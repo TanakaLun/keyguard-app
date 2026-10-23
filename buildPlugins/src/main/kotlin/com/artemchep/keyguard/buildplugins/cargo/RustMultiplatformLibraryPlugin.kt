@@ -225,10 +225,21 @@ open class RustMultiplatformLibraryPlugin : Plugin<Project> {
         val androidAbi: String,
     )
 
-    private fun androidNativeTargets(): List<AndroidNativeTarget> = listOf(
-        AndroidNativeTarget("aarch64-linux-android", "arm64-v8a"),
-        AndroidNativeTarget("armv7-linux-androideabi", "armeabi-v7a"),
-        AndroidNativeTarget("i686-linux-android", "x86"),
-        AndroidNativeTarget("x86_64-linux-android", "x86_64"),
-    )
+    /**
+     * All supported Android ABIs, optionally narrowed by the comma-separated
+     * `keyguard.androidAbis` Gradle property (for example, `arm64-v8a`).
+     */
+    private fun Project.androidNativeTargets(): List<AndroidNativeTarget> {
+        val enabledAbis = providers.gradleProperty("keyguard.androidAbis").orNull
+            ?.split(',')
+            ?.map(String::trim)
+            ?.filter(String::isNotEmpty)
+            ?.toSet()
+        return listOf(
+            AndroidNativeTarget("aarch64-linux-android", "arm64-v8a"),
+            AndroidNativeTarget("armv7-linux-androideabi", "armeabi-v7a"),
+            AndroidNativeTarget("i686-linux-android", "x86"),
+            AndroidNativeTarget("x86_64-linux-android", "x86_64"),
+        ).filter { target -> enabledAbis == null || target.androidAbi in enabledAbis }
+    }
 }
