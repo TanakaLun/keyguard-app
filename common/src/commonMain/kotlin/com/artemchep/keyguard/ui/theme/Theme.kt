@@ -368,7 +368,14 @@ fun KeyguardTheme(
             CompositionLocalProvider(
                 GlobalExpressive provides expressive,
             ) {
-                content()
+                // Phase 0: Miuix theme tree coexists with the Material 3 stack.
+                // Migrated components read MiuixTheme.* inside this subtree.
+                MiuixThemeBridge(
+                    config = config,
+                    dark = dark,
+                ) {
+                    content()
+                }
             }
         }
     }
