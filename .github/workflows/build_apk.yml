@@ -26,6 +26,12 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-37.1 build-tools;37.0.0 ndk;27.0.12077973'
 
+      - name: Setup Rust
+        uses: ./.github/actions/setup_rust
+        with:
+          targets: aarch64-linux-android
+          cache-key: android
+
       - name: Write local google-services placeholder
         run: |
           cat > androidApp/google-services.json <<'JSON'
