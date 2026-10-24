@@ -38,9 +38,9 @@ import com.artemchep.keyguard.feature.navigation.LocalNavigationNodeFinishing
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
-import com.artemchep.keyguard.ui.DialogPopup
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
 
 // See:
 // https://m3.material.io/components/dialogs/specs#9a8c226b-19fa-4d6b-894e-e7d5ca9203e8
@@ -61,12 +61,12 @@ fun Dialog(
     actions: @Composable FlowRowScope.() -> Unit,
 ) {
     val updatedNavController by rememberUpdatedState(LocalNavigationController.current)
-    DialogPopup(
+    OverlayDialog(
         onDismissRequest = {
             val intent = NavigationIntent.Pop
             updatedNavController.queue(intent)
         },
-        expanded = !LocalNavigationNodeFinishing.current,
+        show = !LocalNavigationNodeFinishing.current,
     ) {
         DialogContent(
             icon = icon,
@@ -89,14 +89,12 @@ fun DialogContent(
     actions: @Composable FlowRowScope.() -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Column(
         modifier = Modifier,
     ) {
         Column(
             modifier = Modifier
-                .weight(1f, fill = fill)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+                .weight(1f, fill = fill),
         ) {
             if (title != null || icon != null) {
                 Spacer(
