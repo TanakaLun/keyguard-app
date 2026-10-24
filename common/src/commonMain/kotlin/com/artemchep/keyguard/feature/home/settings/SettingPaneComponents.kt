@@ -47,6 +47,8 @@ import top.yukonga.miuix.kmp.basic.Badge
 import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
+import top.yukonga.miuix.kmp.preference.ArrowPreference
+import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Stable
@@ -314,22 +316,25 @@ fun SettingPaneComponents.KgAction(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = onClick != null,
 ) {
-    KgAction(
-        icon = icon,
-        subIcon = subIcon,
-        title = {
-            Text(title)
-        },
-        text = if (text != null) {
-            {
-                Text(text)
-            }
+    ArrowPreference(
+        title = title,
+        summary = text,
+        startAction = if (icon != null) {
+            icon(
+                main = icon,
+                secondary = subIcon,
+            )
         } else {
             null
         },
-        contentColor = contentColor,
-        trailing = trailing,
-        footer = footer,
+        endActions = trailing ?: {},
+        bottomAction = footer?.let { f ->
+            {
+                Column {
+                    f()
+                }
+            }
+        },
         onClick = onClick,
         enabled = enabled,
     )
@@ -345,23 +350,27 @@ fun SettingPaneComponents.KgSwitch(
     checked: Boolean,
     onCheckedChange: ((Boolean) -> Unit)?,
 ) {
-    KgSwitch(
-        icon = icon,
-        subIcon = subIcon,
-        title = {
-            Text(title)
-        },
-        text = if (text != null) {
-            // composable
-            {
-                Text(text)
-            }
+    SwitchPreference(
+        title = title,
+        summary = text,
+        startAction = if (icon != null) {
+            icon(
+                main = icon,
+                secondary = subIcon,
+            )
         } else {
             null
         },
-        footer = footer,
+        bottomAction = footer?.let { f ->
+            {
+                Column {
+                    f()
+                }
+            }
+        },
         checked = checked,
-        onCheckedChange = onCheckedChange,
+        onCheckedChange = onCheckedChange ?: {},
+        enabled = onCheckedChange != null,
     )
 }
 

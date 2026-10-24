@@ -587,13 +587,18 @@ fun SettingPaneContent2(
                     if (groupTitle != null) {
                         item(key = "settingsTitle$groupIndex") {
                             SmallTitle(
+                                modifier = Modifier.padding(top = 8.dp),
                                 text = textResource(groupTitle),
                             )
                         }
                     }
                     item(key = "settingsCard$groupIndex") {
                         Card(
-                            modifier = Modifier.padding(horizontal = 12.dp),
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = 12.dp,
+                                    vertical = 6.dp,
+                                ),
                         ) {
                             groupItems.forEach { model ->
                                 CompositionLocalProvider(
