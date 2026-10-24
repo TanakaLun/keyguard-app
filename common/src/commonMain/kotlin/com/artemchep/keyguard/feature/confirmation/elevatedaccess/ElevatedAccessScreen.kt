@@ -20,7 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -92,25 +92,25 @@ fun ElevatedAccessScreen(
             val updatedOnDeny by rememberUpdatedState(state.onDeny)
             val updatedOnConfirm by rememberUpdatedState(state.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 modifier = Modifier
                     .testTag("btn:close"),
                 enabled = state.onDeny != null,
                 onClick = {
                     updatedOnDeny?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 modifier = Modifier
                     .testTag("btn:go"),
                 enabled = state.onConfirm != null,
                 onClick = {
                     updatedOnConfirm?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

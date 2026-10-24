@@ -55,7 +55,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -841,14 +841,12 @@ private fun ColumnScope.GeneratorFilterTip(
                 Spacer(modifier = Modifier.width(16.dp))
                 if (tip.onLearnMore != null) {
                     TextButton(
+    text = stringResource(Res.string.learn_more),
+
                         onClick = {
                             tip.onLearnMore.invoke()
                         },
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.learn_more),
-                        )
-                    }
+                    )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
             }

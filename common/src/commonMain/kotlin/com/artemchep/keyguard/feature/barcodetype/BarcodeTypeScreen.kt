@@ -14,7 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -78,13 +78,13 @@ private fun BarcodeTypeContent(
         actions = {
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onClose)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
         },
     )
 }

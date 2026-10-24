@@ -14,7 +14,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -108,6 +108,8 @@ private fun DataSafetyScreenItem(
         is DataSafetyItem.LearnMore -> {
             val navigationController by rememberUpdatedState(LocalNavigationController.current)
             TextButton(
+    text = stringResource(Res.string.learn_more),
+
                 modifier = Modifier
                     .padding(
                         vertical = 4.dp,
@@ -119,11 +121,7 @@ private fun DataSafetyScreenItem(
                     )
                     navigationController.queue(intent)
                 },
-            ) {
-                Text(
-                    text = stringResource(Res.string.learn_more),
-                )
-            }
+            )
         }
 
         is DataSafetyItem.Row -> {

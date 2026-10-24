@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -73,8 +73,12 @@ class GpgToolsKeyPickerScreenTest {
                                     )
                                 },
                                 actions = {
-                                    TextButton(onClick = {}) { Text("Cancel") }
-                                    TextButton(onClick = {}) { Text("Done") }
+                                    TextButton(
+    text = "Cancel",
+onClick = {})
+                                    TextButton(
+    text = "Done",
+onClick = {})
                                 },
                             )
                         }

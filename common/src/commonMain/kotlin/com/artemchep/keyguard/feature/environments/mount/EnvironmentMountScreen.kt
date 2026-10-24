@@ -15,7 +15,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -84,20 +84,20 @@ private fun EnvironmentMountScreen(
         },
         actions = {
             TextButton(
+    text = stringResource(Res.string.cancel),
+
                 onClick = {
                     updatedNavigationController.queue(NavigationIntent.Pop)
                 },
-            ) {
-                Text(stringResource(Res.string.cancel))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.environments_mount_create),
+
                 enabled = state?.onCreate != null,
                 onClick = {
                     state?.onCreate?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.environments_mount_create))
-            }
+            )
         },
     )
 }

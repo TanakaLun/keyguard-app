@@ -2,7 +2,7 @@ package com.artemchep.keyguard.feature.yubikey
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -125,7 +125,9 @@ private fun NativePromptEffect(flow: Flow<NativePrompt>) {
         title = { Text(stringResource(Res.string.yubikey_usb_touch_the_gold_sensor_note)) },
         text = { Text(stringResource(Res.string.yubikey_usb_text)) },
         confirmButton = {
-            TextButton(onClick = { pending = null }) { Text(stringResource(Res.string.cancel)) }
+            TextButton(
+    text = stringResource(Res.string.cancel),
+onClick = { pending = null })
         },
     )
 }

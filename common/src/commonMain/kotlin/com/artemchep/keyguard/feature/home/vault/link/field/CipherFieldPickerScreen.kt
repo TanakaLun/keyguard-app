@@ -17,7 +17,7 @@ import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.material3.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -68,13 +68,13 @@ fun CipherFieldPickerScreen(
         actions = {
             val updatedOnDeny by rememberUpdatedState(state.onDeny)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnDeny != null,
                 onClick = {
                     updatedOnDeny?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
         },
     )
 }

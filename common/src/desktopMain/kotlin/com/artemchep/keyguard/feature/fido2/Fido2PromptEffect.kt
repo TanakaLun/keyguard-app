@@ -5,7 +5,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -75,6 +75,8 @@ private fun NativeFido2Dialog(prompt: Fido2Prompt) {
         confirmButton = {
             if (requestPin)
                 TextButton(
+    text = stringResource(Res.string.continue_),
+
                     enabled = pin.isNotEmpty(),
                     onClick = {
                         submittedPin = pin
@@ -82,12 +84,12 @@ private fun NativeFido2Dialog(prompt: Fido2Prompt) {
                         requestPin = false
                         attempt++
                     },
-                ) {
-                    Text(stringResource(Res.string.continue_))
-                }
+                )
         },
         dismissButton = {
-            TextButton(onClick = prompt::cancel) { Text(stringResource(Res.string.cancel)) }
+            TextButton(
+    text = stringResource(Res.string.cancel),
+onClick = prompt::cancel)
         },
     )
 }

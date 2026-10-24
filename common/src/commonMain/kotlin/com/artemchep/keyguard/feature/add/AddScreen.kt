@@ -51,7 +51,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -746,14 +746,12 @@ private fun NoteTextField(
                     Unit.takeIf { field.text.isNotEmpty() },
                 ) {
                     TextButton(
+    text = stringResource(Res.string.additem_markdown_render_preview),
+
                         onClick = {
                             isMarkdownRenderPopupShown = true
                         },
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.additem_markdown_render_preview),
-                        )
-                    }
+                    )
                 }
             }
         } else {
@@ -794,17 +792,15 @@ private fun NoteTextField(
                     .width(16.dp),
             )
             TextButton(
+    text = stringResource(Res.string.learn_more),
+
                 onClick = {
                     val intent = NavigationIntent.NavigateToBrowser(
                         url = "https://www.markdownguide.org/basic-syntax/",
                     )
                     navigationController.queue(intent)
                 },
-            ) {
-                Text(
-                    text = stringResource(Res.string.learn_more),
-                )
-            }
+            )
         }
     }
     // Inject the dropdown popup to the bottom of the

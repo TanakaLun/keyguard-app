@@ -16,7 +16,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -228,16 +228,16 @@ private fun AttachmentArchivePasswordDialog(prompt: AttachmentArchivePassword) {
         },
         confirmButton = {
             TextButton(
+    text = stringResource(Res.string.confirm),
+
                 enabled = password.isNotEmpty(),
                 onClick = submit,
-            ) {
-                Text(stringResource(Res.string.confirm))
-            }
+            )
         },
         dismissButton = {
-            TextButton(onClick = prompt.onCancel) {
-                Text(stringResource(Res.string.cancel))
-            }
+            TextButton(
+    text = stringResource(Res.string.cancel),
+onClick = prompt.onCancel)
         },
     )
     LaunchedEffect(requester) {

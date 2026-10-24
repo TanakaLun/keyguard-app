@@ -19,7 +19,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -104,23 +104,23 @@ fun PasskeysCredentialViewScreen(
         actions = {
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onClose)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             val onUse = loadableState.getOrNull()?.content?.getOrNull()?.onUse
             if (onUse != null) {
                 val updatedOnUse by rememberUpdatedState(onUse)
                 TextButton(
+    text = stringResource(Res.string.passkey_use_short),
+
                     onClick = {
                         updatedOnUse.invoke()
                     },
-                ) {
-                    Text(stringResource(Res.string.passkey_use_short))
-                }
+                )
             }
         },
     )

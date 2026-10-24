@@ -31,7 +31,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -265,13 +265,10 @@ fun ToastMessage(
                         .width(8.dp),
                 )
                 TextButton(
+    text = model.action.title,
+
                     onClick = model.action.onClick,
-                ) {
-                    Text(
-                        text = model.action.title,
-                        color = contentIconColor,
-                    )
-                }
+                )
             }
             Spacer(
                 modifier = Modifier

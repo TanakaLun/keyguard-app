@@ -18,7 +18,7 @@ import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,21 +68,21 @@ fun ColorPickerScreen(
             val updatedOnClose by rememberUpdatedState(state?.onDeny)
             val updatedOnOk by rememberUpdatedState(state?.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = updatedOnOk != null,
                 onClick = {
                     updatedOnOk?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

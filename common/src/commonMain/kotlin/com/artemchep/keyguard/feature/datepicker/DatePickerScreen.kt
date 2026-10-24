@@ -16,7 +16,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,21 +65,21 @@ fun DatePickerScreen(
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onDeny)
             val updatedOnOk by rememberUpdatedState(loadableState.getOrNull()?.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = updatedOnOk != null,
                 onClick = {
                     updatedOnOk?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

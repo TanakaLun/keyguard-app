@@ -19,7 +19,7 @@ import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -176,15 +176,13 @@ private fun SettingLocalizationTopContributors(
 
         val navigationController by rememberUpdatedState(LocalNavigationController.current)
         TextButton(
+    text = stringResource(Res.string.pref_item_crowdin_view_all_contributors_title),
+
             onClick = {
                 val intent = NavigationIntent.NavigateToRoute(LocalizationContributorsListRoute)
                 navigationController.queue(intent)
             },
-        ) {
-            Text(
-                text = stringResource(Res.string.pref_item_crowdin_view_all_contributors_title),
-            )
-        }
+        )
 
         Spacer(
             modifier = Modifier

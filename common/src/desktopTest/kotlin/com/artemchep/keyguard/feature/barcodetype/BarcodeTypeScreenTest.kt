@@ -11,7 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -135,7 +135,9 @@ class BarcodeTypeScreenTest {
                                         )
                                     },
                                     actions = {
-                                        TextButton(onClick = {}) { Text("Close") }
+                                        TextButton(
+    text = "Close",
+onClick = {})
                                     },
                                 )
                             }

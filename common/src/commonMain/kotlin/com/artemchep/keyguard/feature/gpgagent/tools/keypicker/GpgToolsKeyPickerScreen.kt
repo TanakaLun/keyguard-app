@@ -16,7 +16,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -67,12 +67,12 @@ internal fun GpgToolsKeyPickerScreen(
         actions = {
             val onDeny by rememberUpdatedState(state.onDeny)
             val onConfirm by rememberUpdatedState(state.onConfirm)
-            TextButton(enabled = onDeny != null, onClick = { onDeny?.invoke() }) {
-                Text(stringResource(Res.string.cancel))
-            }
-            TextButton(enabled = onConfirm != null, onClick = { onConfirm?.invoke() }) {
-                Text(stringResource(Res.string.gpg_tools_selection_done))
-            }
+            TextButton(
+    text = stringResource(Res.string.cancel),
+enabled = onDeny != null, onClick = { onDeny?.invoke() })
+            TextButton(
+    text = stringResource(Res.string.gpg_tools_selection_done),
+enabled = onConfirm != null, onClick = { onConfirm?.invoke() })
         },
     )
 }

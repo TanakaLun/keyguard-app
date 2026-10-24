@@ -28,7 +28,7 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -144,12 +144,14 @@ private fun BackupSetupDiscardDialog(state: AutomaticBackupsSetupState) {
         title = { Text(stringResource(Res.string.pref_item_automatic_backups_wizard_discard_title)) },
         text = { Text(stringResource(Res.string.pref_item_automatic_backups_wizard_discard_message)) },
         confirmButton = {
-            TextButton(onClick = state.onDiscard) {
-                Text(stringResource(Res.string.pref_item_automatic_backups_wizard_discard_action))
-            }
+            TextButton(
+    text = stringResource(Res.string.pref_item_automatic_backups_wizard_discard_action),
+onClick = state.onDiscard)
         },
         dismissButton = {
-            TextButton(onClick = state.onDismissDiscard) { Text(stringResource(Res.string.cancel)) }
+            TextButton(
+    text = stringResource(Res.string.cancel),
+onClick = state.onDismissDiscard)
         },
     )
 }

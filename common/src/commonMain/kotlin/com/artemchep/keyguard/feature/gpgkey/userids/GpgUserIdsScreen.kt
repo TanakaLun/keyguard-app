@@ -19,7 +19,7 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -272,6 +272,8 @@ private fun GpgUserIdHistory(history: List<GpgUserIdsState.Identity>) {
 @Composable
 private fun GpgUserIdActionButton(action: GpgUserIdsState.Action) {
     TextButton(
+    text = action.title,
+
         enabled = action.onClick != null,
         colors = if (action.destructive) {
             ButtonDefaults.textButtonColors(
@@ -283,9 +285,7 @@ private fun GpgUserIdActionButton(action: GpgUserIdsState.Action) {
         onClick = {
             action.onClick?.invoke()
         },
-    ) {
-        Text(action.title)
-    }
+    )
 }
 
 @Composable

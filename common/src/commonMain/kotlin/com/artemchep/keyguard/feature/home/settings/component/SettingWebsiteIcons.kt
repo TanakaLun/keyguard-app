@@ -12,7 +12,7 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -108,6 +108,8 @@ private fun SettingMarkdown(
             // composable
             {
                 TextButton(
+    text = stringResource(Res.string.learn_more),
+
                     modifier = Modifier
                         .padding(
                             horizontal = getSettingsButtonStartPadding(),
@@ -116,11 +118,7 @@ private fun SettingMarkdown(
                     onClick = {
                         onLearnMore()
                     },
-                ) {
-                    Text(
-                        text = stringResource(Res.string.learn_more),
-                    )
-                }
+                )
             }
         } else {
             null

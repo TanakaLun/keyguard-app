@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,21 +51,21 @@ fun DatePickerScreen(
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onDeny)
             val updatedOnOk by rememberUpdatedState(loadableState.getOrNull()?.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = updatedOnOk != null,
                 onClick = {
                     updatedOnOk?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

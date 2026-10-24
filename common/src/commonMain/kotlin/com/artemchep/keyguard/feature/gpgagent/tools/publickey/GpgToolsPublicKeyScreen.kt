@@ -8,7 +8,7 @@ import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,19 +88,19 @@ fun GpgToolsPublicKeyScreen(
         contentScrollable = false,
         actions = {
             TextButton(
+    text = stringResource(Res.string.cancel),
+
                 onClick = {
                     deliver(GpgToolsPublicKeyResult.Deny)
                 },
-            ) {
-                Text(stringResource(Res.string.cancel))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 onClick = {
                     deliver(GpgToolsPublicKeyResult.Confirm(listOf(text.trim())))
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

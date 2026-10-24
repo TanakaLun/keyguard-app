@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberTimePickerState
@@ -53,21 +53,21 @@ fun TimePickerScreen(
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onDeny)
             val updatedOnOk by rememberUpdatedState(loadableState.getOrNull()?.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = updatedOnOk != null,
                 onClick = {
                     updatedOnOk?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

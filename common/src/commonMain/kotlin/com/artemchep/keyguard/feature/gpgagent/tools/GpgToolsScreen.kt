@@ -28,7 +28,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -672,18 +672,16 @@ private fun GpgFileRefRow(
         },
         trailing = {
             TextButton(
-                onClick = if (file == null) onSelect else onClear,
-            ) {
-                Text(
-                    text = stringResource(
+    text = stringResource(
                         if (file == null) {
                             Res.string.choose_file
                         } else {
                             Res.string.gpg_tools_clear_file
                         },
                     ),
-                )
-            }
+
+                onClick = if (file == null) onSelect else onClear,
+            )
         },
         onClick = onSelect,
     )

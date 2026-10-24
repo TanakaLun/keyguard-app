@@ -15,7 +15,7 @@ import androidx.compose.material3.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -116,12 +116,12 @@ fun GpgToolsResultScreen(
                     .weight(1f),
             )
             TextButton(
+    text = stringResource(Res.string.close),
+
                 onClick = {
                     updatedNavigationController.queue(NavigationIntent.Pop)
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
         },
     )
 }

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -114,21 +114,21 @@ private fun OrganizationConfirmationScreen(
             val updatedOnDeny by rememberUpdatedState(state.onDeny)
             val updatedOnConfirm by rememberUpdatedState(state.onConfirm)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = state.onDeny != null,
                 onClick = {
                     updatedOnDeny?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = state.onConfirm != null,
                 onClick = {
                     updatedOnConfirm?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

@@ -18,7 +18,7 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -115,13 +115,13 @@ fun TwoFaServiceViewDialogScreen(
         actions = {
             val updatedOnClose by rememberUpdatedState(loadableState.getOrNull()?.onClose)
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
         },
     )
 }

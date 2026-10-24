@@ -12,7 +12,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberUpdatedState
@@ -95,21 +95,21 @@ fun GpgKeyExpirationScreen(
             val updatedOnDeny = rememberUpdatedState(state.onDeny)
             val updatedOnConfirm = rememberUpdatedState(state.onConfirm)
             TextButton(
+    text = stringResource(Res.string.cancel),
+
                 enabled = state.onDeny != null,
                 onClick = {
                     updatedOnDeny.value?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.cancel))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = state.onConfirm != null,
                 onClick = {
                     updatedOnConfirm.value?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }

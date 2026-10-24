@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
@@ -45,9 +45,9 @@ fun settingPermissionLocalNetworkProvider2(): SettingComponent {
             footer = if (!permission.status.isGranted) {
                 {
                     // Also available when Android no longer displays the permission prompt.
-                    TextButton(onClick = { context.launchAppDetailsSettings() }) {
-                        Text(stringResource(Res.string.local_network_permission_open_settings_action))
-                    }
+                    TextButton(
+    text = stringResource(Res.string.local_network_permission_open_settings_action),
+onClick = { context.launchAppDetailsSettings() })
                 }
             } else {
                 null

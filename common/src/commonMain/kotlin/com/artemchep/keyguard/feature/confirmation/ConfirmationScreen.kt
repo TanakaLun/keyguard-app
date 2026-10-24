@@ -23,7 +23,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -149,16 +149,14 @@ fun ConfirmationScreen(
                 val updatedNavigationController by rememberUpdatedState(LocalNavigationController.current)
                 val updatedDocUrl by rememberUpdatedState(args.docUrl)
                 TextButton(
+    text = stringResource(Res.string.uri_action_launch_docs_title),
+
                     modifier = Modifier,
                     onClick = {
                         val intent = NavigationIntent.NavigateToBrowser(updatedDocUrl)
                         updatedNavigationController.queue(intent)
                     },
-                ) {
-                    Text(
-                        text = stringResource(Res.string.uri_action_launch_docs_title),
-                    )
-                }
+                )
                 Spacer(
                     modifier = Modifier
                         .weight(1f),
@@ -168,21 +166,21 @@ fun ConfirmationScreen(
             val updatedOnDeny by rememberUpdatedState(state.onDeny)
             val updatedOnConfirm by rememberUpdatedState(state.onConfirm)
             TextButton(
+    text = stringResource(Res.string.cancel),
+
                 enabled = state.onDeny != null,
                 onClick = {
                     updatedOnDeny?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.cancel))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.ok),
+
                 enabled = state.onConfirm != null,
                 onClick = {
                     updatedOnConfirm?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }
@@ -427,17 +425,15 @@ private fun ConfirmationEnumItem(
                 )
                 val updatedOnLearnMore by rememberUpdatedState(doc.onLearnMore)
                 TextButton(
+    text = stringResource(Res.string.learn_more),
+
                     modifier = Modifier
                         .padding(horizontal = 12.dp),
                     enabled = updatedOnLearnMore != null,
                     onClick = {
                         updatedOnLearnMore?.invoke()
                     },
-                ) {
-                    Text(
-                        text = stringResource(Res.string.learn_more),
-                    )
-                }
+                )
             }
         }
     }

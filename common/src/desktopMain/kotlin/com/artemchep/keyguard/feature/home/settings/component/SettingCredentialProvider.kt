@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -183,17 +183,15 @@ private fun SettingCredentialProviderOpenSettings(
     onClick: () -> Unit,
 ) {
     TextButton(
+    text = stringResource(Res.string.passkey_provider_open_settings),
+
         modifier = Modifier
             .padding(
                 horizontal = getSettingsButtonStartPadding(),
                 vertical = 4.dp,
             ),
         onClick = onClick,
-    ) {
-        Text(
-            text = stringResource(Res.string.passkey_provider_open_settings),
-        )
-    }
+    )
 }
 
 private fun WindowsPasskeyStatus.text(): StringResource = when (this) {

@@ -9,7 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -73,21 +73,21 @@ internal fun PasswordMemoryScreen(
         },
         actions = {
             TextButton(
+    text = stringResource(Res.string.close),
+
                 enabled = updatedOnClose != null,
                 onClick = {
                     updatedOnClose?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+    text = stringResource(Res.string.verify),
+
                 enabled = updatedOnVerify != null,
                 onClick = {
                     updatedOnVerify?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.verify))
-            }
+            )
         },
     )
 }

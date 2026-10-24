@@ -30,7 +30,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -238,17 +238,14 @@ fun UnlockDialog(
                 val updatedOnCancel by rememberUpdatedState(LocalAuthScreen.current.onCancel)
                 if (updatedOnCancel != null) {
                     TextButton(
+    text = stringResource(Res.string.cancel),
+
                         modifier = Modifier
                             .weight(1f, fill = true),
                         onClick = {
                             updatedOnCancel?.invoke()
                         },
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.cancel),
-                            maxLines = 1,
-                        )
-                    }
+                    )
                 }
                 UnlockCtaButton(
                     modifier = Modifier

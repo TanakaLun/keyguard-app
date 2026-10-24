@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.TextFormat
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -90,6 +90,8 @@ private fun SettingMarkdown(
             // composable
             {
                 TextButton(
+    text = stringResource(Res.string.learn_more),
+
                     modifier = Modifier
                         .padding(
                             horizontal = getSettingsButtonStartPadding(),
@@ -98,11 +100,7 @@ private fun SettingMarkdown(
                     onClick = {
                         onLearnMore()
                     },
-                ) {
-                    Text(
-                        text = stringResource(Res.string.learn_more),
-                    )
-                }
+                )
             }
         } else {
             null

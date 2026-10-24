@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -121,19 +121,15 @@ fun PoweredByLabel(
         val navigationController by rememberUpdatedState(LocalNavigationController.current)
         val updatedUrl by rememberUpdatedState(url)
         TextButton(
+    text = domain,
+
             onClick = {
                 val intent = NavigationIntent.NavigateToBrowser(
                     url = updatedUrl,
                 )
                 navigationController.queue(intent)
             },
-        ) {
-            Text(
-                text = domain,
-                maxLines = 1,
-                style = MaterialTheme.typography.labelMedium,
-            )
-        }
+        )
         if (suffix.isNotEmpty()) {
             Spacer(modifier = Modifier.width(8.dp))
             PoweredByText(

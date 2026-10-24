@@ -17,7 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -198,15 +198,12 @@ fun AgentApprovalButtons(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         TextButton(
+    text = cancelText,
+
             modifier = Modifier
                 .weight(1f, fill = true),
             onClick = onCancel,
-        ) {
-            Text(
-                text = cancelText,
-                maxLines = 1,
-            )
-        }
+        )
         Button(
             modifier = Modifier
                 .focusRequester2(focusRequester)

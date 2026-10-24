@@ -11,7 +11,7 @@ import androidx.compose.material.icons.outlined.Screenshot
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -151,6 +151,8 @@ private fun SettingLocale(
             // composable
             {
                 TextButton(
+    text = stringResource(Res.string.pref_item_locale_help_translation_button),
+
                     modifier = Modifier
                         .padding(
                             horizontal = getSettingsButtonStartPadding(),
@@ -159,11 +161,7 @@ private fun SettingLocale(
                     onClick = {
                         onHelpTranslate()
                     },
-                ) {
-                    Text(
-                        text = stringResource(Res.string.pref_item_locale_help_translation_button),
-                    )
-                }
+                )
             }
         } else {
             null
