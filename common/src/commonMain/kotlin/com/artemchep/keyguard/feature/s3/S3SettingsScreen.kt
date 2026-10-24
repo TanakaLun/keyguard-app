@@ -117,11 +117,7 @@ private fun S3SettingsContent(
         },
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.s3_settings_header_title),
-                    )
-                },
+                title = stringResource(Res.string.s3_settings_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

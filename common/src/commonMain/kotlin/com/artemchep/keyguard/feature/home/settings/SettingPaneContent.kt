@@ -548,9 +548,7 @@ fun SettingPaneContent2(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(title)
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },

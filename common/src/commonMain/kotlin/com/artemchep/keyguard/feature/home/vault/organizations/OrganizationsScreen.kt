@@ -72,24 +72,7 @@ fun FoldersScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(Res.string.account),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = LocalContentColor.current
-                                .combineAlpha(MediumEmphasisAlpha),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2,
-                        )
-                        Text(
-                            text = stringResource(Res.string.organizations),
-                            style = MaterialTheme.typography.titleMedium,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                    }
-                },
+                title = stringResource(Res.string.account),
                 navigationIcon = {
                     NavigationIcon()
                 },

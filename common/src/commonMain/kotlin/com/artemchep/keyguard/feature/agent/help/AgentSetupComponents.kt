@@ -77,11 +77,7 @@ internal fun AgentSetupScaffold(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = title,
-                    )
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },

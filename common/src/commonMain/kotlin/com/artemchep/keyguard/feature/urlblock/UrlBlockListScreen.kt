@@ -87,9 +87,7 @@ fun UrlBlockListScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.urlblock_list_header_title))
-                },
+                title = stringResource(Res.string.urlblock_list_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

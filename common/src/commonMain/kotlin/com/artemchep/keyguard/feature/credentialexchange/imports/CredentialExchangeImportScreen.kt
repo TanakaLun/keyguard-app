@@ -112,11 +112,7 @@ private fun CredentialExchangeImportToolbar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     LargeToolbar(
-        title = {
-            Text(
-                text = stringResource(Res.string.credential_exchange_import_header_title),
-            )
-        },
+        title = stringResource(Res.string.credential_exchange_import_header_title),
         navigationIcon = {
             NavigationIcon()
         },

@@ -63,11 +63,7 @@ private fun AutomaticBackupsSettingsLoadingContent() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.settings_automatic_backups_header_title),
-                    )
-                },
+                title = stringResource(Res.string.settings_automatic_backups_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -158,11 +154,7 @@ private fun AutomaticBackupsSettingsContent(
         },
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.settings_automatic_backups_header_title),
-                    )
-                },
+                title = stringResource(Res.string.settings_automatic_backups_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -282,11 +282,7 @@ private fun NavigationItemsSettingsToolbar(
     onReset: (() -> Unit)?,
 ) {
     LargeToolbar(
-        title = {
-            Text(
-                text = stringResource(Res.string.settings_navigation_items_header_title),
-            )
-        },
+        title = stringResource(Res.string.settings_navigation_items_header_title),
         navigationIcon = {
             NavigationIcon()
         },

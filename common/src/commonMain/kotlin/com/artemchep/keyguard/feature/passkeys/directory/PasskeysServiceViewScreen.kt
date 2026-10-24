@@ -143,24 +143,7 @@ fun PasskeysViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    when (loadableState) {
-                        is Loadable.Loading -> {
-                            SkeletonText(
-                                modifier = Modifier
-                                    .width(72.dp),
-                            )
-                        }
-
-                        is Loadable.Ok -> {
-                            val title = loadableState.value.content.getOrNull()
-                                ?.model?.name.orEmpty()
-                            Text(
-                                text = title,
-                            )
-                        }
-                    }
-                },
+                title = (loadableState as? Loadable.Ok)?.value?.content?.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },

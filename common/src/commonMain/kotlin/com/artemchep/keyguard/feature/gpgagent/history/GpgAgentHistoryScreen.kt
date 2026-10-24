@@ -69,11 +69,7 @@ private fun GpgAgentHistoryScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    ToolbarTitle(
-                        subtitle = loadableState.getOrNull()?.subtitle,
-                    )
-                },
+                title = stringResource(Res.string.agent_history_header_title, stringResource(Res.string.protocol_gpg)),
                 navigationIcon = {
                     NavigationIcon()
                 },

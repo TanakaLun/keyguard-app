@@ -93,9 +93,7 @@ private fun LogsScreenSkeleton(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.logs_header_title))
-                },
+                title = stringResource(Res.string.logs_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -125,9 +123,7 @@ private fun LogsScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.logs_header_title))
-                },
+                title = stringResource(Res.string.logs_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

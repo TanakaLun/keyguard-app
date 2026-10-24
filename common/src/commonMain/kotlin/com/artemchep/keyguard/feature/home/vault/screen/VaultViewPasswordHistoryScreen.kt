@@ -60,11 +60,7 @@ fun VaultViewPasswordHistoryScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    ToolbarTitle(
-                        state = state,
-                    )
-                },
+                title = (state.content as? VaultViewPasswordHistoryState.Content.Cipher)?.data?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },

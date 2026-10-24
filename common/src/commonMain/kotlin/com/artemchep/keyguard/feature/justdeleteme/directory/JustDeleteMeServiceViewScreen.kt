@@ -106,12 +106,7 @@ fun JustDeleteMeFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    val title = args.justDeleteMe.name
-                    Text(
-                        text = title,
-                    )
-                },
+                title = args.justDeleteMe.name,
                 navigationIcon = {
                     NavigationIcon()
                 },

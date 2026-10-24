@@ -125,17 +125,7 @@ private fun AddScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    val title = loadableState.getOrNull()?.title
-                    if (title != null) {
-                        Text(title)
-                    } else {
-                        SkeletonText(
-                            modifier = Modifier
-                                .fillMaxWidth(0.4f),
-                        )
-                    }
-                },
+                title = loadableState.getOrNull()?.title.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },
