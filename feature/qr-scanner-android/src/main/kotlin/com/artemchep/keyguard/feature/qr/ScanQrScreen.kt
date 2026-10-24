@@ -78,9 +78,7 @@ fun ScanQrScreen(
             SmallToolbar(
                 modifier = Modifier
                     .statusBarsPadding(),
-                title = {
-                    Text(stringResource(Res.string.scanqr_title))
-                },
+                title = stringResource(Res.string.scanqr_title),
                 navigationIcon = {
                     NavigationIcon()
                 },
