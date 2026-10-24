@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -42,18 +43,14 @@ import androidx.compose.material3.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationItemColors
-import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.WideNavigationRail
-import androidx.compose.material3.WideNavigationRailDefaults
-import androidx.compose.material3.WideNavigationRailItem
-import androidx.compose.material3.WideNavigationRailItemDefaults
-import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.rememberWideNavigationRailState
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
+import top.yukonga.miuix.kmp.basic.NavigationRail
+import top.yukonga.miuix.kmp.basic.NavigationRailItem
+import top.yukonga.miuix.kmp.basic.NavigationRailValue
+import top.yukonga.miuix.kmp.basic.rememberNavigationRailState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -261,7 +258,9 @@ fun HomeScreenContent(
                 Row {
                     val scope = rememberCoroutineScope()
 
-                    val railState = rememberWideNavigationRailState()
+                    val railState = rememberNavigationRailState(
+                        initialValue = NavigationRailValue.Expanded,
+                    )
                     val verticalInsets = WindowInsets.leSystemBars
                         .union(WindowInsets.leIme)
                         .only(WindowInsetsSides.Vertical)
@@ -291,35 +290,12 @@ fun HomeScreenContent(
                         )
                     }
 
-                    WideNavigationRail(
+                    NavigationRail(
                         modifier = Modifier
                             .fillMaxHeight(),
                         state = railState,
-                        colors = WideNavigationRailDefaults.colors()
-                            .copy(containerColor = Color.Transparent),
-                        windowInsets = verticalInsets,
-                        header = if (canExpand) {
-                            // composable
-                            {
-                                IconButton(
-                                    modifier = Modifier
-                                        .padding(start = 24.dp),
-                                    onClick = {
-                                        scope.launch {
-                                            railState.toggle()
-                                        }
-                                    },
-                                ) {
-                                    if (railState.targetValue == WideNavigationRailValue.Expanded) {
-                                        Icon(Icons.AutoMirrored.Filled.MenuOpen, null)
-                                    } else {
-                                        Icon(Icons.Filled.Menu, null)
-                                    }
-                                }
-                            }
-                        } else {
-                            null
-                        },
+                        color = Color.Transparent,
+                        showDivider = false,
                     ) {
                         routesSplit.visible.forEach { r ->
                             key(r.key) {
@@ -329,19 +305,11 @@ fun HomeScreenContent(
                                         .homeNavigationTestTag(r.testTag),
                                     backStack = backStack,
                                     item = r,
-                                    expanded = railState.currentValue == WideNavigationRailValue.Expanded,
                                     count = counterState.value,
                                     label = if (navLabelState.value) {
-                                        // composable
-                                        {
-                                            Text(
-                                                text = textResource(r.label),
-                                                maxLines = 2,
-                                                textAlign = TextAlign.Center,
-                                            )
-                                        }
+                                        textResource(r.label)
                                     } else {
-                                        null
+                                        ""
                                     },
                                 )
                             }
@@ -350,16 +318,10 @@ fun HomeScreenContent(
                             RailNavigationOverflowItem(
                                 backStack = backStack,
                                 items = routesSplit.overflow,
-                                expanded = railState.currentValue == WideNavigationRailValue.Expanded,
                                 label = if (navLabelState.value) {
-                                    {
-                                        Text(
-                                            text = stringResource(Res.string.options),
-                                            maxLines = 2,
-                                        )
-                                    }
+                                    stringResource(Res.string.options)
                                 } else {
-                                    null
+                                    ""
                                 },
                             )
                         }
@@ -960,35 +922,28 @@ private fun RailNavigationControllerItem(
     modifier: Modifier = Modifier,
     backStack: ImmutableList<NavigationEntry>,
     item: HomeNavigationItem,
-    expanded: Boolean,
     count: Int?,
-    label: @Composable (() -> Unit)? = null,
+    label: String,
 ) {
     val controller = LocalNavigationController.current
     val selected = item.isSelected(backStack)
-    WideNavigationRailItem(
+    NavigationRailItem(
         modifier = modifier,
-        icon = {
-            NavigationIcon(
-                selected = selected,
-                icon = item.icon,
-                iconSelected = item.iconSelected,
-                count = count,
-            )
-        },
-        label = label,
         selected = selected,
-        railExpanded = expanded,
-        colors = navigationRailItemColors(),
         onClick = {
             navigateOnClick(controller, item)
+        },
+        icon = if (selected) item.iconSelected else item.icon,
+        label = label,
+        badge = {
+            AnimatedTotalCounterBadge(count = count)
         },
     )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun BottomNavigationControllerItem(
+private fun RowScope.BottomNavigationControllerItem(
     modifier: Modifier = Modifier,
     backStack: ImmutableList<NavigationEntry>,
     item: HomeNavigationItem,
@@ -1016,8 +971,7 @@ private fun BottomNavigationControllerItem(
 private fun RailNavigationOverflowItem(
     backStack: ImmutableList<NavigationEntry>,
     items: List<HomeNavigationItem>,
-    expanded: Boolean,
-    label: @Composable (() -> Unit)? = null,
+    label: String,
 ) {
     val controller = LocalNavigationController.current
     var menuExpanded by remember {
@@ -1028,21 +982,15 @@ private fun RailNavigationOverflowItem(
     }
     val count = rememberOverflowCount(items)
     Box {
-        WideNavigationRailItem(
-            icon = {
-                NavigationIcon(
-                    selected = selected,
-                    icon = Icons.Filled.MoreVert,
-                    iconSelected = Icons.Filled.MoreVert,
-                    count = count,
-                )
-            },
-            label = label,
+        NavigationRailItem(
             selected = selected,
-            railExpanded = expanded,
-            colors = navigationRailItemColors(),
             onClick = {
                 menuExpanded = true
+            },
+            icon = Icons.Filled.MoreVert,
+            label = label,
+            badge = {
+                AnimatedTotalCounterBadge(count = count)
             },
         )
         HomeNavigationOverflowMenu(
@@ -1061,7 +1009,7 @@ private fun RailNavigationOverflowItem(
 }
 
 @Composable
-private fun BottomNavigationOverflowItem(
+private fun RowScope.BottomNavigationOverflowItem(
     backStack: ImmutableList<NavigationEntry>,
     items: List<HomeNavigationItem>,
     label: String,
@@ -1162,18 +1110,6 @@ private fun Modifier.homeNavigationTestTag(
     testTag(testTag)
 } else {
     this
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun navigationRailItemColors(): NavigationItemColors {
-    return WideNavigationRailItemDefaults.colors()
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun navigationBarItemColors(): NavigationItemColors {
-    return ShortNavigationBarItemDefaults.colors()
 }
 
 @Composable
