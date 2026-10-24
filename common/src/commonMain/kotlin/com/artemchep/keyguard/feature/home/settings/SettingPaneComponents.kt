@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +37,9 @@ import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.LocalExpressive
-import com.artemchep.keyguard.ui.theme.badgeContainer
+import top.yukonga.miuix.kmp.basic.Badge
+import top.yukonga.miuix.kmp.basic.BadgedBox
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Stable
 interface SettingPaneComponents {
@@ -118,7 +118,7 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
                         BadgedBox(
                             badge = {
                                 Badge(
-                                    containerColor = MaterialTheme.colorScheme.badgeContainer,
+                                    containerColor = MiuixTheme.colorScheme.tertiaryContainer,
                                 ) {
                                     Text(
                                         text = badge,
