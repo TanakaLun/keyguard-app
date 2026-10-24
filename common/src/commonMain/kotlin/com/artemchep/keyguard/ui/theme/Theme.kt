@@ -28,7 +28,6 @@ import com.artemchep.keyguard.common.model.AppTheme
 import com.artemchep.keyguard.common.usecase.GetColors
 import com.artemchep.keyguard.common.usecase.GetFont
 import com.artemchep.keyguard.common.usecase.GetTheme
-import com.artemchep.keyguard.common.usecase.GetThemeExpressive
 import com.artemchep.keyguard.common.usecase.GetThemeUseAmoledDark
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.theme.hasDarkThemeEnabled
@@ -295,7 +294,6 @@ fun KeyguardTheme(
     dark: Boolean,
     content: @Composable () -> Unit,
 ) {
-    val expressive = config.expressive
     val themeBlack = config.useAmoledBlack
     val colors = config.colors
     val isDarkColorScheme = dark
@@ -350,7 +348,7 @@ fun KeyguardTheme(
             labelSmall = defaultTypography.labelSmall.copy(fontFamily = sansFontFamily),
         )
     }
-    MaterialExpressiveTheme(
+    MaterialTheme(
         colorScheme = scheme,
         typography = typography,
     ) {
@@ -365,24 +363,19 @@ fun KeyguardTheme(
                     onSecondary = scheme.onSecondary,
                 ),
         ) {
-            CompositionLocalProvider(
-                GlobalExpressive provides expressive,
+            // Phase 0: Miuix theme tree coexists with the Material 3 stack.
+            // Migrated components read MiuixTheme.* inside this subtree.
+            MiuixThemeBridge(
+                config = config,
+                dark = dark,
             ) {
-                // Phase 0: Miuix theme tree coexists with the Material 3 stack.
-                // Migrated components read MiuixTheme.* inside this subtree.
-                MiuixThemeBridge(
-                    config = config,
-                    dark = dark,
-                ) {
-                    content()
-                }
+                content()
             }
         }
     }
 }
 
 data class ThemeConfig(
-    val expressive: Boolean,
     val colors: AppColors?,
     val mode: AppTheme?,
     val useAmoledBlack: Boolean,
@@ -392,26 +385,21 @@ data class ThemeConfig(
 fun rememberThemeConfigState(): State<ThemeConfig> {
     val getTheme = koinInject<GetTheme>()
     val getThemeUseAmoledDark = koinInject<GetThemeUseAmoledDark>()
-    val getThemeExpressive = koinInject<GetThemeExpressive>()
     val getColors = koinInject<GetColors>()
     return remember(
         getTheme,
         getThemeUseAmoledDark,
-        getThemeExpressive,
         getColors,
     ) {
-        val themeExpressiveFlow = getThemeExpressive()
         val themeColorsFlow = getColors()
         val themeModeFlow = getTheme()
         val themeModeAmoledBlackFlow = getThemeUseAmoledDark()
         combine(
-            themeExpressiveFlow,
             themeColorsFlow,
             themeModeFlow,
             themeModeAmoledBlackFlow,
-        ) { expressive, colors, mode, modeAmoledBlack ->
+        ) { colors, mode, modeAmoledBlack ->
             ThemeConfig(
-                expressive = expressive,
                 colors = colors,
                 mode = mode,
                 useAmoledBlack = modeAmoledBlack,
@@ -420,7 +408,6 @@ fun rememberThemeConfigState(): State<ThemeConfig> {
     }.collectAsState(
         // use sane defaults
         initial = ThemeConfig(
-            expressive = true,
             colors = null,
             mode = null,
             useAmoledBlack = false,

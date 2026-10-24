@@ -14,6 +14,7 @@ data class SettingPaneState(
         val compositeKey: String,
         val itemKey: String,
         val groupKey: String,
+        val groupTitle: com.artemchep.keyguard.feature.localization.TextHolder?,
         val args: Any?,
         val content: (@Composable () -> Unit)?,
     )

@@ -2,7 +2,6 @@ package com.artemchep.keyguard.feature.home.settings
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -20,8 +19,10 @@ import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.util.flow.foldAsList
 import com.artemchep.keyguard.feature.EmptyView
+import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.home.settings.component.SettingComponent
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppBuildDateProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppBuildRefProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppChangelogProvider
@@ -139,7 +140,6 @@ import com.artemchep.keyguard.feature.home.settings.component.settingSshSettings
 import com.artemchep.keyguard.feature.home.settings.component.settingSubscriptionsDebug
 import com.artemchep.keyguard.feature.home.settings.component.settingSubscriptionsPlayStoreProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingSubscriptionsProvider
-import com.artemchep.keyguard.feature.home.settings.component.settingThemeExpressiveProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingThemeUseAmoledDarkProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingTwoPanelLayoutLandscapeProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingTwoPanelLayoutPortraitProvider
@@ -192,7 +192,6 @@ object Setting {
     const val LOCALE = "locale"
     const val COLOR_SCHEME = "color_scheme"
     const val COLOR_SCHEME_AMOLED_DARK = "color_scheme_amoled_dark"
-    const val COLOR_SCHEME_EXPRESSIVE = "color_scheme_expressive"
     const val COLOR_ACCENT = "color_accent"
     const val MASTER_PASSWORD = "master_password"
     const val PERMISSION_DETAILS = "permission_details" // screen
@@ -337,7 +336,6 @@ val hub = mapOf<String, (Scope) -> SettingComponent>(
     Setting.LOCALE to ::settingSelectLocaleProvider,
     Setting.COLOR_SCHEME to ::settingColorSchemeProvider,
     Setting.COLOR_SCHEME_AMOLED_DARK to ::settingThemeUseAmoledDarkProvider,
-    Setting.COLOR_SCHEME_EXPRESSIVE to ::settingThemeExpressiveProvider,
     Setting.COLOR_ACCENT to ::settingColorAccentProvider,
     Setting.MASTER_PASSWORD to ::settingMasterPasswordProvider,
     Setting.PERMISSION_DETAILS to ::settingPermissionDetailsProvider,
@@ -477,6 +475,7 @@ fun rememberSettingPaneState(
         fun create(
             item: SettingPaneItem.Item,
             group: String = "",
+            groupTitle: com.artemchep.keyguard.feature.localization.TextHolder? = null,
             args: Any? = null,
         ) = hub[item.key]
             ?.invoke(di)
@@ -486,6 +485,7 @@ fun rememberSettingPaneState(
                     compositeKey = compositeKey,
                     itemKey = item.key,
                     groupKey = group,
+                    groupTitle = groupTitle,
                     args = args,
                     content = content
                         ?.takeIf {
@@ -497,25 +497,16 @@ fun rememberSettingPaneState(
                 )
             }
 
-        val componentDivider = "divider"
         val componentFlows = mutableListOf<Flow<SettingPaneState.Component>>()
         items.forEach { item ->
             when (item) {
                 is SettingPaneItem.Group -> {
-                    val shouldAddDivider =
-                    // Do not add a divider on top of the
-                        // blank list.
-                        componentFlows.isNotEmpty() || item.title != null
-                    if (shouldAddDivider) {
-                        val divider = create(
-                            item = SettingPaneItem.Item(componentDivider),
-                            group = item.key,
-                            args = item.toSectionArgs(),
-                        )
-                        if (divider != null) componentFlows.add(divider)
-                    }
                     item.list.forEach { childItem ->
-                        val e = create(childItem, group = item.key)
+                        val e = create(
+                            item = childItem,
+                            group = item.key,
+                            groupTitle = item.title,
+                        )
                         if (e != null) componentFlows.add(e)
                     }
                 }
@@ -529,24 +520,11 @@ fun rememberSettingPaneState(
         componentFlows
             .foldAsList()
             .map { components ->
-                val result = mutableListOf<SettingPaneState.Component>()
-                val filteredComponents = components
+                val result = components
                     .filter { it.content != null }
-                filteredComponents
-                    .forEachIndexed { index, component ->
-                        val isDivider = component.itemKey == componentDivider
-                        if (isDivider) {
-                            val hasItemsFromTheSameGroup =
-                                component.groupKey == filteredComponents.getOrNull(index + 1)?.groupKey
-                            if (result.isNotEmpty() && hasItemsFromTheSameGroup) {
-                                result.add(component)
-                            }
-                        } else {
-                            result.add(component)
-                        }
-                    }
+                    .toImmutableList()
                 SettingPaneState(
-                    list = Loadable.Ok(result.toImmutableList()),
+                    list = Loadable.Ok(result),
                 )
             }
     }.collectAsState(initial = SettingPaneState())
@@ -595,39 +573,38 @@ fun SettingPaneContent2(
                     }
                 }
 
-                itemsIndexed(
-                    items = list,
-                    key = { _, model -> model.compositeKey },
-                ) { index, model ->
-                    val shapeState = getShapeState(
-                        list,
-                        index,
-                        predicate = { item, _ ->
-                            item.groupKey == model.groupKey &&
-                                    item.itemKey != "divider"
-                        },
-                    )
-                    CompositionLocalProvider(
-                        LocalSettingItemArgs provides model.args,
-                        LocalSettingItemShape provides shapeState,
-                    ) {
-                        if (model.itemKey == "divider") {
-                            model.content?.invoke()
-                        } else {
-                            val content = model.content
-                            if (content != null) {
-                                // Standard Miuix hierarchy: grouped rows sit
-                                // inside a Card; the row itself is a transparent
-                                // BasicComponent (see SettingPaneComponents).
-                                Card(
-                                    modifier = Modifier
-                                        .padding(horizontal = 12.dp),
+                // Group rows into Cards; a leading SmallTitle names each group.
+                var groupIndex = 0
+                var i = 0
+                while (i < list.size) {
+                    val start = i
+                    val groupKey = list[i].groupKey
+                    val groupTitle = list[i].groupTitle
+                    while (i < list.size && list[i].groupKey == groupKey) {
+                        i++
+                    }
+                    val groupItems = list.subList(start, i)
+                    if (groupTitle != null) {
+                        item(key = "settingsTitle$groupIndex") {
+                            SmallTitle(
+                                title = textResource(groupTitle),
+                            )
+                        }
+                    }
+                    item(key = "settingsCard$groupIndex") {
+                        Card(
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                        ) {
+                            groupItems.forEach { model ->
+                                CompositionLocalProvider(
+                                    LocalSettingItemArgs provides model.args,
                                 ) {
-                                    content()
+                                    model.content?.invoke()
                                 }
                             }
                         }
                     }
+                    groupIndex++
                 }
             }
         }
