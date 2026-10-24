@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import top.yukonga.miuix.kmp.overlay.OverlayBottomSheet
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Check
@@ -163,11 +164,18 @@ fun AutofillButton(
 }
 
 @Composable
-expect fun LeMOdelBottomSheet(
+fun LeMOdelBottomSheet(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     content: @Composable (PaddingValues) -> Unit,
-)
+) {
+    OverlayBottomSheet(
+        show = visible,
+        onDismissRequest = onDismissRequest,
+    ) {
+        content(PaddingValues(0.dp))
+    }
+}
 
 @Composable
 fun ColumnScope.AutofillWindow(
