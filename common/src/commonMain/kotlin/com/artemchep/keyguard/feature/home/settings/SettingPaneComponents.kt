@@ -36,7 +36,9 @@ import com.artemchep.keyguard.feature.home.vault.component.surfaceShape
 import com.artemchep.keyguard.ui.AnimatedNewCounterBadge
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
+import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.SwitchExpressive
 import com.artemchep.keyguard.ui.icons.IconBox
@@ -48,6 +50,7 @@ import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.preference.ArrowPreference
+import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
@@ -385,23 +388,22 @@ fun SettingPaneComponents.KgPicker(
     footer: (@Composable ColumnScope.() -> Unit)? = null,
     dropdown: List<ContextItem>,
 ) {
-    KgPicker(
-        icon = icon,
-        subIcon = subIcon,
-        title = {
-            Text(title)
-        },
-        titleText = titleText,
-        text = if (text != null) {
-            // composable
-            {
-                Text(text)
-            }
+    val actions = dropdown.filterIsInstance<FlatItemAction>()
+    OverlayDropdownPreference(
+        title = title,
+        summary = text,
+        startAction = if (icon != null) {
+            icon(
+                main = icon,
+                secondary = subIcon,
+            )
         } else {
             null
         },
-        trailing = trailing,
-        footer = footer,
-        dropdown = dropdown,
+        items = actions.map { action -> textResource(action.title) },
+        selectedIndex = actions.indexOfFirst { it.selected },
+        onSelectedIndexChange = { index ->
+            actions.getOrNull(index)?.onClick?.invoke()
+        },
     )
 }
