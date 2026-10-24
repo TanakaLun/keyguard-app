@@ -41,14 +41,14 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.ButtonGroupDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.IconButtonDefaults
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -749,7 +749,6 @@ fun ColumnScope.GeneratorValue(
                     ) {
                         val updatedOnCopy by rememberUpdatedState(value.onCopy)
                         IconButton(
-                            shapes = IconButtonDefaults.shapes(),
                             enabled = value.onCopy != null,
                             onClick = {
                                 updatedOnCopy?.invoke()

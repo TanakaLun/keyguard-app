@@ -19,7 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -178,7 +178,6 @@ private fun BackupSetupBottomBar(state: AutomaticBackupsSetupState) {
             BackupSetupColumn {
                 Button(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = Dimens.fieldHorizontalPadding),
-                    shapes = ButtonDefaults.shapes(),
                     enabled = state.onContinue != null,
                     onClick = {
                         focusManager.clearFocus()

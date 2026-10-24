@@ -12,7 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Fingerprint
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -211,7 +211,6 @@ private fun UserVerificationHardwareButton(
     val updatedOnClick by rememberUpdatedState(onClick)
     Button(
         enabled = onClick != null,
-        shapes = ButtonDefaults.shapes(),
 
 
 
@@ -220,7 +219,6 @@ private fun UserVerificationHardwareButton(
         onClick = {
             updatedOnClick?.invoke()
         },
-        contentPadding = PaddingValues(16.dp),
     ) {
         Icon(
             imageVector = imageVector,

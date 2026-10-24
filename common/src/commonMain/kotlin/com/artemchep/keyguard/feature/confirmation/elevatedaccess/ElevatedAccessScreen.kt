@@ -16,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.Security
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -193,7 +193,6 @@ private fun ColumnScope.ElevatedAccessContent(
             if (content.biometric != null) {
                 Button(
                     enabled = content.biometric.onClick != null,
-                    shapes = ButtonDefaults.shapes(),
 
 
 
@@ -202,7 +201,6 @@ private fun ColumnScope.ElevatedAccessContent(
                     onClick = {
                         onBiometricButtonClick?.invoke()
                     },
-                    contentPadding = PaddingValues(16.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Fingerprint,
@@ -213,7 +211,6 @@ private fun ColumnScope.ElevatedAccessContent(
             if (content.yubiKey != null) {
                 Button(
                     enabled = content.yubiKey.onClick != null,
-                    shapes = ButtonDefaults.shapes(),
 
 
 
@@ -222,7 +219,6 @@ private fun ColumnScope.ElevatedAccessContent(
                     onClick = {
                         onYubiKeyButtonClick?.invoke()
                     },
-                    contentPadding = PaddingValues(16.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.KeyguardYubiKey,

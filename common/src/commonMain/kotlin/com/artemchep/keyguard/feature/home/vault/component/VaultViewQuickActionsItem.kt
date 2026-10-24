@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.home.vault.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.ButtonColors
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import top.yukonga.miuix.kmp.basic.ButtonElevation
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -54,9 +50,6 @@ fun VaultViewQuickActionsItem(
 fun HorizontalContextItems(
     modifier: Modifier = Modifier,
     items: ImmutableList<ContextItem>,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? = null,
 ) {
     FlowRow(
         modifier = modifier
@@ -71,9 +64,6 @@ fun HorizontalContextItems(
             HorizontalContextItem(
                 modifier = Modifier,
                 item = i,
-                colors = colors,
-                elevation = elevation,
-                border = border,
             )
         }
     }
@@ -83,9 +73,6 @@ fun HorizontalContextItems(
 private fun HorizontalContextItem(
     modifier: Modifier = Modifier,
     item: ContextItem,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? = null,
 ) = when (item) {
     is ContextItem.Section -> {
         Section(
@@ -106,9 +93,6 @@ private fun HorizontalContextItem(
         HorizontalFlatActionItem(
             modifier = modifier,
             item = item,
-            colors = colors,
-            elevation = elevation,
-            border = border,
         )
     }
 }
@@ -118,9 +102,6 @@ private fun HorizontalContextItem(
 private fun HorizontalFlatActionItem(
     modifier: Modifier = Modifier,
     item: FlatItemAction,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? = null,
 ) {
     val updatedOnClick by rememberUpdatedState(item.onClick)
     Button(
@@ -128,10 +109,6 @@ private fun HorizontalFlatActionItem(
         onClick = {
             updatedOnClick?.invoke()
         },
-        colors = colors,
-        shapes = ButtonDefaults.shapes(),
-        elevation = elevation,
-        border = border,
         enabled = updatedOnClick != null,
     ) {
         HorizontalFlatActionContent(
