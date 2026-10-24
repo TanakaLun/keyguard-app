@@ -15,13 +15,13 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import com.artemchep.keyguard.feature.localization.textResource
 import kotlinx.collections.immutable.ImmutableList
+import top.yukonga.miuix.kmp.basic.TabRow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -33,46 +33,20 @@ fun <T : TabItem> SegmentedButtonGroup(
     weight: Float = Float.NaN,
     isTabEnabled: (T) -> Boolean = { true },
 ) {
-    val interactionSourcesState = remember {
-        mutableStateMapOf<String, MutableInteractionSource>()
+    val selectedIndex = remember(tabState.value) {
+        tabs
+            .indexOfFirst { it == tabState.value }
+            .coerceIn(0, (tabs.size - 1).coerceAtLeast(0))
     }
-    // Persist the interaction sources between tabs
-    // update. Otherwise the scaling animation gets
-    // stuck.
-    tabs.forEach { tab ->
-        val key = tab.key
-        if (key !in interactionSourcesState) {
-            val value = MutableInteractionSource()
-            interactionSourcesState.put(key, value)
-        }
-    }
-
     val updatedOnClick by rememberUpdatedState(onClick)
-    ButtonGroup(
-        overflowIndicator = { menuState -> SegmentedOverflowIndicator(menuState) },
-        expandedRatio = 0.05f,
+    TabRow(
         modifier = modifier,
-    ) {
-        tabs.forEachIndexed { index, tab ->
-            val interactionSource = interactionSourcesState[tab.key]
-                ?: MutableInteractionSource()
-            customItem(
-                buttonGroupContent = {
-                    SegmentedToggleButton(
-                        tab = tab,
-                        checked = tabState.value == tab,
-                        interactionSource = interactionSource,
-                        weight = weight,
-                        enabled = isTabEnabled(tab),
-                        onClick = updatedOnClick,
-                    )
-                },
-                menuContent = { state ->
-                    SegmentedMenuItem(tab, state, isTabEnabled(tab), updatedOnClick)
-                },
-            )
-        }
-    }
+        tabs = tabs.map { tab -> textResource(tab.title) },
+        selectedTabIndex = selectedIndex,
+        onTabSelected = { index ->
+            tabs.getOrNull(index)?.let(updatedOnClick)
+        },
+    )
 }
 
 @Composable
