@@ -84,9 +84,7 @@ fun PrivilegedAppListScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.privilegedapps_list_header_title))
-                },
+                title = stringResource(Res.string.privilegedapps_list_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

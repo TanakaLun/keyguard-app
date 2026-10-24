@@ -68,36 +68,7 @@ fun JustGetMyDataViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.KeyguardTwoFa),
-        title = {
-            when (loadableState) {
-                is Loadable.Loading -> {
-                    SkeletonText(
-                        modifier = Modifier
-                            .width(72.dp),
-                    )
-                }
-
-                is Loadable.Ok -> {
-                    val title = loadableState.value.content.getOrNull()
-                        ?.model?.name
-                        .orEmpty()
-                    Text(
-                        text = title,
-                    )
-                }
-            }
-            Text(
-                text = stringResource(Res.string.justgetmydata_title),
-                style = MaterialTheme.typography.titleSmall,
-                color = LocalContentColor.current
-                    .combineAlpha(MediumEmphasisAlpha),
-            )
-            AhDifficulty(
-                modifier = Modifier
-                    .padding(top = 4.dp),
-                model = args.model,
-            )
-        },
+        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
         content = {
             Column {
                 Content(
@@ -145,25 +116,7 @@ fun JustGetMyDataViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    when (loadableState) {
-                        is Loadable.Loading -> {
-                            SkeletonText(
-                                modifier = Modifier
-                                    .width(72.dp),
-                            )
-                        }
-
-                        is Loadable.Ok -> {
-                            val title = loadableState.value.content.getOrNull()
-                                ?.model?.name
-                                .orEmpty()
-                            Text(
-                                text = title,
-                            )
-                        }
-                    }
-                },
+                title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -212,11 +165,7 @@ fun ColumnScope.Content(
             leading = {
                 IconBox(Icons.Outlined.Email)
             },
-            title = {
-                Text(
-                    text = stringResource(Res.string.justdeleteme_send_email_title),
-                )
-            },
+            title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
             trailing = {
                 ChevronIcon()
             },

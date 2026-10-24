@@ -72,38 +72,7 @@ fun TwoFaServiceViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.KeyguardTwoFa),
-        title = {
-            when (loadableState) {
-                is Loadable.Loading -> {
-                    SkeletonText(
-                        modifier = Modifier
-                            .width(72.dp),
-                    )
-                }
-
-                is Loadable.Ok -> {
-                    val title = loadableState.value.content.getOrNull()
-                        ?.model?.name
-                        .orEmpty()
-                    Text(
-                        text = title,
-                    )
-                }
-            }
-
-            Text(
-                text = stringResource(Res.string.tfa_directory_title),
-                style = MaterialTheme.typography.titleSmall,
-                color = LocalContentColor.current
-                    .combineAlpha(MediumEmphasisAlpha),
-            )
-
-            HeaderChips(
-                modifier = Modifier
-                    .padding(top = 4.dp),
-                loadableState = loadableState,
-            )
-        },
+        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
         content = {
             Column {
                 Content(
@@ -149,25 +118,7 @@ fun TwoFaServiceViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    when (loadableState) {
-                        is Loadable.Loading -> {
-                            SkeletonText(
-                                modifier = Modifier
-                                    .width(72.dp),
-                            )
-                        }
-
-                        is Loadable.Ok -> {
-                            val title = loadableState.value.content.getOrNull()
-                                ?.model?.name
-                                .orEmpty()
-                            Text(
-                                text = title,
-                            )
-                        }
-                    }
-                },
+                title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -315,12 +266,7 @@ fun FlatLaunchBrowserItem(
     FlatItem(
         modifier = modifier,
         leading = icon<RowScope>(Icons.AutoMirrored.Outlined.OpenInNew),
-        title = {
-            Text(
-                text = title,
-                maxLines = 3,
-            )
-        },
+        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
         text = if (updatedUrl != null) {
             // composable
             {

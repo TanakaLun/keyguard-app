@@ -122,11 +122,7 @@ fun ExportScreenSkeleton(
             SmallToolbar(
                 modifier = modifier,
                 containerColor = Color.Transparent,
-                title = {
-                    Text(
-                        text = title,
-                    )
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -178,11 +174,7 @@ fun ExportScreenOk(
             SmallToolbar(
                 modifier = modifier,
                 containerColor = Color.Transparent,
-                title = {
-                    Text(
-                        text = title,
-                    )
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -288,11 +280,7 @@ private fun ExportScreen(
             }
 
             LargeToolbar(
-                title = {
-                    Text(
-                        text = title,
-                    )
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -149,16 +149,10 @@ private fun AttachmentPreviewScaffold(
     Scaffold(
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = loadableState.fold(
+                title = loadableState.fold(
                             ifLoading = { fileName },
                             ifOk = { it.fileName },
                         ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
                 navigationIcon = {
                     val onBack = ready?.onNavigateBack
                     if (onBack != null) {

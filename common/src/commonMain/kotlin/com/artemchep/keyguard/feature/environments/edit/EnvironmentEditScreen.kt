@@ -155,11 +155,7 @@ private fun EnvironmentEditToolbar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     LargeToolbar(
-        title = {
-            EnvironmentEditTitle(
-                title = state?.title,
-            )
-        },
+        title = state?.title.orEmpty(),
         navigationIcon = {
             NavigationIcon()
         },

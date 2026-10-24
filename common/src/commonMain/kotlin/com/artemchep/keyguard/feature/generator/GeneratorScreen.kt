@@ -179,11 +179,7 @@ fun GeneratorScreen(
             SmallToolbar(
                 modifier = modifier,
                 containerColor = Color.Transparent,
-                title = {
-                    Text(
-                        text = stringResource(Res.string.generator_header_title),
-                    )
-                },
+                title = stringResource(Res.string.generator_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -320,9 +316,7 @@ private fun GeneratorPaneMaster(
             }
 
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.generator_header_title))
-                },
+                title = stringResource(Res.string.generator_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

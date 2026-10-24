@@ -60,9 +60,7 @@ private fun SshAgentFiltersScreenSkeleton() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_ssh)))
-                },
+                title = stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_ssh)),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -114,9 +112,7 @@ private fun SshAgentFiltersScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_ssh)))
-                },
+                title = stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_ssh)),
                 navigationIcon = {
                     NavigationIcon()
                 },

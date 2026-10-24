@@ -59,11 +59,7 @@ fun DataSafetyScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.datasafety_header_title),
-                    )
-                },
+                title = stringResource(Res.string.datasafety_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

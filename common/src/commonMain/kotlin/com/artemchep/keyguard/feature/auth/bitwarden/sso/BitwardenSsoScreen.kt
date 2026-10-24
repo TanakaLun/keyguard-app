@@ -77,11 +77,7 @@ private fun BitwardenSsoScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.sso_login),
-                    )
-                },
+                title = stringResource(Res.string.sso_login),
                 navigationIcon = {
                     NavigationIcon()
                 },

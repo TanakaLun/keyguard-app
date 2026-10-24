@@ -53,23 +53,7 @@ fun JustDeleteMeDialogScreen(
     )
     Dialog(
         icon = icon(Icons.Outlined.AccountBox, Icons.Outlined.Delete),
-        title = {
-            val title = args.justDeleteMe.name
-            Text(
-                text = title,
-            )
-            Text(
-                text = stringResource(Res.string.justdeleteme_title),
-                style = MaterialTheme.typography.titleSmall,
-                color = LocalContentColor.current
-                    .combineAlpha(MediumEmphasisAlpha),
-            )
-            AhDifficulty(
-                modifier = Modifier
-                    .padding(top = 4.dp),
-                model = args.justDeleteMe,
-            )
-        },
+        title = args.justDeleteMe.name,
         content = {
             Column {
                 Content(
@@ -106,12 +90,7 @@ fun JustDeleteMeFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    val title = args.justDeleteMe.name
-                    Text(
-                        text = title,
-                    )
-                },
+                title = args.justDeleteMe.name,
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -160,11 +139,7 @@ fun ColumnScope.Content(
             leading = {
                 IconBox(Icons.Outlined.Email)
             },
-            title = {
-                Text(
-                    text = stringResource(Res.string.justdeleteme_send_email_title),
-                )
-            },
+            title = args.justDeleteMe.name,
             trailing = {
                 ChevronIcon()
             },

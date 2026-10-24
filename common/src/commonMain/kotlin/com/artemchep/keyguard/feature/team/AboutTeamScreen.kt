@@ -77,11 +77,7 @@ fun AboutTeamScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.team_header_title),
-                    )
-                },
+                title = stringResource(Res.string.team_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

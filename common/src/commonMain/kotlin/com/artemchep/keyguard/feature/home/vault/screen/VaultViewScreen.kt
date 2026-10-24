@@ -104,11 +104,7 @@ fun VaultViewScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    VaultViewTitle(
-                        state = state,
-                    )
-                },
+                title = state.toVaultViewHeaderState().name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },

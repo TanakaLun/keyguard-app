@@ -334,11 +334,7 @@ private fun SettingListScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.settings_main_header_title),
-                    )
-                },
+                title = stringResource(Res.string.settings_main_header_title),
                 navigationIcon = {
                     NavigationIcon()
                 },

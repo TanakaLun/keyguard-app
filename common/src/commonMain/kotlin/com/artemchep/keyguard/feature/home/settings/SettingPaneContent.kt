@@ -548,9 +548,7 @@ fun SettingPaneContent2(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = {
-                    Text(title)
-                },
+                title = title,
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -587,7 +585,7 @@ fun SettingPaneContent2(
                     if (groupTitle != null) {
                         item(key = "settingsTitle$groupIndex") {
                             SmallTitle(
-                                title = textResource(groupTitle),
+                                text = textResource(groupTitle),
                             )
                         }
                     }
