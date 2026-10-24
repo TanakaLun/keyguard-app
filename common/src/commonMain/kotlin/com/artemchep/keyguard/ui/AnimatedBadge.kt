@@ -1,14 +1,14 @@
 package com.artemchep.keyguard.ui
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.material3.Badge
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.artemchep.keyguard.ui.theme.badgeContainer
+import top.yukonga.miuix.kmp.basic.Badge
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 inline fun AnimatedNewCounterBadge(
@@ -30,22 +30,21 @@ inline fun AnimatedTotalCounterBadge(
 fun AnimatedCounterBadge(
     text: String?,
 ) {
-    val motionScheme = MaterialTheme.motionScheme
     ExpandedIfNotEmpty(
         valueOrNull = text,
         enter = fadeIn(
-            animationSpec = motionScheme.fastEffectsSpec(),
+            animationSpec = tween(),
         ) + scaleIn(
-            animationSpec = motionScheme.fastSpatialSpec(),
+            animationSpec = tween(),
         ),
         exit = fadeOut(
-            animationSpec = motionScheme.fastEffectsSpec(),
+            animationSpec = tween(),
         ) + scaleOut(
-            animationSpec = motionScheme.fastSpatialSpec(),
+            animationSpec = tween(),
         ),
     ) {
         Badge(
-            containerColor = MaterialTheme.colorScheme.badgeContainer,
+            containerColor = MiuixTheme.colorScheme.tertiaryContainer,
         ) {
             Text(
                 text = it,

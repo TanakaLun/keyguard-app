@@ -1,25 +1,19 @@
 package com.artemchep.keyguard.ui.util
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
-import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.basic.HorizontalDivider as MiuixHorizontalDivider
+import top.yukonga.miuix.kmp.basic.VerticalDivider as MiuixVerticalDivider
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 val DividerColor
     @Composable
-    get() =
-        LocalContentColor.current.combineAlpha(0.12f)
+    get() = MiuixTheme.colorScheme.dividerLine
 
 val DividerSize get() = 1.dp
 
@@ -28,11 +22,10 @@ fun VerticalDivider(
     modifier: Modifier = Modifier,
     transparency: Boolean = true,
 ) {
-    Divider(
-        modifier = modifier
-            .fillMaxHeight()
-            .width(DividerSize),
-        transparency = transparency,
+    MiuixVerticalDivider(
+        modifier = modifier.fillMaxHeight(),
+        thickness = DividerSize,
+        color = dividerColor(transparency),
     )
 }
 
@@ -40,30 +33,24 @@ fun VerticalDivider(
 fun HorizontalDivider(
     modifier: Modifier = Modifier,
     transparency: Boolean = true,
-) = Divider(
-    modifier = modifier
-        .fillMaxWidth()
-        .height(DividerSize),
-    transparency = transparency,
-)
+) {
+    MiuixHorizontalDivider(
+        modifier = modifier.fillMaxWidth(),
+        thickness = DividerSize,
+        color = dividerColor(transparency),
+    )
+}
 
 @Composable
-private fun Divider(
-    modifier: Modifier = Modifier,
+private fun dividerColor(
     transparency: Boolean,
-) {
-    val dividerColor = DividerColor
-    val backgroundColor =
-        if (transparency) {
-            dividerColor
-        } else {
-            val elevation = LocalAbsoluteTonalElevation.current
-            val background = MaterialTheme.colorScheme
-                .surfaceColorAtElevation(elevation)
-            dividerColor.compositeOver(background)
-        }
-    Box(
-        modifier = modifier
-            .background(backgroundColor),
-    )
+): Color {
+    val color = DividerColor
+    return if (transparency) {
+        color
+    } else {
+        // Opaque dividers sit on the highest container so they remain visible
+        // over tinted surfaces.
+        color.compositeOver(MiuixTheme.colorScheme.surfaceContainerHighest)
+    }
 }
