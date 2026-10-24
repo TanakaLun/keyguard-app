@@ -275,13 +275,6 @@ private fun GpgUserIdActionButton(action: GpgUserIdsState.Action) {
     text = action.title,
 
         enabled = action.onClick != null,
-        colors = if (action.destructive) {
-            ButtonDefaults.textButtonColors(
-                contentColor = MaterialTheme.colorScheme.error,
-            )
-        } else {
-            ButtonDefaults.textButtonColors()
-        },
         onClick = {
             action.onClick?.invoke()
         },
