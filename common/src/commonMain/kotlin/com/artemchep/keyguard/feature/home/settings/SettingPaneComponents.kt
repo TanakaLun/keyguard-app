@@ -39,6 +39,8 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.LocalExpressive
 import top.yukonga.miuix.kmp.basic.Badge
 import top.yukonga.miuix.kmp.basic.BadgedBox
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Stable
@@ -100,9 +102,8 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
         onClick: (() -> Unit)?,
         enabled: Boolean,
     ) {
-        FlatItemSimpleExpressive(
-            shapeState = LocalSettingItemShape.current,
-            leading = if (icon != null) {
+        BasicComponent(
+            startAction = if (icon != null) {
                 // composable
                 {
                     val content = remember(icon, subIcon) {
@@ -135,28 +136,29 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
             } else {
                 null
             },
-            trailing = trailing,
-            title = {
+            endActions = trailing,
+            bottomAction = footer?.let { f ->
+                {
+                    Column {
+                        f()
+                    }
+                }
+            },
+            insideMargin = BasicComponentDefaults.InsideMargin,
+            onClick = onClick,
+            enabled = enabled,
+        ) {
+            Column {
                 Row {
                     title()
                 }
-            },
-            text = if (text != null) {
-                {
+                if (text != null) {
                     Row {
                         text()
                     }
                 }
-            } else {
-                null
-            },
-            contentColor = contentColor
-                .takeIf { it.isSpecified }
-                ?: LocalContentColor.current,
-            footer = footer,
-            onClick = onClick,
-            enabled = enabled,
-        )
+            }
+        }
     }
 
     @Composable
@@ -212,14 +214,13 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
         checked: Boolean,
         onCheckedChange: ((Boolean) -> Unit)?,
     ) {
-        FlatItemSimpleExpressive(
-            shapeState = LocalSettingItemShape.current,
-            leading = if (icon != null) {
+        BasicComponent(
+            startAction = if (icon != null) {
                 icon<RowScope>(icon, subIcon)
             } else {
                 null
             },
-            trailing = {
+            endActions = {
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
                 ) {
@@ -230,24 +231,31 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
                     )
                 }
             },
-            title = {
+            bottomAction = footer?.let { f ->
+                {
+                    Column {
+                        f()
+                    }
+                }
+            },
+            insideMargin = BasicComponentDefaults.InsideMargin,
+            onClick = onCheckedChange?.let { change ->
+                {
+                    change(!checked)
+                }
+            },
+        ) {
+            Column {
                 Row {
                     title()
                 }
-            },
-            text = if (text != null) {
-                // composable
-                {
+                if (text != null) {
                     Row {
                         text()
                     }
                 }
-            } else {
-                null
-            },
-            footer = footer,
-            onClick = onCheckedChange?.partially1(!checked),
-        )
+            }
+        }
     }
 
     @Composable

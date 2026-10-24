@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.home.settings
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,12 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.util.flow.foldAsList
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.home.settings.component.SettingComponent
+import top.yukonga.miuix.kmp.basic.Card
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppBuildDateProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppBuildRefProvider
 import com.artemchep.keyguard.feature.home.settings.component.settingAboutAppChangelogProvider
@@ -608,7 +611,22 @@ fun SettingPaneContent2(
                         LocalSettingItemArgs provides model.args,
                         LocalSettingItemShape provides shapeState,
                     ) {
-                        model.content?.invoke()
+                        if (model.itemKey == "divider") {
+                            model.content?.invoke()
+                        } else {
+                            val content = model.content
+                            if (content != null) {
+                                // Standard Miuix hierarchy: grouped rows sit
+                                // inside a Card; the row itself is a transparent
+                                // BasicComponent (see SettingPaneComponents).
+                                Card(
+                                    modifier = Modifier
+                                        .padding(horizontal = 12.dp),
+                                ) {
+                                    content()
+                                }
+                            }
+                        }
                     }
                 }
             }
