@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.feature.home.settings
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -32,6 +36,8 @@ import com.artemchep.keyguard.feature.home.vault.component.surfaceShape
 import com.artemchep.keyguard.ui.AnimatedNewCounterBadge
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.SwitchExpressive
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.icon
@@ -172,36 +178,54 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
         footer: @Composable (ColumnScope.() -> Unit)?,
         dropdown: List<ContextItem>,
     ) {
-        FlatDropdownSimpleExpressive(
-            shapeState = LocalSettingItemShape.current,
-            leading = if (icon != null) {
-                icon<RowScope>(icon, subIcon)
-            } else {
-                null
-            },
-            content = {
-                FlatItemTextContent(
-                    title = {
+        var dropdownExpanded by remember {
+            mutableStateOf(false)
+        }
+        Box {
+            BasicComponent(
+                startAction = if (icon != null) {
+                    icon(
+                        main = icon,
+                        secondary = subIcon,
+                    )
+                } else {
+                    null
+                },
+                endActions = trailing,
+                bottomAction = footer?.let { f ->
+                    {
+                        Column {
+                            f()
+                        }
+                    }
+                },
+                insideMargin = BasicComponentDefaults.InsideMargin,
+                onClick = {
+                    dropdownExpanded = true
+                },
+            ) {
+                Column {
+                    Row {
+                        title()
+                    }
+                    if (text != null) {
                         Row {
-                            title()
+                            text()
                         }
-                    },
-                    text = if (text != null) {
-                        // composable
-                        {
-                            Row {
-                                text()
-                            }
-                        }
-                    } else {
-                        null
-                    },
-                )
-            },
-            trailing = trailing,
-            footer = footer,
-            dropdown = dropdown,
-        )
+                    }
+                }
+            }
+            KeyguardDropdownMenu(
+                expanded = dropdownExpanded,
+                onDismissRequest = {
+                    dropdownExpanded = false
+                },
+            ) {
+                dropdown.forEach { action ->
+                    DropdownMenuItemFlat(action = action)
+                }
+            }
+        }
     }
 
     @Composable
@@ -216,7 +240,10 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
     ) {
         BasicComponent(
             startAction = if (icon != null) {
-                icon<RowScope>(icon, subIcon)
+                icon(
+                    main = icon,
+                    secondary = subIcon,
+                )
             } else {
                 null
             },
