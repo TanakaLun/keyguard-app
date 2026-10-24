@@ -1,36 +1,15 @@
 package com.artemchep.keyguard.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.basic.BreadcrumbBar
+import top.yukonga.miuix.kmp.basic.BreadcrumbItem
 
 /** A node of a folder path; the current folder has no [onClick]. */
 data class Breadcrumb(
@@ -77,86 +56,31 @@ fun LazyListScope.breadcrumbsItem(
         )
     }
     item("breadcrumbs.spacer") {
+        // Spacer kept for visual rhythm.
         Spacer(
             modifier = Modifier
-                .height(8.dp),
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
         )
     }
 }
 
 /** Parent folders as chips, followed by the current folder. */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BreadcrumbTree(
     breadcrumbs: List<Breadcrumb>,
     modifier: Modifier = Modifier,
 ) {
-    FlowRow(
+    BreadcrumbBar(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
-        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
-    ) {
-        // A lone node has no chips to line up with.
-        val currentPadding = if (breadcrumbs.size > 1) BreadcrumbPadding else PaddingValues()
-        breadcrumbs.forEachIndexed { index, s ->
-            if (index != breadcrumbs.lastIndex) {
-                BreadcrumbChip(
-                    breadcrumb = s,
-                )
-            } else {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(currentPadding),
-                    text = s.name,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 5,
-                )
-            }
-        }
-    }
+        items = breadcrumbs.map { breadcrumb ->
+            BreadcrumbItem(
+                path = breadcrumb.name,
+            )
+        },
+        onItemClick = { index ->
+            // The current (last) folder has no onClick and is not clickable.
+            breadcrumbs.getOrNull(index)?.onClick?.invoke()
+        },
+    )
 }
-
-/** A parent folder; opens the folder on click. */
-@Composable
-private fun BreadcrumbChip(
-    breadcrumb: Breadcrumb,
-    modifier: Modifier = Modifier,
-) {
-    val updatedOnClick by rememberUpdatedState(breadcrumb.onClick)
-    val tintColor = MaterialTheme.colorScheme
-        .surfaceColorAtElevationSemi(1.dp)
-    Row(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.small)
-            .background(tintColor)
-            .clickable(enabled = breadcrumb.onClick != null) {
-                updatedOnClick?.invoke()
-            }
-            .padding(BreadcrumbPadding),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(1f, fill = false),
-            text = breadcrumb.name,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 5,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            Icons.Outlined.ChevronRight,
-            null,
-            modifier = Modifier
-                .size(18.dp),
-            tint = LocalContentColor.current
-                .combineAlpha(DisabledEmphasisAlpha),
-        )
-    }
-}
-
-private val BreadcrumbPadding = PaddingValues(
-    horizontal = 8.dp,
-    vertical = 4.dp,
-)
