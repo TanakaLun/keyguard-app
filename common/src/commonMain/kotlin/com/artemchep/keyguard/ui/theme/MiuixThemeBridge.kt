@@ -40,9 +40,7 @@ fun MiuixThemeBridge(
         if (useAmoledBlack) amoledDarkColorScheme() else darkColorScheme()
     }
     val font = sansFontFamily
-    val textStyles = remember(font) {
-        fontTextStyles(font = font)
-    }
+    val textStyles = fontTextStyles(font = font)
     val controller = remember(colorSchemeMode, keyColor, dark, darkColors) {
         ThemeController(
             colorSchemeMode = colorSchemeMode,
@@ -70,6 +68,7 @@ private fun amoledDarkColorScheme(): top.yukonga.miuix.kmp.theme.Colors =
     )
 
 /** Applies the user-selected sans font family to every Miuix text style. */
+@Composable
 private fun fontTextStyles(
     font: androidx.compose.ui.text.font.FontFamily,
 ): TextStyles {
