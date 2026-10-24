@@ -201,7 +201,6 @@ fun AgentApprovalButtons(
             modifier = Modifier
                 .weight(1f, fill = true),
             onClick = onCancel,
-            shapes = ButtonDefaults.shapes(),
         ) {
             Text(
                 text = cancelText,
@@ -214,7 +213,6 @@ fun AgentApprovalButtons(
                 .weight(1f, fill = true),
             enabled = confirmEnabled,
             onClick = onConfirm,
-            shapes = ButtonDefaults.shapes(),
         ) {
             Text(
                 modifier = Modifier

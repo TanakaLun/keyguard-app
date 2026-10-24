@@ -18,12 +18,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun Fido2UnlockButton(enabled: Boolean, onClick: () -> Unit) {
     Button(
         enabled = enabled,
-        shapes = ButtonDefaults.shapes(),
-
-
-
         onClick = onClick,
-        contentPadding = PaddingValues(16.dp),
     ) {
         Icon(
             imageVector = Icons.Outlined.Key,

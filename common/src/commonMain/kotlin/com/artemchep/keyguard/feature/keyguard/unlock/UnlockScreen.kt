@@ -243,7 +243,6 @@ fun UnlockDialog(
                         onClick = {
                             updatedOnCancel?.invoke()
                         },
-                        shapes = ButtonDefaults.shapes(),
                     ) {
                         Text(
                             text = stringResource(Res.string.cancel),
@@ -414,7 +413,6 @@ private fun UnlockCtaButton(
     Button(
         modifier = modifier
             .testTag("btn:go"),
-        shapes = ButtonDefaults.shapes(),
         enabled = unlockState.unlockVaultByMasterPassword != null,
 
 
@@ -496,14 +494,12 @@ private fun ExpandedHardwareUnlockIfExists(
             if (unlockState.biometric != null) {
                 Button(
                     enabled = unlockState.biometric.onClick != null,
-                    shapes = ButtonDefaults.shapes(),
 
 
 
                     onClick = {
                         onBiometricButtonClick?.invoke()
                     },
-                    contentPadding = PaddingValues(16.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Fingerprint,
@@ -520,14 +516,12 @@ private fun ExpandedHardwareUnlockIfExists(
             if (unlockState.yubiKey != null) {
                 Button(
                     enabled = unlockState.yubiKey.onClick != null,
-                    shapes = ButtonDefaults.shapes(),
 
 
 
                     onClick = {
                         onYubiKeyButtonClick?.invoke()
                     },
-                    contentPadding = PaddingValues(16.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.KeyguardYubiKey,

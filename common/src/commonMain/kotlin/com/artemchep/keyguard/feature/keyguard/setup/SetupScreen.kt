@@ -261,7 +261,6 @@ fun ColumnScope.SetupContent(
         modifier = Modifier
             .testTag("btn:go")
             .fillMaxWidth(),
-        shapes = ButtonDefaults.shapes(),
         enabled = setupState.onCreateVault != null,
         onClick = {
             onCreateButtonClick?.invoke()

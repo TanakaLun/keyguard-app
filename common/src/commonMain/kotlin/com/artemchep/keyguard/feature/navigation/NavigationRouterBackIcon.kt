@@ -35,9 +35,7 @@ fun NavigationIcon(
         }
         IconButton(
             modifier = modifier,
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = containerColor,
-            ),
+            backgroundColor = containerColor,
             onClick = {
                 val intent = NavigationIntent.PopById(navigationId, exclusive = false)
                 controller.queue(intent)

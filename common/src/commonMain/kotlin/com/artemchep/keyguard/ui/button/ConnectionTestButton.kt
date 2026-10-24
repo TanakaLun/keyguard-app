@@ -82,8 +82,6 @@ private fun ConnectionTestButton(
             .padding(horizontal = Dimens.buttonHorizontalPadding),
         onClick = onClick,
 
-        shapes = ButtonDefaults.shapes(),
-
         enabled = enabled,
     ) {
         Box(
