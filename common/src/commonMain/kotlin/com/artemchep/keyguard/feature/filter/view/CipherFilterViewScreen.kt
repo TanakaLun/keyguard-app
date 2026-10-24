@@ -66,7 +66,11 @@ fun CipherFilterViewSkeleton(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = title,
+                title = {
+                    Text(
+                        text = title,
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -90,8 +94,12 @@ fun CipherFilterViewScreenOk(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = content.model?.name
+                title = {
+                    Text(
+                        text = content.model?.name
                             ?: title,
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

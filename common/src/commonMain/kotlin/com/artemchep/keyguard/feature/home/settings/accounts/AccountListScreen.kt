@@ -70,7 +70,9 @@ fun AccountListScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.account_main_header_title),
+                title = {
+                    Text(stringResource(Res.string.account_main_header_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

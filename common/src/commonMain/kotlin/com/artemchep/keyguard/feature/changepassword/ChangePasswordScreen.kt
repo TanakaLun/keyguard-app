@@ -71,7 +71,11 @@ fun ChangePasswordScaffoldSkeleton() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.changepassword_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.changepassword_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -263,7 +267,11 @@ fun ChangePasswordScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.changepassword_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.changepassword_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

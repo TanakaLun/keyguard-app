@@ -60,7 +60,9 @@ private fun GpgAgentFiltersScreenSkeleton() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_gpg)),
+                title = {
+                    Text(stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_gpg)))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -112,7 +114,9 @@ private fun GpgAgentFiltersScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_gpg)),
+                title = {
+                    Text(stringResource(Res.string.agent_filters_title, stringResource(Res.string.protocol_gpg)))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

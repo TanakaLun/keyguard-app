@@ -60,7 +60,11 @@ private fun FeedbackContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.contactus_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.contactus_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

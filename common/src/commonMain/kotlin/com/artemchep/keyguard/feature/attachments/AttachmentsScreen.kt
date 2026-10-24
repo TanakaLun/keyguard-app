@@ -39,7 +39,11 @@ fun AttachmentsScreen() {
         header = { modifier ->
             SmallToolbar(
                 modifier = modifier,
-                title = stringResource(Res.string.downloads),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.downloads),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -91,7 +95,11 @@ fun AttachmentsScreen(
             }
 
             LargeToolbar(
-                title = stringResource(Res.string.downloads),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.downloads),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

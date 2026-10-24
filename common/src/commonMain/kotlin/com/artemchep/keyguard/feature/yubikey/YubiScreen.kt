@@ -74,7 +74,9 @@ fun YubiScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = "YubiKey",
+                title = {
+                    Text("YubiKey")
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -84,7 +84,11 @@ private fun SyncContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.syncstatus_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.syncstatus_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

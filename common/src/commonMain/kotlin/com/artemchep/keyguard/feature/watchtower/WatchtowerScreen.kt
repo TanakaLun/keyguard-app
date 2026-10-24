@@ -168,7 +168,11 @@ fun WatchtowerScreen(
             SmallToolbar(
                 modifier = modifier,
                 containerColor = Color.Transparent,
-                title = stringResource(Res.string.watchtower_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.watchtower_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -255,7 +259,11 @@ fun WatchtowerScreen2(
             }
 
             LargeToolbar(
-                title = stringResource(Res.string.watchtower_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.watchtower_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

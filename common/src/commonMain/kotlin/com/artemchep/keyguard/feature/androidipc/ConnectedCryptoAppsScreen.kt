@@ -59,7 +59,9 @@ fun ConnectedCryptoAppsScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.connected_crypto_apps_title),
+                title = {
+                    Text(stringResource(Res.string.connected_crypto_apps_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

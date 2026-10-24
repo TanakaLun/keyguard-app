@@ -138,7 +138,9 @@ private fun LargeTypeScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.largetype_title),
+                title = {
+                    Text(stringResource(Res.string.largetype_title))
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = {

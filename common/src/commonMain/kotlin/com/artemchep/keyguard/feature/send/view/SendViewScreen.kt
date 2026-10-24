@@ -97,7 +97,11 @@ fun SendViewScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = state.toVaultViewHeaderState().name.orEmpty(),
+                title = {
+                    VaultViewTitle(
+                        state = state,
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -102,7 +102,17 @@ fun SendAddScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = loadableState.getOrNull()?.title.orEmpty(),
+                title = {
+                    val title = loadableState.getOrNull()?.title
+                    if (title != null) {
+                        Text(title)
+                    } else {
+                        SkeletonText(
+                            modifier = Modifier
+                                .fillMaxWidth(0.4f),
+                        )
+                    }
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

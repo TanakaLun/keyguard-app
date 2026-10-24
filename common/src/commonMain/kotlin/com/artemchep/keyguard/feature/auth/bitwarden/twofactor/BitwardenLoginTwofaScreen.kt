@@ -118,7 +118,11 @@ fun LoginTwofaScreenContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.addaccount2fa_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.addaccount2fa_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

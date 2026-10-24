@@ -100,7 +100,9 @@ fun UrlOverrideListScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.urloverride_list_header_title),
+                title = {
+                    Text(stringResource(Res.string.urloverride_list_header_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

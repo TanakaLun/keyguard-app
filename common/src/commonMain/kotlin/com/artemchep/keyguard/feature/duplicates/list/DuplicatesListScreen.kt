@@ -110,7 +110,24 @@ fun DuplicatesListScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.watchtower_header_title),
+                title = {
+                    Column() {
+                        Text(
+                            text = stringResource(Res.string.watchtower_header_title),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = LocalContentColor.current
+                                .combineAlpha(MediumEmphasisAlpha),
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2,
+                        )
+                        Text(
+                            text = stringResource(Res.string.watchtower_item_duplicate_items_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                    }
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -1,42 +1,51 @@
 package com.artemchep.keyguard.ui.toolbar
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarColors
-import top.yukonga.miuix.kmp.basic.TopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LargeToolbar(
-    title: String,
-    subtitle: String = "",
+    title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    @Suppress("UNUSED_PARAMETER")
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     if (CurrentPlatform is Platform.Desktop) {
         SmallToolbar(
             title = title,
-            subtitle = subtitle,
             modifier = modifier,
             navigationIcon = navigationIcon,
             actions = actions,
+            scrollBehavior = scrollBehavior,
         )
         return
     }
 
     val containerColor = ToolbarColors.containerColor()
-    TopAppBar(
+    val scrolledContainerColor = ToolbarColors.scrolledContainerColor(containerColor)
+    LargeFlexibleTopAppBar(
         title = title,
-        subtitle = subtitle,
         modifier = modifier,
         navigationIcon = navigationIcon,
+        colors = TopAppBarDefaults.topAppBarColors()
+            .copy(
+                containerColor = containerColor,
+                scrolledContainerColor = scrolledContainerColor,
+            ),
         actions = actions,
-        color = containerColor,
+        scrollBehavior = scrollBehavior,
     )
 }

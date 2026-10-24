@@ -208,7 +208,9 @@ fun OnboardingScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.feat_header_title),
+                title = {
+                    Text(stringResource(Res.string.feat_header_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

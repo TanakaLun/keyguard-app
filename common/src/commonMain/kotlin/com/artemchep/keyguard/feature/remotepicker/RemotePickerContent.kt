@@ -85,7 +85,11 @@ internal fun RemotePickerContent(
         },
         topBar = {
             LargeToolbar(
-                title = title,
+                title = {
+                    Text(
+                        text = title,
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

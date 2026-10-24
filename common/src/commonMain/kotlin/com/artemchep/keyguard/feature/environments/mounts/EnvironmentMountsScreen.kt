@@ -73,7 +73,9 @@ private fun EnvironmentMountsScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.environments_mounts),
+                title = {
+                    Text(stringResource(Res.string.environments_mounts))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

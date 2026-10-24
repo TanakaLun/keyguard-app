@@ -105,7 +105,9 @@ private fun GeneratorPaneMaster(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.watchtower_alerts_header_title),
+                title = {
+                    Text(stringResource(Res.string.watchtower_alerts_header_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

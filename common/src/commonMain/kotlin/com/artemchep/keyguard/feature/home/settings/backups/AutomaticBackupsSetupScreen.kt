@@ -78,7 +78,7 @@ internal fun AutomaticBackupsSetupContent(state: AutomaticBackupsSetupState?) {
         listState = listState,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.pref_item_automatic_backups_wizard_title),
+                title = { Text(stringResource(Res.string.pref_item_automatic_backups_wizard_title)) },
                 navigationIcon = { BackupSetupBackButton(state) },
                 scrollBehavior = scrollBehavior,
             )

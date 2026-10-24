@@ -87,7 +87,9 @@ fun AccountViewScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = state.toAccountViewHeaderState().host.orEmpty(),
+                title = {
+                    AccountViewTitle(state)
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

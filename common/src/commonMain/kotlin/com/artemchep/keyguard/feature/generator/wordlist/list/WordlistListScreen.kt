@@ -116,7 +116,9 @@ fun WordlistListScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.wordlist_list_header_title),
+                title = {
+                    Text(stringResource(Res.string.wordlist_list_header_title))
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -123,7 +123,11 @@ private fun WebDavSettingsContent(
         },
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.webdav_settings_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.webdav_settings_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

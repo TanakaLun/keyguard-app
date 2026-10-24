@@ -140,7 +140,11 @@ fun LoginContentSkeleton() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.addkeepass_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.addkeepass_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -202,7 +206,11 @@ fun LoginContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.addkeepass_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.addkeepass_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

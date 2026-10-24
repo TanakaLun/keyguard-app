@@ -145,7 +145,11 @@ private fun GpgToolsOperationScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = textResource(operation.title),
+                title = {
+                    Text(
+                        text = textResource(operation.title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

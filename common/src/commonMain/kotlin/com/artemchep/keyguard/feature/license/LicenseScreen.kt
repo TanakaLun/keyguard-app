@@ -54,7 +54,11 @@ fun LicenseScreen() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.settings_open_source_licenses_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.settings_open_source_licenses_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

@@ -172,7 +172,11 @@ fun LoginContentSkeleton() {
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.addaccount_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.addaccount_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -229,7 +233,11 @@ fun LoginScaffold(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.addaccount_header_title),
+                title = {
+                    Text(
+                        text = stringResource(Res.string.addaccount_header_title),
+                    )
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

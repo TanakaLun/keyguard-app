@@ -63,7 +63,24 @@ fun EquivalentDomainsContent(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = stringResource(Res.string.account),
+                title = {
+                    Column {
+                        Text(
+                            text = stringResource(Res.string.account),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = LocalContentColor.current
+                                .combineAlpha(MediumEmphasisAlpha),
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2,
+                        )
+                        Text(
+                            text = stringResource(Res.string.equivalent_domains),
+                            style = MaterialTheme.typography.titleMedium,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                    }
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },

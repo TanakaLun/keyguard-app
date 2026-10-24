@@ -67,7 +67,37 @@ fun PasskeysViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.Key),
-        title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
+        title = {
+            when (loadableState) {
+                is Loadable.Loading -> {
+                    SkeletonText(
+                        modifier = Modifier
+                            .width(72.dp),
+                    )
+                }
+
+                is Loadable.Ok -> {
+                    val title = loadableState.value.content.getOrNull()
+                        ?.model?.name.orEmpty()
+                    Text(
+                        text = title,
+                    )
+                }
+            }
+
+            Text(
+                text = stringResource(Res.string.passkeys_directory_title),
+                style = MaterialTheme.typography.titleSmall,
+                color = LocalContentColor.current
+                    .combineAlpha(MediumEmphasisAlpha),
+            )
+
+            HeaderChips(
+                modifier = Modifier
+                    .padding(top = 4.dp),
+                loadableState = loadableState,
+            )
+        },
         content = {
             Column {
                 Content(
@@ -113,7 +143,24 @@ fun PasskeysViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = (loadableState as? Loadable.Ok)?.value?.content?.getOrNull()?.model?.name.orEmpty(),
+                title = {
+                    when (loadableState) {
+                        is Loadable.Loading -> {
+                            SkeletonText(
+                                modifier = Modifier
+                                    .width(72.dp),
+                            )
+                        }
+
+                        is Loadable.Ok -> {
+                            val title = loadableState.value.content.getOrNull()
+                                ?.model?.name.orEmpty()
+                            Text(
+                                text = title,
+                            )
+                        }
+                    }
+                },
                 navigationIcon = {
                     NavigationIcon()
                 },
