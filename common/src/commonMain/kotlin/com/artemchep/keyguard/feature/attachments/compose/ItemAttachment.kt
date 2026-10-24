@@ -34,7 +34,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
+import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -140,7 +140,7 @@ fun ItemAttachment(
                                 }
                                 val p = animateFloatAsState(updatedProgressState.value)
                                 LinearProgressIndicator(
-                                    progress = { p.value },
+                                    progress = p.value,
                                     modifier = Modifier
                                         .fillMaxWidth(),
                                 )

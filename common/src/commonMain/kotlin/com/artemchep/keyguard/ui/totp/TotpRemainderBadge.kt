@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LocalContentColor
+import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
+import top.yukonga.miuix.kmp.basic.ProgressIndicatorDefaults
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,9 +69,11 @@ private fun RowScope.TotpRemainderBadgeContent(
         else -> {
             CircularProgressIndicator(
                 modifier = circularProgressModifier,
-                progress = progress,
-                trackColor = Color.Transparent,
-                color = LocalContentColor.current,
+                progress = progress(),
+                colors = ProgressIndicatorDefaults.progressIndicatorColors(
+                    foregroundColor = MiuixTheme.colorScheme.onSurface,
+                    backgroundColor = Color.Transparent,
+                ),
             )
             Spacer(Modifier.width(4.dp))
         }

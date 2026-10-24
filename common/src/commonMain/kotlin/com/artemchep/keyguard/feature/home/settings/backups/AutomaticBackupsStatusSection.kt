@@ -16,7 +16,7 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
+import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -424,7 +424,7 @@ private fun BackupProgressFooter(
     val p = progress.details.progressPercentage()
     if (p != null) {
         LinearProgressIndicator(
-            progress = { p },
+            progress = p,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),

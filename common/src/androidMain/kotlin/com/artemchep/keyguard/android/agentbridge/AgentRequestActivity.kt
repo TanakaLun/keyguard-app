@@ -9,7 +9,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.LinearProgressIndicator
+import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -263,7 +263,7 @@ internal class AgentRequestActivity : BaseActivity() {
         val progress = rememberTimeoutProgress(activeRequestState)
         if (progress != null) {
             LinearProgressIndicator(
-                progress = { progress },
+                progress = progress,
                 modifier = modifier,
             )
         }
