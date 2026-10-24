@@ -43,10 +43,7 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationItemColors
-import androidx.compose.material3.NavigationItemIconPosition
-import androidx.compose.material3.ShortNavigationBar
 import androidx.compose.material3.ShortNavigationBarItem
-import androidx.compose.material3.ShortNavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.WideNavigationRail
 import androidx.compose.material3.WideNavigationRailDefaults
@@ -55,6 +52,8 @@ import androidx.compose.material3.WideNavigationRailItemDefaults
 import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberWideNavigationRailState
+import top.yukonga.miuix.kmp.basic.NavigationBar
+import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -521,11 +520,6 @@ fun HomeScreenContent(
                                 .fillMaxWidth(),
                             statusState = accountStatusState,
                         )
-                        val iconPosition = if (maxWidth <= 680.dp) {
-                            NavigationItemIconPosition.Top
-                        } else {
-                            NavigationItemIconPosition.Start
-                        }
                         val density = LocalDensity.current
                         val routesSplit = remember(
                             routes,
@@ -542,8 +536,9 @@ fun HomeScreenContent(
                                 },
                             )
                         }
-                        ShortNavigationBar(
-                            containerColor = Color.Unspecified,
+                        NavigationBar(
+                            color = Color.Unspecified,
+                            showDivider = false,
                         ) {
                             routesSplit.visible.forEach { r ->
                                 key(r.key) {
@@ -553,22 +548,11 @@ fun HomeScreenContent(
                                             .homeNavigationTestTag(r.testTag),
                                         backStack = backStack,
                                         item = r,
-                                        iconPosition = iconPosition,
                                         count = counterState.value,
                                         label = if (navLabelState.value) {
-                                            // composable
-                                            {
-                                                Text(
-                                                    text = textResource(r.label),
-                                                    maxLines = 1,
-                                                    textAlign = TextAlign.Center,
-                                                    // Default style does not fit on devices with small
-                                                    // screens.
-                                                    fontSize = 10.sp,
-                                                )
-                                            }
+                                            textResource(r.label)
                                         } else {
-                                            null
+                                            ""
                                         },
                                     )
                                 }
@@ -577,18 +561,10 @@ fun HomeScreenContent(
                                 BottomNavigationOverflowItem(
                                     backStack = backStack,
                                     items = routesSplit.overflow,
-                                    iconPosition = iconPosition,
                                     label = if (navLabelState.value) {
-                                        {
-                                            Text(
-                                                text = stringResource(Res.string.options),
-                                                maxLines = 1,
-                                                textAlign = TextAlign.Center,
-                                                fontSize = 10.sp,
-                                            )
-                                        }
+                                        stringResource(Res.string.options)
                                     } else {
-                                        null
+                                        ""
                                     },
                                 )
                             }
@@ -1016,28 +992,21 @@ private fun BottomNavigationControllerItem(
     modifier: Modifier = Modifier,
     backStack: ImmutableList<NavigationEntry>,
     item: HomeNavigationItem,
-    iconPosition: NavigationItemIconPosition,
     count: Int?,
-    label: @Composable (() -> Unit)? = null,
+    label: String,
 ) {
     val controller = LocalNavigationController.current
     val selected = item.isSelected(backStack)
-    ShortNavigationBarItem(
+    NavigationBarItem(
         modifier = modifier,
-        icon = {
-            NavigationIcon(
-                selected = selected,
-                icon = item.icon,
-                iconSelected = item.iconSelected,
-                count = count,
-            )
-        },
-        label = label,
         selected = selected,
-        iconPosition = iconPosition,
-        colors = navigationBarItemColors(),
         onClick = {
             navigateOnClick(controller, item)
+        },
+        icon = if (selected) item.iconSelected else item.icon,
+        label = label,
+        badge = {
+            AnimatedTotalCounterBadge(count = count)
         },
     )
 }
@@ -1091,13 +1060,11 @@ private fun RailNavigationOverflowItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun BottomNavigationOverflowItem(
     backStack: ImmutableList<NavigationEntry>,
     items: List<HomeNavigationItem>,
-    iconPosition: NavigationItemIconPosition,
-    label: @Composable (() -> Unit)? = null,
+    label: String,
 ) {
     val updatedController by rememberUpdatedState(LocalNavigationController.current)
 
@@ -1109,21 +1076,15 @@ private fun BottomNavigationOverflowItem(
     }
     val count = rememberOverflowCount(items)
     Box {
-        ShortNavigationBarItem(
-            icon = {
-                NavigationIcon(
-                    selected = selected,
-                    icon = Icons.Filled.MoreHoriz,
-                    iconSelected = Icons.Filled.MoreHoriz,
-                    count = count,
-                )
-            },
-            label = label,
+        NavigationBarItem(
             selected = selected,
-            iconPosition = iconPosition,
-            colors = navigationBarItemColors(),
             onClick = {
                 menuExpanded = true
+            },
+            icon = Icons.Filled.MoreHoriz,
+            label = label,
+            badge = {
+                AnimatedTotalCounterBadge(count = count)
             },
         )
         HomeNavigationOverflowMenu(
