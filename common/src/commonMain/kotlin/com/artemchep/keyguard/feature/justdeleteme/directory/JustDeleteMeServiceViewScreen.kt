@@ -53,7 +53,7 @@ fun JustDeleteMeDialogScreen(
     )
     Dialog(
         icon = icon(Icons.Outlined.AccountBox, Icons.Outlined.Delete),
-        title = args.justDeleteMe.name,
+        title = { Text(args.justDeleteMe.name) },
         content = {
             Column {
                 Content(
@@ -139,7 +139,7 @@ fun ColumnScope.Content(
             leading = {
                 IconBox(Icons.Outlined.Email)
             },
-            title = args.justDeleteMe.name,
+            title = { Text(args.justDeleteMe.name) },
             trailing = {
                 ChevronIcon()
             },

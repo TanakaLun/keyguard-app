@@ -68,7 +68,7 @@ fun JustGetMyDataViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.KeyguardTwoFa),
-        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+        title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
         content = {
             Column {
                 Content(
@@ -116,7 +116,7 @@ fun JustGetMyDataViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+                title = (loadableState as? Loadable.Ok)?.value?.content?.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -165,7 +165,7 @@ fun ColumnScope.Content(
             leading = {
                 IconBox(Icons.Outlined.Email)
             },
-            title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+            title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
             trailing = {
                 ChevronIcon()
             },

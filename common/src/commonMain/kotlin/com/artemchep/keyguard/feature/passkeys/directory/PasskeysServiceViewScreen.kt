@@ -67,7 +67,7 @@ fun PasskeysViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.Key),
-        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+        title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
         content = {
             Column {
                 Content(
@@ -113,7 +113,7 @@ fun PasskeysViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+                title = (loadableState as? Loadable.Ok)?.value?.content?.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },

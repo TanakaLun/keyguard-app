@@ -72,7 +72,7 @@ fun TwoFaServiceViewDialogScreen(
 ) {
     Dialog(
         icon = icon(Icons.Outlined.KeyguardTwoFa),
-        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+        title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
         content = {
             Column {
                 Content(
@@ -118,7 +118,7 @@ fun TwoFaServiceViewFullScreen(
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+                title = (loadableState as? Loadable.Ok)?.value?.content?.getOrNull()?.model?.name.orEmpty(),
                 navigationIcon = {
                     NavigationIcon()
                 },
@@ -266,7 +266,7 @@ fun FlatLaunchBrowserItem(
     FlatItem(
         modifier = modifier,
         leading = icon<RowScope>(Icons.AutoMirrored.Outlined.OpenInNew),
-        title = loadableState.value.content.getOrNull()?.model?.name.orEmpty(),
+        title = { Text(loadableState.value.content.getOrNull()?.model?.name.orEmpty()) },
         text = if (updatedUrl != null) {
             // composable
             {
