@@ -15,8 +15,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.Security
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -194,11 +194,11 @@ private fun ColumnScope.ElevatedAccessContent(
                 Button(
                     enabled = content.biometric.onClick != null,
                     shapes = ButtonDefaults.shapes(),
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    elevation = null,
-                    border = ButtonDefaults.outlinedButtonBorder(
-                        enabled = content.biometric.onClick != null,
-                    ),
+
+
+
+
+
                     onClick = {
                         onBiometricButtonClick?.invoke()
                     },
@@ -214,11 +214,11 @@ private fun ColumnScope.ElevatedAccessContent(
                 Button(
                     enabled = content.yubiKey.onClick != null,
                     shapes = ButtonDefaults.shapes(),
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    elevation = null,
-                    border = ButtonDefaults.outlinedButtonBorder(
-                        enabled = content.yubiKey.onClick != null,
-                    ),
+
+
+
+
+
                     onClick = {
                         onYubiKeyButtonClick?.invoke()
                     },

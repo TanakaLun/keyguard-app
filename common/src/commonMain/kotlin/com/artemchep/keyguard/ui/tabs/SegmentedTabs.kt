@@ -3,9 +3,9 @@ package com.artemchep.keyguard.ui.tabs
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.ButtonGroup
-import androidx.compose.material3.ButtonGroupMenuState
-import androidx.compose.material3.ButtonGroupScope
+import top.yukonga.miuix.kmp.basic.ButtonGroup
+import top.yukonga.miuix.kmp.basic.ButtonGroupMenuState
+import top.yukonga.miuix.kmp.basic.ButtonGroupScope
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton

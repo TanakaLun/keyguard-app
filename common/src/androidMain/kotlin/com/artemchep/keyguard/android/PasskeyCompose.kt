@@ -19,8 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -308,7 +308,7 @@ fun CredentialError(
         ) {
             Button(
                 shapes = ButtonDefaults.shapes(),
-                colors = ButtonDefaults.buttonColors(),
+
                 onClick = {
                     updatedOnFinish()
                 },

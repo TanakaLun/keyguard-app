@@ -22,8 +22,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.LockOpen
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -416,9 +416,9 @@ private fun UnlockCtaButton(
             .testTag("btn:go"),
         shapes = ButtonDefaults.shapes(),
         enabled = unlockState.unlockVaultByMasterPassword != null,
-        contentPadding = ButtonDefaults.contentPaddingFor(
-            buttonHeight = ButtonDefaults.MinHeight,
-        ),
+
+
+
         onClick = {
             onUnlockButtonClick?.invoke()
         },
@@ -497,9 +497,9 @@ private fun ExpandedHardwareUnlockIfExists(
                 Button(
                     enabled = unlockState.biometric.onClick != null,
                     shapes = ButtonDefaults.shapes(),
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    elevation = null,
-                    border = ButtonDefaults.outlinedButtonBorder(),
+
+
+
                     onClick = {
                         onBiometricButtonClick?.invoke()
                     },
@@ -521,9 +521,9 @@ private fun ExpandedHardwareUnlockIfExists(
                 Button(
                     enabled = unlockState.yubiKey.onClick != null,
                     shapes = ButtonDefaults.shapes(),
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    elevation = null,
-                    border = ButtonDefaults.outlinedButtonBorder(),
+
+
+
                     onClick = {
                         onYubiKeyButtonClick?.invoke()
                     },

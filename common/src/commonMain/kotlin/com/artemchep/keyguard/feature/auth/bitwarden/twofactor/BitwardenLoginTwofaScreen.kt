@@ -24,8 +24,8 @@ import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.Construction
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -343,8 +343,8 @@ private fun ColumnScope.LoginOtpScreenContentUnsupported(
                 .padding(
                     horizontal = Dimens.buttonHorizontalPadding,
                 ),
-            colors = ButtonDefaults.filledTonalButtonColors(),
-            elevation = ButtonDefaults.filledTonalButtonElevation(),
+
+
             onClick = {
                 updatedOnLaunchWebVault?.invoke()
             },

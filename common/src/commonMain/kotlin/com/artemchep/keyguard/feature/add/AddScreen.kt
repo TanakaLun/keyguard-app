@@ -40,12 +40,12 @@ import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -1966,8 +1966,8 @@ internal fun AddButton(
 
             dropdownShownState.value = true
         },
-        colors = ButtonDefaults.filledTonalButtonColors(),
-        elevation = ButtonDefaults.filledTonalButtonElevation(),
+
+
     ) {
         Icon(
             modifier = Modifier

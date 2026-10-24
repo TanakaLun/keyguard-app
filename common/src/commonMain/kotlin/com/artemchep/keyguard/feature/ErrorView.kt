@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material3.ElevatedButton
+import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -64,7 +64,7 @@ fun ErrorView(
         ExpandedIfNotEmpty(
             valueOrNull = exception,
         ) { e ->
-            ElevatedButton(
+            Button(
                 modifier = Modifier
                     .padding(top = 8.dp),
                 onClick = {

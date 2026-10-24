@@ -24,11 +24,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -450,9 +450,9 @@ private fun ColumnScope.GeneratorValue2(
                 modifier = Modifier
                     .padding(top = 4.dp),
                 items = actions,
-                colors = ButtonDefaults.outlinedButtonColors(),
-                elevation = null,
-                border = ButtonDefaults.outlinedButtonBorder(),
+
+
+
             )
         }
     }

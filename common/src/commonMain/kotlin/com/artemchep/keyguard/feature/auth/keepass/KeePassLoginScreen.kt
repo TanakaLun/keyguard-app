@@ -24,13 +24,13 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.Key
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -516,8 +516,8 @@ fun LoginContent(
         ) {
             Button(
                 shapes = ButtonDefaults.shapes(),
-                colors = ButtonDefaults.outlinedButtonColors(),
-                border = ButtonDefaults.outlinedButtonBorder(),
+
+
                 onClick = keyFileState.onClick,
             ) {
                 IconBox(
@@ -544,8 +544,8 @@ fun LoginContent(
                 val updatedOnClear by rememberUpdatedState(keyFileState.onClear)
                 Button(
                     shapes = ButtonDefaults.shapes(),
-                    colors = ButtonDefaults.outlinedButtonColors(),
-                    border = ButtonDefaults.outlinedButtonBorder(),
+
+
                     onClick = {
                         updatedOnClear?.invoke()
                     },

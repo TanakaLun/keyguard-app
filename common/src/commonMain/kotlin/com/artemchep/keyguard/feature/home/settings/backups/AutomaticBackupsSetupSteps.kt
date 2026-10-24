@@ -18,7 +18,7 @@ import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Attachment
-import androidx.compose.material3.FilledTonalButton
+import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -72,7 +72,7 @@ internal fun BackupSetupDestination(state: AutomaticBackupsSetupState) {
             .padding(vertical = Dimens.verticalPadding),
     )
     val updatedOnLocationClick by rememberUpdatedState(state.onLocationClick)
-    FilledTonalButton(
+    Button(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding),
         onClick = {
