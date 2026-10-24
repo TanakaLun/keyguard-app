@@ -1024,7 +1024,7 @@ private fun RowScope.BottomNavigationOverflowItem(
     }
     val count = rememberOverflowCount(items)
     Box {
-        NavigationBarItem(
+        this@BottomNavigationOverflowItem.NavigationBarItem(
             selected = selected,
             onClick = {
                 menuExpanded = true
