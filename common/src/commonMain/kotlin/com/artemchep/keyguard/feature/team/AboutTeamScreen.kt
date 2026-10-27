@@ -35,6 +35,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 private data class SocialNetworkItem(
     val title: String,

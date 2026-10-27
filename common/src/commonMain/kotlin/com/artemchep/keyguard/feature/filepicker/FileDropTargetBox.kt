@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
 internal expect fun Modifier.fileDropTarget(

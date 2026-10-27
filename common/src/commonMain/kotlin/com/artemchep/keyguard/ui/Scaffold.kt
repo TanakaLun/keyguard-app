@@ -86,6 +86,8 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlin.math.log10
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import androidx.compose.material3.MaterialTheme
 
 val screenMaxWidth = 768.dp
 val screenMaxWidthCompact = 480.dp

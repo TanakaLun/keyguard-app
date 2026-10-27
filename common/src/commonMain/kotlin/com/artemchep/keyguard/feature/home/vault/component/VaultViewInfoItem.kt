@@ -54,6 +54,10 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.math.ln
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.titleSmall
+import top.yukonga.miuix.kmp.theme.Colors
 
 @Composable
 fun VaultViewInfoItem(
@@ -234,11 +238,11 @@ private fun LearnButton(
     }
 }
 
-private fun ColorScheme.colorAtElevation(
+private fun Colors.colorAtElevation(
     color: Color,
     elevation: Dp,
 ): Color {
     if (elevation == 0.dp) return color
     val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return surfaceTint.copy(alpha = alpha).compositeOver(color)
+    return primary.copy(alpha = alpha).compositeOver(color)
 }

@@ -21,6 +21,9 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonText
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleLarge
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 private val toolbarMinHeight = 64.dp
 

@@ -64,6 +64,8 @@ import kotlinx.io.readByteArray
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.labelLarge
 
 private const val IMPORT_BUFFER_SIZE = 4096L
 

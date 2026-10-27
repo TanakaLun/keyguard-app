@@ -72,6 +72,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.pluralStringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelSmall
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun SearchTextField(

@@ -63,6 +63,10 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.titleSmall
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun ConfirmationScreen(

@@ -160,6 +160,11 @@ import kotlinx.collections.immutable.toPersistentList
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleLarge
 
 private val paddingValues = PaddingValues(
     horizontal = 8.dp,

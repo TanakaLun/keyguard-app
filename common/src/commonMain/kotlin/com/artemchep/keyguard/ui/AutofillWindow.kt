@@ -87,6 +87,8 @@ import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.flow.StateFlow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.titleLarge
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 fun AutofillButton(

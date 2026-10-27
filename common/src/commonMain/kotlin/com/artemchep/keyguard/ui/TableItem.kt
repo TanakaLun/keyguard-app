@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun TableRowItem(

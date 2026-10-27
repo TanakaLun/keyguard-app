@@ -22,6 +22,7 @@ import com.artemchep.keyguard.ui.icons.KeyguardFavourite
 import com.artemchep.keyguard.ui.icons.KeyguardFavouriteOutline
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun FavouriteToggleButton(

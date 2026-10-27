@@ -32,6 +32,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.painterResource
 import kotlin.time.Instant
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 /**
  * The layout every approval window shares: a badged icon, the title, who

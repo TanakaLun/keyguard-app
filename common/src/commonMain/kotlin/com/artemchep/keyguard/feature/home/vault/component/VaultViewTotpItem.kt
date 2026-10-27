@@ -64,6 +64,8 @@ import kotlinx.collections.immutable.PersistentList
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.titleSmall
+import androidx.compose.material3.MaterialTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

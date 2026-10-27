@@ -170,6 +170,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.currentKoinScope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodySmall
 
 private const val TIP_VISIBLE = true
 

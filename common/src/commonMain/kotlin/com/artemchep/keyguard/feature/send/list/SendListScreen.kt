@@ -124,6 +124,9 @@ import org.koin.compose.currentKoinScope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.titleMedium
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun SendListScreen(

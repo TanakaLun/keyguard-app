@@ -27,6 +27,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 
 actual class MarkdownDocument(
     internal val node: AstNode,

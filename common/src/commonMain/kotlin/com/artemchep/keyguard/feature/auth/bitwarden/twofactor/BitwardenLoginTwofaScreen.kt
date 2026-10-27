@@ -89,6 +89,7 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun LoginTwofaScreen(

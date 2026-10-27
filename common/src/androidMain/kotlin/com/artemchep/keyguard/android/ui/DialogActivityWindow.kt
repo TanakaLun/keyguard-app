@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.material3.MaterialTheme
 
 private const val DIALOG_WIDTH_FRACTION = 0.9f
 

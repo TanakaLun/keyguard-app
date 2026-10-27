@@ -230,28 +230,6 @@ val Colors.inversePrimary: Color
     @ReadOnlyComposable
     get() = primaryContainer
 
-/**
- * Returns the [Colors.surface] color with the tonal elevation overlay applied.
- */
-fun Colors.surfaceColorAtElevation(
-    elevation: Dp,
-): Color {
-    val tint = surfaceColorAtElevationSemi(elevation = elevation)
-    return if (tint.isSpecified) {
-        tint.compositeOver(surface)
-    } else {
-        surface
-    }
-}
-
-/** Returns the [Colors.surfaceTint] with the elevation alpha. */
-fun Colors.surfaceColorAtElevationSemi(
-    elevation: Dp,
-): Color {
-    if (elevation == 0.dp) return Color.Unspecified
-    val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return primary.copy(alpha = alpha)
-}
 
 // ---------------------------------------------------------------------------
 // Material 3 typography aliases mapped to Miuix text styles.

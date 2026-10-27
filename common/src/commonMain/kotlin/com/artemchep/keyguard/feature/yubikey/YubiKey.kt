@@ -45,6 +45,10 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.titleMedium
+import androidx.compose.material3.MaterialTheme
 
 typealias OnYubiKeyListener = (Either<Throwable, String>) -> Unit
 

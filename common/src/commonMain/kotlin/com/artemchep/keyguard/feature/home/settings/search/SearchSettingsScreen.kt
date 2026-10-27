@@ -42,6 +42,8 @@ import com.artemchep.keyguard.ui.toolbar.CustomToolbar
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 fun SearchSettingsScreen() {

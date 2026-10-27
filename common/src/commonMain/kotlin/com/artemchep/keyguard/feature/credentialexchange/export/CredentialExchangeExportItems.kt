@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.skeleton.SkeletonItem
 import com.artemchep.keyguard.ui.theme.Dimens
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 
 /**
  * The error stage's whole content: an icon and a sentence, with no retry.

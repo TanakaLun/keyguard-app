@@ -44,6 +44,7 @@ import com.artemchep.keyguard.ui.icons.KeyguardYubiKey
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 
 /**
  * Long enough for the field to be attached before it is asked for focus; only ever

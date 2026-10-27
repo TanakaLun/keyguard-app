@@ -25,6 +25,8 @@ import com.artemchep.keyguard.ui.theme.onWarningContainer
 import com.artemchep.keyguard.ui.theme.warning
 import com.artemchep.keyguard.ui.theme.warningContainer
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.titleSmall
 
 @Immutable
 data class SimpleNote(

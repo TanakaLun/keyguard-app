@@ -142,6 +142,12 @@ import com.artemchep.keyguard.common.service.keyboard.KeyboardShortcutsService
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import androidx.compose.material3.MaterialTheme
 
 const val PLACEHOLDER_EMAIL = "username@example.com"
 

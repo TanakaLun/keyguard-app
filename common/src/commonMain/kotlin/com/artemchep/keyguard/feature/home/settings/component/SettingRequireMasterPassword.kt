@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
 
 fun settingRequireMasterPasswordProvider(
     koinScope: Scope,

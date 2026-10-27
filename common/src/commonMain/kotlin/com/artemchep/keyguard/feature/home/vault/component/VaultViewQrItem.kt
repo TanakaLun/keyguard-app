@@ -28,6 +28,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

@@ -52,6 +52,8 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
 fun VaultViewValueItem(

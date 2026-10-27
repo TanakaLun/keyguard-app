@@ -59,6 +59,10 @@ import com.artemchep.keyguard.ui.theme.verticalPaddingHalf
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 internal fun BackupSetupDestination(state: AutomaticBackupsSetupState) {

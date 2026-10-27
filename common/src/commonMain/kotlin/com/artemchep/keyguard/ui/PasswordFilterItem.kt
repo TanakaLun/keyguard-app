@@ -79,6 +79,11 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
+import androidx.compose.material3.MaterialTheme
 
 private inline val flatItemSmallCornerSizeDp get() = 4.dp
 

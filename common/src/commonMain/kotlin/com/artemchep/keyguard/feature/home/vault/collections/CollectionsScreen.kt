@@ -45,6 +45,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun CollectionsScreen(

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.HighEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun icon(

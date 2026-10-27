@@ -48,6 +48,11 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import com.artemchep.keyguard.ui.theme.tertiary
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 internal fun LazyListScope.automaticBackupsStatusSummary(
     key: String,

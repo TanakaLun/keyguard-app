@@ -36,6 +36,9 @@ import kotlin.time.Clock
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleLarge
 
 const val ObscureChar = '•'
 

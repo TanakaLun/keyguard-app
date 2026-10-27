@@ -23,6 +23,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.isDark
 
 @Composable
 actual fun appDynamicDarkColorScheme(): ColorScheme {

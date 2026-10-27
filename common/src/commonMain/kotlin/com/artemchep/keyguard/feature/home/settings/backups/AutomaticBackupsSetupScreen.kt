@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material3.AlertDialog
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +51,13 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.foundation.layout.Row
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.headlineMedium
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 internal fun AutomaticBackupsSetupScreen() {
@@ -139,21 +145,26 @@ private fun BackupSetupBackButton(state: AutomaticBackupsSetupState?) {
 
 @Composable
 private fun BackupSetupDiscardDialog(state: AutomaticBackupsSetupState) {
-    AlertDialog(
+    OverlayDialog(
+        show = true,
         onDismissRequest = state.onDismissDiscard,
-        title = { Text(stringResource(Res.string.pref_item_automatic_backups_wizard_discard_title)) },
-        text = { Text(stringResource(Res.string.pref_item_automatic_backups_wizard_discard_message)) },
-        confirmButton = {
+        title = stringResource(Res.string.pref_item_automatic_backups_wizard_discard_title),
+        summary = stringResource(Res.string.pref_item_automatic_backups_wizard_discard_message),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
             TextButton(
-    text = stringResource(Res.string.pref_item_automatic_backups_wizard_discard_action),
-onClick = state.onDiscard)
-        },
-        dismissButton = {
+                text = stringResource(Res.string.cancel),
+                onClick = state.onDismissDiscard,
+            )
             TextButton(
-    text = stringResource(Res.string.cancel),
-onClick = state.onDismissDiscard)
-        },
-    )
+                text = stringResource(Res.string.pref_item_automatic_backups_wizard_discard_action),
+                onClick = state.onDiscard,
+            )
+        }
+    }
 }
 
 @Composable

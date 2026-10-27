@@ -70,6 +70,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.titleMedium
+import com.artemchep.keyguard.ui.theme.titleSmall
+import androidx.compose.material3.MaterialTheme
 
 private const val SubscriptionsCountDefault = 2
 private const val ProductsCountDefault = 1

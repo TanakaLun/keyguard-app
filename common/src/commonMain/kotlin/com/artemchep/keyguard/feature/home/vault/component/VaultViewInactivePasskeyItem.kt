@@ -17,6 +17,7 @@ import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.theme.onInfoContainer
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.titleSmall
 
 @Composable
 fun VaultViewInactivePasskeyItem(

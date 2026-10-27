@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.SaveAlt
-import androidx.compose.material3.AlertDialog
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.Text
@@ -51,6 +50,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
 
 @Composable
 internal fun AttachmentArchiveContent(
@@ -205,10 +207,12 @@ private fun AttachmentArchivePasswordDialog(prompt: AttachmentArchivePassword) {
         }
     }
     val requester = remember { FocusRequester2() }
-    AlertDialog(
+    OverlayDialog(
+        show = true,
         onDismissRequest = prompt.onCancel,
-        title = { Text(stringResource(Res.string.attachment_archive_password)) },
-        text = {
+        title = stringResource(Res.string.attachment_archive_password),
+    ) {
+        Column {
             PasswordFlatTextField(
                 modifier = Modifier
                     .focusRequester2(requester),
@@ -225,21 +229,22 @@ private fun AttachmentArchivePasswordDialog(prompt: AttachmentArchivePassword) {
                     onDone = { submit() },
                 ),
             )
-        },
-        confirmButton = {
-            TextButton(
-    text = stringResource(Res.string.confirm),
-
-                enabled = password.isNotEmpty(),
-                onClick = submit,
-            )
-        },
-        dismissButton = {
-            TextButton(
-    text = stringResource(Res.string.cancel),
-onClick = prompt.onCancel)
-        },
-    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(
+                    text = stringResource(Res.string.cancel),
+                    onClick = prompt.onCancel,
+                )
+                TextButton(
+                    text = stringResource(Res.string.confirm),
+                    enabled = password.isNotEmpty(),
+                    onClick = submit,
+                )
+            }
+        }
+    }
     LaunchedEffect(requester) {
         // Let the dialog attach before focusing the field.
         delay(PASSWORD_FOCUS_DELAY_MS)

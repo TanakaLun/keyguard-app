@@ -34,6 +34,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 internal fun LazyListScope.automaticBackupsDisabledContent(
     onSetupClick: () -> Unit,

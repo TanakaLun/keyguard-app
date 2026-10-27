@@ -81,6 +81,7 @@ import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.persistentListOf
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun ExportScreen(

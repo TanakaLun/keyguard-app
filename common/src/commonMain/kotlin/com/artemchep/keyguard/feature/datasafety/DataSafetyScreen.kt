@@ -39,6 +39,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun dataSafetyItems(): List<DataSafetyItem> = dataSafetyCatalog(

@@ -52,6 +52,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.util.DividerColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

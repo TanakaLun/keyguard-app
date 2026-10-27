@@ -30,6 +30,7 @@ import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 fun SelectionBar(

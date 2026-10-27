@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.theme.Dimens
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelLarge
 
 @Composable
 fun ErrorView(

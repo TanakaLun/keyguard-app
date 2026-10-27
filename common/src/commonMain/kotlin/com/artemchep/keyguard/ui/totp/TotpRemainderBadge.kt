@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.AhContainer
 import com.artemchep.keyguard.ui.theme.monoFontFamily
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 /**
  * Shows the time left until the code changes, or

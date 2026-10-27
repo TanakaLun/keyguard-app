@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
 
 fun settingGpgKeyserverAutoRefreshProvider(
     koinScope: Scope,

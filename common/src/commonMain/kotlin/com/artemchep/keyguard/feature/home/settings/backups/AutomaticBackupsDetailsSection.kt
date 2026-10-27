@@ -35,6 +35,10 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.titleSmall
 
 private const val AutomaticBackupsRepositoryTreeSample = "Keyguard Backups/\n" +
         "├─ repo.zip\n" +

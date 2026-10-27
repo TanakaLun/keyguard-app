@@ -65,6 +65,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 private const val YUBIKEY_CHALLENGE_LENGTH = 32
 private const val YUBIKEY_SECRET_LENGTH = 20

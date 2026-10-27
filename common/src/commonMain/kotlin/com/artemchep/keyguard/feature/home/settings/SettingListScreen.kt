@@ -90,6 +90,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.material3.MaterialTheme
 
 sealed interface SettingsItem2 {
     val id: String

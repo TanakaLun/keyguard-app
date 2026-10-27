@@ -25,6 +25,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlin.math.pow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
 fun Ah(

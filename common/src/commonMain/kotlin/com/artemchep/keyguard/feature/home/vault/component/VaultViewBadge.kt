@@ -26,6 +26,8 @@ import com.artemchep.keyguard.ui.icons.IconSmallBox
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
 
 /**
  * A small badge with an icon, a title and a secondary text,

@@ -53,6 +53,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 fun AutofillScaffold(

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.util.DividerColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 /**
  * A short outlined label shown at the end of an item's

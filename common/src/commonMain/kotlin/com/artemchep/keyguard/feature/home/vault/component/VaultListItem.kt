@@ -136,6 +136,15 @@ import kotlin.math.ln
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.titleMedium
+import androidx.compose.material3.MaterialTheme
+import top.yukonga.miuix.kmp.theme.Colors
 
 @Composable
 fun VaultListItem(
@@ -1254,7 +1263,7 @@ fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {
 }
 
 @Composable
-fun ColorScheme.localSurfaceColorAtElevation(
+fun Colors.localSurfaceColorAtElevation(
     surface: Color,
     elevation: Dp,
 ): Color {
@@ -1273,7 +1282,7 @@ fun ColorScheme.localSurfaceColorAtElevation(
  *
  * @param elevation Elevation value used to compute alpha of the color overlay layer.
  */
-fun ColorScheme.surfaceColorAtElevation(
+fun Colors.surfaceColorAtElevation(
     elevation: Dp,
 ): Color {
     val tint = surfaceColorAtElevationSemi(elevation = elevation)
@@ -1291,12 +1300,12 @@ fun ColorScheme.surfaceColorAtElevation(
  *
  * @param elevation Elevation value used to compute alpha of the color overlay layer.
  */
-fun ColorScheme.surfaceColorAtElevationSemi(
+fun Colors.surfaceColorAtElevationSemi(
     elevation: Dp,
 ): Color {
     if (elevation == 0.dp) return Color.Unspecified
     val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return surfaceTint.combineAlpha(alpha = alpha)
+    return primary.combineAlpha(alpha = alpha)
 }
 
 @Composable

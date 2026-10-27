@@ -63,6 +63,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import com.artemchep.keyguard.ui.theme.titleSmall
 
 @Composable
 fun ToastMessageHost(

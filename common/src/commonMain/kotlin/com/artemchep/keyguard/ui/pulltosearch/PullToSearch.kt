@@ -27,6 +27,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.log10
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun PullToSearch(

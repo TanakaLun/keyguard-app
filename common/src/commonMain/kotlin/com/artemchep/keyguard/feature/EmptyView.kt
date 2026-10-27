@@ -46,6 +46,8 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.sin
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 
 private const val PixelEmptyArtworkGridSize = 48
 

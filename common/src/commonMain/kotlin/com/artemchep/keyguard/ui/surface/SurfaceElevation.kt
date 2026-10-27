@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.compositeOver
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.surfaceContainerLow
 
 data class SurfaceElevation(
     val from: Float,

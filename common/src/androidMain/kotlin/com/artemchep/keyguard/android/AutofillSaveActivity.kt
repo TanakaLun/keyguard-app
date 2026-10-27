@@ -48,6 +48,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.parcelize.Parcelize
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.titleLarge
 
 class AutofillSaveActivity : BaseActivity(), KeyguardKoinOwner {
     companion object {

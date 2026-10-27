@@ -3,7 +3,7 @@ package com.artemchep.keyguard.feature.home.vault.component
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material3.DropdownMenu
+import top.yukonga.miuix.kmp.overlay.OverlayListPopup
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,15 +16,10 @@ fun SearchQualifierSuggestionPopup(
     suggestion: String,
     onClick: () -> Unit,
 ) {
-    DropdownMenu(
-        expanded = true,
+    OverlayListPopup(
+        show = true,
         onDismissRequest = {},
-        shape = KgShapes.large,
-        tonalElevation = 6.dp,
-        shadowElevation = 8.dp,
-        properties = PopupProperties(
-            focusable = false,
-        ),
+        enableWindowDim = false,
     ) {
         SmartBadge(
             modifier = Modifier

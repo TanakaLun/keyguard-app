@@ -1,4 +1,6 @@
 // package com.artemchep.keyguard.feature.onboarding
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.titleMedium
 //
 // import androidx.compose.foundation.background
 // import androidx.compose.foundation.clickable

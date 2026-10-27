@@ -22,6 +22,7 @@ import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
 fun GpgKeyserverSearchScreen() {

@@ -1,4 +1,6 @@
 // package com.artemchep.keyguard.feature.notifications
+import com.artemchep.keyguard.ui.theme.bodySmall
+import com.artemchep.keyguard.ui.theme.titleMedium
 //
 // import android.Manifest
 // import android.os.Build

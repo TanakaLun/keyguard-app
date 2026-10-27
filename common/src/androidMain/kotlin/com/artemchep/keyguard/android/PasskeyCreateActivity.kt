@@ -59,6 +59,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString as getComposeString
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class PasskeyCreateActivity : BaseActivity(), KeyguardKoinOwner {

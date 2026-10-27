@@ -77,6 +77,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun CipherFiltersListScreen(

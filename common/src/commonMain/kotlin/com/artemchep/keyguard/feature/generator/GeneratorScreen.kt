@@ -51,7 +51,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Slider
+import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -161,6 +161,11 @@ import kotlin.math.roundToLong
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.titleLarge
+import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
 fun GeneratorScreen(
@@ -1308,7 +1313,6 @@ private fun ColumnScope.DecoratedSliderContent(
         value = filterLengthTemp,
         valueRange = sliderValueRange,
         steps = sliderSteps,
-        interactionSource = interactionSource,
         onValueChange = { length ->
             filterLengthTemp = length
         },

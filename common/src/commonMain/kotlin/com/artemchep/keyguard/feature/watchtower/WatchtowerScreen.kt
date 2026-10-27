@@ -144,6 +144,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.roundToInt
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.displayLarge
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.titleMedium
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun WatchtowerScreen(

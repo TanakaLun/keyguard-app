@@ -31,6 +31,9 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import io.ktor.sse.SPACE
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.titleLargeEmphasized
+import com.artemchep.keyguard.ui.theme.titleMedium
+import com.artemchep.keyguard.ui.theme.titleSmall
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

@@ -47,6 +47,7 @@ import com.artemchep.keyguard.platform.leIme
 import com.artemchep.keyguard.platform.leSystemBars
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.scrim
 
 // Menu open/close animation.
 private const val InTransitionDuration = 180

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodySmall
 
 actual fun settingPermissionOtherProvider(
     koinScope: Scope,

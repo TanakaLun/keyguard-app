@@ -56,6 +56,10 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.headlineMedium
+import com.artemchep.keyguard.ui.theme.labelSmall
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun LargeTypeScreen(

@@ -36,6 +36,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.labelSmall
 
 /**
  * One item row on a review screen: its title plus a badge per credential kind.

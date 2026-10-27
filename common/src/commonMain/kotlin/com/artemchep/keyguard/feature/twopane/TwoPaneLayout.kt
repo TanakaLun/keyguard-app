@@ -55,6 +55,8 @@ import com.artemchep.keyguard.ui.surface.surfaceElevationColor
 import com.artemchep.keyguard.ui.text.AutoSizeText
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.displayLarge
+import com.artemchep.keyguard.ui.theme.displayMedium
 
 @Composable
 fun TwoPaneScaffold(

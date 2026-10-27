@@ -68,6 +68,12 @@ import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.getString as getComposeString
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.labelMedium
+import com.artemchep.keyguard.ui.theme.labelSmall
+import com.artemchep.keyguard.ui.theme.titleLarge
+import com.artemchep.keyguard.ui.theme.titleSmall
+import com.artemchep.keyguard.ui.theme.titleSmallEmphasized
 
 @Composable
 fun CredentialScaffold(
