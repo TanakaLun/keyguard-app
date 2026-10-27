@@ -8,7 +8,7 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.SmallFloatingActionButton
+import top.yukonga.miuix.kmp.basic.FloatingActionButton
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +37,8 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.onSurfaceVariant
+import androidx.compose.runtime.CompositionLocalProvider
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 
 @Composable
 fun SshAgentFiltersScreen() {
@@ -130,17 +132,18 @@ private fun SshAgentFiltersScreenContent(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                SmallFloatingActionButton(
+                FloatingActionButton(
                     containerColor = resetContainerColor,
-                    contentColor = resetContentColor,
                     onClick = {
                         resetOnClick?.invoke()
                     },
                 ) {
+                    CompositionLocalProvider(LocalContentColor provides resetContentColor) {
                     Icon(
                         imageVector = Icons.Outlined.Clear,
                         contentDescription = null,
                     )
+                    }
                 }
                 DefaultFab(
                     icon = {
