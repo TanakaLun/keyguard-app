@@ -45,6 +45,7 @@
     <string name="database_name">Database name</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="disable">Disable</string>
     <string name="sign">Sign</string>
     <string name="encrypt">Encrypt</string>
     <string name="verify">Verify</string>

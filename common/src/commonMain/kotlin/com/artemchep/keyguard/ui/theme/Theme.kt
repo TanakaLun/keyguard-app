@@ -5,7 +5,6 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -71,13 +70,6 @@ inline val ColorScheme.searchHighlightBackgroundColor get() = tertiaryContainer
 
 inline val ColorScheme.searchHighlightContentColor get() = onTertiaryContainer
 
-// We use this property to replace the error
-// of the color scheme.
-@Suppress("ObjectPropertyName")
-private val ColorScheme._error: Color
-    @Composable
-    get() = buildContentColor(HUE_ERROR)
-
 val ColorScheme.danger: Color
     @Composable
     get() {
@@ -141,20 +133,6 @@ private fun buildContentColor(
         value = lightness,
     )
 }
-
-// We use this property to replace the error container
-// of the color scheme.
-@Suppress("ObjectPropertyName")
-private val ColorScheme._errorContainer: Color
-    @Composable
-    get() = buildContainerColor(HUE_ERROR)
-
-// We use this property to replace the error container
-// of the color scheme.
-@Suppress("ObjectPropertyName")
-private val ColorScheme._onErrorContainer: Color
-    @Composable
-    get() = onSurfaceVariant
 
 val ColorScheme.warningContainer: Color
     @Composable
@@ -295,89 +273,69 @@ fun KeyguardTheme(
     dark: Boolean,
     content: @Composable () -> Unit,
 ) {
-    val themeBlack = config.useAmoledBlack
-    val colors = config.colors
-    val isDarkColorScheme = dark
-
-    val scheme = kotlin.run {
-        val scheme = appColorScheme(
-            colors = colors,
-            isDarkColorScheme = isDarkColorScheme,
-        )
-        scheme.copy(
-            errorContainer = scheme._errorContainer,
-            onErrorContainer = scheme._onErrorContainer,
-            error = scheme._error,
-            background = if (themeBlack && isDarkColorScheme) Color.Black else scheme.background,
-            surface = if (themeBlack && isDarkColorScheme) Color.Black else scheme.surface,
-            surfaceContainerLowest = if (themeBlack && isDarkColorScheme) Color.Black else scheme.surfaceContainerLowest,
-            surfaceContainerLow = if (themeBlack && isDarkColorScheme) Color.Black else scheme.surfaceContainerLow,
-            surfaceContainer = if (themeBlack && isDarkColorScheme) scheme.surfaceContainerLow else scheme.surfaceContainer,
-            surfaceContainerHigh = if (themeBlack && isDarkColorScheme) scheme.surfaceContainerLow else scheme.surfaceContainerHigh,
-            surfaceContainerHighest = if (themeBlack && isDarkColorScheme) scheme.surfaceContainer else scheme.surfaceContainerHighest,
-        )
-    }
-
-    val getFont = koinInject<GetFont>()
-    val font = remember(getFont) {
-        getFont()
-    }.collectAsState(null)
-
-    val typography = if (font.value == null) {
-        Typography()
-    } else {
-        val defaultTypography = Typography()
-        Typography(
-            displayLarge = defaultTypography.displayLarge.copy(fontFamily = sansFontFamily),
-            displayMedium = defaultTypography.displayMedium.copy(fontFamily = sansFontFamily),
-            displaySmall = defaultTypography.displaySmall.copy(fontFamily = sansFontFamily),
-
-            headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = sansFontFamily),
-            headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = sansFontFamily),
-            headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = sansFontFamily),
-
-            titleLarge = defaultTypography.titleLarge.copy(fontFamily = sansFontFamily),
-            titleMedium = defaultTypography.titleMedium.copy(fontFamily = sansFontFamily),
-            titleSmall = defaultTypography.titleSmall.copy(fontFamily = sansFontFamily),
-
-            bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = sansFontFamily),
-            bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = sansFontFamily),
-            bodySmall = defaultTypography.bodySmall.copy(fontFamily = sansFontFamily),
-
-            labelLarge = defaultTypography.labelLarge.copy(fontFamily = sansFontFamily),
-            labelMedium = defaultTypography.labelMedium.copy(fontFamily = sansFontFamily),
-            labelSmall = defaultTypography.labelSmall.copy(fontFamily = sansFontFamily),
-        )
-    }
-    MaterialTheme(
-        colorScheme = scheme,
-        typography = typography,
+    // Miuix owns the palette. The remaining Material 3 components read a color
+    // scheme derived from it, so both stacks stay visually identical.
+    MiuixThemeBridge(
+        config = config,
+        dark = dark,
     ) {
-        SystemUiThemeEffect()
+        val colors = MiuixTheme.colorScheme
+        val scheme = remember(colors, dark) {
+            colors.toMaterialColorScheme()
+        }
 
-        androidx.compose.material.MaterialTheme(
-            colors = (if (isDarkColorScheme) darkColors() else lightColors())
-                .copy(
-                    primary = scheme.primary,
-                    onPrimary = scheme.onPrimary,
-                    secondary = scheme.secondary,
-                    onSecondary = scheme.onSecondary,
-                ),
+        val getFont = koinInject<GetFont>()
+        val font = remember(getFont) {
+            getFont()
+        }.collectAsState(null)
+
+        val typography = if (font.value == null) {
+            Typography()
+        } else {
+            val defaultTypography = Typography()
+            Typography(
+                displayLarge = defaultTypography.displayLarge.copy(fontFamily = sansFontFamily),
+                displayMedium = defaultTypography.displayMedium.copy(fontFamily = sansFontFamily),
+                displaySmall = defaultTypography.displaySmall.copy(fontFamily = sansFontFamily),
+
+                headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = sansFontFamily),
+                headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = sansFontFamily),
+                headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = sansFontFamily),
+
+                titleLarge = defaultTypography.titleLarge.copy(fontFamily = sansFontFamily),
+                titleMedium = defaultTypography.titleMedium.copy(fontFamily = sansFontFamily),
+                titleSmall = defaultTypography.titleSmall.copy(fontFamily = sansFontFamily),
+
+                bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = sansFontFamily),
+                bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = sansFontFamily),
+                bodySmall = defaultTypography.bodySmall.copy(fontFamily = sansFontFamily),
+
+                labelLarge = defaultTypography.labelLarge.copy(fontFamily = sansFontFamily),
+                labelMedium = defaultTypography.labelMedium.copy(fontFamily = sansFontFamily),
+                labelSmall = defaultTypography.labelSmall.copy(fontFamily = sansFontFamily),
+            )
+        }
+        MaterialTheme(
+            colorScheme = scheme,
+            typography = typography,
         ) {
-            // Phase 0: Miuix theme tree coexists with the Material 3 stack.
-            // Migrated components read MiuixTheme.* inside this subtree.
-            MiuixThemeBridge(
-                config = config,
-                dark = dark,
+            SystemUiThemeEffect()
+
+            androidx.compose.material.MaterialTheme(
+                colors = (if (colors.isDark) darkColors() else lightColors())
+                    .copy(
+                        primary = colors.primary,
+                        onPrimary = colors.onPrimary,
+                        secondary = colors.secondary,
+                        onSecondary = colors.onSecondary,
+                    ),
             ) {
                 // The migrated UI reads the Miuix content color, while the
                 // remaining Material 3 components read the Material one. Seed
                 // both from the scheme background for the whole app.
                 CompositionLocalProvider(
-                    androidx.compose.material3.LocalContentColor provides
-                        MiuixTheme.colorScheme.onBackground,
-                    top.yukonga.miuix.kmp.theme.LocalContentColor provides
-                        MiuixTheme.colorScheme.onBackground,
+                    androidx.compose.material3.LocalContentColor provides colors.onBackground,
+                    top.yukonga.miuix.kmp.theme.LocalContentColor provides colors.onBackground,
                     content = content,
                 )
             }

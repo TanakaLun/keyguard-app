@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -43,6 +44,10 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.SnackbarDuration
+import top.yukonga.miuix.kmp.basic.SnackbarHost
+import top.yukonga.miuix.kmp.basic.SnackbarHostState
+import top.yukonga.miuix.kmp.basic.SnackbarResult
 import androidx.compose.material3.contentColorFor
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
@@ -149,6 +154,8 @@ import com.artemchep.keyguard.ui.theme.labelLarge
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.labelSmall
 import com.artemchep.keyguard.ui.theme.surfaceContainerLow
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 private const val ROUTE_NAME = "home"
 
@@ -356,6 +363,77 @@ fun HomeScreenContent(
             var bottomNavBarSize by remember {
                 mutableStateOf(64.dp)
             }
+            val snackbarHostState = remember {
+                SnackbarHostState()
+            }
+
+            // Prompts are indefinite Miuix snackbars with an action, instead of
+            // bespoke banner rows.
+            val updatedContext by rememberUpdatedState(LocalLeContext)
+            val pendingPermissionState = remember(accountStatusState) {
+                derivedStateOf {
+                    accountStatusState.value.pendingPermissions
+                        .firstOrNull { it.permission != Permission.LOCAL_NETWORK }
+                }
+            }
+            val pendingPermission = pendingPermissionState.value
+            val notificationsMessage = stringResource(Res.string.post_notifications_permission_banner_text)
+            val grantPermissionLabel = stringResource(Res.string.grant_permission)
+            LaunchedEffect(pendingPermission) {
+                val permission = pendingPermission
+                    ?: return@LaunchedEffect
+                var finished = false
+                try {
+                    val result = snackbarHostState.showSnackbar(
+                        message = notificationsMessage,
+                        actionLabel = grantPermissionLabel,
+                        withDismissAction = true,
+                        duration = SnackbarDuration.Indefinite,
+                    )
+                    finished = true
+                    if (result == SnackbarResult.ActionPerformed) {
+                        permission.ask(updatedContext)
+                    }
+                } finally {
+                    // The prompt is gone from the state while it is still on
+                    // the screen; take it away with it.
+                    if (!finished) {
+                        withContext(NonCancellable) {
+                            snackbarHostState.newestSnackbarData()?.dismiss()
+                        }
+                    }
+                }
+            }
+
+            val screenshotsAllowedMessage = stringResource(Res.string.pref_item_allow_screenshots_badge)
+            val disableLabel = stringResource(Res.string.disable)
+            val screenshotsAllowed = allowScreenshotsState.value
+            LaunchedEffect(screenshotsAllowed) {
+                if (!screenshotsAllowed) {
+                    return@LaunchedEffect
+                }
+                var finished = false
+                try {
+                    val result = snackbarHostState.showSnackbar(
+                        message = screenshotsAllowedMessage,
+                        actionLabel = disableLabel,
+                        withDismissAction = true,
+                        duration = SnackbarDuration.Indefinite,
+                    )
+                    finished = true
+                    if (result == SnackbarResult.ActionPerformed) {
+                        putAllowScreenshots(AllowScreenshots.DISABLED)
+                            .attempt()
+                            .launchIn(GlobalScope)
+                    }
+                } finally {
+                    if (!finished) {
+                        withContext(NonCancellable) {
+                            snackbarHostState.newestSnackbarData()?.dismiss()
+                        }
+                    }
+                }
+            }
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -371,16 +449,34 @@ fun HomeScreenContent(
                     ),
             ) {
                 val defaultContainerColor = MiuixTheme.colorScheme.surfaceContainerLow
-                CompositionLocalProvider(
-                    LocalSurfaceColor provides defaultContainerColor,
-                    LocalNavigationNodeVisualStack provides persistentListOf(),
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 ) {
-                    NavigationNode(
+                    CompositionLocalProvider(
+                        LocalSurfaceColor provides defaultContainerColor,
+                        LocalNavigationNodeVisualStack provides persistentListOf(),
+                    ) {
+                        NavigationNode(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(defaultContainerColor),
+                            entries = backStack,
+                        )
+                    }
+                    SnackbarHost(
+                        state = snackbarHostState,
                         modifier = Modifier
+                            .align(Alignment.BottomCenter)
                             .fillMaxWidth()
-                            .weight(1f)
-                            .background(defaultContainerColor),
-                        entries = backStack,
+                            .then(
+                                if (bottomNavBarVisible) {
+                                    Modifier
+                                } else {
+                                    Modifier.padding(bottomInsets.asPaddingValues())
+                                },
+                            ),
                     )
                 }
 
@@ -420,38 +516,6 @@ fun HomeScreenContent(
 //                            } else Modifier
 //                        ),
 //                )
-                AnimatedVisibility(
-                    visible = allowScreenshotsState.value,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MiuixTheme.colorScheme.warningContainer)
-                            .clickable {
-                                putAllowScreenshots(AllowScreenshots.DISABLED)
-                                    .attempt()
-                                    .launchIn(GlobalScope)
-                            }
-                            .padding(
-                                horizontal = Dimens.textHorizontalPadding,
-                                vertical = 8.dp,
-                            ),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(16.dp),
-                            imageVector = Icons.Outlined.Screenshot,
-                            contentDescription = null,
-                            tint = MiuixTheme.colorScheme.onWarningContainer,
-                        )
-                        Text(
-                            style = MiuixTheme.textStyles.labelSmall,
-                            color = MiuixTheme.colorScheme.onWarningContainer,
-                            text = stringResource(Res.string.pref_item_allow_screenshots_badge),
-                        )
-                    }
-                }
                 AnimatedVisibility(
                     visible = bottomNavBarVisible,
                 ) {
@@ -610,22 +674,6 @@ private fun BannerStatusBadge(
                         error = true,
                         onClick = {
                             navigateSyncStatus(updatedNavController)
-                        },
-                    )
-                }
-
-                statusState.value.pendingPermissions
-                    .any { it.permission != Permission.LOCAL_NETWORK } -> {
-                    val permission = statusState.value.pendingPermissions
-                        .first { it.permission != Permission.LOCAL_NETWORK }
-                    val presentation = permission.permission.homePresentation()
-                    BannerStatusBadgeContentModel(
-                        count = 0,
-                        title = TextHolder.Res(presentation.title),
-                        text = TextHolder.Res(presentation.text),
-                        error = false,
-                        onClick = {
-                            permission.ask(updatedContext)
                         },
                     )
                 }
