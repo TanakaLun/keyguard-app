@@ -75,6 +75,7 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.titleMedium
 import com.artemchep.keyguard.ui.theme.titleSmall
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
 
 private const val SubscriptionsCountDefault = 2
 private const val ProductsCountDefault = 1

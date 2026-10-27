@@ -46,6 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
 
 @Composable
 fun CollectionsScreen(

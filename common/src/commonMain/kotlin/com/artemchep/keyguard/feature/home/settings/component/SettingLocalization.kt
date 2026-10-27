@@ -16,7 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Translate
-import androidx.compose.material3.BadgedBox
+import top.yukonga.miuix.kmp.basic.BadgedBox
 import androidx.compose.material3.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton

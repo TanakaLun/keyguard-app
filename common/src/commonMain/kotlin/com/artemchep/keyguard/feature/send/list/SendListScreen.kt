@@ -27,7 +27,6 @@ import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import top.yukonga.miuix.kmp.basic.Checkbox
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -127,6 +126,7 @@ import androidx.compose.ui.state.ToggleableState
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.titleMedium
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
 
 @Composable
 fun SendListScreen(

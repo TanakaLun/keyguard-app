@@ -32,7 +32,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -84,6 +83,7 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
 
 private inline val flatItemSmallCornerSizeDp get() = 4.dp
 

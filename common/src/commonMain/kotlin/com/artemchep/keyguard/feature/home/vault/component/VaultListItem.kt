@@ -144,7 +144,8 @@ import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.ui.theme.titleMedium
 import androidx.compose.material3.MaterialTheme
-import top.yukonga.miuix.kmp.theme.Colors
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 
 @Composable
 fun VaultListItem(
@@ -1263,7 +1264,7 @@ fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {
 }
 
 @Composable
-fun Colors.localSurfaceColorAtElevation(
+fun ColorScheme.localSurfaceColorAtElevation(
     surface: Color,
     elevation: Dp,
 ): Color {
@@ -1282,7 +1283,7 @@ fun Colors.localSurfaceColorAtElevation(
  *
  * @param elevation Elevation value used to compute alpha of the color overlay layer.
  */
-fun Colors.surfaceColorAtElevation(
+fun ColorScheme.surfaceColorAtElevation(
     elevation: Dp,
 ): Color {
     val tint = surfaceColorAtElevationSemi(elevation = elevation)
@@ -1300,12 +1301,12 @@ fun Colors.surfaceColorAtElevation(
  *
  * @param elevation Elevation value used to compute alpha of the color overlay layer.
  */
-fun Colors.surfaceColorAtElevationSemi(
+fun ColorScheme.surfaceColorAtElevationSemi(
     elevation: Dp,
 ): Color {
     if (elevation == 0.dp) return Color.Unspecified
     val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return primary.combineAlpha(alpha = alpha)
+    return surfaceTint.combineAlpha(alpha = alpha)
 }
 
 @Composable

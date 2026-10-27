@@ -53,6 +53,7 @@ import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import top.yukonga.miuix.kmp.overlay.OverlayDialog
+import androidx.compose.foundation.layout.Column
 
 @Composable
 internal fun AttachmentArchiveContent(

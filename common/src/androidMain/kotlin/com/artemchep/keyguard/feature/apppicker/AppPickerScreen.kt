@@ -55,6 +55,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.labelMedium
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 
 @Composable
 fun AppPickerScreen(

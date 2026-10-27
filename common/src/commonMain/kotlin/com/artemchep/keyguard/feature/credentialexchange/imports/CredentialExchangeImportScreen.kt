@@ -21,7 +21,7 @@ import androidx.compose.material.icons.outlined.AppShortcut
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SystemUpdateAlt
-import androidx.compose.material3.BadgedBox
+import top.yukonga.miuix.kmp.basic.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor

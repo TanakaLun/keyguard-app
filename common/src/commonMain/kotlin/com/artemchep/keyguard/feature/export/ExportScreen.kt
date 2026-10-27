@@ -16,8 +16,8 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SaveAlt
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
+import top.yukonga.miuix.kmp.basic.Badge
+import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api

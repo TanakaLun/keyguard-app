@@ -57,7 +57,6 @@ import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelLarge
 import com.artemchep.keyguard.ui.theme.titleSmall
-import top.yukonga.miuix.kmp.theme.Colors
 
 @Composable
 fun VaultViewInfoItem(
@@ -238,11 +237,11 @@ private fun LearnButton(
     }
 }
 
-private fun Colors.colorAtElevation(
+private fun ColorScheme.colorAtElevation(
     color: Color,
     elevation: Dp,
 ): Color {
     if (elevation == 0.dp) return color
     val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return primary.copy(alpha = alpha).compositeOver(color)
+    return surfaceTint.copy(alpha = alpha).compositeOver(color)
 }

@@ -38,8 +38,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.NotificationsActive
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
+import top.yukonga.miuix.kmp.basic.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
@@ -149,6 +148,7 @@ import com.artemchep.keyguard.ui.theme.displayLarge
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.ui.theme.titleMedium
 import androidx.compose.material3.MaterialTheme
+import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
 
 @Composable
 fun WatchtowerScreen(
