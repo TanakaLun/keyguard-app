@@ -2,7 +2,7 @@ package com.artemchep.keyguard.feature.home.settings.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Text
 import com.artemchep.keyguard.common.service.cli.CliService
 import com.artemchep.keyguard.common.usecase.WindowCoroutineScope
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents

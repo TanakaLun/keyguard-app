@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.feature.yubikey
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

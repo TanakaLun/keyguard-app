@@ -3,7 +3,7 @@ package com.artemchep.keyguard.feature.auth.bitwarden.twofactor
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import arrow.core.partially1
 import com.artemchep.keyguard.feature.fido2.Fido2PromptEffect

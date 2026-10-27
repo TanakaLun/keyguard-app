@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.Key
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
+import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.res.Res

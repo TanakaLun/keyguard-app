@@ -11,7 +11,7 @@ import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.SortByAlpha
-import androidx.compose.material3.Icon
+import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.ui.graphics.Color
 import arrow.core.partially1
 import arrow.optics.Getter

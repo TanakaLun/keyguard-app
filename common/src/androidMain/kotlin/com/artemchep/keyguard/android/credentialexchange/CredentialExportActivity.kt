@@ -3,7 +3,7 @@ package com.artemchep.keyguard.android.credentialexchange
 import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

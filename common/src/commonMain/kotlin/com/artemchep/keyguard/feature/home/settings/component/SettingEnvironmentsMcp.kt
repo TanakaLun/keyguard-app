@@ -2,7 +2,7 @@ package com.artemchep.keyguard.feature.home.settings.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import com.artemchep.keyguard.common.model.AgentStatus
 import com.artemchep.keyguard.common.service.cli.agent.CliAgentHost
