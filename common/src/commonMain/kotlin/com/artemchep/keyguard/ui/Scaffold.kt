@@ -36,11 +36,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
+import top.yukonga.miuix.kmp.basic.FabPosition
 import androidx.compose.material3.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import top.yukonga.miuix.kmp.basic.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
@@ -151,7 +151,6 @@ fun ScaffoldLazyColumn(
             },
             floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
-            contentColor = contentColor,
             contentWindowInsets = contentWindowInsets,
         ) { contentPadding ->
             val contentPaddingWithFab = calculatePaddingWithFab(
@@ -236,7 +235,6 @@ fun ScaffoldColumn(
             },
             floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
-            contentColor = contentColor,
             contentWindowInsets = contentWindowInsets,
         ) { contentPadding ->
             val contentPaddingWithFab = calculatePaddingWithFab(
