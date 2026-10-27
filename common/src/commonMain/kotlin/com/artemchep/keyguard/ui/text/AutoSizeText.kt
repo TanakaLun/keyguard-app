@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
-import androidx.compose.ui.unit.isSp
 import com.artemchep.keyguard.ui.text.SuggestedFontSizesStatus.Companion.validSuggestedFontSizes
 import kotlin.math.min
 import kotlin.math.roundToInt

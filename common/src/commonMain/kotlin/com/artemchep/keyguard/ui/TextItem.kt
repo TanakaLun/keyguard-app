@@ -985,7 +985,10 @@ private fun TextFieldLabel(
     hasError: Boolean,
 ) {
     val expandedTextSize = MiuixTheme.textStyles.bodySmall.fontSize.value
-    val normalTextSize = LocalTextStyle.current.fontSize.value
+    val normalTextSize = LocalTextStyle.current.fontSize
+        .takeIf { it.isSp }
+        ?.value
+        ?: expandedTextSize
     val textSize by animateFloatAsState(
         targetValue = if (expanded) expandedTextSize else normalTextSize,
     )

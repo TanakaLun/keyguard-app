@@ -16,7 +16,6 @@ import kotlin.math.ln
 import top.yukonga.miuix.kmp.theme.Colors
 import top.yukonga.miuix.kmp.theme.TextStyles
 import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.isSp
 
 // ---------------------------------------------------------------------------
 // Keyguard semantic roles on top of the Miuix color scheme.
