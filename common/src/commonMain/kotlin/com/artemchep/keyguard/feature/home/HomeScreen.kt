@@ -448,7 +448,7 @@ fun HomeScreenContent(
                         },
                     ),
             ) {
-                val defaultContainerColor = MiuixTheme.colorScheme.surfaceContainerLow
+                val defaultContainerColor = MiuixTheme.colorScheme.surface
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

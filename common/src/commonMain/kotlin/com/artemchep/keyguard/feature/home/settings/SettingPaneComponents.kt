@@ -53,6 +53,9 @@ import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 
 @Stable
 interface SettingPaneComponents {
@@ -186,6 +189,7 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
         var dropdownExpanded by remember {
             mutableStateOf(false)
         }
+        val hapticFeedback = LocalHapticFeedback.current
         Box {
             BasicComponent(
                 startAction = if (icon != null) {
@@ -205,8 +209,11 @@ object SettingPaneComponentsDefault : SettingPaneComponents {
                     }
                 },
                 insideMargin = BasicComponentDefaults.InsideMargin,
+                role = Role.DropdownList,
+                holdDownState = dropdownExpanded,
                 onClick = {
                     dropdownExpanded = true
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
                 },
             ) {
                 Column {

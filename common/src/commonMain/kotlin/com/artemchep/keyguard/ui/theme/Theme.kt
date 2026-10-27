@@ -40,6 +40,11 @@ import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.Font
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
+import top.yukonga.miuix.kmp.basic.Scaffold
 
 val ColorScheme.selectedContainer
     @ReadOnlyComposable
@@ -329,14 +334,20 @@ fun KeyguardTheme(
                         onSecondary = colors.onSecondary,
                     ),
             ) {
-                // The migrated UI reads the Miuix content color, while the
-                // remaining Material 3 components read the Material one. Seed
-                // both from the scheme background for the whole app.
-                CompositionLocalProvider(
-                    androidx.compose.material3.LocalContentColor provides colors.onBackground,
-                    top.yukonga.miuix.kmp.theme.LocalContentColor provides colors.onBackground,
-                    content = content,
-                )
+                // The root scaffold paints the app background and, more
+                // importantly, hosts every Miuix overlay (dropdowns, dialogs).
+                // Overlays are registered into the outermost scaffold, so one
+                // root host makes them render from any screen.
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                ) { _ ->
+                    CompositionLocalProvider(
+                        androidx.compose.material3.LocalContentColor provides colors.onSurface,
+                        LocalSurfaceColor provides colors.surface,
+                        content = content,
+                    )
+                }
             }
         }
     }

@@ -33,6 +33,8 @@ import com.artemchep.keyguard.ui.theme.danger
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun DropdownScope.DropdownMenuItemFlat(
@@ -168,10 +170,15 @@ fun OptionsButton(
     }
 
     Box {
+        val hapticFeedback = LocalHapticFeedback.current
         IconButton(
             enabled = enabled,
+            holdDownState = isAutofillWindowShowing,
             onClick = {
                 isAutofillWindowShowing = !isAutofillWindowShowing
+                if (isAutofillWindowShowing) {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                }
             },
         ) {
             Icon(
