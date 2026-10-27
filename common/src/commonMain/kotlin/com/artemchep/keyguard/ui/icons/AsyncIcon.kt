@@ -2,7 +2,6 @@ package com.artemchep.keyguard.ui.icons
 
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +20,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.rememberVectorPainterCustom
 import com.artemchep.keyguard.ui.shimmer.shimmer
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun <T> AsyncIcon(
@@ -29,7 +29,7 @@ fun <T> AsyncIcon(
     contentDescription: String?,
     errorImageVector: ImageVector,
 ) {
-    val surfaceColor = MaterialTheme.colorScheme
+    val surfaceColor = MiuixTheme.colorScheme
         .surfaceColorAtElevation(LocalAbsoluteTonalElevation.current + 16.dp)
     val contentColor = LocalContentColor.current
     val highlightColor = contentColor

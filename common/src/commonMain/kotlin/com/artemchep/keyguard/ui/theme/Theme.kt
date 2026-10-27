@@ -53,7 +53,6 @@ val ColorScheme.badgeContainer
     @ReadOnlyComposable
     get() = tertiaryContainer
 
-private const val HUE_ERROR = 0f
 private const val HUE_WARNING = 55f
 private const val HUE_INFO = 210f
 private const val HUE_OK = 120f

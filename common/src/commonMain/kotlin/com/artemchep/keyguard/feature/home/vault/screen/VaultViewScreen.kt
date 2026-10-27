@@ -37,7 +37,7 @@ import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.home.vault.component.VaultItemIcon2
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemIcon
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -63,8 +63,7 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.titleSmall
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 @Composable
 fun VaultViewScreen(
@@ -265,7 +264,7 @@ private fun VaultViewTitle(
                 !header.hasRemoteService
             ) {
                 val elevation = LocalAbsoluteTonalElevation.current + 8.dp
-                MaterialTheme.colorScheme
+                MiuixTheme.colorScheme
                     .surfaceColorAtElevationSemi(elevation = elevation)
                     .combineAlpha(LocalContentColor.current.alpha)
             } else {

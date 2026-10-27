@@ -43,7 +43,6 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.icons.outlined.Title
 import top.yukonga.miuix.kmp.basic.Checkbox
-import androidx.compose.material3.ColorScheme
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
@@ -143,9 +142,6 @@ import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.ui.theme.titleMedium
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 
 @Composable
 fun VaultListItem(
@@ -758,12 +754,12 @@ fun SmartBadge(
 
     val shape = KgShapes.small
     val backgroundModifier = if (selected) {
-        val tintColor = MaterialTheme.colorScheme
+        val tintColor = MiuixTheme.colorScheme
             .surfaceColorAtElevationSemi(4.dp)
         Modifier
             .background(tintColor)
     } else if (updatedOnClick != null) {
-        val tintColor = MaterialTheme.colorScheme
+        val tintColor = MiuixTheme.colorScheme
             .surfaceColorAtElevationSemi(1.dp)
         Modifier
             .background(tintColor)
@@ -771,7 +767,7 @@ fun SmartBadge(
         Modifier
     }
     val borderModifier = if (!selected && updatedOnClick == null) {
-        val tintColor = MaterialTheme.colorScheme
+        val tintColor = MiuixTheme.colorScheme
             .surfaceColorAtElevationSemi(1.dp)
         Modifier
             .border(Dp.Hairline, tintColor, shape)
@@ -1264,51 +1260,6 @@ fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {
 }
 
 @Composable
-fun ColorScheme.localSurfaceColorAtElevation(
-    surface: Color,
-    elevation: Dp,
-): Color {
-    val tint = surfaceColorAtElevationSemi(elevation = elevation)
-    return if (tint.isSpecified) {
-        tint.compositeOver(surface)
-    } else {
-        surface
-    }
-}
-
-/**
- * Returns the [ColorScheme.surface] color with an alpha of the [ColorScheme.surfaceTint] color
- * overlaid on top of it.
- * Computes the surface tonal color at different elevation levels e.g. surface1 through surface5.
- *
- * @param elevation Elevation value used to compute alpha of the color overlay layer.
- */
-fun ColorScheme.surfaceColorAtElevation(
-    elevation: Dp,
-): Color {
-    val tint = surfaceColorAtElevationSemi(elevation = elevation)
-    return if (tint.isSpecified) {
-        tint.compositeOver(surface)
-    } else {
-        surface
-    }
-}
-
-/**
- * Returns the [ColorScheme.surface] color with an alpha of the [ColorScheme.surfaceTint] color
- * overlaid on top of it.
- * Computes the surface tonal color at different elevation levels e.g. surface1 through surface5.
- *
- * @param elevation Elevation value used to compute alpha of the color overlay layer.
- */
-fun ColorScheme.surfaceColorAtElevationSemi(
-    elevation: Dp,
-): Color {
-    if (elevation == 0.dp) return Color.Unspecified
-    val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
-    return surfaceTint.combineAlpha(alpha = alpha)
-}
-
 @Composable
 fun BoxScope.VaultItemIcon2(
     icon: VaultItemIcon,

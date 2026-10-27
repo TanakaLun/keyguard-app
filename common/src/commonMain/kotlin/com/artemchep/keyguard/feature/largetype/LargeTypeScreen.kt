@@ -182,7 +182,7 @@ private fun SymbolItem(
             } else {
                 elevation.minus(2.dp).coerceAtLeast(0.dp)
             }
-            MaterialTheme.colorScheme
+            MiuixTheme.colorScheme
                 .surfaceColorAtElevation(backgroundElevation)
         }
         val backgroundColorState = animateColorAsState(

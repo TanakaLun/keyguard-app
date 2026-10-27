@@ -66,7 +66,7 @@ import androidx.compose.ui.unit.sp
 import arrow.core.andThen
 import com.artemchep.keyguard.common.usecase.CopyText
 import com.artemchep.keyguard.feature.home.vault.component.VaultItemIcon2
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemIcon
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.textResource
@@ -82,8 +82,7 @@ import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 private inline val flatItemSmallCornerSizeDp get() = 4.dp
 
@@ -768,7 +767,7 @@ fun AvatarBuilder(
                     background = color,
                 )
         }
-        ?: MaterialTheme.colorScheme
+        ?: MiuixTheme.colorScheme
             .surfaceColorAtElevationSemi(
                 elevation = LocalAbsoluteTonalElevation.current + 8.dp,
             )

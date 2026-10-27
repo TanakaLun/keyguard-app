@@ -33,7 +33,7 @@ import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.ui.icons.FaviconIcon
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.search.sort.SortButton
@@ -54,8 +54,7 @@ import kotlinx.coroutines.flow.first
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.labelMedium
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 
 @Composable
 fun AppPickerScreen(
@@ -285,7 +284,7 @@ private fun AppItem(
                 Text(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colorScheme
+                            MiuixTheme.colorScheme
                                 .surfaceColorAtElevation(elevation + 2.dp),
                             KgShapes.small,
                         )

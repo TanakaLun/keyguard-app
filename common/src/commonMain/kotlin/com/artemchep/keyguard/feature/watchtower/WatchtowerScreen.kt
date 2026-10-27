@@ -83,7 +83,7 @@ import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.appreview.RequestAppReviewEffect
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.search.filter.FilterButton
@@ -147,8 +147,7 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.displayLarge
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.ui.theme.titleMedium
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 @Composable
 fun WatchtowerScreen(
@@ -764,7 +763,7 @@ private fun ColumnScope.DashboardContentSkeleton() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         for (i in 0..4) {
-            val tintColor = MaterialTheme.colorScheme
+            val tintColor = MiuixTheme.colorScheme
                 .surfaceColorAtElevationSemi(1.dp)
             Row(
                 modifier = Modifier

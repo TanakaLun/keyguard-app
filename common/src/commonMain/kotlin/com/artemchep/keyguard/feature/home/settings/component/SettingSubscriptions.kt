@@ -45,7 +45,7 @@ import com.artemchep.keyguard.common.usecase.GetProducts
 import com.artemchep.keyguard.common.usecase.GetSubscriptions
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.home.vault.component.Section
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.onboarding.OnboardingCard
 import com.artemchep.keyguard.feature.onboarding.onboardingItemsPremium
 import com.artemchep.keyguard.platform.LocalLeContext
@@ -74,8 +74,7 @@ import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.titleMedium
 import com.artemchep.keyguard.ui.theme.titleSmall
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 private const val SubscriptionsCountDefault = 2
 private const val ProductsCountDefault = 1
@@ -373,7 +372,7 @@ private fun SettingItemLayout(
 ) {
     val backgroundShape = KgShapes.large
     val backgroundModifier = run {
-        val tintColor = MaterialTheme.colorScheme
+        val tintColor = MiuixTheme.colorScheme
             .surfaceColorAtElevationSemi(1.dp)
         Modifier
             .background(tintColor)

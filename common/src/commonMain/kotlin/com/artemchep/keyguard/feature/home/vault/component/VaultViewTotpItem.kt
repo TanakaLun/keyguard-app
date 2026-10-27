@@ -66,8 +66,8 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.titleSmall
 import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -184,7 +184,7 @@ fun VaultViewTotpBadge2(
         }
     }
 
-    val tintColor = MaterialTheme.colorScheme
+    val tintColor = MiuixTheme.colorScheme
         .surfaceColorAtElevationSemi(1.dp)
     Row(
         modifier = modifier

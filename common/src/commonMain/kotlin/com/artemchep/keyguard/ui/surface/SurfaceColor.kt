@@ -2,11 +2,16 @@ package com.artemchep.keyguard.ui.surface
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
-val LocalSurfaceColor = staticCompositionLocalOf {
-    Color.White
+/**
+ * The surface color of the current screen. Defaults to the Miuix surface, so a
+ * screen that does not provide one never falls back to a hardcoded color.
+ */
+val LocalSurfaceColor = compositionLocalOf {
+    MiuixTheme.colorScheme.surface
 }
 
 @Composable

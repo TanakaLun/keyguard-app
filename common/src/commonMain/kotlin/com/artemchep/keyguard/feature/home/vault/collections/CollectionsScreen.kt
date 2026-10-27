@@ -24,7 +24,7 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -45,8 +45,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 @Composable
 fun CollectionsScreen(
@@ -191,7 +190,7 @@ private fun OrganizationsScreenCollectionItem(
         dropdown = item.actions,
         leading = {
             val pillElevation = LocalAbsoluteTonalElevation.current + 8.dp
-            val pillColor = MaterialTheme.colorScheme
+            val pillColor = MiuixTheme.colorScheme
                 .surfaceColorAtElevationSemi(elevation = pillElevation)
             AhLayout(
                 modifier = modifier,

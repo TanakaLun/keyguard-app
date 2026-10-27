@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.home.vault.component
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
@@ -16,6 +15,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import com.artemchep.keyguard.feature.home.vault.search.query.highlight.QueryHighlightRole
 import com.artemchep.keyguard.feature.home.vault.search.query.highlight.QueryHighlighting
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.tertiary
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 
 @Immutable
 internal data class SearchQueryHighlightColors(
@@ -28,16 +30,16 @@ internal data class SearchQueryHighlightColors(
 
 @Composable
 internal fun rememberSearchQueryHighlightColors(): SearchQueryHighlightColors {
-    val colorScheme = MaterialTheme.colorScheme
-    return remember(colorScheme) {
-        SearchQueryHighlightColors(
-            textClause = colorScheme.primary,
-            facetClause = colorScheme.secondary,
-            booleanClause = colorScheme.tertiary,
-            unsupportedQualifier = colorScheme.onSurfaceVariant,
-            diagnostic = colorScheme.error,
-        )
-    }
+    val colorScheme = MiuixTheme.colorScheme
+    // The Miuix color scheme is a stable object whose roles are snapshot state,
+    // so this must not be remembered on the scheme identity.
+    return SearchQueryHighlightColors(
+        textClause = colorScheme.primary,
+        facetClause = colorScheme.secondary,
+        booleanClause = colorScheme.tertiary,
+        unsupportedQualifier = colorScheme.onSurfaceVariant,
+        diagnostic = colorScheme.error,
+    )
 }
 
 @Composable
