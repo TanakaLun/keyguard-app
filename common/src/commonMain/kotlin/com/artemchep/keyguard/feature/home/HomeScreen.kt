@@ -470,6 +470,9 @@ fun HomeScreenContent(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
+                            // The host must not stretch over the content, or it
+                            // would swallow the page scroll.
+                            .heightIn(max = 200.dp)
                             .then(
                                 if (bottomNavBarVisible) {
                                     Modifier
