@@ -57,6 +57,7 @@ import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelLarge
 import com.artemchep.keyguard.ui.theme.titleSmall
+import com.artemchep.keyguard.ui.theme.colorAtElevation
 
 @Composable
 fun VaultViewInfoItem(

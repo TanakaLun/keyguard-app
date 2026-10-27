@@ -60,8 +60,6 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.headlineMedium
 import com.artemchep.keyguard.ui.theme.labelSmall
 import androidx.compose.material3.MaterialTheme
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 
 @Composable
 fun LargeTypeScreen(

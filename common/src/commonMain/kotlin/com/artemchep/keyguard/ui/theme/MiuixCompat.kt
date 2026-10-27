@@ -254,6 +254,16 @@ fun Colors.surfaceColorAtElevationSemi(
     return primary.copy(alpha = alpha)
 }
 
+/** Returns [color] tinted by the tonal elevation overlay. */
+fun Colors.colorAtElevation(
+    color: Color,
+    elevation: Dp,
+): Color {
+    if (elevation == 0.dp) return color
+    val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
+    return primary.copy(alpha = alpha).compositeOver(color)
+}
+
 // ---------------------------------------------------------------------------
 // Material 3 typography aliases mapped to Miuix text styles.
 // ---------------------------------------------------------------------------

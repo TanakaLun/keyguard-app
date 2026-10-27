@@ -21,8 +21,6 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.rememberVectorPainterCustom
 import com.artemchep.keyguard.ui.shimmer.shimmer
 import com.artemchep.keyguard.ui.theme.combineAlpha
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevation
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 
 @Composable
 fun <T> AsyncIcon(
