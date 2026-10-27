@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.ui.icons
 
 import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.LocalContentColor
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable

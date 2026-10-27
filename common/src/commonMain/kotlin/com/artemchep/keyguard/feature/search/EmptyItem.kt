@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.feature.search
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LocalContentColor
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

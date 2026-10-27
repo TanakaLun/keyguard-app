@@ -40,6 +40,7 @@ import kotlin.Boolean
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.Font
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 val ColorScheme.selectedContainer
     @ReadOnlyComposable
@@ -369,7 +370,16 @@ fun KeyguardTheme(
                 config = config,
                 dark = dark,
             ) {
-                content()
+                // The migrated UI reads the Miuix content color, while the
+                // remaining Material 3 components read the Material one. Seed
+                // both from the scheme background for the whole app.
+                CompositionLocalProvider(
+                    androidx.compose.material3.LocalContentColor provides
+                        MiuixTheme.colorScheme.onBackground,
+                    top.yukonga.miuix.kmp.theme.LocalContentColor provides
+                        MiuixTheme.colorScheme.onBackground,
+                    content = content,
+                )
             }
         }
     }
