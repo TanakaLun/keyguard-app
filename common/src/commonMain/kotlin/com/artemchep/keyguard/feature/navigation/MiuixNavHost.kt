@@ -127,6 +127,25 @@ internal fun MiuixNavHost(
         return
     }
 
+    // A root screen has nothing to animate, so it renders directly. This also
+    // keeps the tab roots free of the navigation runtime.
+    if (fullscreenCount == 1) {
+        val entry = visualEntries[0]
+        val stacks = stacksById[entry.id]
+        Box(modifier) {
+            CompositionLocalProvider(
+                LocalNavigationNodeLogicalStack provides (stacks?.logical ?: baseLogicalStack),
+                LocalNavigationNodeVisualStack provides (stacks?.visual ?: baseVisualStack),
+                LocalNavigationNodeFinishing provides parentFinishing,
+            ) {
+                NavigationRoute(
+                    entry = entry,
+                )
+            }
+        }
+        return
+    }
+
     val transition: NavTransition = when (getNavAnimation().value) {
         NavAnimation.DISABLED -> NavTransitions.None
         NavAnimation.CROSSFADE -> CrossfadeNavTransition
