@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - ci-build
+      - miuix-phase0
 
 permissions:
   contents: read
