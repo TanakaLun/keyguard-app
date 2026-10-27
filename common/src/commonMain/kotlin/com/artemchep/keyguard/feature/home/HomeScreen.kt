@@ -44,6 +44,7 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SnackbarDuration
 import top.yukonga.miuix.kmp.basic.SnackbarHost
 import top.yukonga.miuix.kmp.basic.SnackbarHostState
@@ -360,9 +361,7 @@ fun HomeScreenContent(
                 .only(WindowInsetsSides.Bottom)
             val bottomNavBarVisible =
                 LocalHomeLayout.current is HomeLayout.Vertical && navBarVisible
-            var bottomNavBarSize by remember {
-                mutableStateOf(64.dp)
-            }
+
             val snackbarHostState = remember {
                 SnackbarHostState()
             }
@@ -434,176 +433,112 @@ fun HomeScreenContent(
                     }
                 }
             }
-            Column(
+
+            // The same shell as the Miuix example: the page content is the
+            // scaffold content, the navigation bar is the bottom bar, and the
+            // snackbars belong to the scaffold.
+            Scaffold(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
-                    .then(
-                        if (bottomNavBarVisible) {
-                            val navBarInsets = bottomInsets
-                                .add(WindowInsets(bottom = bottomNavBarSize))
-                            Modifier.consumeWindowInsets(navBarInsets)
-                        } else {
-                            Modifier
-                        },
-                    ),
-            ) {
-                val defaultContainerColor = MiuixTheme.colorScheme.surface
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                ) {
-                    CompositionLocalProvider(
-                        LocalSurfaceColor provides defaultContainerColor,
-                        LocalNavigationNodeVisualStack provides persistentListOf(),
+                    .fillMaxHeight(),
+                bottomBar = {
+                    AnimatedVisibility(
+                        visible = bottomNavBarVisible,
                     ) {
-                        NavigationNode(
+                        Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(defaultContainerColor),
-                            entries = backStack,
-                        )
-                    }
-                    SnackbarHost(
-                        state = snackbarHostState,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            // The host must not stretch over the content, or it
-                            // would swallow the page scroll.
-                            .heightIn(max = 200.dp)
-                            .then(
-                                if (bottomNavBarVisible) {
-                                    Modifier
-                                } else {
-                                    Modifier.padding(bottomInsets.asPaddingValues())
-                                },
-                            ),
-                    )
-                }
-
-                // TODO:
-//                val onboardingBannerState = rememberOnboardingBannerState()
-//                val notificationsBannerState = rememberNotificationsBannerState()
-//                kotlin.run {
-//                    val navigationController by rememberUpdatedState(LocalNavigationController.current)
-//                    ExpandedIfNotEmpty(
-//                        valueOrNull = Unit.takeIf { onboardingBannerState.value },
-//                    ) {
-//                        OnboardingBanner(
-//                            contentModifier = Modifier
-//                                .then(
-//                                    if (!bottomNavBarVisible && !notificationsBannerState.value) {
-//                                        Modifier
-//                                            .padding(bottomInsets.asPaddingValues())
-//                                    } else Modifier
-//                                ),
-//                            onClick = {
-//                                val intent = NavigationIntent.NavigateToRoute(
-//                                    route = OnboardingRoute,
-//                                )
-//                                navigationController.queue(intent)
-//                            },
-//                        )
-//                    }
-//                }
-//                // TODO: Show notifications banner as in a bottom navigation
-//                //  container if the orientation is landscape.
-//                NotificationsBanner(
-//                    contentModifier = Modifier
-//                        .then(
-//                            if (!bottomNavBarVisible) {
-//                                Modifier
-//                                    .padding(bottomInsets.asPaddingValues())
-//                            } else Modifier
-//                        ),
-//                )
-                AnimatedVisibility(
-                    visible = bottomNavBarVisible,
-                ) {
-                    val updatedDensity by rememberUpdatedState(LocalDensity.current)
-                    Column(
-                        modifier = Modifier
-                            .padding(bottomInsets.asPaddingValues())
-                            .onSizeChanged {
-                                val heightDp = (it.height.toFloat() / updatedDensity.density).dp
-                                bottomNavBarSize = heightDp
-                                    .coerceAtLeast(64.dp)
-                            },
-                    ) {
-                        val isSyncingState = remember(
-                            accountStatusState,
+                                .padding(bottomInsets.asPaddingValues()),
                         ) {
-                            derivedStateOf {
-                                accountStatusState.value.error == null &&
-                                        accountStatusState.value.pending != null
+                            val isSyncingState = remember(
+                                accountStatusState,
+                            ) {
+                                derivedStateOf {
+                                    accountStatusState.value.error == null &&
+                                            accountStatusState.value.pending != null
+                                }
                             }
-                        }
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = isSyncingState.value,
-                        ) {
-                            LinearProgressIndicator(
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = isSyncingState.value,
+                            ) {
+                                LinearProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                )
+                            }
+
+                            BannerStatusBadge(
                                 modifier = Modifier
                                     .fillMaxWidth(),
+                                statusState = accountStatusState,
                             )
-                        }
-
-                        BannerStatusBadge(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            statusState = accountStatusState,
-                        )
-                        val density = LocalDensity.current
-                        val routesSplit = remember(
-                            routes,
-                            maxWidth,
-                            density,
-                        ) {
-                            splitHomeNavigationItemsByMinSize(
-                                items = routes,
-                                availableSizePx = with(density) {
-                                    maxWidth.roundToPx()
-                                },
-                                itemMinSizePx = with(density) {
-                                    bottomNavigationItemMinSize.roundToPx()
-                                },
-                            )
-                        }
-                        NavigationBar(
-                            color = Color.Unspecified,
-                            showDivider = false,
-                        ) {
-                            routesSplit.visible.forEach { r ->
-                                key(r.key) {
-                                    val counterState = r.counterFlow.collectAsState(null)
-                                    BottomNavigationControllerItem(
-                                        modifier = Modifier
-                                            .homeNavigationTestTag(r.testTag),
+                            val density = LocalDensity.current
+                            val routesSplit = remember(
+                                routes,
+                                maxWidth,
+                                density,
+                            ) {
+                                splitHomeNavigationItemsByMinSize(
+                                    items = routes,
+                                    availableSizePx = with(density) {
+                                        maxWidth.roundToPx()
+                                    },
+                                    itemMinSizePx = with(density) {
+                                        bottomNavigationItemMinSize.roundToPx()
+                                    },
+                                )
+                            }
+                            NavigationBar(
+                                showDivider = false,
+                            ) {
+                                routesSplit.visible.forEach { r ->
+                                    key(r.key) {
+                                        val counterState = r.counterFlow.collectAsState(null)
+                                        BottomNavigationControllerItem(
+                                            modifier = Modifier
+                                                .homeNavigationTestTag(r.testTag),
+                                            backStack = backStack,
+                                            item = r,
+                                            count = counterState.value,
+                                            label = if (navLabelState.value) {
+                                                textResource(r.label)
+                                            } else {
+                                                ""
+                                            },
+                                        )
+                                    }
+                                }
+                                if (routesSplit.overflow.isNotEmpty()) {
+                                    BottomNavigationOverflowItem(
                                         backStack = backStack,
-                                        item = r,
-                                        count = counterState.value,
+                                        items = routesSplit.overflow,
                                         label = if (navLabelState.value) {
-                                            textResource(r.label)
+                                            stringResource(Res.string.options)
                                         } else {
                                             ""
                                         },
                                     )
                                 }
                             }
-                            if (routesSplit.overflow.isNotEmpty()) {
-                                BottomNavigationOverflowItem(
-                                    backStack = backStack,
-                                    items = routesSplit.overflow,
-                                    label = if (navLabelState.value) {
-                                        stringResource(Res.string.options)
-                                    } else {
-                                        ""
-                                    },
-                                )
-                            }
                         }
                     }
+                },
+                snackbarHost = {
+                    SnackbarHost(
+                        state = snackbarHostState,
+                    )
+                },
+                containerColor = MiuixTheme.colorScheme.surface,
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            ) { contentPadding ->
+                CompositionLocalProvider(
+                    LocalNavigationNodeVisualStack provides persistentListOf(),
+                ) {
+                    NavigationNode(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(contentPadding),
+                        entries = backStack,
+                    )
                 }
             }
         }

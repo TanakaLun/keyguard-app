@@ -42,7 +42,6 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.contentColorFor
 import top.yukonga.miuix.kmp.basic.FloatingActionButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -111,7 +110,7 @@ fun ScaffoldLazyColumn(
     expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     provideContentUserScrollEnabled: () -> Boolean = { true },
-    contentColor: Color = contentColorFor(containerColor),
+    contentColor: Color = LocalContentColor.current,
     contentWindowInsets: WindowInsets = scaffoldContentWindowInsets,
     overlay: @Composable OverlayScope.() -> Unit = {},
     listVerticalArrangement: Arrangement.Vertical = Arrangement.Top,
@@ -205,7 +204,7 @@ fun ScaffoldColumn(
     expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     provideContentUserScrollEnabled: () -> Boolean = { true },
-    contentColor: Color = contentColorFor(containerColor),
+    contentColor: Color = LocalContentColor.current,
     contentWindowInsets: WindowInsets = scaffoldContentWindowInsets,
     overlay: @Composable OverlayScope.() -> Unit = {},
     columnModifier: Modifier = Modifier,
@@ -360,7 +359,7 @@ class MutableFabScope(
 @Composable
 fun FabScope.DefaultFab(
     color: Color = MiuixTheme.colorScheme.primaryContainer,
-    contentColor: Color = contentColorFor(color),
+    contentColor: Color = LocalContentColor.current,
     icon: @Composable () -> Unit,
     text: @Composable () -> Unit,
 ) {

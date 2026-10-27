@@ -6,6 +6,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -116,11 +117,21 @@ internal fun MiuixNavHost(
     val lastStacks = remember { mutableMapOf<String, EntryStacks>() }
     lastStacks.putAll(stacksById)
 
-    val backStack = remember { mutableStateListOf<NavKey>() }
-    backStack.syncWith(
-        visualEntries = visualEntries,
-        fullscreenCount = fullscreenCount,
-    )
+    val backStack = remember {
+        mutableStateListOf<NavKey>().apply {
+            for (i in 0 until fullscreenCount) {
+                add(KgNavKey(visualEntries[i]))
+            }
+        }
+    }
+    // Never mutate snapshot state while composing: the projection is applied
+    // after the composition instead.
+    SideEffect {
+        backStack.syncWith(
+            visualEntries = visualEntries,
+            fullscreenCount = fullscreenCount,
+        )
+    }
 
     if (backStack.isEmpty()) {
         Box(modifier)
