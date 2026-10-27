@@ -45,6 +45,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import top.yukonga.miuix.kmp.basic.Scaffold
+import androidx.compose.foundation.LocalIndication
 
 val ColorScheme.selectedContainer
     @ReadOnlyComposable
@@ -287,6 +288,9 @@ fun KeyguardTheme(
         // Not remembered: the Miuix scheme is a stable object with snapshot
         // state roles, so the projection has to be re-read on every change.
         val scheme = colors.toMaterialColorScheme()
+        // Material provides its own ripple inside MaterialTheme, which would
+        // replace the Miuix press effect for every Miuix component.
+        val miuixIndication = LocalIndication.current
 
         val getFont = koinInject<GetFont>()
         val font = remember(getFont) {
@@ -343,6 +347,7 @@ fun KeyguardTheme(
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 ) { _ ->
                     CompositionLocalProvider(
+                        LocalIndication provides miuixIndication,
                         androidx.compose.material3.LocalContentColor provides colors.onSurface,
                         LocalSurfaceColor provides colors.surface,
                         content = content,
