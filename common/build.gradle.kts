@@ -155,6 +155,7 @@ kotlin {
                 implementation(libs.miuix.ui)
                 implementation(libs.miuix.icons)
                 implementation(libs.miuix.preference)
+                implementation(libs.miuix.nav)
                 api(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.atomicfu)
                 api(libs.kotlinx.coroutines.core)

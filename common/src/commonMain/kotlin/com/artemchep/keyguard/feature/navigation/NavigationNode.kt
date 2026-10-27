@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.navigation
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
@@ -15,23 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import com.artemchep.keyguard.common.usecase.GetNavAnimation
-import com.artemchep.keyguard.platform.LocalAnimationFactor
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
@@ -74,8 +67,6 @@ fun NavigationNode(
     offset: Int = 0,
     modifier: Modifier = Modifier,
 ) {
-    val getNavAnimation = koinInject<GetNavAnimation>()
-
     val newVisualEntries = remember(entries, offset) {
         if (offset < 0 || offset >= entries.size) {
             // If the offset is illegal then we just
@@ -98,96 +89,15 @@ fun NavigationNode(
         // Draw screen stack
         //
 
-        val previousRenderState = remember {
-            mutableStateOf<NodeRenderState?>(null)
-        }
-        val oldRenderState = remember {
-            mutableStateOf<NodeRenderState?>(null)
-        }
-        val screenRenderState = remember(
-            logicalStack,
-            visualStack,
-            entries,
-            newVisualEntries,
-            lastFullscreenEntryIndex,
-        ) {
-            // There are no screens in the stack.
-            if (lastFullscreenEntryIndex == -1) {
-                return@remember NodeRenderState.empty
-            }
-
-            val newLogicalStack = kotlin.run {
-                val items = entries
-                    .subList(fromIndex = 0, toIndex = lastFullscreenEntryIndex + 1 + offset)
-                logicalStack.addAll(items)
-            }
-            val newVisualStack = kotlin.run {
-                val items = newVisualEntries
-                    .subList(fromIndex = 0, toIndex = lastFullscreenEntryIndex + 1)
-                visualStack.addAll(items)
-            }
-            NodeRenderState(
-                logicalStack = newLogicalStack,
-                visualStack = newVisualStack,
-                entry = newVisualStack.last(),
+        if (lastFullscreenEntryIndex != -1) {
+            MiuixNavHost(
+                entries = entries,
+                visualEntries = newVisualEntries,
+                fullscreenCount = lastFullscreenEntryIndex + 1,
+                offset = offset,
+                modifier = Modifier
+                    .fillMaxSize(),
             )
-        }
-        remember(screenRenderState) {
-            previousRenderState.value = oldRenderState.value
-            oldRenderState.value = screenRenderState
-            1
-        }
-
-        val updatedAnimationScale by rememberUpdatedState(LocalAnimationFactor)
-        AnimatedContent(
-            modifier = Modifier
-                .fillMaxSize(),
-            targetState = screenRenderState,
-            transitionSpec = {
-                val animationType = getNavAnimation().value
-                val transitionType = kotlin.run {
-                    if (
-                        this.targetState.visualStack.size ==
-                        this.initialState.visualStack.size
-                    ) {
-                        return@run NavigationAnimationType.SWITCH
-                    }
-
-                    val isForward = when {
-                        initialState.visualStack.size == 0 -> true
-                        initialState.visualStack.size < targetState.visualStack.size -> true
-
-                        else -> false
-                    }
-                    if (isForward) {
-                        NavigationAnimationType.GO_FORWARD
-                    } else {
-                        NavigationAnimationType.GO_BACKWARD
-                    }
-                }
-
-                NavigationAnimation.transform(
-                    scale = updatedAnimationScale,
-                    animationType = animationType,
-                    transitionType = transitionType,
-                )
-            },
-            label = "",
-        ) { renderState ->
-            val entry = renderState.entry
-            key(entry?.id) {
-                if (entry != null) {
-                    CompositionLocalProvider(
-                        LocalNavigationNodeLogicalStack provides renderState.logicalStack,
-                        LocalNavigationNodeVisualStack provides renderState.visualStack,
-                        LocalNavigationNodeFinishing provides (parentFinishing || renderState != screenRenderState),
-                    ) {
-                        NavigationRoute(
-                            entry = entry,
-                        )
-                    }
-                }
-            }
         }
 
         //
@@ -291,7 +201,7 @@ private fun <T> Transition<T>.DialogCrossLifecycle(
 }
 
 @Composable
-private fun NavigationRoute(
+internal fun NavigationRoute(
     entry: NavigationEntry,
 ) {
     // A composable content must be able to fetch the
