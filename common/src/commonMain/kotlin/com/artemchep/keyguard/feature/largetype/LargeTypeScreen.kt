@@ -16,7 +16,7 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
-import androidx.compose.material3.surfaceColorAtElevation
+import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf

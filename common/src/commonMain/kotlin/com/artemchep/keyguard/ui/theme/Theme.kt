@@ -279,9 +279,9 @@ fun KeyguardTheme(
         dark = dark,
     ) {
         val colors = MiuixTheme.colorScheme
-        val scheme = remember(colors, dark) {
-            colors.toMaterialColorScheme()
-        }
+        // Not remembered: the Miuix scheme is a stable object with snapshot
+        // state roles, so the projection has to be re-read on every change.
+        val scheme = colors.toMaterialColorScheme()
 
         val getFont = koinInject<GetFont>()
         val font = remember(getFont) {

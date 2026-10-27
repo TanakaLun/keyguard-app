@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.gpgagent.keyserver.search.GpgKeyserverSearchRoute
 import com.artemchep.keyguard.feature.home.settings.gpg.GpgSettingsRoute
 import com.artemchep.keyguard.feature.home.vault.component.Section
-import com.artemchep.keyguard.feature.home.vault.component.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationController

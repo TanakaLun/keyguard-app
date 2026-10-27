@@ -1260,7 +1260,6 @@ fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {
 }
 
 @Composable
-@Composable
 fun BoxScope.VaultItemIcon2(
     icon: VaultItemIcon,
     modifier: Modifier = Modifier,
