@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isSp
+import androidx.compose.ui.unit.sp
 import com.artemchep.keyguard.ui.DefaultEmphasisAlpha
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.shimmer.shimmer
@@ -31,7 +33,13 @@ fun SkeletonText(
     }
     val density = LocalDensity.current
     val height = with(density) {
-        style.lineHeight.toDp()
+        // A text unit that is not in sp cannot be converted to dp, and Miuix
+        // text styles leave the line height unspecified.
+        when {
+            style.lineHeight.isSp -> style.lineHeight.toDp()
+            style.fontSize.isSp -> style.fontSize.toDp()
+            else -> 16.sp.toDp()
+        }
     }
     Box(
         modifier

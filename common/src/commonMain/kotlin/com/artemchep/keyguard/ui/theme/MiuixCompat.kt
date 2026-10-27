@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.ln
 import top.yukonga.miuix.kmp.theme.Colors
 import top.yukonga.miuix.kmp.theme.TextStyles
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.isSp
 
 // ---------------------------------------------------------------------------
 // Keyguard semantic roles on top of the Miuix color scheme.
@@ -268,92 +270,108 @@ fun Colors.colorAtElevation(
 // Material 3 typography aliases mapped to Miuix text styles.
 // ---------------------------------------------------------------------------
 
+
+/**
+ * Miuix text styles leave [TextStyle.lineHeight] unspecified. Keyguard measures
+ * and converts line heights in places (skeletons, auto-sizing text), so the
+ * Material 3 role aliases resolve it to the composition default of `1.2 x font size`.
+ */
+private fun TextStyle.withDefaultLineHeight(): TextStyle = when {
+    lineHeight.isSp -> this
+    lineHeight.type == TextUnitType.Em && fontSize.isSp -> {
+        copy(lineHeight = fontSize * lineHeight.value)
+    }
+
+    fontSize.isSp -> copy(lineHeight = fontSize * 1.2f)
+    else -> this
+}
+
 val TextStyles.displayLarge: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title1
+    get() = title1.withDefaultLineHeight()
 
 val TextStyles.displayMedium: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title2
+    get() = title2.withDefaultLineHeight()
 
 val TextStyles.displaySmall: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title3
+    get() = title3.withDefaultLineHeight()
 
 val TextStyles.headlineLarge: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = headline1
+    get() = headline1.withDefaultLineHeight()
 
 val TextStyles.headlineMedium: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = headline1
+    get() = headline1.withDefaultLineHeight()
 
 val TextStyles.headlineSmall: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = headline2
+    get() = headline2.withDefaultLineHeight()
 
 val TextStyles.titleLarge: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title2
+    get() = title2.withDefaultLineHeight()
 
 val TextStyles.titleMedium: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title3
+    get() = title3.withDefaultLineHeight()
 
 val TextStyles.titleSmall: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = title4
+    get() = title4.withDefaultLineHeight()
 
 val TextStyles.bodyLarge: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = body1
+    get() = body1.withDefaultLineHeight()
 
 val TextStyles.bodyMedium: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = body1
+    get() = body1.withDefaultLineHeight()
 
 val TextStyles.bodySmall: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = body2
+    get() = body2.withDefaultLineHeight()
 
 val TextStyles.labelLarge: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = button
+    get() = button.withDefaultLineHeight()
 
 val TextStyles.labelMedium: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = footnote1
+    get() = footnote1.withDefaultLineHeight()
 
 val TextStyles.labelSmall: TextStyle
     @Composable
     @ReadOnlyComposable
-    get() = footnote2
+    get() = footnote2.withDefaultLineHeight()
 
 val TextStyles.titleLargeEmphasized: TextStyle
     @Composable
-    get() = title2.copy(fontWeight = FontWeight.SemiBold)
+    get() = title2.copy(fontWeight = FontWeight.SemiBold).withDefaultLineHeight()
 
 val TextStyles.titleMediumEmphasized: TextStyle
     @Composable
-    get() = title3.copy(fontWeight = FontWeight.SemiBold)
+    get() = title3.copy(fontWeight = FontWeight.SemiBold).withDefaultLineHeight()
 
 val TextStyles.titleSmallEmphasized: TextStyle
     @Composable
-    get() = title4.copy(fontWeight = FontWeight.SemiBold)
+    get() = title4.copy(fontWeight = FontWeight.SemiBold).withDefaultLineHeight()
 
 // ---------------------------------------------------------------------------
 // Shapes: M3 shape roles as Miuix-friendly rounded corners.

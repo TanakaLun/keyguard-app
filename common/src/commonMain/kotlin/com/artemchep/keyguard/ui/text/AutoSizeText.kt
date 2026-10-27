@@ -40,8 +40,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
+import androidx.compose.ui.unit.isSp
 import com.artemchep.keyguard.ui.text.SuggestedFontSizesStatus.Companion.validSuggestedFontSizes
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -52,6 +54,25 @@ import kotlin.reflect.KProperty
 // and is under "MIT License"
 //
 // Thanks!
+
+/**
+ * The line-height to font-size ratio of [style].
+ *
+ * Miuix text styles leave the line height unspecified, so this falls back to the
+ * composition default of `1.2` instead of producing a `NaN` ratio.
+ */
+private fun defaultLineSpaceRatio(style: TextStyle): Float {
+    val lineHeight = style.lineHeight
+    val fontSize = style.fontSize
+    return when {
+        lineHeight.type == TextUnitType.Em -> lineHeight.value
+        lineHeight.isSp && fontSize.isSp && fontSize.value > 0f -> {
+            lineHeight.value / fontSize.value
+        }
+
+        else -> 1.2f
+    }
+}
 
 /**
  * Composable function that automatically adjusts the text size to fit within given constraints, considering the ratio of line spacing to text size.
@@ -123,7 +144,7 @@ fun AutoSizeText(
     minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
-    lineSpaceRatio: Float = style.lineHeight.value / style.fontSize.value,
+    lineSpaceRatio: Float = defaultLineSpaceRatio(style),
 ) {
     AutoSizeText(
         text = AnnotatedString(text),
@@ -183,7 +204,7 @@ fun AutoSizeText(
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
-    lineSpacingRatio: Float = style.lineHeight.value / style.fontSize.value,
+    lineSpacingRatio: Float = defaultLineSpaceRatio(style),
 ) {
     // Change font scale to 1F
     val newDensity = Density(density = LocalDensity.current.density, fontScale = 1F)
