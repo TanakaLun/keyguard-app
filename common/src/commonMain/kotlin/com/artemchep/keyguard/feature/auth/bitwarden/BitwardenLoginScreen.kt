@@ -23,7 +23,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -96,6 +95,7 @@ import kotlin.collections.firstOrNull
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun BitwardenLoginScreen(
@@ -184,19 +184,19 @@ fun LoginContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.8f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         SkeletonText(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.88f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         SkeletonText(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.3f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         Spacer(Modifier.height(16.dp))
         SkeletonTextField(
@@ -313,7 +313,7 @@ fun ColumnScope.LoginContent(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(Res.string.addaccount_disclaimer_bitwarden_label),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
     Spacer(Modifier.height(16.dp))
     val tabState = rememberUpdatedState(
@@ -422,7 +422,7 @@ fun ColumnScope.LoginContent(
                 modifier = Modifier
                     .padding(horizontal = Dimens.textHorizontalPadding),
                 text = stringResource(Res.string.addaccount_captcha_need_client_secret_note),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
             Box(Modifier.height(16.dp))
             val clientSecretIsLastField = !isEnvironmentVisible
@@ -613,7 +613,7 @@ private fun LoginItemLabel(
             .padding(top = 8.dp)
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = item.text,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
     )

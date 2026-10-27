@@ -14,8 +14,7 @@
 // import androidx.compose.material.icons.outlined.NotificationsOff
 // import top.yukonga.miuix.kmp.basic.Icon
 // import androidx.compose.material3.LocalContentColor
-// import androidx.compose.material3.MaterialTheme
-// import androidx.compose.material3.Surface
+// // import top.yukonga.miuix.kmp.basic.Surface
 // import top.yukonga.miuix.kmp.basic.Text
 // import androidx.compose.runtime.Composable
 // import androidx.compose.runtime.State
@@ -121,11 +120,11 @@
 //                ) {
 //                    Text(
 //                        text = "Notifications are disabled",
-//                        style = MaterialTheme.typography.titleMedium,
+//                        style = MiuixTheme.textStyles.titleMedium,
 //                    )
 //                    Text(
 //                        text = "Grant the notification permission to allow Keyguard to show one-time passwords when autofilling & more.",
-//                        style = MaterialTheme.typography.bodySmall,
+//                        style = MiuixTheme.textStyles.bodySmall,
 //                        color = LocalContentColor.current
 //                            .combineAlpha(MediumEmphasisAlpha),
 //                    )

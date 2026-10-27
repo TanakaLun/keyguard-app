@@ -17,13 +17,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Book
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -74,6 +73,8 @@ import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun WordlistListScreen(
@@ -270,7 +271,7 @@ private fun WordlistItem(
     val onLongClick = selectableState.onLongClick
 
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> run {
             if (LocalHasDetailPane.current) {
                 val nextEntry = navigationNextEntryOrNull()
@@ -278,7 +279,7 @@ private fun WordlistItem(
 
                 val selected = nextRoute?.args?.wordlistId == item.wordlistId
                 if (selected) {
-                    return@run MaterialTheme.colorScheme.selectedContainer
+                    return@run MiuixTheme.colorScheme.selectedContainer
                 }
             }
 
@@ -365,8 +366,8 @@ private fun WordlistItem(
                 ) {
                     if (it) {
                         Checkbox(
-                            checked = selectableState.selected,
-                            onCheckedChange = null,
+                            state = ToggleableState(selectableState.selected),
+                            onClick = null,
                         )
                     } else {
                         ChevronIcon()

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +29,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * The skipped-items introduction and count rows shared by the credential-
@@ -61,7 +61,7 @@ internal fun LazyListScope.credentialExchangeSkippedNotes(
                     vertical = 4.dp,
                 ),
             text = stringResource(Res.string.skipped_items_text),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )
@@ -135,7 +135,7 @@ private fun CredentialExchangeSkippedRow(
             modifier = Modifier
                 .weight(1f),
             text = pluralStringResource(note.res, note.count, note.count),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )
@@ -176,7 +176,7 @@ private fun CredentialExchangeSkippedTitleRow(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )
@@ -185,7 +185,7 @@ private fun CredentialExchangeSkippedTitleRow(
         if (count > 1) {
             Text(
                 text = "($count)",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current
                     .combineAlpha(alpha = DisabledEmphasisAlpha),
             )

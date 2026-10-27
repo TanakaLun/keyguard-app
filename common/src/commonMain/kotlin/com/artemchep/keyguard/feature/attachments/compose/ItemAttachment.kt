@@ -31,11 +31,10 @@ import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.DownloadDone
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -63,6 +62,9 @@ import com.artemchep.keyguard.ui.icons.AttachmentIcon
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -124,7 +126,7 @@ fun ItemAttachment(
                                     .padding(end = 8.dp)
                                     .animateContentSize(),
                                 text = text,
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MiuixTheme.textStyles.labelSmall,
                             )
                         }
                         Crossfade(
@@ -167,15 +169,15 @@ fun ItemAttachment(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
                 ) {
-                    val errorContentColor = MaterialTheme.colorScheme.error
-                    val errorBackgroundColor = MaterialTheme.colorScheme.errorContainer
-                    val infoContentColor = MaterialTheme.colorScheme.info
-                    val infoBackgroundColor = MaterialTheme.colorScheme.infoContainer
+                    val errorContentColor = MiuixTheme.colorScheme.error
+                    val errorBackgroundColor = MiuixTheme.colorScheme.errorContainer
+                    val infoContentColor = MiuixTheme.colorScheme.info
+                    val infoBackgroundColor = MiuixTheme.colorScheme.infoContainer
                     Row(
                         modifier = Modifier
                             .background(
                                 errorBackgroundColor,
-                                MaterialTheme.shapes.small,
+                                KgShapes.small,
                             )
                             .padding(
                                 start = 4.dp,
@@ -196,7 +198,7 @@ fun ItemAttachment(
                         Text(
                             modifier = Modifier,
                             text = stringResource(Res.string.file_status_downloading_failed),
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MiuixTheme.textStyles.labelMedium,
                         )
                     }
                     ExpandedIfNotEmptyForRow(
@@ -206,7 +208,7 @@ fun ItemAttachment(
                             modifier = Modifier
                                 .background(
                                     infoBackgroundColor,
-                                    MaterialTheme.shapes.small,
+                                    KgShapes.small,
                                 )
                                 .padding(
                                     start = 4.dp,
@@ -227,7 +229,7 @@ fun ItemAttachment(
                             Text(
                                 modifier = Modifier,
                                 text = stringResource(Res.string.file_status_auto_resume),
-                                style = MaterialTheme.typography.labelMedium,
+                                style = MiuixTheme.textStyles.labelMedium,
                             )
                         }
                     }
@@ -237,8 +239,8 @@ fun ItemAttachment(
                 valueOrNull = downloadStatusState.value
                     .takeIf { it is AttachmentItem.Status.PendingUpload },
             ) {
-                val infoContentColor = MaterialTheme.colorScheme.info
-                val infoBackgroundColor = MaterialTheme.colorScheme.infoContainer
+                val infoContentColor = MiuixTheme.colorScheme.info
+                val infoBackgroundColor = MiuixTheme.colorScheme.infoContainer
                 Row(
                     modifier = Modifier
                         .padding(
@@ -246,7 +248,7 @@ fun ItemAttachment(
                         )
                         .background(
                             infoBackgroundColor,
-                            MaterialTheme.shapes.small,
+                            KgShapes.small,
                         )
                         .padding(
                             start = 4.dp,
@@ -267,7 +269,7 @@ fun ItemAttachment(
                     Text(
                         modifier = Modifier,
                         text = stringResource(Res.string.file_status_pending_upload),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                     )
                 }
             }
@@ -291,7 +293,7 @@ private fun ItemAttachmentLayout(
     val selected = selectable.selected
     val backgroundColor =
         if (selectable.selected) {
-            MaterialTheme.colorScheme.primaryContainer
+            MiuixTheme.colorScheme.primaryContainer
         } else {
             Color.Unspecified
         }
@@ -345,13 +347,13 @@ private fun ItemAttachmentLayout(
                         Icon(
                             modifier = Modifier
                                 .background(
-                                    MaterialTheme.colorScheme.tertiaryContainer,
-                                    MaterialTheme.shapes.extraSmall,
+                                    MiuixTheme.colorScheme.tertiaryContainer,
+                                    KgShapes.extraSmall,
                                 )
                                 .size(16.dp)
                                 .padding(1.dp),
                             imageVector = Icons.Outlined.DownloadDone,
-                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                            tint = MiuixTheme.colorScheme.onTertiaryContainer,
                             contentDescription = null,
                         )
                     }
@@ -369,8 +371,8 @@ private fun ItemAttachmentLayout(
                                 minWidth = 48.dp,
                                 minHeight = 48.dp,
                             ),
-                        checked = selected,
-                        onCheckedChange = null,
+                        state = ToggleableState(selected),
+                        onClick = null,
                     )
                 } else {
                     Row(

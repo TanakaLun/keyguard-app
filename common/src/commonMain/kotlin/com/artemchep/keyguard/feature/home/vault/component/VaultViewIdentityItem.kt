@@ -16,7 +16,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import io.ktor.sse.SPACE
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -49,7 +49,7 @@ fun VaultViewIdentityItem(
                 modifier = Modifier
                     .padding(horizontal = Dimens.textHorizontalPadding),
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MiuixTheme.textStyles.titleMedium,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )
@@ -64,7 +64,7 @@ fun VaultViewIdentityItem(
                 modifier = Modifier
                     .padding(horizontal = Dimens.textHorizontalPadding),
                 text = name,
-                style = MaterialTheme.typography.titleLargeEmphasized,
+                style = MiuixTheme.textStyles.titleLargeEmphasized,
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -126,7 +126,7 @@ private fun RowScope.IdentityActionButton(
         )
         Text(
             text = textResource(action.title),
-            style = MaterialTheme.typography.titleSmall,
+            style = MiuixTheme.textStyles.titleSmall,
         )
     }
 }

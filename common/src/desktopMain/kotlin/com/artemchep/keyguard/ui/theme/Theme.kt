@@ -3,7 +3,6 @@
 package com.artemchep.keyguard.ui.theme
 
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 actual fun appDynamicDarkColorScheme(): ColorScheme {
@@ -80,6 +80,6 @@ private fun rememberSystemAccentColor(): Int {
 
 @Composable
 actual fun SystemUiThemeEffect() {
-    val dark = MaterialTheme.colorScheme.isDark
+    val dark = MiuixTheme.colorScheme.isDark
     LocalComposeWindow.current.setWindowsAdaptiveTitleBar(dark)
 }

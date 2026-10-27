@@ -15,7 +15,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,6 +32,8 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 internal fun LazyListScope.automaticBackupsDisabledContent(
     onSetupClick: () -> Unit,
@@ -76,8 +77,8 @@ private fun AutomaticBackupsSetupIntro(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding)
             .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.extraLarge,
+                color = MiuixTheme.colorScheme.surfaceContainer,
+                shape = KgShapes.extraLarge,
             )
             .padding(
                 horizontal = Dimens.horizontalPadding,
@@ -88,19 +89,19 @@ private fun AutomaticBackupsSetupIntro(
             Icon(
                 imageVector = Icons.Outlined.Backup,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MiuixTheme.colorScheme.primary,
             )
         }
         Spacer(Modifier.height(Dimens.verticalPadding))
         Text(
             text = stringResource(Res.string.pref_item_automatic_backups_wizard_ready_title),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MiuixTheme.textStyles.titleMedium,
+            color = MiuixTheme.colorScheme.onSurface,
         )
         Spacer(Modifier.height(12.dp))
         Text(
             text = stringResource(Res.string.pref_item_automatic_backups_wizard_ready_detail),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )

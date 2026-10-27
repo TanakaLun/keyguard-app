@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +39,7 @@ import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,7 +140,7 @@ private fun LicenseItem(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = FontFamily.Monospace,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )
@@ -156,7 +156,7 @@ private fun LicenseItem(
             ) {
                 model.licenseNames.forEach { licenseName ->
                     FlatTextFieldBadge(
-                        backgroundColor = MaterialTheme.colorScheme.infoContainer,
+                        backgroundColor = MiuixTheme.colorScheme.infoContainer,
                         text = licenseName,
                     )
                 }

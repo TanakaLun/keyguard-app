@@ -11,7 +11,6 @@ import androidx.compose.material.icons.outlined.CreditCardOff
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -36,6 +35,7 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import kotlin.time.Clock
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 const val ObscureChar = '•'
 
@@ -124,9 +124,9 @@ fun VaultViewCardItem(
             if (brand != null) {
                 Text(
                     text = brand,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MiuixTheme.colorScheme.secondary
                         .combineAlpha(MediumEmphasisAlpha),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                 )
                 Spacer(
                     modifier = Modifier
@@ -141,7 +141,7 @@ fun VaultViewCardItem(
                     )
                     Text(
                         text = finalCardNumber,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MiuixTheme.textStyles.titleLarge,
                         fontSize = 18.sp,
                         fontFamily = monoFontFamily,
                     )
@@ -163,7 +163,7 @@ fun VaultViewCardItem(
                         Text(
                             text = stringResource(Res.string.card_number_empty_label),
                             color = contentColor,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MiuixTheme.textStyles.titleLarge,
                             fontSize = 18.sp,
                             fontFamily = monoFontFamily,
                         )
@@ -178,7 +178,7 @@ fun VaultViewCardItem(
                 )
                 Text(
                     text = cardholderName,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     fontFamily = monoFontFamily,
                 )
             }

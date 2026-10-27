@@ -1,7 +1,6 @@
 package com.artemchep.keyguard.feature.search.filter.component
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,6 +10,7 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.animatedNumberText
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultHomeScreenFilterPaneNumberOfItems(
@@ -31,7 +31,7 @@ fun VaultHomeScreenFilterPaneNumberOfItems(
                     bottom = 8.dp,
                 ),
             text = stringResource(Res.string.items_n, animatedCount),
-            style = MaterialTheme.typography.titleSmall,
+            style = MiuixTheme.textStyles.titleSmall,
         )
     }
 }

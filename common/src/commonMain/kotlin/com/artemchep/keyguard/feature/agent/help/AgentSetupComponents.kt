@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,6 +61,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +99,7 @@ internal fun AgentSetupBodyLabel(
                 horizontal = Dimens.textHorizontalPadding,
             ),
         text = text,
-        style = MaterialTheme.typography.labelMedium,
+        style = MiuixTheme.textStyles.labelMedium,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
     )
@@ -142,7 +142,7 @@ internal fun AgentSetupCodeBlock(
                 horizontal = Dimens.textHorizontalPadding,
             )
             .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MiuixTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(12.dp),
             )
             .padding(12.dp),
@@ -166,7 +166,7 @@ internal fun AgentSetupCodeBlock(
                 )
             }
             SelectionContainer {
-                val isDark = MaterialTheme.colorScheme.isDark
+                val isDark = MiuixTheme.colorScheme.isDark
                 var code by remember(text) {
                     mutableStateOf(AnnotatedString(text))
                 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -34,6 +33,7 @@ import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun GpgToolsPublicKeyScreen(
@@ -64,7 +64,7 @@ fun GpgToolsPublicKeyScreen(
                     modifier = Modifier
                         .padding(horizontal = Dimens.horizontalPadding),
                     text = stringResource(Res.string.gpg_tools_public_key_description),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )

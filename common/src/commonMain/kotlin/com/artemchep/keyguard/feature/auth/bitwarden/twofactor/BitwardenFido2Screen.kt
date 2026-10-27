@@ -1,8 +1,7 @@
 package com.artemchep.keyguard.feature.auth.bitwarden.twofactor
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
+import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import arrow.core.partially1
@@ -11,6 +10,8 @@ import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpress
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 internal fun ColumnScope.LoginOtpScreenContentFido2WebAuthn(
@@ -23,15 +24,15 @@ internal fun ColumnScope.LoginOtpScreenContentFido2WebAuthn(
         expressive = false,
         leading = {
             Checkbox(
-                checked = state.rememberMe.checked,
+                state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.remember_me),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),

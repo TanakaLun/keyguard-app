@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import com.artemchep.keyguard.ui.ScaffoldColumn
 import com.artemchep.keyguard.ui.SmallFab
 import com.artemchep.keyguard.ui.icons.IconBox
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun FilterScreen(
@@ -73,7 +73,7 @@ fun FilterScreen(
                             text = stringResource(Res.string.reset),
                         )
                     },
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    color = MiuixTheme.colorScheme.secondaryContainer,
                 )
             }
         },

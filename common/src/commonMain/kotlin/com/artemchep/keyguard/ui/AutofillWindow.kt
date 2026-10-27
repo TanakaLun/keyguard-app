@@ -31,7 +31,6 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -87,6 +86,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.flow.StateFlow
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun AutofillButton(
@@ -229,7 +229,7 @@ fun ColumnScope.AutofillWindow(
                         vertical = 8.dp,
                     ),
                 text = text,
-                style = MaterialTheme.typography.titleLarge,
+                style = MiuixTheme.textStyles.titleLarge,
             )
             AutofillWindow(
                 state = state,
@@ -381,7 +381,7 @@ private fun ColumnScope.GeneratorValue2(
                             modifier = Modifier
                                 .padding(bottom = 4.dp),
                             text = title,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                         )
                     }
                     Crossfade(
@@ -437,7 +437,7 @@ private fun ColumnScope.GeneratorValue2(
                         onClick = {
                             updatedOnClick.invoke(updatedSource)
                         },
-                        containerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MiuixTheme.colorScheme.primary,
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.Check,

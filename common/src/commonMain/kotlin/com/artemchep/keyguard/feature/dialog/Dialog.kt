@@ -19,7 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -41,6 +40,7 @@ import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import top.yukonga.miuix.kmp.overlay.OverlayDialog
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 // See:
 // https://m3.material.io/components/dialogs/specs#9a8c226b-19fa-4d6b-894e-e7d5ca9203e8
@@ -114,7 +114,7 @@ fun DialogContent(
                 ) {
                     if (icon != null) {
                         CompositionLocalProvider(
-                            LocalContentColor provides MaterialTheme.colorScheme.secondary,
+                            LocalContentColor provides MiuixTheme.colorScheme.secondary,
                         ) {
                             Box(
                                 modifier = Modifier
@@ -130,8 +130,8 @@ fun DialogContent(
                     }
                     if (title != null) {
                         val titleStyle = when (CurrentPlatform) {
-                            is Platform.Desktop -> MaterialTheme.typography.titleMedium
-                            is Platform.Mobile -> MaterialTheme.typography.titleLarge
+                            is Platform.Desktop -> MiuixTheme.textStyles.titleMedium
+                            is Platform.Mobile -> MiuixTheme.textStyles.titleLarge
                         }
                         ProvideTextStyle(
                             titleStyle
@@ -192,7 +192,7 @@ fun DialogContent(
                             )
                         }
                         CompositionLocalProvider(
-                            LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+                            LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
                         ) {
                             content(contentScope)
                         }

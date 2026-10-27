@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -53,6 +52,7 @@ import com.artemchep.keyguard.ui.theme.warningContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun LogsScreen() {
@@ -238,16 +238,16 @@ private fun LogItem(
         content = {
             Row {
                 val levelContainerColor = when (item.level) {
-                    LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer
-                    LogLevel.WARNING -> MaterialTheme.colorScheme.warningContainer
-                    LogLevel.INFO -> MaterialTheme.colorScheme.infoContainer
-                    LogLevel.DEBUG -> MaterialTheme.colorScheme.surfaceContainer
+                    LogLevel.ERROR -> MiuixTheme.colorScheme.errorContainer
+                    LogLevel.WARNING -> MiuixTheme.colorScheme.warningContainer
+                    LogLevel.INFO -> MiuixTheme.colorScheme.infoContainer
+                    LogLevel.DEBUG -> MiuixTheme.colorScheme.surfaceContainer
                 }
                 val levelContentColor = when (item.level) {
-                    LogLevel.ERROR -> MaterialTheme.colorScheme.onErrorContainer
-                    LogLevel.WARNING -> MaterialTheme.colorScheme.onWarningContainer
-                    LogLevel.INFO -> MaterialTheme.colorScheme.onInfoContainer
-                    LogLevel.DEBUG -> MaterialTheme.colorScheme.onSurface
+                    LogLevel.ERROR -> MiuixTheme.colorScheme.onErrorContainer
+                    LogLevel.WARNING -> MiuixTheme.colorScheme.onWarningContainer
+                    LogLevel.INFO -> MiuixTheme.colorScheme.onInfoContainer
+                    LogLevel.DEBUG -> MiuixTheme.colorScheme.onSurface
                 }
                 Box(
                     modifier = Modifier
@@ -258,7 +258,7 @@ private fun LogItem(
                     Text(
                         text = item.level.letter,
                         color = levelContentColor,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MiuixTheme.textStyles.labelSmall,
                     )
                 }
 
@@ -270,12 +270,12 @@ private fun LogItem(
                 Column {
                     Text(
                         text = item.text,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                         fontFamily = FontFamily.Monospace,
                     )
                     Text(
                         text = item.time,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                         fontFamily = FontFamily.Monospace,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),

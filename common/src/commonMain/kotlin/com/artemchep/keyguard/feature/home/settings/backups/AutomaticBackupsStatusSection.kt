@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Sync
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -48,6 +47,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 internal fun LazyListScope.automaticBackupsStatusSummary(
     key: String,
@@ -80,11 +80,11 @@ private fun AutomaticBackupsStatusPanel(
     statusExpanded: MutableState<Boolean>,
 ) {
     val iconTint = when {
-        status.currentRun != null -> MaterialTheme.colorScheme.primary
-        status.lastErrorMessage != null -> MaterialTheme.colorScheme.error
-        status.lastSkippedReason != null -> MaterialTheme.colorScheme.tertiary
-        status.lastSnapshotId != null -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+        status.currentRun != null -> MiuixTheme.colorScheme.primary
+        status.lastErrorMessage != null -> MiuixTheme.colorScheme.error
+        status.lastSkippedReason != null -> MiuixTheme.colorScheme.tertiary
+        status.lastSnapshotId != null -> MiuixTheme.colorScheme.primary
+        else -> MiuixTheme.colorScheme.onSurfaceVariant
     }
     Column(
         modifier = modifier,
@@ -128,13 +128,13 @@ private fun AutomaticBackupsStatusPanel(
                     ) {
                         Text(
                             text = backupStatusTitle(status),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = backupStatusText(status, dateFormatter),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface
+                            style = MiuixTheme.textStyles.bodySmall,
+                            color = MiuixTheme.colorScheme.onSurface
                                 .combineAlpha(MediumEmphasisAlpha),
                         )
                     }
@@ -336,16 +336,16 @@ private fun AutomaticBackupsStatusPanelLine(
             modifier = Modifier
                 .weight(0.48f),
             text = label,
-            style = MaterialTheme.typography.labelMedium,
+            style = MiuixTheme.textStyles.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface.combineAlpha(MediumEmphasisAlpha),
+            color = MiuixTheme.colorScheme.onSurface.combineAlpha(MediumEmphasisAlpha),
         )
         Text(
             modifier = Modifier
                 .weight(1f),
             text = value,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.combineAlpha(MediumEmphasisAlpha),
+            style = MiuixTheme.textStyles.bodySmall,
+            color = MiuixTheme.colorScheme.onSurface.combineAlpha(MediumEmphasisAlpha),
         )
     }
 }

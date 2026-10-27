@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.ui.surface
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -8,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 data class SurfaceElevation(
     val from: Float,
@@ -34,19 +34,19 @@ val SurfaceElevation.color: Color
 @ReadOnlyComposable
 fun surfaceElevationColor(elevation: Float): Color {
     when (elevation) {
-        1.0f -> return MaterialTheme.colorScheme.background
-        0.75f -> return MaterialTheme.colorScheme.surfaceContainerLow
+        1.0f -> return MiuixTheme.colorScheme.background
+        0.75f -> return MiuixTheme.colorScheme.surfaceContainerLow
         // Makes sense on practice after you have seen
         // how these containers are positioned. If we just
         // use the code below, then the difference between these
         // containers becomes too subtle.
-        0.625f -> return MaterialTheme.colorScheme.surfaceContainer
-        0.5f -> return MaterialTheme.colorScheme.surfaceContainer
-        0.25f -> return MaterialTheme.colorScheme.surfaceContainerHigh
+        0.625f -> return MiuixTheme.colorScheme.surfaceContainer
+        0.5f -> return MiuixTheme.colorScheme.surfaceContainer
+        0.25f -> return MiuixTheme.colorScheme.surfaceContainerHigh
     }
 
-    val min = MaterialTheme.colorScheme.surfaceContainerHigh
-    val max = MaterialTheme.colorScheme.background
+    val min = MiuixTheme.colorScheme.surfaceContainerHigh
+    val max = MiuixTheme.colorScheme.background
     return max
         .combineAlpha(elevation)
         .compositeOver(min)
@@ -55,7 +55,7 @@ fun surfaceElevationColor(elevation: Float): Color {
 @Composable
 @ReadOnlyComposable
 fun surfaceNextGroupColorToElevationColor(elevation: Float): Color {
-    return if (MaterialTheme.colorScheme.isDark) {
+    return if (MiuixTheme.colorScheme.isDark) {
         surfaceNextGroupColorToElevationColorDarkTheme(elevation)
     } else {
         surfaceNextGroupColorToElevationColorLightTheme(elevation)
@@ -66,15 +66,15 @@ fun surfaceNextGroupColorToElevationColor(elevation: Float): Color {
 @ReadOnlyComposable
 fun surfaceNextGroupColorToElevationColorLightTheme(elevation: Float): Color {
     when (elevation) {
-        1.0f -> return MaterialTheme.colorScheme.surfaceContainerLow
-        0.75f -> return MaterialTheme.colorScheme.background
+        1.0f -> return MiuixTheme.colorScheme.surfaceContainerLow
+        0.75f -> return MiuixTheme.colorScheme.background
         // Makes sense on practice after you have seen
         // how these containers are positioned. If we just
         // use the code below, then the difference between these
         // containers becomes too subtle.
-        0.625f -> return MaterialTheme.colorScheme.surfaceContainerLow
-        0.5f -> return MaterialTheme.colorScheme.surfaceContainerLow
-        0.25f -> return MaterialTheme.colorScheme.surfaceContainer
+        0.625f -> return MiuixTheme.colorScheme.surfaceContainerLow
+        0.5f -> return MiuixTheme.colorScheme.surfaceContainerLow
+        0.25f -> return MiuixTheme.colorScheme.surfaceContainer
     }
     return surfaceElevationColor(elevation.plus(0.25f).coerceIn(0f, 1f))
 }
@@ -83,15 +83,15 @@ fun surfaceNextGroupColorToElevationColorLightTheme(elevation: Float): Color {
 @ReadOnlyComposable
 fun surfaceNextGroupColorToElevationColorDarkTheme(elevation: Float): Color {
     when (elevation) {
-        1.0f -> return MaterialTheme.colorScheme.surfaceContainerLow
-        0.75f -> return MaterialTheme.colorScheme.surfaceContainer
+        1.0f -> return MiuixTheme.colorScheme.surfaceContainerLow
+        0.75f -> return MiuixTheme.colorScheme.surfaceContainer
         // Makes sense on practice after you have seen
         // how these containers are positioned. If we just
         // use the code below, then the difference between these
         // containers becomes too subtle.
-        0.625f -> return MaterialTheme.colorScheme.surfaceContainerHigh
-        0.5f -> return MaterialTheme.colorScheme.surfaceContainerHigh
-        0.25f -> return MaterialTheme.colorScheme.surfaceContainerHighest
+        0.625f -> return MiuixTheme.colorScheme.surfaceContainerHigh
+        0.5f -> return MiuixTheme.colorScheme.surfaceContainerHigh
+        0.25f -> return MiuixTheme.colorScheme.surfaceContainerHighest
     }
     return surfaceElevationColor(elevation.minus(0.25f).coerceIn(0f, 1f))
 }

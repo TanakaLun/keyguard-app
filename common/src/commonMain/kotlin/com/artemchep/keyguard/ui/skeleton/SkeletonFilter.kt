@@ -1,11 +1,11 @@
 package com.artemchep.keyguard.ui.skeleton
 
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.search.filter.component.FilterItemLayout
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SkeletonFilter(
@@ -19,7 +19,7 @@ fun SkeletonFilter(
             SkeletonText(
                 modifier = Modifier
                     .width(64.dp),
-                style = MaterialTheme.typography.labelLarge,
+                style = MiuixTheme.textStyles.labelLarge,
             )
         },
         onClick = null,

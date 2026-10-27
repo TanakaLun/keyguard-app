@@ -26,11 +26,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.HorizontalDivider
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -114,6 +113,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun QuickSearchListScreen(
@@ -262,7 +262,7 @@ internal fun QuickSearchListScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                .background(MiuixTheme.colorScheme.surfaceContainerLow)
                 .onPreviewKeyEvent { event ->
                     if (handleAutotypeMenuKeyEvent(event)) return@onPreviewKeyEvent true
                     if (
@@ -306,7 +306,7 @@ internal fun QuickSearchListScreen(
         )
         HorizontalDivider(
             color =
-                MaterialTheme.colorScheme.outline
+                MiuixTheme.colorScheme.outline
                     .combineAlpha(0.18f),
         )
         Row(
@@ -404,7 +404,7 @@ internal fun QuickSearchListScreen(
         QuickSearchActionStrip(
             modifier =
                 Modifier
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .background(MiuixTheme.colorScheme.surfaceContainerHigh)
                     .fillMaxWidth(),
             actions = state.actions,
             onActionClick = performAction,
@@ -492,7 +492,7 @@ private fun QuickSearchSearch(
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = null,
-                tint = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                tint = if (isFocused) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onBackground,
             )
             Spacer(
                 modifier =
@@ -619,7 +619,7 @@ private fun QuickSearchResultRow(
 ) {
     val backgroundColor =
         when {
-            selected -> MaterialTheme.colorScheme.selectedContainer
+            selected -> MiuixTheme.colorScheme.selectedContainer
             else -> Color.Unspecified
         }
     // We explicitly do not support the expressive shape merging here,
@@ -647,7 +647,7 @@ private fun QuickSearchResultRow(
                             text = title,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                         )
                     } else {
                         Text(
@@ -705,7 +705,7 @@ private fun QuickSearchLoadingPlaceholder(modifier: Modifier = Modifier) {
                     Modifier
                         .fillMaxWidth()
                         .height(62.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                color = MiuixTheme.colorScheme.surfaceContainerHigh,
                 shape = RoundedCornerShape(16.dp),
             ) {}
         }

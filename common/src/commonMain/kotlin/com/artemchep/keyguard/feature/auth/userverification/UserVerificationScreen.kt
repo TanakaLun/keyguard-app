@@ -15,7 +15,6 @@ import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +43,7 @@ import com.artemchep.keyguard.ui.focus.focusRequester2
 import com.artemchep.keyguard.ui.icons.KeyguardYubiKey
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Long enough for the field to be attached before it is asked for focus; only ever
@@ -105,7 +105,7 @@ private fun UserVerificationHeader() {
     Text(
         textAlign = TextAlign.Center,
         text = stringResource(Res.string.userverification_header_text),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MiuixTheme.textStyles.bodyLarge,
     )
 }
 

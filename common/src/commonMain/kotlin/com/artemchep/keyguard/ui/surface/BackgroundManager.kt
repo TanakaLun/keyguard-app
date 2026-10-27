@@ -1,12 +1,12 @@
 package com.artemchep.keyguard.ui.surface
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import kotlin.uuid.Uuid
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 class BackgroundManager {
     private val surfaceColorsState = mutableStateMapOf<String, Color>()
@@ -14,9 +14,9 @@ class BackgroundManager {
     val colorHighest: Color
         @Composable
         get() {
-            val surfaceContainer = MaterialTheme.colorScheme.surfaceContainer
-            val surfaceContainerHigh = MaterialTheme.colorScheme.surfaceContainerHigh
-            val surfaceContainerHighest = MaterialTheme.colorScheme.surfaceContainerHighest
+            val surfaceContainer = MiuixTheme.colorScheme.surfaceContainer
+            val surfaceContainerHigh = MiuixTheme.colorScheme.surfaceContainerHigh
+            val surfaceContainerHighest = MiuixTheme.colorScheme.surfaceContainerHighest
 
             var maxPriority = 0
             surfaceColorsState.values.forEach { color ->

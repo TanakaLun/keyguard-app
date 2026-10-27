@@ -19,11 +19,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -53,6 +52,9 @@ import com.artemchep.keyguard.ui.icons.SyncIcon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun AccountListItem(
@@ -83,8 +85,8 @@ fun AccountListItemText(
         )
 
     val backgroundColor = when {
-        item.isSelected -> MaterialTheme.colorScheme.primaryContainer
-        item.isOpened -> MaterialTheme.colorScheme.selectedContainer
+        item.isSelected -> MiuixTheme.colorScheme.primaryContainer
+        item.isOpened -> MiuixTheme.colorScheme.selectedContainer
         else -> run {
             if (LocalHasDetailPane.current) {
                 val nextEntry = navigationNextEntryOrNull()
@@ -92,7 +94,7 @@ fun AccountListItemText(
 
                 val selected = nextRoute?.accountId?.id == item.id
                 if (selected) {
-                    return@run MaterialTheme.colorScheme.selectedContainer
+                    return@run MiuixTheme.colorScheme.selectedContainer
                 }
             }
 
@@ -157,7 +159,7 @@ fun AccountListItemText(
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Outlined.ErrorOutline,
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = MiuixTheme.colorScheme.error,
                     contentDescription = null,
                 )
             }
@@ -180,8 +182,8 @@ fun AccountListItemText(
                 item.isSelected.takeIf { item.selecting },
             ) { selected ->
                 Checkbox(
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
 
@@ -227,8 +229,8 @@ fun VaultListItemTextIcon(
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .background(
-                MaterialTheme.colorScheme.tertiaryContainer,
-                MaterialTheme.shapes.extraSmall,
+                MiuixTheme.colorScheme.tertiaryContainer,
+                KgShapes.extraSmall,
             ),
     ) {
         if (item.actionNeeded) {
@@ -237,7 +239,7 @@ fun VaultListItemTextIcon(
                     .size(15.dp)
                     .padding(1.dp),
                 imageVector = Icons.Outlined.Warning,
-                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                tint = MiuixTheme.colorScheme.onTertiaryContainer,
                 contentDescription = null,
             )
         }

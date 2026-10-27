@@ -12,10 +12,9 @@ import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Tune
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +34,8 @@ import com.artemchep.keyguard.ui.icons.KeyguardSshKey
 import com.artemchep.keyguard.ui.icons.KeyguardTwoFa
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 /**
  * One item row on a review screen: its title plus a badge per credential kind.
@@ -71,10 +72,10 @@ fun CredentialExchangeItemRow(
             // composable
             {
                 Checkbox(
-                    checked = checked,
+                    state = ToggleableState(checked),
                     enabled = updatedOnSelectedChange != null,
-                    onCheckedChange = { value ->
-                        updatedOnSelectedChange?.invoke(value)
+                    onClick = {
+                        updatedOnSelectedChange?.invoke(!checked)
                     },
                 )
             }
@@ -167,8 +168,8 @@ private fun CredentialKindBadge(
     val label = stringResource(visuals.label)
     Surface(
         shape = RoundedCornerShape(BADGE_CORNER_RADIUS_DP.dp),
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        color = MiuixTheme.colorScheme.secondaryContainer,
+        contentColor = MiuixTheme.colorScheme.onSecondaryContainer,
     ) {
         Row(
             modifier = Modifier
@@ -187,7 +188,7 @@ private fun CredentialKindBadge(
             )
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

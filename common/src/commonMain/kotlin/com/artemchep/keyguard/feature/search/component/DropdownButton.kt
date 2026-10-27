@@ -15,7 +15,6 @@ import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.DropdownMenu
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import com.artemchep.keyguard.ui.DropdownMinWidth
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.theme.badgeContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun <T> DropdownButton(
@@ -87,7 +87,7 @@ fun <T> DropdownButton(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = MaterialTheme.colorScheme.badgeContainer,
+                                    color = MiuixTheme.colorScheme.badgeContainer,
                                     shape = CircleShape,
                                 ),
                         )

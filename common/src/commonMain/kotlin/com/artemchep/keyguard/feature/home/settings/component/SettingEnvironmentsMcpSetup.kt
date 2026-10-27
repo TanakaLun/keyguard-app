@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingEnvironmentsMcpSetupProvider(
     koinScope: Scope,
@@ -59,7 +59,7 @@ fun settingEnvironmentsMcpSetupProvider(
                     modifier = Modifier
                         .padding(horizontal = Dimens.textHorizontalPadding),
                     text = stringResource(Res.string.environments_mcp_note),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -72,7 +72,7 @@ fun settingEnvironmentsMcpSetupProvider(
                         modifier = Modifier
                             .padding(horizontal = Dimens.textHorizontalPadding),
                         text = stringResource(Res.string.environments_mcp_setup),
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MiuixTheme.textStyles.labelLarge,
                     )
                     AgentSetupCodeBlock(
                         text = configuration,

@@ -13,8 +13,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -36,6 +35,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.ImmutableList
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun DatePickerScreen(
@@ -94,8 +95,8 @@ private fun ColumnScope.Content(
                 horizontal = 8.dp,
                 vertical = 8.dp,
             ),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shape = MaterialTheme.shapes.medium,
+        color = MiuixTheme.colorScheme.primaryContainer,
+        shape = KgShapes.medium,
     ) {
         Row(
             modifier = Modifier
@@ -110,14 +111,14 @@ private fun ColumnScope.Content(
                     .animateContentSize()
                     .alignByBaseline(),
                 text = stringResource(monthRes),
-                style = MaterialTheme.typography.displaySmall,
+                style = MiuixTheme.textStyles.displaySmall,
             )
             Text(
                 modifier = Modifier
                     .animateContentSize()
                     .alignByBaseline(),
                 text = year,
-                style = MaterialTheme.typography.displayMedium,
+                style = MiuixTheme.textStyles.displayMedium,
             )
         }
     }
@@ -178,7 +179,7 @@ private fun MonthPickerItem(
     selected: Boolean,
 ) {
     val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.selectedContainer
+        MiuixTheme.colorScheme.selectedContainer
     } else {
         Color.Unspecified
     }

@@ -20,12 +20,11 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
@@ -62,6 +61,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun FoldersScreen(
@@ -223,7 +224,7 @@ private fun FoldersScreenCiphersButton(
         BadgedBox(
             badge = {
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.badgeContainer,
+                    containerColor = MiuixTheme.colorScheme.badgeContainer,
                 ) {
                     Text(
                         text = animatedNumberText(ciphers.count),
@@ -274,7 +275,7 @@ private fun FoldersScreenFolderItem(
     item: FoldersState.Content.Item.Folder,
 ) {
     val backgroundColor =
-        if (item.selected) MaterialTheme.colorScheme.primaryContainer else Color.Unspecified
+        if (item.selected) MiuixTheme.colorScheme.primaryContainer else Color.Unspecified
     FlatDropdownSimpleExpressive(
         modifier = modifier,
         backgroundColor = backgroundColor,
@@ -321,8 +322,8 @@ private fun FoldersScreenFolderItem(
                 item.selected.takeIf { item.selecting },
             ) { selected ->
                 Checkbox(
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },
@@ -344,7 +345,7 @@ private fun FoldersScreenFolderItemBadge(
             val ciphers = animatedNumberText(ciphersCount)
             Badge(
                 modifier = Modifier,
-                containerColor = MaterialTheme.colorScheme.badgeContainer,
+                containerColor = MiuixTheme.colorScheme.badgeContainer,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

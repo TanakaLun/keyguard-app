@@ -16,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -65,6 +64,8 @@ import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 internal fun GpgToolsPickerScreen() {
@@ -221,12 +222,12 @@ private fun GpgToolsCard(
     val selected = LocalHasDetailPane.current &&
             navigationNextEntryOrNull()?.route === route
     val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.selectedContainer
+        MiuixTheme.colorScheme.selectedContainer
     } else {
-        MaterialTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
+        MiuixTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
     }
     val contentColor = if (selected) {
-        MaterialTheme.colorScheme.onSelectedContainer
+        MiuixTheme.colorScheme.onSelectedContainer
     } else {
         LocalContentColor.current
     }
@@ -241,7 +242,7 @@ private fun GpgToolsCard(
                 },
             )
             .heightIn(min = 136.dp)
-            .clip(MaterialTheme.shapes.large)
+            .clip(KgShapes.large)
             .background(backgroundColor)
             .clickable(role = Role.Button) {
                 onClick()
@@ -270,7 +271,7 @@ private fun GpgToolsCard(
                 )
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -280,7 +281,7 @@ private fun GpgToolsCard(
                 )
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = contentColor.combineAlpha(MediumEmphasisAlpha),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,

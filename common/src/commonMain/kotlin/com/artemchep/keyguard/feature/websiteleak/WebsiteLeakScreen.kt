@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FactCheck
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -53,6 +52,7 @@ import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun WebsiteLeakScreen(
@@ -72,7 +72,7 @@ fun WebsiteLeakScreen(
                     modifier = Modifier
                         .padding(horizontal = Dimens.horizontalPadding),
                     text = stringResource(Res.string.websiteleak_note),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -213,11 +213,11 @@ private fun BreachItem(
             Column {
                 Text(
                     text = item.title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                 )
                 Text(
                     text = item.domain,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                     fontFamily = FontFamily.Monospace,
@@ -231,7 +231,7 @@ private fun BreachItem(
             ) {
                 item.dataClasses.forEach { dataClass ->
                     FlatTextFieldBadge(
-                        backgroundColor = MaterialTheme.colorScheme.infoContainer,
+                        backgroundColor = MiuixTheme.colorScheme.infoContainer,
                         text = dataClass,
                     )
                 }
@@ -246,7 +246,7 @@ private fun BreachItem(
                         item.count,
                         numberFormatter.formatNumber(item.count.toInt()),
                     ),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                     fontWeight = FontWeight.Black,
                 )
             }
@@ -256,7 +256,7 @@ private fun BreachItem(
                         Res.string.websiteleak_breach_occurred_at,
                         item.occurredAt,
                     ),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -267,13 +267,13 @@ private fun BreachItem(
                         Res.string.websiteleak_breach_reported_at,
                         item.reportedAt,
                     ),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
             }
         }
-        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+        ProvideTextStyle(MiuixTheme.textStyles.bodySmall) {
             HtmlText(
                 html = item.description,
             )

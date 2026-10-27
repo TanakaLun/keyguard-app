@@ -28,7 +28,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialShapes
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -90,6 +89,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 sealed interface SettingsItem2 {
     val id: String
@@ -232,7 +232,7 @@ fun rememberSettingsItems(
                                     }.collectAsState(false)
 
                                     val targetTint =
-                                        if (isPurchased) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                                        if (isPurchased) MiuixTheme.colorScheme.primary else LocalContentColor.current
                                     val tint by animateColorAsState(
                                         targetValue = targetTint,
                                         animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
@@ -381,7 +381,7 @@ private fun SettingListScreenContent(
 
                             val selected = it.route === nextRoute
                             if (selected) {
-                                return@run MaterialTheme.colorScheme.selectedContainer
+                                return@run MiuixTheme.colorScheme.selectedContainer
                             }
                         }
 

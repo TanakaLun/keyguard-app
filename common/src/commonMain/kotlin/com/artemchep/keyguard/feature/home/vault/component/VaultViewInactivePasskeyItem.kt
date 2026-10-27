@@ -3,7 +3,6 @@ package com.artemchep.keyguard.feature.home.vault.component
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,20 +16,21 @@ import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.theme.onInfoContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewInactivePasskeyItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.InactivePasskey,
 ) {
-    val contentColor = MaterialTheme.colorScheme.info
-    val backgroundColor = MaterialTheme.colorScheme.infoContainer
+    val contentColor = MiuixTheme.colorScheme.info
+    val backgroundColor = MiuixTheme.colorScheme.infoContainer
         .combineAlpha(DisabledEmphasisAlpha)
     FlatItemLayoutExpressive(
         modifier = modifier,
         shapeState = item.shapeState,
         backgroundColor = backgroundColor,
-        contentColor = MaterialTheme.colorScheme.onInfoContainer,
+        contentColor = MiuixTheme.colorScheme.onInfoContainer,
         leading = {
             Icon(
                 Icons.Outlined.Info,
@@ -43,7 +43,7 @@ fun VaultViewInactivePasskeyItem(
                 title = {
                     Text(
                         stringResource(Res.string.passkey_available),
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MiuixTheme.textStyles.titleSmall,
                     )
                 },
             )

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun TableRowItem(
@@ -31,7 +31,7 @@ fun TableRowItem(
             modifier = Modifier
                 .weight(titleWeight),
             text = title,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             fontWeight = FontWeight.Medium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
@@ -40,7 +40,7 @@ fun TableRowItem(
             modifier = Modifier
                 .weight(1f),
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )

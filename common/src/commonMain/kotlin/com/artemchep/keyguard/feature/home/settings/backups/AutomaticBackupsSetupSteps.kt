@@ -21,8 +21,7 @@ import androidx.compose.material.icons.outlined.Attachment
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -59,6 +58,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.verticalPaddingHalf
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun BackupSetupDestination(state: AutomaticBackupsSetupState) {
@@ -156,7 +156,7 @@ private fun BackupDestinationChoice(
     onClick: () -> Unit,
 ) {
     val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.secondaryContainer
+        MiuixTheme.colorScheme.secondaryContainer
     } else Color.Unspecified
     FlatItemLayoutExpressive(
         rowModifier = Modifier.semantics {
@@ -167,7 +167,7 @@ private fun BackupDestinationChoice(
         backgroundColor = backgroundColor,
         leading = { Icon(icon, contentDescription = null) },
         content = {
-            Text(title, style = MaterialTheme.typography.titleMedium)
+            Text(title, style = MiuixTheme.textStyles.titleMedium)
         },
         trailing = { RadioButton(selected = selected, onClick = null) },
         onClick = onClick,
@@ -208,8 +208,8 @@ internal fun BackupSetupProtection(state: AutomaticBackupsSetupState) {
         Text(
             modifier = Modifier.padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.pref_item_automatic_backups_password_message),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MiuixTheme.textStyles.bodyMedium,
+            color = MiuixTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -312,7 +312,7 @@ private fun TwoColumnRow(
                 .weight(1f)
                 .widthIn(max = 120.dp),
             text = value.orEmpty(),
-            style = MaterialTheme.typography.bodySmall,
+            style = MiuixTheme.textStyles.bodySmall,
             color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
         )
     }

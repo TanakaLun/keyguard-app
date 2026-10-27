@@ -5,11 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material3.DropdownMenu
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun SearchQualifierSuggestionPopup(
@@ -19,7 +19,7 @@ fun SearchQualifierSuggestionPopup(
     DropdownMenu(
         expanded = true,
         onDismissRequest = {},
-        shape = MaterialTheme.shapes.large,
+        shape = KgShapes.large,
         tonalElevation = 6.dp,
         shadowElevation = 8.dp,
         properties = PopupProperties(

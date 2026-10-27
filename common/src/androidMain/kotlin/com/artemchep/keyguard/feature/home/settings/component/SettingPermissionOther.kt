@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -26,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 actual fun settingPermissionOtherProvider(
     koinScope: Scope,
@@ -78,13 +78,13 @@ private fun SettingPermissionOther() {
                     ) {
                         Text(
                             text = item.permission,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MiuixTheme.textStyles.bodySmall,
                             maxLines = 4,
                         )
                         if (item.description != null) {
                             Text(
                                 text = item.description,
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MiuixTheme.textStyles.bodySmall,
                                 color = LocalContentColor.current
                                     .combineAlpha(MediumEmphasisAlpha),
                                 maxLines = 10,

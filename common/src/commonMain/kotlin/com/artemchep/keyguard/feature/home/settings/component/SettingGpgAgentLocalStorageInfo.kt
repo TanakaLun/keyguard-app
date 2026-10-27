@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +18,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingGpgAgentLocalStorageInfoProvider(
     koinScope: Scope,
@@ -54,7 +54,7 @@ fun settingGpgAgentLocalStorageInfoProvider(): SettingComponent = kotlin.run {
                 modifier = Modifier
                     .padding(horizontal = Dimens.textHorizontalPadding),
                 text = stringResource(Res.string.pref_item_agent_local_storage_title),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
                 fontWeight = FontWeight.Bold,
             )
             Spacer(
@@ -68,7 +68,7 @@ fun settingGpgAgentLocalStorageInfoProvider(): SettingComponent = kotlin.run {
                     Res.string.pref_item_agent_local_storage_text,
                     stringResource(Res.string.protocol_gpg),
                 ),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )

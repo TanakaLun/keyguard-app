@@ -42,12 +42,11 @@ import androidx.compose.material.icons.outlined.PhoneIphone
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.icons.outlined.Title
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ColorScheme
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.contentColorFor
@@ -134,6 +133,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.ln
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun VaultListItem(
@@ -230,7 +232,7 @@ fun Section(
                     horizontal = Dimens.textHorizontalPadding,
                 ),
             text = if (caps) text.uppercase() else text,
-            style = MaterialTheme.typography.labelLarge,
+            style = MiuixTheme.textStyles.labelLarge,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             color = LocalContentColor.current
@@ -264,7 +266,7 @@ fun LargeSection(
                 horizontal = Dimens.textHorizontalPadding,
             ),
     ) {
-        val textStyle = MaterialTheme.typography.labelLarge
+        val textStyle = MiuixTheme.textStyles.labelLarge
             .copy(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
@@ -300,7 +302,7 @@ fun ColumnScope.VaultItemTextContent(
                     text = title,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                 )
             } else {
                 Text(
@@ -425,9 +427,9 @@ fun VaultListItemText(
     val onLongClick = selectableItemState.onLongClick
 
     val backgroundColor = when {
-        selectableItemState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableItemState.selected -> MiuixTheme.colorScheme.primaryContainer
         opened ->
-            MaterialTheme.colorScheme.selectedContainer
+            MiuixTheme.colorScheme.selectedContainer
                 .takeIf { LocalHasDetailPane.current }
                 ?: Color.Unspecified
 
@@ -566,7 +568,7 @@ fun VaultListItemText(
         trailing = {
             when (item.feature) {
                 is VaultItem2.Item.Feature.Organization -> {
-                    val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+                    val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
                         item.feature.accentColors.dark
                     } else {
                         item.feature.accentColors.light
@@ -581,7 +583,7 @@ fun VaultListItemText(
                             .widthIn(max = 80.dp)
                             .background(
                                 backgroundColor,
-                                MaterialTheme.shapes.small,
+                                KgShapes.small,
                             )
                             .padding(
                                 horizontal = 6.dp,
@@ -591,7 +593,7 @@ fun VaultListItemText(
                         color = contentColor,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                     )
                 }
 
@@ -605,7 +607,7 @@ fun VaultListItemText(
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Outlined.ErrorOutline,
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = MiuixTheme.colorScheme.error,
                     contentDescription = null,
                 )
             }
@@ -633,8 +635,8 @@ fun VaultListItemText(
                     when (it) {
                         Try.CHECKBOX -> {
                             Checkbox(
-                                checked = selectableItemState.selected,
-                                onCheckedChange = null,
+                                state = ToggleableState(selectableItemState.selected),
+                                onClick = null,
                             )
                         }
 
@@ -744,7 +746,7 @@ fun SmartBadge(
 ) {
     val updatedOnClick by rememberUpdatedState(onClick)
 
-    val shape = MaterialTheme.shapes.small
+    val shape = KgShapes.small
     val backgroundModifier = if (selected) {
         val tintColor = MaterialTheme.colorScheme
             .surfaceColorAtElevationSemi(4.dp)
@@ -808,7 +810,7 @@ fun SmartBadge(
             },
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         if (text != null) {
             Spacer(
@@ -824,7 +826,7 @@ fun SmartBadge(
                     .combineAlpha(MediumEmphasisAlpha),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
             )
         }
     }
@@ -1135,7 +1137,7 @@ fun rememberFlatSurfaceExpressiveColor(
     val color = if (backgroundColor.isSpecified || !expressive) {
         val bg = backgroundColor.takeIf { it.isSpecified }
             ?: Color.Transparent
-        val fg = MaterialTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
+        val fg = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
         fg.compositeOver(bg)
     } else {
         if (elevation.value > 0f) {
@@ -1211,7 +1213,7 @@ fun rememberSecretAccentColor(
 fun surfaceShape(shapeState: Int, expressive: Boolean): Shape {
     val shape: Shape
     if (expressive) {
-        val shapeSrc = MaterialTheme.shapes.large
+        val shapeSrc = KgShapes.large
         shape = when (shapeState) {
             ShapeState.START -> shapeSrc
                 .copy(
@@ -1237,15 +1239,15 @@ fun surfaceShape(shapeState: Int, expressive: Boolean): Shape {
             else -> shapeSrc
         }
     } else {
-        shape = MaterialTheme.shapes.large
+        shape = KgShapes.large
     }
     return shape
 }
 
 @Composable
 fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {
-    return if (color == MaterialTheme.colorScheme.surface) {
-        MaterialTheme.colorScheme.surfaceColorAtElevation(elevation)
+    return if (color == MiuixTheme.colorScheme.surface) {
+        MiuixTheme.colorScheme.surfaceColorAtElevation(elevation)
     } else {
         color
     }
@@ -1332,7 +1334,7 @@ fun BoxScope.VaultItemIcon2(
                     color = color,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             }
         }

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.EdgesensorHigh
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -57,6 +56,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -135,7 +135,7 @@ fun DuplicatesListScreen(
                             ) { textRes ->
                                 Text(
                                     text = stringResource(textRes),
-                                    style = MaterialTheme.typography.labelSmall,
+                                    style = MiuixTheme.textStyles.labelSmall,
                                     color = LocalContentColor.current
                                         .combineAlpha(MediumEmphasisAlpha),
                                 )

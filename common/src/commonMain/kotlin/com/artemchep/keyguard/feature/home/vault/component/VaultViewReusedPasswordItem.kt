@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,14 +17,15 @@ import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewReusedPasswordItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.ReusedPassword,
 ) {
-    val contentColor = MaterialTheme.colorScheme.error
-    val backgroundColor = MaterialTheme.colorScheme.errorContainer
+    val contentColor = MiuixTheme.colorScheme.error
+    val backgroundColor = MiuixTheme.colorScheme.errorContainer
         .combineAlpha(DisabledEmphasisAlpha)
     FlatItemLayoutExpressive(
         modifier = modifier,
@@ -40,13 +40,13 @@ fun VaultViewReusedPasswordItem(
         },
         content = {
             CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.onErrorContainer,
+                LocalContentColor provides MiuixTheme.colorScheme.onErrorContainer,
             ) {
                 FlatItemTextContent(
                     title = {
                         Text(
                             stringResource(Res.string.reused_password),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MiuixTheme.textStyles.titleSmall,
                         )
                     },
                 )

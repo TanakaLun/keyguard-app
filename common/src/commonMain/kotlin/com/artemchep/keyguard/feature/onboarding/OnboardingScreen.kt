@@ -30,7 +30,6 @@ import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,6 +68,8 @@ import kotlin.time.Clock
 import kotlinx.coroutines.GlobalScope
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 val onboardingItemsPremium = listOfNotNull(
     OnboardingItem(
@@ -272,7 +273,7 @@ fun OnboardingCard(
 ) {
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.medium),
+            .clip(KgShapes.medium),
         contentAlignment = Alignment.TopEnd,
     ) {
         if (imageVector != null) {
@@ -293,7 +294,7 @@ fun OnboardingCard(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium
+                style = MiuixTheme.textStyles.titleMedium
                     .copy(
                         hyphens = Hyphens.Auto,
                         lineBreak = LineBreak.Heading,
@@ -304,7 +305,7 @@ fun OnboardingCard(
             ExpandedIfNotEmpty(valueOrNull = text) {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MiuixTheme.textStyles.bodyMedium
                         .copy(
                             hyphens = Hyphens.Auto,
                             lineBreak = LineBreak.Paragraph,
@@ -325,12 +326,12 @@ fun OnboardingCard(
                             .size(12.dp),
                         imageVector = Icons.Outlined.KeyguardPremium,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MiuixTheme.colorScheme.primary,
                     )
                     Text(
                         text = stringResource(Res.string.feat_keyguard_premium_label),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelSmall,
+                        color = MiuixTheme.colorScheme.primary,
+                        style = MiuixTheme.textStyles.labelSmall,
                     )
                 }
             }
@@ -350,7 +351,7 @@ fun SmallOnboardingCard(
 ) {
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.medium),
+            .clip(KgShapes.medium),
         contentAlignment = Alignment.TopEnd,
     ) {
         if (imageVector != null) {
@@ -372,7 +373,7 @@ fun SmallOnboardingCard(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleSmall
+                style = MiuixTheme.textStyles.titleSmall
                     .copy(
                         hyphens = Hyphens.Auto,
                         lineBreak = LineBreak.Heading,
@@ -383,7 +384,7 @@ fun SmallOnboardingCard(
             ExpandedIfNotEmpty(valueOrNull = text) {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MiuixTheme.textStyles.bodySmall
                         .copy(
                             hyphens = Hyphens.Auto,
                             lineBreak = LineBreak.Paragraph,
@@ -406,12 +407,12 @@ fun SmallOnboardingCard(
                             .size(12.dp),
                         imageVector = Icons.Outlined.KeyguardPremium,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MiuixTheme.colorScheme.primary,
                     )
                     Text(
                         text = stringResource(Res.string.feat_keyguard_premium_label),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelSmall,
+                        color = MiuixTheme.colorScheme.primary,
+                        style = MiuixTheme.textStyles.labelSmall,
                     )
                 }
             }

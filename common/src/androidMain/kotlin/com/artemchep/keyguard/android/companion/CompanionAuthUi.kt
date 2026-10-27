@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Watch
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun CompanionAuthHeader() {
@@ -54,7 +54,7 @@ fun CompanionAuthHeader() {
         ) {
             Text(
                 text = stringResource(Res.string.companionauth_header_title),
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
                 overflow = TextOverflow.Ellipsis,
@@ -62,7 +62,7 @@ fun CompanionAuthHeader() {
             )
             Text(
                 text = stringResource(Res.string.companionauth_header_text),
-                style = MaterialTheme.typography.titleMedium,
+                style = MiuixTheme.textStyles.titleMedium,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
             )

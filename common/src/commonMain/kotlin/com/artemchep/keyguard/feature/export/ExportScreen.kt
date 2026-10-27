@@ -23,7 +23,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -81,6 +80,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.persistentListOf
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun ExportScreen(
@@ -366,7 +366,7 @@ private fun ExportScreen(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.exportaccount_format_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )
@@ -382,7 +382,7 @@ private fun ExportScreen(
                     modifier = Modifier
                         .padding(horizontal = Dimens.textHorizontalPadding),
                     text = stringResource(Res.string.exportaccount_attachments_note),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
                         .combineAlpha(alpha = MediumEmphasisAlpha),
                 )
@@ -413,12 +413,12 @@ private fun ColumnScope.ExportContentOk(
     ) { permission ->
         val updatedContext by rememberUpdatedState(LocalLeContext)
         CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.onWarningContainer,
+            LocalContentColor provides MiuixTheme.colorScheme.onWarningContainer,
         ) {
             FlatItemSimpleExpressive(
                 modifier = Modifier
                     .padding(bottom = 24.dp),
-                backgroundColor = MaterialTheme.colorScheme.warningContainer,
+                backgroundColor = MiuixTheme.colorScheme.warningContainer,
                 leading = icon<RowScope>(Icons.Outlined.Storage, Icons.Outlined.Warning),
                 title = {
                     Text(
@@ -498,7 +498,7 @@ private fun ColumnScope.ExportContentOk(
         BadgedBox(
             badge = {
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.badgeContainer,
+                    containerColor = MiuixTheme.colorScheme.badgeContainer,
                 ) {
                     val size = items.count
                     Text(text = size.toString())

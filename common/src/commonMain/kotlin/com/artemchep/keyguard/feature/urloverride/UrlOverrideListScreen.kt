@@ -15,12 +15,11 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -62,6 +61,8 @@ import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun UrlOverrideListScreen() {
@@ -221,7 +222,7 @@ private fun UrlOverrideItem(
 ) {
     val selectableState by item.selectableState.collectAsState()
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
     FlatDropdownSimpleExpressive(
@@ -276,8 +277,8 @@ private fun UrlOverrideItem(
                 Checkbox(
                     modifier = Modifier
                         .padding(start = 16.dp),
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

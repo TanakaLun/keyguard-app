@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.Info
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.*
@@ -62,6 +61,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun ToastMessageHost(
@@ -75,7 +76,7 @@ fun ToastMessageHost(
     item: @Composable (Modifier, ToastMessage) -> Unit = { modifier, msg ->
         ToastMessage(
             modifier = modifier
-                .clip(MaterialTheme.shapes.extraLarge),
+                .clip(KgShapes.extraLarge),
             model = msg,
         )
     },
@@ -189,18 +190,18 @@ fun ToastMessage(
     model: ToastMessage,
 ) {
     val containerColor = when (model.type) {
-        ToastMessage.Type.ERROR -> MaterialTheme.colorScheme.errorContainer
-        ToastMessage.Type.SUCCESS -> MaterialTheme.colorScheme.okContainer
-        else -> MaterialTheme.colorScheme.surfaceVariant
+        ToastMessage.Type.ERROR -> MiuixTheme.colorScheme.errorContainer
+        ToastMessage.Type.SUCCESS -> MiuixTheme.colorScheme.okContainer
+        else -> MiuixTheme.colorScheme.surfaceVariant
     }
     val contentColor = when (model.type) {
-        ToastMessage.Type.ERROR -> MaterialTheme.colorScheme.onErrorContainer
-        ToastMessage.Type.SUCCESS -> MaterialTheme.colorScheme.onOkContainer
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+        ToastMessage.Type.ERROR -> MiuixTheme.colorScheme.onErrorContainer
+        ToastMessage.Type.SUCCESS -> MiuixTheme.colorScheme.onOkContainer
+        else -> MiuixTheme.colorScheme.onSurfaceVariant
     }
     val contentIconColor = when (model.type) {
-        ToastMessage.Type.ERROR -> MaterialTheme.colorScheme.error
-        ToastMessage.Type.SUCCESS -> MaterialTheme.colorScheme.ok
+        ToastMessage.Type.ERROR -> MiuixTheme.colorScheme.error
+        ToastMessage.Type.SUCCESS -> MiuixTheme.colorScheme.ok
         else -> contentColor
     }
     val contentIcon = when (model.type) {
@@ -243,14 +244,14 @@ fun ToastMessage(
                     .padding(vertical = 8.dp),
             ) {
                 Text(
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MiuixTheme.textStyles.titleSmall,
                     text = model.title,
                     maxLines = 8,
                     overflow = TextOverflow.Ellipsis,
                 )
                 if (model.text != null) {
                     Text(
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MiuixTheme.textStyles.labelSmall,
                         color = LocalContentColor.current
                             .combineAlpha(alpha = MediumEmphasisAlpha),
                         maxLines = 1,

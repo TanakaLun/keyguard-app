@@ -3,7 +3,6 @@ package com.artemchep.keyguard.feature.home.settings.component
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,6 +34,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingRequireMasterPasswordProvider(
     koinScope: Scope,
@@ -167,7 +167,7 @@ private fun ColumnScope.SettingRequireMasterPasswordFooter(
         modifier = modifier,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
-        style = MaterialTheme.typography.bodySmall,
+        style = MiuixTheme.textStyles.bodySmall,
         text = stringResource(Res.string.pref_item_require_app_password_note),
     )
 }

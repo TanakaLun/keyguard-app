@@ -36,7 +36,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -112,6 +111,7 @@ import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun AttachmentPreviewScreen(
@@ -211,7 +211,7 @@ private fun AttachmentPreviewScaffold(
                                         imageVector = Icons.AutoMirrored.Outlined.WrapText,
                                         contentDescription = wrapLinesText,
                                         tint = if (wrapLines) {
-                                            MaterialTheme.colorScheme.primary
+                                            MiuixTheme.colorScheme.primary
                                         } else {
                                             LocalContentColor.current
                                         },
@@ -568,7 +568,7 @@ private fun AttachmentPreviewCodeViewer(
         val digits = lineIndex.size.toString().length
         (digits * 10 + 24).dp
     }
-    val codeStyle = MaterialTheme.typography.bodyMedium.copy(
+    val codeStyle = MiuixTheme.textStyles.bodyMedium.copy(
         fontFamily = FontFamily.Monospace,
     )
     val lineNumberColor = LocalContentColor.current

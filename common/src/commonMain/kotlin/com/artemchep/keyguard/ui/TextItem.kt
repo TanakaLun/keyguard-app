@@ -45,9 +45,8 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.contentColorFor
@@ -141,6 +140,8 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import com.artemchep.keyguard.common.service.keyboard.KeyboardShortcutsService
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 const val PLACEHOLDER_EMAIL = "username@example.com"
 
@@ -519,7 +520,7 @@ fun FakeFlatTextField(
                                 // If color is not provided via the text style, use content color as a default
                                 val textColor = run {
                                     val color =
-                                        contentColorFor(backgroundColor = MaterialTheme.colorScheme.background)
+                                        contentColorFor(backgroundColor = MiuixTheme.colorScheme.background)
                                     val alpha =
                                         if (onClick != null) DefaultEmphasisAlpha else DisabledEmphasisAlpha
                                     color.copy(alpha = alpha)
@@ -934,8 +935,8 @@ fun FlatTextField(
                         Box(
                             modifier = Modifier
                                 .heightIn(min = 32.dp)
-                                .clip(MaterialTheme.shapes.small)
-                                .border(Dp.Hairline, DividerColor, MaterialTheme.shapes.small)
+                                .clip(KgShapes.small)
+                                .border(Dp.Hairline, DividerColor, KgShapes.small)
                                 .clickable {
                                     updateFieldValue(
                                         TextFieldValue(
@@ -954,7 +955,7 @@ fun FlatTextField(
                                 text = text,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MiuixTheme.textStyles.labelLarge,
                             )
                         }
                     }
@@ -977,15 +978,15 @@ private fun TextFieldLabel(
     hasFocus: Boolean,
     hasError: Boolean,
 ) {
-    val expandedTextSize = MaterialTheme.typography.bodySmall.fontSize.value
+    val expandedTextSize = MiuixTheme.textStyles.bodySmall.fontSize.value
     val normalTextSize = LocalTextStyle.current.fontSize.value
     val textSize by animateFloatAsState(
         targetValue = if (expanded) expandedTextSize else normalTextSize,
     )
 
     val expandedTextColor = when {
-        hasError -> MaterialTheme.colorScheme.error
-        hasFocus -> MaterialTheme.colorScheme.primary
+        hasError -> MiuixTheme.colorScheme.error
+        hasFocus -> MiuixTheme.colorScheme.primary
         else -> LocalContentColor.current
     }
     val normalTextColor = LocalContentColor.current
@@ -1076,13 +1077,13 @@ fun PlainTextField(
 ) {
     // If color is not provided via the text style, use content color as a default
     val textColor = run {
-        val color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.background)
+        val color = contentColorFor(backgroundColor = MiuixTheme.colorScheme.background)
         val alpha = if (enabled) DefaultEmphasisAlpha else DisabledEmphasisAlpha
         color.copy(alpha = alpha)
     }
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
     val cursorBrushColor =
-        if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+        if (isError) MiuixTheme.colorScheme.error else MiuixTheme.colorScheme.primary
 
     IncognitoInputIf(
         enabled = incognito || keyboardOptions.isPasswordInput(),
@@ -1148,13 +1149,13 @@ fun PlainTextField(
 ) {
     // If color is not provided via the text style, use content color as a default
     val textColor = run {
-        val color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.background)
+        val color = contentColorFor(backgroundColor = MiuixTheme.colorScheme.background)
         val alpha = if (enabled) DefaultEmphasisAlpha else DisabledEmphasisAlpha
         color.copy(alpha = alpha)
     }
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
     val cursorBrushColor =
-        if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+        if (isError) MiuixTheme.colorScheme.error else MiuixTheme.colorScheme.primary
     val keyboardShortcutsService =
         if (LocalInspectionMode.current) null else koinInject<KeyboardShortcutsService>()
     val windowId = LocalWindowId.current
@@ -1290,9 +1291,9 @@ private fun PlainTextFieldDecorationBox(
                         .alpha(placeholderOpacity),
                 ) {
                     Decoration(
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        contentColor = MiuixTheme.colorScheme.onSurfaceVariant
                             .combineAlpha(HighEmphasisAlpha),
-                        typography = MaterialTheme.typography.bodyLarge,
+                        typography = MiuixTheme.textStyles.bodyLarge,
                         content = placeholder,
                     )
                 }
@@ -1437,7 +1438,7 @@ fun ColumnScope.BiFlatTextFieldLabel(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val updatedOnChange by rememberUpdatedState(label.onChange)
-    ProvideTextStyle(value = MaterialTheme.typography.bodySmall) {
+    ProvideTextStyle(value = MiuixTheme.textStyles.bodySmall) {
         PlainTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1448,7 +1449,7 @@ fun ColumnScope.BiFlatTextFieldLabel(
                 {
                     Text(
                         text = hintText,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                         maxLines = 1,
                     )
                 }
@@ -1615,15 +1616,15 @@ private fun FlatTextFieldSurface(
     content: @Composable () -> Unit,
 ) {
     val borderColorTargetBaseColor = when {
-        isError -> MaterialTheme.colorScheme.error
-        else -> MaterialTheme.colorScheme.primary
+        isError -> MiuixTheme.colorScheme.error
+        else -> MiuixTheme.colorScheme.primary
     }
     val borderColorTarget = when {
         isError || isFocused -> borderColorTargetBaseColor
         else ->
             LocalContentColor.current
                 .combineAlpha(0.1f)
-                .compositeOver(MaterialTheme.colorScheme.surfaceVariant)
+                .compositeOver(MiuixTheme.colorScheme.surfaceVariant)
     }
     val borderColor by animateColorAsState(
         targetValue = borderColorTarget,
@@ -1638,7 +1639,7 @@ private fun FlatTextFieldSurface(
             .fillMaxWidth()
             .border(1.dp, borderColor, shape),
         shape = shape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MiuixTheme.colorScheme.surfaceVariant,
     ) {
         content()
     }
@@ -1670,10 +1671,10 @@ fun FlatTextFieldBadge(
 ) {
     val icon = null
     val color = when (type) {
-        TextFieldModel.Vl.Type.SUCCESS -> MaterialTheme.colorScheme.okContainer
-        TextFieldModel.Vl.Type.INFO -> MaterialTheme.colorScheme.infoContainer
-        TextFieldModel.Vl.Type.WARNING -> MaterialTheme.colorScheme.warningContainer
-        TextFieldModel.Vl.Type.ERROR -> MaterialTheme.colorScheme.errorContainer
+        TextFieldModel.Vl.Type.SUCCESS -> MiuixTheme.colorScheme.okContainer
+        TextFieldModel.Vl.Type.INFO -> MiuixTheme.colorScheme.infoContainer
+        TextFieldModel.Vl.Type.WARNING -> MiuixTheme.colorScheme.warningContainer
+        TextFieldModel.Vl.Type.ERROR -> MiuixTheme.colorScheme.errorContainer
     }
     FlatTextFieldBadge(
         modifier = modifier
@@ -1713,7 +1714,7 @@ fun FlatTextFieldBadge(
     )
     Row(
         modifier = modifier
-            .clip(MaterialTheme.shapes.small)
+            .clip(KgShapes.small)
             .drawBehind {
                 val color = backgroundColorState.value
                 drawRect(color)
@@ -1743,7 +1744,7 @@ fun FlatTextFieldBadge(
                 .animateContentSize(),
             text = text,
             color = contentColorState.value,
-            style = MaterialTheme.typography.labelSmall,
+            style = MiuixTheme.textStyles.labelSmall,
         )
     }
 }

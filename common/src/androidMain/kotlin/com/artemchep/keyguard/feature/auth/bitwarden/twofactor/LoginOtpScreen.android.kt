@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +34,8 @@ import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.util.DividerColor
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -124,7 +125,7 @@ actual fun ColumnScope.LoginOtpScreenContentFido2WebAuthnBrowser(
                 modifier = Modifier
                     .padding(horizontal = Dimens.horizontalPadding),
                 text = error,
-                color = MaterialTheme.colorScheme.error,
+                color = MiuixTheme.colorScheme.error,
             )
         }
     }
@@ -151,7 +152,7 @@ actual fun ColumnScope.LoginOtpScreenContentFido2WebAuthnBrowser(
 //            Res.string.fido2webauthn_bitwarden_web_vault_version_warning_note,
 //            "2023.7.1",
 //        ),
-//        style = MaterialTheme.typography.bodyMedium,
+//        style = MiuixTheme.textStyles.bodyMedium,
 //        color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
 //    )
 }
@@ -222,7 +223,7 @@ private fun BaseWebView(
     url: String,
     factory: WebView.() -> Unit,
 ) {
-    val shape = MaterialTheme.shapes.extraLarge
+    val shape = KgShapes.extraLarge
     AndroidView(
         modifier = modifier
             .padding(8.dp)

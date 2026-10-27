@@ -12,7 +12,6 @@ import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.Settings
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -44,6 +43,7 @@ import java.io.InputStreamReader
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 actual fun settingAutofillProvider(
     koinScope: Scope,
@@ -232,9 +232,9 @@ private fun SettingAutofillBrowserStatusRow(
     onClick: () -> Unit,
 ) {
     val statusColor = if (browserAutofillStatus.isEnabled) {
-        MaterialTheme.colorScheme.ok
+        MiuixTheme.colorScheme.ok
     } else {
-        MaterialTheme.colorScheme.warning
+        MiuixTheme.colorScheme.warning
     }
     SmartBadge(
         icon = {

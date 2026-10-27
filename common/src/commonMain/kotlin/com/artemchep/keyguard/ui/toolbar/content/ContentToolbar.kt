@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +20,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.skeleton.SkeletonText
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private val toolbarMinHeight = 64.dp
 
@@ -60,7 +60,7 @@ fun CustomToolbarContent(
             if (subtitle != null) {
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                     overflow = TextOverflow.Ellipsis,
@@ -69,9 +69,9 @@ fun CustomToolbarContent(
             }
             if (title != null) {
                 val titleStyle = if (subtitle != null) {
-                    MaterialTheme.typography.titleMedium
+                    MiuixTheme.textStyles.titleMedium
                 } else {
-                    MaterialTheme.typography.titleLarge
+                    MiuixTheme.textStyles.titleLarge
                 }
                 Text(
                     text = title,

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,6 +47,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.parcelize.Parcelize
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 class AutofillSaveActivity : BaseActivity(), KeyguardKoinOwner {
     companion object {
@@ -115,7 +115,7 @@ class AutofillSaveActivity : BaseActivity(), KeyguardKoinOwner {
                                 modifier = Modifier
                                     .weight(1f),
                                 text = "Save form data",
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MiuixTheme.textStyles.titleLarge,
                             )
                             val context by rememberUpdatedState(newValue = LocalContext.current)
                             TextButton(
@@ -204,7 +204,7 @@ class AutofillSaveActivity : BaseActivity(), KeyguardKoinOwner {
                                     modifier = Modifier
                                         .height(8.dp),
                                 )
-                                val textStyle = MaterialTheme.typography.bodySmall
+                                val textStyle = MiuixTheme.textStyles.bodySmall
                                     .copy(
                                         color = LocalContentColor.current
                                             .combineAlpha(MediumEmphasisAlpha),

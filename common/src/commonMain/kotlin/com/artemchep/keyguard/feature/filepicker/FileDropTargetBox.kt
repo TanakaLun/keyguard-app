@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +18,8 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 internal expect fun Modifier.fileDropTarget(
@@ -71,18 +72,18 @@ internal fun FileDropOverlay(
         modifier = modifier
             .border(
                 width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.large,
+                color = MiuixTheme.colorScheme.primary,
+                shape = KgShapes.large,
             )
             .background(
-                color = MaterialTheme.colorScheme.primaryContainer
+                color = MiuixTheme.colorScheme.primaryContainer
                     .copy(alpha = DisabledEmphasisAlpha)
                     // make it a bit less transparent
                     .compositeOver(
-                        MaterialTheme.colorScheme.surface
+                        MiuixTheme.colorScheme.surface
                             .copy(alpha = DisabledEmphasisAlpha)
                     ),
-                shape = MaterialTheme.shapes.large,
+                shape = KgShapes.large,
             ),
         contentAlignment = Alignment.Center,
         content = content,
@@ -102,8 +103,8 @@ internal fun FileDropOverlay(
                 .widthIn(max = 280.dp)
                 .padding(24.dp),
             text = text,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            style = MaterialTheme.typography.labelMedium,
+            color = MiuixTheme.colorScheme.onPrimaryContainer,
+            style = MiuixTheme.textStyles.labelMedium,
             textAlign = TextAlign.Center,
         )
     }

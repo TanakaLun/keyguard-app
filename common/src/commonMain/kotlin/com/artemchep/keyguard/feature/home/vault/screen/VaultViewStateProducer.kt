@@ -30,7 +30,6 @@ import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.outlined.Textsms
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -332,6 +331,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 typealias RevealConcealFlow = Flow<Unit>
 
@@ -3668,7 +3668,7 @@ private suspend fun RememberStateFlowScope.createUriItem(
                                 Icon(
                                     imageVector = Icons.Outlined.ErrorOutline,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.error,
+                                    tint = MiuixTheme.colorScheme.error,
                                 )
                                 Spacer(
                                     modifier = Modifier
@@ -3676,11 +3676,11 @@ private suspend fun RememberStateFlowScope.createUriItem(
                                 )
                                 Text(
                                     text = stringResource(Res.string.error_failed_format_placeholder),
-                                    style = MaterialTheme.typography.labelLarge,
+                                    style = MiuixTheme.textStyles.labelLarge,
                                 )
                                 Text(
                                     text = parsedMessage.title,
-                                    style = MaterialTheme.typography.labelMedium,
+                                    style = MiuixTheme.textStyles.labelMedium,
                                     color = LocalContentColor.current
                                         .combineAlpha(MediumEmphasisAlpha),
                                 )

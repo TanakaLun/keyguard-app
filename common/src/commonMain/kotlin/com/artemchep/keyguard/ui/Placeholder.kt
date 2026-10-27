@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +22,7 @@ import com.artemchep.keyguard.res.*
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Package
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun Placeholder(
@@ -90,7 +90,7 @@ fun ColumnScope.Placeholder(
         modifier = Modifier
             .height(16.dp),
     )
-    ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+    ProvideTextStyle(MiuixTheme.textStyles.labelLarge) {
         title(
             Modifier
                 .widthIn(max = 196.dp)

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -39,6 +38,7 @@ import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Scrollbar for Column
@@ -58,7 +58,7 @@ fun ColumnScrollbar(
     thumbMinHeight: Float = 0.1f,
     thumbColor: Color = LocalContentColor.current
         .combineAlpha(DisabledEmphasisAlpha),
-    thumbSelectedColor: Color = MaterialTheme.colorScheme.primary,
+    thumbSelectedColor: Color = MiuixTheme.colorScheme.primary,
     thumbShape: Shape = CircleShape,
     enabled: Boolean = true,
     selectionMode: ScrollbarSelectionMode = ScrollbarSelectionMode.default,

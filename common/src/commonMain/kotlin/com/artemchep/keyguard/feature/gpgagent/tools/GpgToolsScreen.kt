@@ -20,13 +20,12 @@ import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.RemoveCircleOutline
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -93,6 +92,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun GpgToolsScreen() {
@@ -389,7 +390,7 @@ private fun DecryptNote() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.gpg_tools_decrypt_keys_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
         )
         Spacer(
@@ -400,7 +401,7 @@ private fun DecryptNote() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.gpg_tools_stored_public_keys_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
         )
     }
@@ -430,7 +431,7 @@ private fun VerifyNote() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.gpg_tools_stored_public_keys_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
         )
     }
@@ -518,9 +519,9 @@ private fun GpgCheckboxRow(
     FlatItemLayoutExpressive(
         leading = {
             Checkbox(
-                checked = checked,
+                state = ToggleableState(checked),
                 enabled = enabled,
-                onCheckedChange = {
+                onClick = {
                     updatedOnCheckedChanged(!updatedChecked)
                 },
             )
@@ -528,14 +529,14 @@ private fun GpgCheckboxRow(
         content = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MiuixTheme.textStyles.bodyLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             if (text != null) {
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                     maxLines = 2,
@@ -652,14 +653,14 @@ private fun GpgFileRefRow(
         content = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MiuixTheme.textStyles.bodyLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             file?.let {
                 Text(
                     text = it.name ?: it.uri,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -704,7 +705,7 @@ private fun GpgCustomPublicKeyRow(
             content = {
                 Text(
                     text = stringResource(Res.string.gpg_tools_pasted_public_key_label),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MiuixTheme.textStyles.bodyLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

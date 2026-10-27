@@ -14,7 +14,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
@@ -51,6 +50,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun EnvironmentMountsScreen() {
@@ -182,7 +182,7 @@ private fun EnvironmentMountsNote() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.environments_mount_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
         )
     }
@@ -213,9 +213,9 @@ private fun EnvironmentMountItem(
                         Text(
                             text = stringResource(item.status.titleH()),
                             color = if (item.status == EnvironmentMountStatus.Error) {
-                                MaterialTheme.colorScheme.error
+                                MiuixTheme.colorScheme.error
                             } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
+                                MiuixTheme.colorScheme.onSurfaceVariant
                             },
                         )
                     }

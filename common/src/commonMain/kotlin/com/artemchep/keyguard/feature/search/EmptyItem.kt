@@ -2,7 +2,6 @@ package com.artemchep.keyguard.feature.search
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun EmptyItem(
@@ -25,6 +25,6 @@ fun EmptyItem(
         text = text,
         color = LocalContentColor.current
             .combineAlpha(alpha = MediumEmphasisAlpha),
-        style = MaterialTheme.typography.labelMedium,
+        style = MiuixTheme.textStyles.labelMedium,
     )
 }

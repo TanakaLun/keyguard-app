@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun dataSafetyItems(): List<DataSafetyItem> = dataSafetyCatalog(
@@ -172,7 +172,7 @@ private fun DataSafetySecondaryText(
     }
 
     val secondaryTextStyle = LocalTextStyle.current
-        .merge(MaterialTheme.typography.bodyMedium)
+        .merge(MiuixTheme.textStyles.bodyMedium)
         .copy(
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),

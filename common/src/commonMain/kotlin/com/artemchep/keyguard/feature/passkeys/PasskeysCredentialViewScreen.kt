@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Public
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -50,6 +49,7 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonText
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun PasskeysCredentialViewScreen(
@@ -182,7 +182,7 @@ private fun PasskeysCredentialItem(
                                 Text(
                                     text = item.rpId,
                                     fontFamily = FontFamily.Monospace,
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style = MiuixTheme.textStyles.bodyMedium,
                                 )
                             }
                         },
@@ -237,7 +237,7 @@ private fun PasskeysCredentialItem(
                 Text(
                     text = item.text,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MiuixTheme.textStyles.labelMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -326,8 +326,8 @@ private fun ColumnScope.ContentError(
             .align(Alignment.CenterHorizontally),
         text = message,
         textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.error,
+        style = MiuixTheme.textStyles.labelMedium,
+        color = MiuixTheme.colorScheme.error,
     )
 }
 
@@ -360,7 +360,7 @@ private fun ColumnScope.ContentSkeleton(
         SkeletonText(
             modifier = Modifier
                 .fillMaxWidth(0.8f),
-            style = MaterialTheme.typography.labelMedium,
+            style = MiuixTheme.textStyles.labelMedium,
         )
     }
 }

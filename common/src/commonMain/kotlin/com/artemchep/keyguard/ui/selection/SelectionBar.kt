@@ -19,7 +19,6 @@ import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -30,6 +29,7 @@ import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SelectionBar(
@@ -81,7 +81,7 @@ fun SelectionBar(
                         title.invoke(this)
                     }
                 }
-                val textStyle = MaterialTheme.typography.titleMedium
+                val textStyle = MiuixTheme.textStyles.titleMedium
                 CompositionLocalProvider(
                     LocalTextStyle provides textStyle,
                 ) {

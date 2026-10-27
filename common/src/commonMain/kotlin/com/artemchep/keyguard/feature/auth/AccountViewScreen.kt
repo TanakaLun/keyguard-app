@@ -21,7 +21,6 @@ import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -58,6 +57,8 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun AccountViewScreen(
@@ -261,13 +262,13 @@ private fun AccountViewTitle(
                         .shimmer()
                         .fillMaxHeight()
                         .fillMaxWidth(0.28f)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(KgShapes.medium)
                         .background(shimmerColor),
                 )
                 // only needed to measure the text size
                 Text(
                     "",
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                 )
             }
             Box(
@@ -280,13 +281,13 @@ private fun AccountViewTitle(
                         .shimmer()
                         .fillMaxHeight()
                         .fillMaxWidth(0.45f)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(KgShapes.medium)
                         .background(shimmerColor),
                 )
                 // only needed to measure the text size
                 Text(
                     "",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                 )
             }
         } else {
@@ -296,7 +297,7 @@ private fun AccountViewTitle(
                 .orEmpty()
             Text(
                 text = host,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
                 overflow = TextOverflow.Ellipsis,
@@ -309,7 +310,7 @@ private fun AccountViewTitle(
                     modifier = Modifier
                         .weight(1f, fill = false),
                     text = name,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )

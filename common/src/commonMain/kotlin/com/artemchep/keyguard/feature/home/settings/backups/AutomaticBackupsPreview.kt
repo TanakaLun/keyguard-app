@@ -4,7 +4,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalInspectionMode

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,6 +23,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlin.math.pow
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun Ah(
@@ -81,13 +82,13 @@ fun AhContainer(
     // together with the content. The background follows the animated
     // progress in the draw phase, so animating does not recompose.
     val contentColor = run {
-        val primary = MaterialTheme.colorScheme.onSecondaryContainer
-        val error = MaterialTheme.colorScheme.onErrorContainer
+        val primary = MiuixTheme.colorScheme.onSecondaryContainer
+        val error = MiuixTheme.colorScheme.onErrorContainer
         primary.copy(alpha = score.pow(0.4f)).compositeOver(error)
             .combineAlpha(LocalContentColor.current.alpha)
     }
-    val backgroundPrimary = MaterialTheme.colorScheme.secondaryContainer
-    val backgroundError = MaterialTheme.colorScheme.errorContainer
+    val backgroundPrimary = MiuixTheme.colorScheme.secondaryContainer
+    val backgroundError = MiuixTheme.colorScheme.errorContainer
     AhLayout(
         modifier = modifier,
         contentColor = contentColor,
@@ -120,7 +121,7 @@ private fun AhLayout(
     backgroundColor: ColorProducer,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val shape = MaterialTheme.shapes.small
+    val shape = KgShapes.small
     val backgroundAlpha = LocalContentColor.current.alpha
     Row(
         modifier = modifier
@@ -141,7 +142,7 @@ private fun AhLayout(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val textStyle = MaterialTheme.typography.labelMedium
+        val textStyle = MiuixTheme.textStyles.labelMedium
         CompositionLocalProvider(
             LocalContentColor provides contentColor,
             LocalTextStyle provides textStyle,

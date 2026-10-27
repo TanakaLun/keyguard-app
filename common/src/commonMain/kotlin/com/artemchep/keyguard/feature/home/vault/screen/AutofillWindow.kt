@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.HistoryToggleOff
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -43,6 +42,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun RecentsButton(
@@ -132,8 +132,8 @@ fun ColumnScope.RecentsWindow(
     onComplete: (DSecret) -> Unit,
 ) {
     val state = vaultRecentScreenState(
-        highlightBackgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-        highlightContentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        highlightBackgroundColor = MiuixTheme.colorScheme.tertiaryContainer,
+        highlightContentColor = MiuixTheme.colorScheme.onTertiaryContainer,
     )
     state.fold(
         ifLoading = {

@@ -30,9 +30,8 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.VerticalDivider
+import top.yukonga.miuix.kmp.basic.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -86,6 +85,7 @@ import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun NavigationItemsSettingsScreen() {
@@ -318,7 +318,7 @@ private fun NavigationItemsSettingsItem(
             subIcon = item.subIcon,
             title = {
                 val style = if (item.ref is NavItemRef.BuiltIn) {
-                    MaterialTheme.typography.titleMedium
+                    MiuixTheme.textStyles.titleMedium
                 } else LocalTextStyle.current
                 Text(
                     text = textResource(item.title),
@@ -428,13 +428,13 @@ private fun RowScope.NavigationItemsSettingsItemActions(
         modifier = dragHandleModifier
             .size(36.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.tertiaryContainer),
+            .background(MiuixTheme.colorScheme.tertiaryContainer),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = Icons.Outlined.DragIndicator,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+            tint = MiuixTheme.colorScheme.onTertiaryContainer,
         )
     }
 }

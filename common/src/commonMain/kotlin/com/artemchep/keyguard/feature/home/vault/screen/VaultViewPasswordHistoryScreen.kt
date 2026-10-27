@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.ImmutableList
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private const val SKELETON_ITEMS_COUNT = 2
 
@@ -135,7 +135,7 @@ private fun ToolbarTitle(
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.33f),
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 emphasis = MediumEmphasisAlpha,
             )
         }
@@ -144,7 +144,7 @@ private fun ToolbarTitle(
             val name = state.content.data.name
             Text(
                 text = name,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
                 overflow = TextOverflow.Ellipsis,
@@ -155,14 +155,14 @@ private fun ToolbarTitle(
         is VaultViewPasswordHistoryState.Content.NotFound -> {
             Text(
                 text = "Not found",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.error,
+                style = MiuixTheme.textStyles.labelSmall,
+                color = MiuixTheme.colorScheme.error,
             )
         }
     }
     Text(
         text = stringResource(Res.string.passwordhistory_header_title),
-        style = MaterialTheme.typography.titleMedium,
+        style = MiuixTheme.textStyles.titleMedium,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
     )

@@ -24,7 +24,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
@@ -68,6 +67,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.getString as getComposeString
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun CredentialScaffold(
@@ -95,13 +95,13 @@ fun CredentialScaffold(
                 ) {
                     Text(
                         text = titleText,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MiuixTheme.textStyles.labelSmall,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                     )
-                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                    ProvideTextStyle(MiuixTheme.textStyles.titleSmall) {
                         subtitle()
                     }
                 }
@@ -192,7 +192,7 @@ fun CredentialError(
                 .size(48.dp),
             imageVector = Icons.Outlined.Warning,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
+            tint = MiuixTheme.colorScheme.error,
         )
         if (title != null) {
             Spacer(
@@ -203,7 +203,7 @@ fun CredentialError(
                 modifier = Modifier
                     .fillMaxWidth(),
                 text = title,
-                style = MaterialTheme.typography.titleLarge,
+                style = MiuixTheme.textStyles.titleLarge,
             )
         }
         Spacer(
@@ -214,7 +214,7 @@ fun CredentialError(
             modifier = Modifier
                 .fillMaxWidth(),
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         if (advanced != null) {
             Spacer(
@@ -235,8 +235,8 @@ fun CredentialError(
                             vertical = 4.dp,
                         ),
                     text = stringResource(Res.string.advanced_options),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    style = MiuixTheme.textStyles.titleSmall,
+                    color = MiuixTheme.colorScheme.primary,
                 )
                 Spacer(
                     modifier = Modifier
@@ -245,7 +245,7 @@ fun CredentialError(
                 DropdownIcon(
                     modifier = Modifier
                         .size(16.dp),
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = MiuixTheme.colorScheme.primary,
                     expanded = expandedState.value,
                 )
             }
@@ -263,14 +263,14 @@ fun CredentialError(
                         FlatItemLayoutExpressive(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            contentColor = MaterialTheme.colorScheme.error,
+                            contentColor = MiuixTheme.colorScheme.error,
                             padding = PaddingValues(top = 3.dp, start = 0.dp, end = 0.dp),
                             content = {
                                 Text(
                                     modifier = Modifier
                                         .fillMaxWidth(),
                                     text = advanced.action.title,
-                                    style = MaterialTheme.typography.titleSmallEmphasized,
+                                    style = MiuixTheme.textStyles.titleSmallEmphasized,
                                 )
                             },
                             onClick = advanced.action.onClick,
@@ -284,7 +284,7 @@ fun CredentialError(
                         modifier = Modifier
                             .fillMaxWidth(),
                         text = advanced.note,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                         color = LocalContentColor.current
                             .combineAlpha(DisabledEmphasisAlpha),
                     )
@@ -445,7 +445,7 @@ private fun CredentialErrorPreview(
                         horizontal = 16.dp,
                     ),
                 text = "Keyguard",
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
                 overflow = TextOverflow.Ellipsis,

@@ -32,7 +32,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,6 +86,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun KeePassLoginScreen(
@@ -152,19 +152,19 @@ fun LoginContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.8f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         SkeletonText(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.88f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         SkeletonText(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.3f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         Spacer(Modifier.height(16.dp))
         SkeletonTextField(
@@ -282,7 +282,7 @@ fun LoginContent(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.addkeepass_header_body),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         Spacer(Modifier.height(16.dp))
         FlatSimpleNote(
@@ -297,7 +297,7 @@ fun LoginContent(
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.database_location_title),
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
         Spacer(Modifier.height(8.dp))
         FlowRow(
@@ -394,7 +394,7 @@ fun LoginContent(
                     Text(
                         text = size.orEmpty(),
                         fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                     )
@@ -478,7 +478,7 @@ fun LoginContent(
                     Text(
                         text = size.orEmpty(),
                         fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                     )
@@ -564,7 +564,7 @@ fun LoginContent(
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.backup_disclaimer_title),
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )
@@ -576,7 +576,7 @@ fun LoginContent(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.backup_disclaimer_text),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )

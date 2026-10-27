@@ -17,9 +17,8 @@ import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -169,6 +168,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 private const val TIP_VISIBLE = true
 
@@ -581,7 +582,7 @@ suspend fun RememberStateFlowScope.generatorStateProducer(
                         id = "generator.wordlist.${wordlist.idRaw}",
                         title = TextHolder.Value(wordlist.name),
                         leading = {
-                            val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+                            val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
                                 wordlist.accentColor.dark
                             } else {
                                 wordlist.accentColor.light
@@ -2271,8 +2272,8 @@ suspend fun RememberStateFlowScope.generatorStateProducer(
                 icon = Icons.Outlined.Info,
                 trailing = {
                     Checkbox(
-                        checked = tipVisible,
-                        onCheckedChange = null,
+                        state = ToggleableState(tipVisible),
+                        onClick = null,
                     )
                 },
                 onClick = tipVisibleSink::value::set.partially1(!tipVisible),
@@ -2597,7 +2598,7 @@ private fun RememberStateFlowScope.flowOfGeneratorType(
         return FlatItemAction(
             id = "generator.type.emailRelay.${emailRelay.id ?: emailRelay.name}",
             leading = {
-                val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+                val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
                     emailRelay.accentColor.dark
                 } else {
                     emailRelay.accentColor.light
@@ -2664,7 +2665,7 @@ private fun RememberStateFlowScope.flowOfGeneratorType(
                                     content = {
                                         Text(
                                             text = tip,
-                                            style = MaterialTheme.typography.bodySmall,
+                                            style = MiuixTheme.textStyles.bodySmall,
                                         )
                                     },
                                     trailing = {

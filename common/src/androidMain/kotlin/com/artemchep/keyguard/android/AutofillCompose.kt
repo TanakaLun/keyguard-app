@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +51,8 @@ import com.artemchep.keyguard.ui.composable
 import com.artemchep.keyguard.ui.icons.FaviconIcon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun AutofillScaffold(
@@ -94,7 +95,7 @@ fun ExtensionScaffold(
         .only(WindowInsetsSides.Top)
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(MiuixTheme.colorScheme.surfaceVariant)
             .windowInsetsPadding(topInsets),
     ) {
         val horizontalInsets = WindowInsets.statusBars
@@ -108,7 +109,7 @@ fun ExtensionScaffold(
             header()
         }
 
-        val shape = MaterialTheme.shapes.extraLarge
+        val shape = KgShapes.extraLarge
             .copy(
                 bottomStart = CornerSize(0.dp),
                 bottomEnd = CornerSize(0.dp),
@@ -116,7 +117,7 @@ fun ExtensionScaffold(
         Box(
             modifier = Modifier
                 .clip(shape)
-                .background(MaterialTheme.colorScheme.background)
+                .background(MiuixTheme.colorScheme.background)
                 .fillMaxSize(),
         ) {
             content()
@@ -147,7 +148,7 @@ fun AppInfo(
         else -> {
             Text(
                 text = "Autofill with Keyguard",
-                style = MaterialTheme.typography.titleMedium,
+                style = MiuixTheme.textStyles.titleMedium,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -274,7 +275,7 @@ private fun AppInfo(
         Column {
             Text(
                 text = "Autofill for",
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
                 overflow = TextOverflow.Ellipsis,
@@ -283,7 +284,7 @@ private fun AppInfo(
             if (state is Loadable.Ok) {
                 Text(
                     text = state.value.label,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )

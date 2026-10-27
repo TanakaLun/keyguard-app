@@ -42,7 +42,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -51,9 +51,8 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.ToggleButton
@@ -159,6 +158,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun GeneratorScreen(
@@ -695,7 +697,7 @@ fun ColumnScope.GeneratorValue(
                             modifier = Modifier
                                 .padding(bottom = 4.dp),
                             text = title,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                         )
                     }
                     Crossfade(
@@ -827,7 +829,7 @@ private fun ColumnScope.GeneratorFilterTip(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     text = tip.text,
                     color = LocalContentColor.current
                         .combineAlpha(alpha = MediumEmphasisAlpha),
@@ -969,9 +971,9 @@ private fun FilterSwitchItemMainContent(
         shapeState = shapeState,
         leading = {
             Checkbox(
-                checked = item.model.checked,
+                state = ToggleableState(item.model.checked),
                 enabled = item.model.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         title = {
@@ -1005,7 +1007,7 @@ fun FilterSwitchItemCounter(
         modifier = Modifier
             .height(32.dp),
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MiuixTheme.colorScheme.secondaryContainer,
     ) {
         Row {
             val updatedOnChange = rememberUpdatedState(counter.onChange)
@@ -1035,7 +1037,7 @@ fun FilterSwitchItemCounter(
                     .animateContentSize()
                     .align(Alignment.CenterVertically),
                 text = counter.number.toString(),
-                style = MaterialTheme.typography.labelMedium,
+                style = MiuixTheme.textStyles.labelMedium,
                 textAlign = TextAlign.Center,
             )
             FilterSwitchItemCounterButton(
@@ -1200,7 +1202,7 @@ private fun ColumnScope.DecoratedSliderLayout(
         Text(
             modifier = Modifier
                 .weight(1f),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
             text = stringResource(Res.string.length),
         )
         length(
@@ -1286,7 +1288,7 @@ private fun ColumnScope.DecoratedSliderContent(
         Text(
             modifier = Modifier
                 .weight(1f),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
             text = stringResource(Res.string.length),
         )
         FilterSwitchItemCounter(
@@ -1330,7 +1332,7 @@ private fun ColumnScope.DecoratedSkeletonSlider(
                     .shimmer()
                     .heightIn(min = 16.dp)
                     .widthIn(min = 20.dp)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor),
             )
         },
@@ -1347,7 +1349,7 @@ private fun ColumnScope.DecoratedSkeletonSlider(
                     .shimmer()
                     .heightIn(min = 14.dp)
                     .widthIn(min = 18.dp)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor),
             )
         },
@@ -1374,6 +1376,6 @@ fun AutoResizeText(
         fontSize = fontSize.sp,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.titleLarge,
+        style = MiuixTheme.textStyles.titleLarge,
     )
 }

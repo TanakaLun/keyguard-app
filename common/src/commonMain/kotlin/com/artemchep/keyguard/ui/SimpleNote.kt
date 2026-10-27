@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -25,6 +24,7 @@ import com.artemchep.keyguard.ui.theme.onOkContainer
 import com.artemchep.keyguard.ui.theme.onWarningContainer
 import com.artemchep.keyguard.ui.theme.warning
 import com.artemchep.keyguard.ui.theme.warningContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Immutable
 data class SimpleNote(
@@ -66,22 +66,22 @@ fun FlatSimpleNote(
     icon: Boolean = true,
 ) {
     val tintColor = when (type) {
-        SimpleNote.Type.OK -> MaterialTheme.colorScheme.ok
-        SimpleNote.Type.INFO -> MaterialTheme.colorScheme.info
-        SimpleNote.Type.WARNING -> MaterialTheme.colorScheme.warning
-        SimpleNote.Type.ERROR -> MaterialTheme.colorScheme.error
+        SimpleNote.Type.OK -> MiuixTheme.colorScheme.ok
+        SimpleNote.Type.INFO -> MiuixTheme.colorScheme.info
+        SimpleNote.Type.WARNING -> MiuixTheme.colorScheme.warning
+        SimpleNote.Type.ERROR -> MiuixTheme.colorScheme.error
     }
     val surfaceColor = when (type) {
-        SimpleNote.Type.OK -> MaterialTheme.colorScheme.okContainer
-        SimpleNote.Type.INFO -> MaterialTheme.colorScheme.infoContainer
-        SimpleNote.Type.WARNING -> MaterialTheme.colorScheme.warningContainer
-        SimpleNote.Type.ERROR -> MaterialTheme.colorScheme.errorContainer
+        SimpleNote.Type.OK -> MiuixTheme.colorScheme.okContainer
+        SimpleNote.Type.INFO -> MiuixTheme.colorScheme.infoContainer
+        SimpleNote.Type.WARNING -> MiuixTheme.colorScheme.warningContainer
+        SimpleNote.Type.ERROR -> MiuixTheme.colorScheme.errorContainer
     }
     val contentColor = when (type) {
-        SimpleNote.Type.OK -> MaterialTheme.colorScheme.onOkContainer
-        SimpleNote.Type.INFO -> MaterialTheme.colorScheme.onInfoContainer
-        SimpleNote.Type.WARNING -> MaterialTheme.colorScheme.onWarningContainer
-        SimpleNote.Type.ERROR -> MaterialTheme.colorScheme.onErrorContainer
+        SimpleNote.Type.OK -> MiuixTheme.colorScheme.onOkContainer
+        SimpleNote.Type.INFO -> MiuixTheme.colorScheme.onInfoContainer
+        SimpleNote.Type.WARNING -> MiuixTheme.colorScheme.onWarningContainer
+        SimpleNote.Type.ERROR -> MiuixTheme.colorScheme.onErrorContainer
     }
     FlatItemLayoutExpressive(
         modifier = modifier,
@@ -115,7 +115,7 @@ fun FlatSimpleNote(
             if (title != null) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MiuixTheme.textStyles.titleSmall,
                     color = contentColor,
                 )
             }
@@ -128,7 +128,7 @@ fun FlatSimpleNote(
                 }
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = textColor,
                 )
             }

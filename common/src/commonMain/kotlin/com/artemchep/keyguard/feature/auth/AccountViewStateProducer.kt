@@ -21,7 +21,6 @@ import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -134,6 +133,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun accountState(
@@ -1116,7 +1116,7 @@ private suspend fun FlowCollector<VaultViewItem>.emitName(
         id = "account.name.editColor",
         leading = iconSmall(Icons.Outlined.Edit, Icons.Outlined.ColorLens),
         trailing = {
-            val accentColor = if (MaterialTheme.colorScheme.isDark) {
+            val accentColor = if (MiuixTheme.colorScheme.isDark) {
                 profile.accentColor.dark
             } else {
                 profile.accentColor.light
@@ -1131,7 +1131,7 @@ private suspend fun FlowCollector<VaultViewItem>.emitName(
         onClick = ::onEditColor,
     )
     val leading: @Composable RowScope.() -> Unit = {
-        val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+        val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
             profile.accentColor.dark
         } else {
             profile.accentColor.light

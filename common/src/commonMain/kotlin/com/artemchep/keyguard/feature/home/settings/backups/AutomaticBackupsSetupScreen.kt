@@ -25,8 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -52,6 +51,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun AutomaticBackupsSetupScreen() {
@@ -226,8 +226,8 @@ private fun BackupSetupHeader(step: BackupSetupStep) {
                 step.ordinal + 1,
                 BackupSetupStep.entries.size,
             ),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
+            style = MiuixTheme.textStyles.labelLarge,
+            color = MiuixTheme.colorScheme.primary,
         )
         LinearProgressIndicator(
             modifier = Modifier.fillMaxWidth(),
@@ -236,12 +236,12 @@ private fun BackupSetupHeader(step: BackupSetupStep) {
         Text(
             modifier = Modifier.semantics { heading() },
             text = stringResource(title),
-            style = MaterialTheme.typography.headlineMedium,
+            style = MiuixTheme.textStyles.headlineMedium,
         )
         Text(
             text = stringResource(detail),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MiuixTheme.textStyles.bodyLarge,
+            color = MiuixTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

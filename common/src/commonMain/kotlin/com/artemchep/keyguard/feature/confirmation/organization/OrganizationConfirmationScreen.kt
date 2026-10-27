@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun OrganizationConfirmationScreen(
@@ -181,7 +181,7 @@ private fun ColumnScope.FolderSection(
                         .padding(horizontal = Dimens.horizontalPadding)
                         .padding(top = 8.dp),
                     text = text,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MiuixTheme.textStyles.labelMedium,
                 )
             }
         }

@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.FolderOff
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -52,6 +51,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun organizationConfirmationState(
@@ -530,7 +530,7 @@ suspend fun RememberStateFlowScope.organizationConfirmationStateProducer(
                     selected = selected,
                     onClick = onClick,
                     icon = {
-                        val accentColor = if (MaterialTheme.colorScheme.isDark) {
+                        val accentColor = if (MiuixTheme.colorScheme.isDark) {
                             account.accentColors.dark
                         } else {
                             account.accentColors.light

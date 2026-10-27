@@ -8,7 +8,6 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +34,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SshAgentFiltersScreen() {
@@ -87,7 +87,7 @@ private fun SshAgentFiltersScreenContent(
     val resetEnabled = resetOnClick != null
 
     val resetContainerColor = run {
-        val color = MaterialTheme.colorScheme.secondaryContainer
+        val color = MiuixTheme.colorScheme.secondaryContainer
         if (resetEnabled) {
             color
         } else {
@@ -96,7 +96,7 @@ private fun SshAgentFiltersScreenContent(
         }
     }
     val resetContentColor = run {
-        val color = MaterialTheme.colorScheme.onSecondaryContainer
+        val color = MiuixTheme.colorScheme.onSecondaryContainer
         if (resetEnabled) {
             color
         } else {
@@ -160,8 +160,8 @@ private fun SshAgentFiltersScreenContent(
                     vertical = 8.dp,
                 ),
             text = stringResource(Res.string.agent_filters_note_save_to_apply),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MiuixTheme.textStyles.bodySmall,
+            color = MiuixTheme.colorScheme.onSurfaceVariant,
         )
 
         VaultHomeScreenFilterPaneNumberOfItems(

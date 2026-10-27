@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Key
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,6 +75,7 @@ import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private const val HIBP_API_TOKEN_ITEM_KEY = "hibp_api_token"
 
@@ -276,11 +276,11 @@ private fun HibpApiTokenCheckStatusIcon(
     state: HibpApiTokenCheckState,
 ) {
     val color = when (state) {
-        HibpApiTokenCheckState.Checking -> MaterialTheme.colorScheme.info
-        HibpApiTokenCheckState.Verified -> MaterialTheme.colorScheme.ok
+        HibpApiTokenCheckState.Checking -> MiuixTheme.colorScheme.info
+        HibpApiTokenCheckState.Verified -> MiuixTheme.colorScheme.ok
         HibpApiTokenCheckState.Rejected,
         HibpApiTokenCheckState.Failed,
-            -> MaterialTheme.colorScheme.error
+            -> MiuixTheme.colorScheme.error
     }
     val icon = when (state) {
         HibpApiTokenCheckState.Checking -> {

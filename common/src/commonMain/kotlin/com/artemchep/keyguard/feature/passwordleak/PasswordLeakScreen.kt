@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FactCheck
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun PasswordLeakScreen(
@@ -55,7 +55,7 @@ fun PasswordLeakScreen(
                     modifier = Modifier
                         .padding(horizontal = Dimens.horizontalPadding),
                     text = stringResource(Res.string.passwordleak_note),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -155,7 +155,7 @@ private fun ColumnScope.Content(
                 leaks,
                 numberFormatter.formatNumber(leaks),
             ),
-            style = MaterialTheme.typography.labelSmall,
+            style = MiuixTheme.textStyles.labelSmall,
             fontWeight = FontWeight.Black,
         )
     } else {

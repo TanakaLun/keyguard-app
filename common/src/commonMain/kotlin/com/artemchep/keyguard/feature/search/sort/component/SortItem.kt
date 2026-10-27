@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -30,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.defaultAvatarColor
 import com.artemchep.keyguard.ui.theme.selectedContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun SortItemComposable(
@@ -43,7 +44,7 @@ fun SortItemComposable(
 
     val backgroundColor =
         if (checked) {
-            MaterialTheme.colorScheme.selectedContainer
+            MiuixTheme.colorScheme.selectedContainer
         } else Color.Unspecified
     val contentColor = contentColorFor(backgroundColor)
     Row(
@@ -52,7 +53,7 @@ fun SortItemComposable(
                 horizontal = 8.dp,
                 vertical = 1.dp,
             )
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .then(
                 if (updatedOnClick != null) {
                     Modifier

@@ -26,13 +26,12 @@ import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -122,6 +121,9 @@ import com.artemchep.keyguard.ui.toolbar.content.CustomSearchbarContent
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun SendListScreen(
@@ -130,8 +132,8 @@ fun SendListScreen(
     val sendViewRouteFactory = currentKoinScope().get<SendViewRouteFactory>()
     val state = sendListScreenState(
         args = args,
-        highlightBackgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-        highlightContentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        highlightBackgroundColor = MiuixTheme.colorScheme.tertiaryContainer,
+        highlightContentColor = MiuixTheme.colorScheme.onTertiaryContainer,
         mode = LocalAppMode.current,
     )
     val old = remember {
@@ -557,9 +559,9 @@ fun VaultSendItemText(
     val onLongClick = localState.selectableItemState.onLongClick
 
     val backgroundColor = when {
-        localState.selectableItemState.selected -> MaterialTheme.colorScheme.primaryContainer
+        localState.selectableItemState.selected -> MiuixTheme.colorScheme.primaryContainer
         localState.openedState.isOpened ->
-            MaterialTheme.colorScheme.selectedContainer
+            MiuixTheme.colorScheme.selectedContainer
                 .takeIf { LocalHasDetailPane.current }
                 ?: Color.Unspecified
 
@@ -578,7 +580,7 @@ fun VaultSendItemText(
                         Text(
                             text = title,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                             maxLines = 1,
                         )
                     } else {
@@ -630,7 +632,7 @@ fun VaultSendItemText(
                         text = item.notes,
                         maxLines = 4,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                     )
                 }
             }
@@ -663,7 +665,7 @@ fun VaultSendItemText(
                             text = item.deletion,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MiuixTheme.textStyles.labelMedium,
                         )
                     }
                     Spacer(
@@ -689,7 +691,7 @@ fun VaultSendItemText(
                                         .orEmpty(),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MiuixTheme.textStyles.labelMedium,
                         )
                     }
                 }
@@ -747,8 +749,8 @@ fun VaultSendItemText(
                 ) {
                     if (it) {
                         Checkbox(
-                            checked = localState.selectableItemState.selected,
-                            onCheckedChange = null,
+                            state = ToggleableState(localState.selectableItemState.selected),
+                            onClick = null,
                         )
                     } else {
                         ChevronIcon()
@@ -773,7 +775,7 @@ private fun SmallInfoBadge(
             .background(
                 MaterialTheme.colorScheme
                     .surfaceColorAtElevationSemi(elevation + 2.dp),
-                MaterialTheme.shapes.small,
+                KgShapes.small,
             )
             .padding(
                 horizontal = 6.dp,
@@ -782,7 +784,7 @@ private fun SmallInfoBadge(
         text = text,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.labelMedium,
+        style = MiuixTheme.textStyles.labelMedium,
     )
 }
 

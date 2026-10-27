@@ -16,12 +16,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -62,6 +61,8 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.monoFontFamily
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun ConfirmationScreen(
@@ -89,7 +90,7 @@ fun ConfirmationScreen(
                 if (args.subtitle != null) {
                     Text(
                         text = args.subtitle,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MiuixTheme.textStyles.titleSmall,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                     )
@@ -231,8 +232,8 @@ private fun ConfirmationBooleanItem(
         modifier = modifier,
         leading = {
             Checkbox(
-                checked = item.value,
-                onCheckedChange = null,
+                state = ToggleableState(item.value),
+                onClick = null,
                 enabled = item.enabled,
             )
         },
@@ -240,12 +241,12 @@ private fun ConfirmationBooleanItem(
             Column {
                 Text(
                     text = item.title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
                 if (item.text != null) {
                     Text(
                         text = item.text,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                         maxLines = item.textMaxLines,
@@ -360,7 +361,7 @@ private fun ConfirmationStringItem(
                         vertical = 8.dp,
                     ),
                 text = item.description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )
@@ -416,7 +417,7 @@ private fun ConfirmationEnumItem(
                         .padding(horizontal = Dimens.horizontalPadding)
                         .animateContentSize(),
                     text = doc.text,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
                 )
                 Spacer(
@@ -477,7 +478,7 @@ private fun ConfirmationFileItem(
             val colorTarget = if (item.valid) {
                 LocalContentColor.current
             } else {
-                MaterialTheme.colorScheme.error
+                MiuixTheme.colorScheme.error
             }
             val colorState = animateColorAsState(
                 targetValue = colorTarget,
@@ -492,7 +493,7 @@ private fun ConfirmationFileItem(
         content = {
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
 
             val file = item.value
@@ -505,7 +506,7 @@ private fun ConfirmationFileItem(
                         modifier = Modifier
                             .weight(1f, fill = false),
                         text = name,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                     )
                     val size = remember() {
                         file.size?.let(::humanReadableByteCountSI)
@@ -513,7 +514,7 @@ private fun ConfirmationFileItem(
                     if (size != null) {
                         Text(
                             text = size,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MiuixTheme.textStyles.bodySmall,
                             color = LocalContentColor.current
                                 .combineAlpha(MediumEmphasisAlpha),
                         )
@@ -522,7 +523,7 @@ private fun ConfirmationFileItem(
             } else {
                 Text(
                     text = stringResource(Res.string.select_file),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )

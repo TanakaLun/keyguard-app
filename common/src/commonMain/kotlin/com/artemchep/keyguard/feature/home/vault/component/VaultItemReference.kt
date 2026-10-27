@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Link
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +24,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private val ReferenceItemIconSize = 24.dp
 
@@ -68,7 +68,7 @@ fun VaultItemReference(
                     .width(8.dp),
             )
             val contentColor = if (label.unavailable) {
-                MaterialTheme.colorScheme.error
+                MiuixTheme.colorScheme.error
             } else {
                 LocalContentColor.current
             }
@@ -112,7 +112,7 @@ private fun VaultItemReferenceIcon(
                 .size(ReferenceItemIconSize),
             imageVector = Icons.Outlined.ErrorOutline,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
+            tint = MiuixTheme.colorScheme.error,
         )
     }
 }

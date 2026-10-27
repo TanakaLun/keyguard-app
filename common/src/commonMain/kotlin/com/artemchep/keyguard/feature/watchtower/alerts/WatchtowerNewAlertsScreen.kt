@@ -23,7 +23,6 @@ import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -74,6 +73,7 @@ import com.artemchep.keyguard.ui.theme.warningContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun WatchtowerNewAlerts(
@@ -208,7 +208,7 @@ private fun GeneratorHistoryItem(
 
             val selected = nextRoute?.tag == item.id
             if (selected) {
-                return@run MaterialTheme.colorScheme.selectedContainer
+                return@run MiuixTheme.colorScheme.selectedContainer
             }
         }
 
@@ -233,7 +233,7 @@ private fun GeneratorHistoryItem(
                 ) {
                     AvatarBadgeSurface(
                         modifier = Modifier,
-                        backgroundColor = MaterialTheme.colorScheme.badgeContainer,
+                        backgroundColor = MiuixTheme.colorScheme.badgeContainer,
                     ) {
                         AvatarBadgeIcon(
                             imageVector = Icons.Outlined.Info,
@@ -260,7 +260,7 @@ private fun GeneratorHistoryItem(
                     text = item.date,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MiuixTheme.textStyles.labelMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -275,19 +275,19 @@ private fun Ahhhh(
     type: DWatchtowerAlertType,
 ) {
     val tintColor = when (type.level) {
-        DWatchtowerAlertType.Level.INFO -> MaterialTheme.colorScheme.info
-        DWatchtowerAlertType.Level.WARNING -> MaterialTheme.colorScheme.warning
-        DWatchtowerAlertType.Level.ERROR -> MaterialTheme.colorScheme.error
+        DWatchtowerAlertType.Level.INFO -> MiuixTheme.colorScheme.info
+        DWatchtowerAlertType.Level.WARNING -> MiuixTheme.colorScheme.warning
+        DWatchtowerAlertType.Level.ERROR -> MiuixTheme.colorScheme.error
     }
     val surfaceColor = when (type.level) {
-        DWatchtowerAlertType.Level.INFO -> MaterialTheme.colorScheme.infoContainer
-        DWatchtowerAlertType.Level.WARNING -> MaterialTheme.colorScheme.warningContainer
-        DWatchtowerAlertType.Level.ERROR -> MaterialTheme.colorScheme.errorContainer
+        DWatchtowerAlertType.Level.INFO -> MiuixTheme.colorScheme.infoContainer
+        DWatchtowerAlertType.Level.WARNING -> MiuixTheme.colorScheme.warningContainer
+        DWatchtowerAlertType.Level.ERROR -> MiuixTheme.colorScheme.errorContainer
     }
     val contentColor = when (type.level) {
-        DWatchtowerAlertType.Level.INFO -> MaterialTheme.colorScheme.onInfoContainer
-        DWatchtowerAlertType.Level.WARNING -> MaterialTheme.colorScheme.onWarningContainer
-        DWatchtowerAlertType.Level.ERROR -> MaterialTheme.colorScheme.onErrorContainer
+        DWatchtowerAlertType.Level.INFO -> MiuixTheme.colorScheme.onInfoContainer
+        DWatchtowerAlertType.Level.WARNING -> MiuixTheme.colorScheme.onWarningContainer
+        DWatchtowerAlertType.Level.ERROR -> MiuixTheme.colorScheme.onErrorContainer
     }
     AhLayout(
         modifier = modifier,

@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +33,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.parcelize.Parcelize
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * A screen that does show the provided text in a Large type
@@ -91,7 +91,7 @@ class LargeTypeActivity : BaseActivity() {
                 modifier = Modifier
                     .padding(16.dp),
                 text = text,
-                color = MaterialTheme.colorScheme.error,
+                color = MiuixTheme.colorScheme.error,
             )
             return
         }

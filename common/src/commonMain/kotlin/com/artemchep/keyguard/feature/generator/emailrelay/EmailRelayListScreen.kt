@@ -8,10 +8,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,6 +53,9 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.DividerColor
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun EmailRelayListScreen(
@@ -230,7 +232,7 @@ private fun AppItem(
 ) {
     val selectableState by item.selectableState.collectAsState()
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
     FlatDropdownSimpleExpressive(
@@ -269,14 +271,14 @@ private fun AppItem(
                     .border(
                         Dp.Hairline,
                         DividerColor,
-                        MaterialTheme.shapes.small,
+                        KgShapes.small,
                     )
                     .padding(
                         horizontal = 8.dp,
                         vertical = 4.dp,
                     ),
                 text = item.service,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 textAlign = TextAlign.End,
                 maxLines = 2,
             )
@@ -286,8 +288,8 @@ private fun AppItem(
                 Checkbox(
                     modifier = Modifier
                         .padding(start = 16.dp),
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +29,7 @@ import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -44,7 +44,7 @@ fun AddAccountView(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.addaccount_promo_title),
-            style = MaterialTheme.typography.titleMediumEmphasized,
+            style = MiuixTheme.textStyles.titleMediumEmphasized,
         )
         Section(
             expressive = true,
@@ -66,7 +66,7 @@ fun AddAccountView(
                 title = {
                     Text(
                         text = type.fullName,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MiuixTheme.textStyles.titleMedium,
                     )
                 },
                 text = {
@@ -115,7 +115,7 @@ fun AddAccountView(
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
             text = stringResource(Res.string.addaccount_promo_features),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
         )

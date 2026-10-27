@@ -58,6 +58,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString as getComposeString
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class PasskeyCreateActivity : BaseActivity(), KeyguardKoinOwner {
@@ -327,7 +328,7 @@ class PasskeyCreateActivity : BaseActivity(), KeyguardKoinOwner {
                     null -> {
                         Text(
                             text = "Failed to parse the create credential request data",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 2,
                         )

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingAutofillRespectAutofillOffProvider(
     koinScope: Scope,
@@ -81,7 +81,7 @@ private fun SettingAutofillRespectAutofillOff(
                 Text(
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     text = stringResource(Res.string.pref_item_autofill_respect_autofill_disabled_note),
                 )
             }

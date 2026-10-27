@@ -12,7 +12,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -42,6 +41,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.CustomToolbar
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.delay
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SearchSettingsScreen() {
@@ -98,7 +98,7 @@ fun SearchSettingsScreenContent(
                         ) {
                             Text(
                                 text = stringResource(Res.string.settingssearch_header_subtitle),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MiuixTheme.textStyles.labelSmall,
                                 color = LocalContentColor.current
                                     .combineAlpha(MediumEmphasisAlpha),
                                 overflow = TextOverflow.Ellipsis,
@@ -106,7 +106,7 @@ fun SearchSettingsScreenContent(
                             )
                             Text(
                                 text = stringResource(Res.string.settingssearch_header_title),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MiuixTheme.textStyles.titleMedium,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                             )

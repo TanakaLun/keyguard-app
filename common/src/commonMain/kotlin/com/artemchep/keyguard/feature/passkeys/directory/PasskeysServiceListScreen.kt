@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.passkeys.directory
 
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +16,7 @@ import com.artemchep.keyguard.res.passkeys_directory_search_placeholder
 import com.artemchep.keyguard.res.passkeys_directory_title
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun PasskeysListScreen(
@@ -86,7 +86,7 @@ private fun AppItem(
 
             val selected = nextRoute?.args?.model?.id == item.data.id
             if (selected) {
-                return@run MaterialTheme.colorScheme.selectedContainer
+                return@run MiuixTheme.colorScheme.selectedContainer
             }
         }
 

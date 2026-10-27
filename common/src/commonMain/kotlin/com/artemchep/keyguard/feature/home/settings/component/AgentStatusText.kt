@@ -1,7 +1,6 @@
 package com.artemchep.keyguard.feature.home.settings.component
 
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import com.artemchep.keyguard.common.model.AgentStatus
@@ -16,6 +15,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.ok
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun AgentStatusText(
@@ -27,9 +27,9 @@ internal fun AgentStatusText(
         -> LocalContentColor.current
             .combineAlpha(DisabledEmphasisAlpha)
 
-        AgentStatus.Starting -> MaterialTheme.colorScheme.info
-        AgentStatus.Ready -> MaterialTheme.colorScheme.ok
-        AgentStatus.Failed -> MaterialTheme.colorScheme.error
+        AgentStatus.Starting -> MiuixTheme.colorScheme.info
+        AgentStatus.Ready -> MiuixTheme.colorScheme.ok
+        AgentStatus.Failed -> MiuixTheme.colorScheme.error
     }
     val statusText = stringResource(
         when (status) {

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.DropdownMenuItem
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +34,7 @@ import com.artemchep.keyguard.ui.shortcut.ShortcutTooltip
 import com.artemchep.keyguard.ui.shortcut.toText
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun QuickSearchAutotypeButton(
@@ -110,7 +110,7 @@ private fun QuickSearchAutotypeMenuItem(
         modifier = Modifier
             .semantics { this.selected = selected }
             .then(
-                if (selected) Modifier.background(MaterialTheme.colorScheme.selectedContainer)
+                if (selected) Modifier.background(MiuixTheme.colorScheme.selectedContainer)
                 else Modifier,
             ),
         text = { Text(stringResource(title)) },

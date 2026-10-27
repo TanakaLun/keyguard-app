@@ -25,7 +25,6 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -57,6 +56,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 internal const val IMPORT_SKELETON_ITEM_COUNT = 3
 
@@ -172,7 +172,7 @@ internal fun ColumnScope.CredentialExchangeImportStartContent(
                 vertical = 8.dp,
             ),
         text = stringResource(Res.string.credential_exchange_import_header_text),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MiuixTheme.textStyles.bodyLarge,
     )
     Column(
         modifier = Modifier
@@ -251,7 +251,7 @@ private fun CredentialExchangeImportStep(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MiuixTheme.textStyles.titleMedium,
             )
             Spacer(
                 modifier = Modifier
@@ -259,7 +259,7 @@ private fun CredentialExchangeImportStep(
             )
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current
                     .combineAlpha(alpha = MediumEmphasisAlpha),
             )

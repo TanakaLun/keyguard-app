@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +19,7 @@ import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.shimmer.shimmer
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun SkeletonItemPilled(
@@ -37,7 +37,7 @@ fun SkeletonItemPilled(
                 Modifier
                     .height(18.dp)
                     .width(44.dp)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor.copy(alpha = 0.2f)),
             )
         },
@@ -51,7 +51,7 @@ fun SkeletonItemPilled(
                     Modifier
                         .height(18.dp)
                         .fillMaxWidth(0.4f)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(KgShapes.medium)
                         .background(contentColor),
                 )
                 if (chevron) {
@@ -59,7 +59,7 @@ fun SkeletonItemPilled(
                     Box(
                         Modifier
                             .size(18.dp)
-                            .clip(MaterialTheme.shapes.medium)
+                            .clip(KgShapes.medium)
                             .background(contentColor.copy(alpha = 0.2f)),
                     )
                 }

@@ -26,11 +26,10 @@ import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Refresh
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,6 +86,9 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun LoginTwofaScreen(
@@ -266,7 +268,7 @@ private fun ColumnScope.LoginOtpScreenContentSkeleton(
             .fillMaxWidth(0.70f)
             .shimmer()
             .padding(horizontal = Dimens.textHorizontalPadding)
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .background(contentColor.copy(alpha = 0.28f)),
     )
     Spacer(Modifier.height(32.dp))
@@ -276,7 +278,7 @@ private fun ColumnScope.LoginOtpScreenContentSkeleton(
             .fillMaxWidth()
             .shimmer()
             .padding(horizontal = Dimens.textHorizontalPadding)
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .background(contentColor),
     )
     Spacer(Modifier.height(16.dp))
@@ -291,7 +293,7 @@ private fun ColumnScope.LoginOtpScreenContentSkeleton(
                 .width(height)
                 .fillMaxHeight()
                 .shimmer()
-                .clip(MaterialTheme.shapes.medium)
+                .clip(KgShapes.medium)
                 .background(contentColor),
         )
         Spacer(Modifier.width(16.dp))
@@ -300,7 +302,7 @@ private fun ColumnScope.LoginOtpScreenContentSkeleton(
                 .fillMaxWidth(0.33f)
                 .fillMaxHeight()
                 .shimmer()
-                .clip(MaterialTheme.shapes.medium)
+                .clip(KgShapes.medium)
                 .background(contentColor),
         )
     }
@@ -326,7 +328,7 @@ private fun ColumnScope.LoginOtpScreenContentUnsupported(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(Res.string.addaccount2fa_unsupported_note),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         color = contentColor,
     )
     val updatedOnLaunchWebVault by rememberUpdatedState(state.onLaunchWebVault)
@@ -374,7 +376,7 @@ private fun ColumnScope.LoginOtpScreenContentAuthenticator(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(Res.string.addaccount2fa_otp_note),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
     Spacer(Modifier.height(16.dp))
     FlatTextField(
@@ -410,15 +412,15 @@ private fun ColumnScope.LoginOtpScreenContentAuthenticator(
         expressive = false,
         leading = {
             Checkbox(
-                checked = state.rememberMe.checked,
+                state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.remember_me),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),
@@ -447,7 +449,7 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(Res.string.addaccount2fa_email_note, state.email.orEmpty()),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
     Spacer(Modifier.height(16.dp))
     FlatTextField(
@@ -490,7 +492,7 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
                     Box(
                         Modifier
                             .align(Alignment.BottomEnd)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+                            .background(MiuixTheme.colorScheme.surfaceVariant, CircleShape),
                     ) {
                         Icon(
                             Icons.Outlined.Refresh,
@@ -505,7 +507,7 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
             content = {
                 Text(
                     text = stringResource(Res.string.resend_verification_code),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             onClick = state.emailResend,
@@ -515,15 +517,15 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
         expressive = false,
         leading = {
             Checkbox(
-                checked = state.rememberMe.checked,
+                state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.remember_me),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),
@@ -552,7 +554,7 @@ private fun ColumnScope.LoginOtpScreenContentEmailNewDevice(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(Res.string.addaccount2fa_email_note, state.email.orEmpty()),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
     Spacer(Modifier.height(16.dp))
     FlatTextField(
@@ -595,7 +597,7 @@ private fun ColumnScope.LoginOtpScreenContentEmailNewDevice(
                     Box(
                         Modifier
                             .align(Alignment.BottomEnd)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+                            .background(MiuixTheme.colorScheme.surfaceVariant, CircleShape),
                     ) {
                         Icon(
                             Icons.Outlined.Refresh,
@@ -610,7 +612,7 @@ private fun ColumnScope.LoginOtpScreenContentEmailNewDevice(
             content = {
                 Text(
                     text = stringResource(Res.string.resend_verification_code),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             onClick = state.emailResend,
@@ -699,15 +701,15 @@ private fun ColumnScope.LoginOtpScreenContentYubiKey(
         expressive = false,
         leading = {
             Checkbox(
-                checked = state.rememberMe.checked,
+                state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.remember_me),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),

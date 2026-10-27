@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +62,8 @@ import com.artemchep.keyguard.ui.totp.TotpRemainderBadge
 import com.artemchep.keyguard.ui.totp.produceTotpCode
 import kotlinx.collections.immutable.PersistentList
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -94,7 +95,7 @@ fun VaultViewTotpItem(
                     copyText = item.copy,
                     totpToken = item.totp,
                 )
-                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                ProvideTextStyle(MiuixTheme.textStyles.titleSmall) {
                     VaultViewTotpBadge2(
                         modifier = Modifier
                             .heightIn(min = 32.dp),
@@ -183,7 +184,7 @@ fun VaultViewTotpBadge2(
         .surfaceColorAtElevationSemi(1.dp)
     Row(
         modifier = modifier
-            .clip(MaterialTheme.shapes.small)
+            .clip(KgShapes.small)
             .background(tintColor)
             .clickable(enabled = codes != null) {
                 val code = (state.value as? TotpCodeState.Success)
@@ -209,7 +210,7 @@ fun VaultViewTotpBadge2(
             Icon(
                 imageVector = Icons.Outlined.ErrorOutline,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
+                tint = MiuixTheme.colorScheme.error,
             )
             Spacer(
                 modifier = Modifier

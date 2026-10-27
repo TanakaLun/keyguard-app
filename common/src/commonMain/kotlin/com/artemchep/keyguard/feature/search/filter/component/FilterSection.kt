@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun FilterSectionComposable(
@@ -64,7 +64,7 @@ fun FilterSectionComposable(
         title = {
             Text(
                 text = title.uppercase(),
-                style = MaterialTheme.typography.labelLarge,
+                style = MiuixTheme.textStyles.labelLarge,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Black,
                 color = LocalContentColor.current

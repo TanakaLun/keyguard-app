@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,6 +32,7 @@ import com.artemchep.keyguard.platform.LocalAnimationFactor
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Renders one root entry and adds it to the logical navigation stack.
@@ -338,9 +338,9 @@ fun VisualStackText() {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
+            .background(MiuixTheme.colorScheme.tertiaryContainer)
             .padding(4.dp),
         text = nav,
-        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        color = MiuixTheme.colorScheme.onTertiaryContainer,
     )
 }

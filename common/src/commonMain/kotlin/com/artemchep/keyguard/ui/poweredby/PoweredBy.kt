@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun PoweredByJustDeleteMe(
@@ -151,7 +151,7 @@ private fun PoweredByText(
             .padding(top = 4.dp),
         text = text,
         maxLines = 2,
-        style = MaterialTheme.typography.labelSmall,
+        style = MiuixTheme.textStyles.labelSmall,
         color = LocalContentColor.current
             .combineAlpha(DisabledEmphasisAlpha),
     )

@@ -18,11 +18,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -63,6 +62,9 @@ import com.artemchep.keyguard.ui.icons.SyncIcon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -78,7 +80,7 @@ fun SettingListItem(
             leading = {
                 Avatar(
                     shape = item.iconShape?.toShape()
-                        ?: MaterialTheme.shapes.large,
+                        ?: KgShapes.large,
                 ) {
                     when {
                         item.leading != null -> {
@@ -122,7 +124,7 @@ fun SettingListItem(
                     title = {
                         Text(
                             text = textResource(item.title),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                         )
                     },
                 )
@@ -157,8 +159,8 @@ fun SettingListAccountsItem(
                 predicate = { el, _ -> el is AccountItem.Item },
             ) and shapeConstraintsAnd
             val backgroundColor = when {
-                accountItem.isSelected -> MaterialTheme.colorScheme.primaryContainer
-                accountItem.isOpened -> MaterialTheme.colorScheme.selectedContainer
+                accountItem.isSelected -> MiuixTheme.colorScheme.primaryContainer
+                accountItem.isOpened -> MiuixTheme.colorScheme.selectedContainer
                 else -> run {
                     if (LocalHasDetailPane.current) {
                         val nextEntry = navigationNextEntryOrNull()
@@ -166,7 +168,7 @@ fun SettingListAccountsItem(
 
                         val selected = nextRoute?.accountId?.id == accountItem.id
                         if (selected) {
-                            return@run MaterialTheme.colorScheme.selectedContainer
+                            return@run MiuixTheme.colorScheme.selectedContainer
                         }
                     }
 
@@ -204,7 +206,7 @@ fun SettingListAccountsItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             imageVector = Icons.Outlined.ErrorOutline,
-                            tint = MaterialTheme.colorScheme.error,
+                            tint = MiuixTheme.colorScheme.error,
                             contentDescription = null,
                         )
                     }
@@ -227,8 +229,8 @@ fun SettingListAccountsItem(
                         accountItem.isSelected.takeIf { accountItem.selecting },
                     ) { selected ->
                         Checkbox(
-                            checked = selected,
-                            onCheckedChange = null,
+                            state = ToggleableState(selected),
+                            onClick = null,
                         )
                     }
 
@@ -244,14 +246,14 @@ fun SettingListAccountsItem(
                             if (accountItem.title != null) {
                                 Text(
                                     text = accountItem.title,
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MiuixTheme.textStyles.titleMedium,
                                     overflow = TextOverflow.Ellipsis,
                                     maxLines = 1,
                                 )
                             } else {
                                 Text(
                                     text = stringResource(Res.string.empty_value),
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MiuixTheme.textStyles.titleMedium,
                                     color = LocalContentColor.current
                                         .combineAlpha(DisabledEmphasisAlpha),
                                 )

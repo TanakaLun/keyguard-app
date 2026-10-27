@@ -19,7 +19,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -60,6 +59,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun LocalizationContributorsListScreen(
@@ -280,7 +280,7 @@ private fun LocalizationContributorItem(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
                 text = item.score.toString(),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
             )
             Spacer(
                 modifier = Modifier

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -64,6 +63,7 @@ import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private const val IMPORT_BUFFER_SIZE = 4096L
 
@@ -162,7 +162,7 @@ private fun EnvironmentImportContent(
             modifier = Modifier
                 .padding(horizontal = Dimens.horizontalPadding),
             text = stringResource(Res.string.environments_import_note),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )
@@ -232,7 +232,7 @@ private fun EnvironmentImportPreview(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding),
         text = stringResource(Res.string.environments_import_preview_title),
-        style = MaterialTheme.typography.labelLarge,
+        style = MiuixTheme.textStyles.labelLarge,
     )
     Spacer(
         modifier = Modifier
@@ -244,7 +244,7 @@ private fun EnvironmentImportPreview(
             .padding(horizontal = Dimens.horizontalPadding),
         text = names.joinToString(separator = "\n"),
         fontFamily = FontFamily.Monospace,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
 }
 

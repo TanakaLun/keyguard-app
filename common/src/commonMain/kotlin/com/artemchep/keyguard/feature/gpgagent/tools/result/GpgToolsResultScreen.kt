@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.SaveAlt
 import androidx.compose.material.icons.outlined.SaveAs
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import com.artemchep.keyguard.res.close
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.theme.Dimens
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun GpgToolsResultScreen(
@@ -69,7 +69,7 @@ fun GpgToolsResultScreen(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                                .background(MiuixTheme.colorScheme.surfaceContainerHighest)
                                 .padding(
                                     vertical = 8.dp,
                                     horizontal = Dimens.textHorizontalPadding,

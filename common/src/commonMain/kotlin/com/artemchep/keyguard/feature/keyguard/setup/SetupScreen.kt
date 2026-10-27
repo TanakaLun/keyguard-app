@@ -18,12 +18,11 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Lock
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,6 +66,8 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonTextField
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun SetupScreen(
@@ -112,7 +113,7 @@ private fun SetupScreenSkeleton() {
                 SkeletonText(
                     modifier = Modifier
                         .fillMaxWidth(0.4f),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             enabled = true,
@@ -129,7 +130,7 @@ private fun SetupScreenSkeleton() {
                 SkeletonText(
                     modifier = Modifier
                         .fillMaxWidth(0.3f),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             enabled = true,
@@ -215,14 +216,14 @@ fun ColumnScope.SetupContent(
             padding = PaddingValues(0.dp),
             leading = {
                 Checkbox(
-                    checked = setupState.biometric.checked,
-                    onCheckedChange = null,
+                    state = ToggleableState(setupState.biometric.checked),
+                    onClick = null,
                 )
             },
             content = {
                 Text(
                     text = stringResource(Res.string.setup_checkbox_biometric_auth),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             onClick = {
@@ -239,14 +240,14 @@ fun ColumnScope.SetupContent(
         padding = PaddingValues(0.dp),
         leading = {
             Checkbox(
-                checked = setupState.crashlytics.checked,
-                onCheckedChange = null,
+                state = ToggleableState(setupState.crashlytics.checked),
+                onClick = null,
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.setup_button_send_crash_reports),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = {
@@ -301,7 +302,7 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
                 .size(18.dp),
             imageVector = Icons.Outlined.Lock,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onBackground,
+            tint = MiuixTheme.colorScheme.onBackground,
         )
         Spacer(
             modifier = Modifier
@@ -312,7 +313,7 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
             text = remember {
                 keyguardSpan()
             },
-            style = MaterialTheme.typography.titleLarge,
+            style = MiuixTheme.textStyles.titleLarge,
         )
     }
     Spacer(Modifier.height(unlockScreenTitlePadding))
@@ -320,7 +321,7 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
         modifier = Modifier
             .fillMaxWidth(),
         text = stringResource(Res.string.setup_header_text),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MiuixTheme.textStyles.bodyLarge,
     )
 
     val config = koinInject<FlavorConfig>()
@@ -328,7 +329,7 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(Res.string.setup_free_text),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(DisabledEmphasisAlpha),
         )

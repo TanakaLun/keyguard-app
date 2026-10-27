@@ -14,8 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +30,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 private const val DIALOG_WIDTH_FRACTION = 0.9f
 
@@ -53,7 +54,7 @@ fun dialogActivityContainerColor(): Color = Color.Transparent
  * counterpart, so it has to be provided explicitly.
  */
 @Composable
-fun dialogActivityContentColor(): Color = MaterialTheme.colorScheme.onSurface
+fun dialogActivityContentColor(): Color = MiuixTheme.colorScheme.onSurface
 
 /**
  * Draws a dimmed scrim with a centered, size constrained card on top of it,
@@ -98,9 +99,9 @@ fun DialogActivityWindow(
                     interactionSource = contentInteractionSource,
                     indication = null,
                 ) {},
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 0.dp,
+            color = MiuixTheme.colorScheme.surfaceContainerHigh,
+            shape = KgShapes.extraLarge,
+
             shadowElevation = 8.dp,
         ) {
             Box(

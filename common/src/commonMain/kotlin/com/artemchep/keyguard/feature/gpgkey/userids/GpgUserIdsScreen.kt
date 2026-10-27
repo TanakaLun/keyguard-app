@@ -17,7 +17,6 @@ import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -51,6 +50,7 @@ import com.artemchep.keyguard.ui.tabs.SegmentedButtonGroup
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Keeps the last state composed after the manager closes, so
@@ -144,8 +144,8 @@ private fun GpgUserIdsContent(state: GpgUserIdsState) {
                 modifier = Modifier
                     .padding(horizontal = Dimens.horizontalPadding),
                 text = error,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
+                style = MiuixTheme.textStyles.bodySmall,
+                color = MiuixTheme.colorScheme.error,
             )
         }
         state.add?.let { action ->

@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -29,6 +28,8 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -85,8 +86,8 @@ fun GpgKeyExpirationScreen(
                     Text(
                         modifier = Modifier.padding(horizontal = Dimens.horizontalPadding),
                         text = error,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
+                        style = MiuixTheme.textStyles.bodySmall,
+                        color = MiuixTheme.colorScheme.error,
                     )
                 }
             }
@@ -121,19 +122,19 @@ private fun GpgKeyExpirationComponent(
     FlatItemLayout(
         leading = {
             Checkbox(
-                checked = component.selected,
-                onCheckedChange = null,
+                state = ToggleableState(component.selected),
+                onClick = null,
             )
         },
         content = {
             Column {
                 Text(
                     text = component.title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
                 Text(
                     text = component.text,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
                 )
             }

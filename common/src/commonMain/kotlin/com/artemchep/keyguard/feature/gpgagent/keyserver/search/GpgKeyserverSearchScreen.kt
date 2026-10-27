@@ -3,7 +3,6 @@ package com.artemchep.keyguard.feature.gpgagent.keyserver.search
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,6 +21,7 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun GpgKeyserverSearchScreen() {
@@ -131,14 +131,14 @@ private fun KeyItem(
         trailing = {
             if (item.result.revoked) {
                 Text(
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.labelMedium,
+                    color = MiuixTheme.colorScheme.error,
+                    style = MiuixTheme.textStyles.labelMedium,
                     text = stringResource(Res.string.gpg_keyserver_search_revoked_label),
                 )
             } else if (item.result.publicKeyArmored == null) {
                 Text(
                     color = LocalContentColor.current.combineAlpha(0.64f),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MiuixTheme.textStyles.labelMedium,
                     text = stringResource(Res.string.gpg_keyserver_search_index_label),
                 )
             }

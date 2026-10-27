@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,6 +26,8 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.animation.animateContentHeight
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -69,7 +70,7 @@ private fun VaultViewQrPreviewItem(
                 .widthIn(max = 240.dp),
             text = stringResource(Res.string.qr_wifi_description_text),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelSmall,
+            style = MiuixTheme.textStyles.labelSmall,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )
@@ -80,7 +81,7 @@ private fun VaultViewQrPreviewItem(
         BarcodeImage(
             modifier = Modifier
                 .size(200.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
+                .clip(KgShapes.extraLarge)
                 .animateContentHeight(),
             imageModel = {
                 imageRequest

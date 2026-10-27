@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,6 +39,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingSshAgentApprovalCachePolicyProvider(
     koinScope: Scope,
@@ -190,7 +190,7 @@ private fun AgentApprovalScopeComparison(
             Text(
                 text = stringResource(resource),
                 color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
             )
         }
     }

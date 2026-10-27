@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +44,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal expect fun SsoBrowserEffect(prompt: SsoBrowserPrompt)
@@ -182,7 +182,7 @@ private fun ColumnScope.SsoContent(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(note),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
     )
     state.password?.let { field ->
         val focusRequester = remember { FocusRequester() }

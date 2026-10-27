@@ -21,8 +21,7 @@ import androidx.compose.material.icons.outlined.Sync
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,14 +42,16 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun VaultViewErrorItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.Error,
 ) {
-    val contentColor = MaterialTheme.colorScheme.error
-    val backgroundColor = MaterialTheme.colorScheme.errorContainer
+    val contentColor = MiuixTheme.colorScheme.error
+    val backgroundColor = MiuixTheme.colorScheme.errorContainer
         .combineAlpha(DisabledEmphasisAlpha)
     Surface(
         modifier = modifier
@@ -60,7 +61,7 @@ fun VaultViewErrorItem(
                 vertical = 2.dp,
             )
             .padding(bottom = 24.dp),
-        shape = MaterialTheme.shapes.large,
+        shape = KgShapes.large,
         color = backgroundColor,
     ) {
         Column(
@@ -87,8 +88,8 @@ fun VaultViewErrorItem(
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
                         text = item.name,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MiuixTheme.textStyles.titleSmall,
+                        color = MiuixTheme.colorScheme.onErrorContainer,
                     )
                     ExpandedIfNotEmpty(
                         valueOrNull = item.message,
@@ -99,7 +100,7 @@ fun VaultViewErrorItem(
                                 .padding(top = 4.dp)
                                 .padding(horizontal = 8.dp),
                             text = message,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MiuixTheme.textStyles.bodySmall,
                             color = LocalContentColor.current
                                 .combineAlpha(MediumEmphasisAlpha),
                         )
@@ -169,7 +170,7 @@ fun VaultViewErrorItem(
                                 vertical = 8.dp,
                             ),
                         text = "BLOB",
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MiuixTheme.textStyles.labelLarge,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = LocalContentColor.current
@@ -227,7 +228,7 @@ fun VaultViewErrorItem(
                 Text(
                     modifier = Modifier,
                     text = item.timestamp,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                     color = LocalContentColor.current
                         .combineAlpha(HighEmphasisAlpha),
                 )

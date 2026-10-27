@@ -3,7 +3,6 @@ package com.artemchep.keyguard.feature.home.vault.component
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,20 +17,21 @@ import com.artemchep.keyguard.ui.theme.onWarningContainer
 import com.artemchep.keyguard.ui.theme.warning
 import com.artemchep.keyguard.ui.theme.warningContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewInactiveTotpItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.InactiveTotp,
 ) {
-    val contentColor = MaterialTheme.colorScheme.warning
-    val backgroundColor = MaterialTheme.colorScheme.warningContainer
+    val contentColor = MiuixTheme.colorScheme.warning
+    val backgroundColor = MiuixTheme.colorScheme.warningContainer
         .combineAlpha(DisabledEmphasisAlpha)
     FlatDropdownSimpleExpressive(
         modifier = modifier,
         shapeState = item.shapeState,
         backgroundColor = backgroundColor,
-        contentColor = MaterialTheme.colorScheme.onWarningContainer,
+        contentColor = MiuixTheme.colorScheme.onWarningContainer,
         leading = {
             Icon(
                 Icons.Outlined.Warning,
@@ -44,7 +44,7 @@ fun VaultViewInactiveTotpItem(
                 title = {
                     Text(
                         text = stringResource(Res.string.twofa_available),
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MiuixTheme.textStyles.titleSmall,
                     )
                 },
             )

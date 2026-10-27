@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +33,8 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.monoFontFamily
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 private const val AutomaticBackupsRepositoryTreeSample = "Keyguard Backups/\n" +
         "├─ repo.zip\n" +
@@ -121,13 +122,13 @@ private fun AutomaticBackupsDetailText(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleSmall,
+            style = MiuixTheme.textStyles.titleSmall,
             fontWeight = FontWeight.Bold,
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            style = MiuixTheme.textStyles.bodyMedium,
+            color = MiuixTheme.colorScheme.onSurface
                 .combineAlpha(MediumEmphasisAlpha),
         )
         content?.invoke(this)
@@ -146,7 +147,7 @@ private fun AutomaticBackupsRuleLine(
         Box(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = MiuixTheme.colorScheme.primaryContainer,
                     shape = RoundedCornerShape(8.dp),
                 )
                 .padding(
@@ -156,17 +157,17 @@ private fun AutomaticBackupsRuleLine(
         ) {
             Text(
                 text = value,
-                style = MaterialTheme.typography.labelLarge,
+                style = MiuixTheme.textStyles.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MiuixTheme.colorScheme.onPrimaryContainer,
             )
         }
         Text(
             modifier = Modifier
                 .weight(1f),
             text = text,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface
+            style = MiuixTheme.textStyles.bodySmall,
+            color = MiuixTheme.colorScheme.onSurface
                 .combineAlpha(MediumEmphasisAlpha),
         )
     }
@@ -179,21 +180,21 @@ private fun AutomaticBackupsRepositoryTree() {
     ) {
         Text(
             text = stringResource(Res.string.pref_item_automatic_backups_details_repository_structure_title),
-            style = MaterialTheme.typography.titleSmall,
+            style = MiuixTheme.textStyles.titleSmall,
             fontWeight = FontWeight.Bold,
         )
         Text(
             text = stringResource(Res.string.pref_item_automatic_backups_details_repository_structure_text),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            style = MiuixTheme.textStyles.bodyMedium,
+            color = MiuixTheme.colorScheme.onSurface
                 .combineAlpha(MediumEmphasisAlpha),
         )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                    shape = MaterialTheme.shapes.large,
+                    color = MiuixTheme.colorScheme.surfaceContainer,
+                    shape = KgShapes.large,
                 )
                 .padding(12.dp),
         ) {
@@ -202,10 +203,10 @@ private fun AutomaticBackupsRepositoryTree() {
                     modifier = Modifier
                         .horizontalScroll(rememberScrollState()),
                     text = AutomaticBackupsRepositoryTreeSample,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     fontFamily = monoFontFamily,
                     softWrap = false,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MiuixTheme.colorScheme.onSurface
                         .combineAlpha(MediumEmphasisAlpha),
                 )
             }

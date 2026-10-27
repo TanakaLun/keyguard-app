@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.Star
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -69,6 +68,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 private const val SubscriptionsCountDefault = 2
 private const val ProductsCountDefault = 1
@@ -123,13 +124,13 @@ private fun SettingSubscriptions(
     LocalSettingPaneComponents.current.KgBlock {
         Text(
             stringResource(Res.string.pref_item_premium_membership_title),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding),
         )
         Text(
             stringResource(Res.string.pref_item_premium_membership_text),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             modifier = Modifier
                 .padding(top = 4.dp)
                 .padding(horizontal = Dimens.textHorizontalPadding),
@@ -187,7 +188,7 @@ private fun SettingSubscriptions(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .padding(horizontal = Dimens.textHorizontalPadding),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
             fontSize = 12.sp,
@@ -235,14 +236,14 @@ private fun SettingSubscriptionSkeletonItem(
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.45f),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
             )
         },
         price = {
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.45f),
-                style = MaterialTheme.typography.titleMedium,
+                style = MiuixTheme.textStyles.titleMedium,
             )
         },
     )
@@ -273,7 +274,7 @@ private fun SettingSubscriptionItem(
                 is Subscription.Status.Inactive -> {
                     if (status.trialPeriodFormatted != null) {
                         FlatTextFieldBadge(
-                            backgroundColor = MaterialTheme.colorScheme.infoContainer,
+                            backgroundColor = MiuixTheme.colorScheme.infoContainer,
                             text = stringResource(
                                 Res.string.pref_item_premium_status_free_trial_n,
                                 status.trialPeriodFormatted,
@@ -284,13 +285,13 @@ private fun SettingSubscriptionItem(
                 is Subscription.Status.Active -> {
                     FlatTextFieldBadge(
                         modifier = Modifier,
-                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        backgroundColor = MiuixTheme.colorScheme.primary,
                         text = stringResource(Res.string.pref_item_premium_status_active),
                         icon = Icons.Outlined.KeyguardPremium,
                     )
                     if (!status.willRenew) {
                         FlatTextFieldBadge(
-                            backgroundColor = MaterialTheme.colorScheme.infoContainer,
+                            backgroundColor = MiuixTheme.colorScheme.infoContainer,
                             text = stringResource(
                                 Res.string.pref_item_premium_status_will_not_renew,
                             ),
@@ -329,7 +330,7 @@ private fun SettingProductItem(
                 is Product.Status.Active -> {
                     FlatTextFieldBadge(
                         modifier = Modifier,
-                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        backgroundColor = MiuixTheme.colorScheme.primary,
                         text = stringResource(Res.string.pref_item_premium_status_active),
                         icon = Icons.Outlined.KeyguardPremium,
                     )
@@ -364,7 +365,7 @@ private fun SettingItemLayout(
     price: @Composable ColumnScope.() -> Unit,
     content: (@Composable FlowRowScope.() -> Unit)? = null,
 ) {
-    val backgroundShape = MaterialTheme.shapes.large
+    val backgroundShape = KgShapes.large
     val backgroundModifier = run {
         val tintColor = MaterialTheme.colorScheme
             .surfaceColorAtElevationSemi(1.dp)
@@ -373,7 +374,7 @@ private fun SettingItemLayout(
     }
     val borderModifier = if (isActive) {
         Modifier
-            .border(1.dp, MaterialTheme.colorScheme.primary, backgroundShape)
+            .border(1.dp, MiuixTheme.colorScheme.primary, backgroundShape)
     } else Modifier
     Box(
         modifier = modifier
@@ -414,14 +415,14 @@ private fun SettingItemLayout(
                     .combineAlpha(localEmphasis),
             )
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleSmall
+                LocalTextStyle provides MiuixTheme.textStyles.titleSmall
                     .merge(localTitleTextStyle),
             ) {
                 title()
             }
             Spacer(modifier = Modifier.height(8.dp))
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                LocalTextStyle provides MiuixTheme.textStyles.titleMedium
                     .merge(localPriceTextStyle),
             ) {
                 price()

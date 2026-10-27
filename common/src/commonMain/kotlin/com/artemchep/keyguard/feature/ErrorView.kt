@@ -12,7 +12,6 @@ import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.theme.Dimens
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun ErrorView(
@@ -48,8 +48,8 @@ fun ErrorView(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.error,
-                LocalTextStyle provides MaterialTheme.typography.labelLarge,
+                LocalContentColor provides MiuixTheme.colorScheme.error,
+                LocalTextStyle provides MiuixTheme.textStyles.labelLarge,
             ) {
                 if (icon != null) {
                     icon()

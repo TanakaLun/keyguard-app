@@ -12,8 +12,8 @@ import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.RadioButton
+import top.yukonga.miuix.kmp.basic.Checkbox
+import top.yukonga.miuix.kmp.basic.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -233,6 +233,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.SerialName
 import org.jetbrains.compose.resources.StringResource
 import org.koin.compose.currentKoinScope
+import androidx.compose.ui.state.ToggleableState
 
 private const val SHARING_STOP_TIMEOUT_MS = 5_000L
 
@@ -1908,8 +1909,8 @@ class AddStateItemFieldTextFactory(
                     title = TextHolder.Res(Res.string.conceal_value),
                     trailing = {
                         Checkbox(
-                            checked = conceal,
-                            onCheckedChange = null,
+                            state = ToggleableState(conceal),
+                            onClick = null,
                         )
                     },
                     onClick = {

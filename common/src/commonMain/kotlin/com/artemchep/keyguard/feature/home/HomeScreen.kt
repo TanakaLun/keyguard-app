@@ -42,7 +42,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.contentColorFor
 import top.yukonga.miuix.kmp.basic.NavigationBar
@@ -144,6 +143,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 private const val ROUTE_NAME = "home"
 
@@ -365,7 +366,7 @@ fun HomeScreenContent(
                         },
                     ),
             ) {
-                val defaultContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                val defaultContainerColor = MiuixTheme.colorScheme.surfaceContainerLow
                 CompositionLocalProvider(
                     LocalSurfaceColor provides defaultContainerColor,
                     LocalNavigationNodeVisualStack provides persistentListOf(),
@@ -421,7 +422,7 @@ fun HomeScreenContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.warningContainer)
+                            .background(MiuixTheme.colorScheme.warningContainer)
                             .clickable {
                                 putAllowScreenshots(AllowScreenshots.DISABLED)
                                     .attempt()
@@ -438,11 +439,11 @@ fun HomeScreenContent(
                                 .size(16.dp),
                             imageVector = Icons.Outlined.Screenshot,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onWarningContainer,
+                            tint = MiuixTheme.colorScheme.onWarningContainer,
                         )
                         Text(
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onWarningContainer,
+                            style = MiuixTheme.textStyles.labelSmall,
+                            color = MiuixTheme.colorScheme.onWarningContainer,
                             text = stringResource(Res.string.pref_item_allow_screenshots_badge),
                         )
                     }
@@ -653,15 +654,15 @@ private fun BannerStatusBadgeContent(
 ) {
     Row {
         val backgroundColor =
-            if (state.error) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.infoContainer
+            if (state.error) MiuixTheme.colorScheme.errorContainer else MiuixTheme.colorScheme.infoContainer
         val contentColor =
-            if (state.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.info
+            if (state.error) MiuixTheme.colorScheme.error else MiuixTheme.colorScheme.info
         Row(
             modifier = modifier
                 .weight(1f)
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp)
-                .clip(MaterialTheme.shapes.medium)
+                .clip(KgShapes.medium)
                 .background(backgroundColor)
                 .clickable(onClick = state.onClick)
                 .then(contentModifier)
@@ -705,14 +706,14 @@ private fun BannerStatusBadgeContent(
             ) {
                 Text(
                     text = textResource(state.title),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MiuixTheme.textStyles.labelLarge,
                 )
                 ExpandedIfNotEmpty(
                     valueOrNull = state.text,
                 ) { text ->
                     Text(
                         text = textResource(text),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                     )
@@ -739,7 +740,7 @@ private fun RailStatusBadge(
             .width(80.dp)
             .heightIn(min = 80.dp)
             .padding(4.dp)
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .clickable {
                 val status = statusState.value
                 when {
@@ -770,7 +771,7 @@ private fun RailStatusBadge(
         when {
             status.error != null -> {
                 RailStatusBadgeContent(
-                    contentColor = MaterialTheme.colorScheme.error,
+                    contentColor = MiuixTheme.colorScheme.error,
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.ErrorOutline,
@@ -804,7 +805,7 @@ private fun RailStatusBadge(
             status.pendingPermissions.isNotEmpty() -> {
                 val permission = status.pendingPermissions.first()
                 RailStatusBadgeContent(
-                    contentColor = MaterialTheme.colorScheme.info,
+                    contentColor = MiuixTheme.colorScheme.info,
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Info,
@@ -819,7 +820,7 @@ private fun RailStatusBadge(
                 val subText = status.lastSyncTimestamp
                     ?.let { rememberLocalizedRelativeTime(it) }
                 RailStatusBadgeContent(
-                    contentColor = MaterialTheme.colorScheme.ok,
+                    contentColor = MiuixTheme.colorScheme.ok,
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.CheckCircle,
@@ -897,7 +898,7 @@ private fun RailStatusBadgeContent(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MiuixTheme.textStyles.labelSmall,
             textAlign = TextAlign.Center,
             maxLines = 2,
             color = contentColor,
@@ -905,7 +906,7 @@ private fun RailStatusBadgeContent(
         if (subText != null) {
             Text(
                 text = subText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 textAlign = TextAlign.Center,
                 fontSize = 9.sp,
                 maxLines = 1,

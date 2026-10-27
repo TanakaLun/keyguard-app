@@ -14,7 +14,6 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -65,6 +64,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingLicenseClaimProvider(
     koinScope: Scope,
@@ -229,7 +229,7 @@ fun LicenseEntitlementFooter(
                     fontFamily = monoFontFamily,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                 )
                 ExpandedIfNotEmpty(
                     valueOrNull = entitlement.status
@@ -336,16 +336,16 @@ private fun LicenseStatusIcon(
     state: LicenseStatus,
 ) {
     val color = when (state) {
-        LicenseStatus.ACTIVE -> MaterialTheme.colorScheme.ok
+        LicenseStatus.ACTIVE -> MiuixTheme.colorScheme.ok
         LicenseStatus.GRACE,
         LicenseStatus.EXPIRED,
         LicenseStatus.REVOKED,
         LicenseStatus.REFUNDED,
         LicenseStatus.PENDING
-            -> MaterialTheme.colorScheme.info
+            -> MiuixTheme.colorScheme.info
         LicenseStatus.INVALID,
         LicenseStatus.UNKNOWN,
-            -> MaterialTheme.colorScheme.error
+            -> MiuixTheme.colorScheme.error
     }
     val icon = when (state) {
         LicenseStatus.ACTIVE -> Icons.Outlined.Check

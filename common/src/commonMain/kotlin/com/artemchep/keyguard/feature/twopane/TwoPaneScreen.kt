@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,6 +33,7 @@ import com.artemchep.keyguard.ui.surface.surfaceElevationColor
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.GlobalExpressive
 import com.artemchep.keyguard.ui.theme.horizontalPaddingHalf
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun TwoPaneScreen(
@@ -102,7 +102,7 @@ fun TwoPaneScreen(
                     }
                     val contentModifier = if (detailIsVisible) {
                         val shapeModifier = kotlin.run {
-                            val shape = MaterialTheme.shapes.large
+                            val shape = KgShapes.large
                                 .copy(
                                     bottomStart = ZeroCornerSize,
                                     bottomEnd = ZeroCornerSize,

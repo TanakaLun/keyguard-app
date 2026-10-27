@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.home.vault.quicksearch
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -73,13 +72,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun quickSearchScreenState(): QuickSearchState = with(currentKoinScope()) {
     quickSearchScreenState(
         autotypeAvailable = LocalQuickSearchAutotype.current != null,
-        highlightBackgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
-        highlightContentColor = MaterialTheme.colorScheme.onSurface,
+        highlightBackgroundColor = MiuixTheme.colorScheme.primary.copy(alpha = 0.18f),
+        highlightContentColor = MiuixTheme.colorScheme.onSurface,
         getAccounts = get(),
         getProfiles = get(),
         getCiphers = get(),

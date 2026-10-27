@@ -16,11 +16,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -76,6 +75,8 @@ import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun CipherFiltersListScreen(
@@ -269,7 +270,7 @@ fun CipherFiltersListScreen(
                 modifier = Modifier
                     .padding(horizontal = Dimens.horizontalPadding),
                 text = stringResource(Res.string.customfilters_dynamic_shortcut_tip),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current
                     .combineAlpha(alpha = MediumEmphasisAlpha),
             )
@@ -300,7 +301,7 @@ private fun FilterItem(
     val onLongClick = selectableState.onLongClick
 
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> run {
             if (LocalHasDetailPane.current) {
                 val nextEntry = navigationNextEntryOrNull()
@@ -308,7 +309,7 @@ private fun FilterItem(
 
                 val selected = nextRoute?.args?.model?.id == item.key
                 if (selected) {
-                    return@run MaterialTheme.colorScheme.selectedContainer
+                    return@run MiuixTheme.colorScheme.selectedContainer
                 }
             }
 
@@ -357,8 +358,8 @@ private fun FilterItem(
                 ) {
                     if (it) {
                         Checkbox(
-                            checked = selectableState.selected,
-                            onCheckedChange = null,
+                            state = ToggleableState(selectableState.selected),
+                            onClick = null,
                         )
                     } else {
                         ChevronIcon()

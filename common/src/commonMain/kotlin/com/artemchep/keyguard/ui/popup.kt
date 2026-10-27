@@ -18,8 +18,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -46,6 +45,8 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.artemchep.keyguard.platform.leIme
 import com.artemchep.keyguard.platform.leSystemBars
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 // Menu open/close animation.
 private const val InTransitionDuration = 180
@@ -126,7 +127,7 @@ fun SheetPopup(
         onDismissRequest = onDismissRequest,
         expanded = expanded,
         popupPositionProvider = popupPositionProvider,
-        shape = MaterialTheme.shapes.extraLarge
+        shape = KgShapes.extraLarge
             .copy(
                 topEnd = CornerSize(0.dp),
                 bottomEnd = CornerSize(0.dp),
@@ -143,7 +144,7 @@ private fun BasicPopup(
     onDismissRequest: () -> Unit,
     expanded: Boolean,
     popupPositionProvider: PopupPositionProvider,
-    shape: Shape = MaterialTheme.shapes.extraLarge,
+    shape: Shape = KgShapes.extraLarge,
     content: @Composable () -> Unit,
 ) {
     val expandedStates = remember {
@@ -191,7 +192,7 @@ private fun BasicPopup(
         ),
     ) {
         AccessibilityDataProtectionEffect()
-        val scrimColor = MaterialTheme.colorScheme.scrim
+        val scrimColor = MiuixTheme.colorScheme.scrim
             .copy(alpha = 0.32f)
         Box(
             modifier = Modifier
@@ -263,8 +264,8 @@ private fun BasicPopup(
                         graphicsModifier(this, alpha, scale)
                     },
                 shape = shape,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                tonalElevation = 0.dp,
+                color = MiuixTheme.colorScheme.surfaceContainerHigh,
+
                 shadowElevation = 1.dp,
             ) {
                 CompositionLocalProvider(

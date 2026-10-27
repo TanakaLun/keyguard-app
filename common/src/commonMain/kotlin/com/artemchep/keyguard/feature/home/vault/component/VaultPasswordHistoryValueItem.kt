@@ -3,11 +3,10 @@ package com.artemchep.keyguard.feature.home.vault.component
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Password
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,13 +18,15 @@ import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.colorizePassword
 import com.artemchep.keyguard.ui.theme.monoFontFamily
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun VaultPasswordHistoryValueItem(
     item: VaultPasswordHistoryItem.Value,
 ) {
     val backgroundColor = when {
-        item.selected -> MaterialTheme.colorScheme.primaryContainer
+        item.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
     FlatDropdownSimpleExpressive(
@@ -80,8 +81,8 @@ fun VaultPasswordHistoryValueItem(
                 item.selected.takeIf { item.selecting },
             ) { selected ->
                 Checkbox(
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

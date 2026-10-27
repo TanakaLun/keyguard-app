@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingCliSetupProvider(
     koinScope: Scope,
@@ -69,7 +69,7 @@ fun settingCliSetupProvider(
                     modifier = Modifier
                         .padding(horizontal = Dimens.textHorizontalPadding),
                     text = stringResource(Res.string.cli_note),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -98,7 +98,7 @@ private fun SettingCliCode(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(title),
-        style = MaterialTheme.typography.labelLarge,
+        style = MiuixTheme.textStyles.labelLarge,
     )
     AgentSetupCodeBlock(
         text = code,

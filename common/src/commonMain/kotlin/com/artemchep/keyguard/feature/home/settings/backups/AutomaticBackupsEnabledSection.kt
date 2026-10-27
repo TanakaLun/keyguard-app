@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.History
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
@@ -25,6 +24,7 @@ import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.danger
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 internal fun LazyListScope.AutomaticBackupsEnabledContent(
     state: AutomaticBackupsSettingsState,
@@ -179,7 +179,7 @@ private fun DisableAutomaticBackupsAction(
     LocalSettingPaneComponents.current.KgAction(
         icon = null,
         title = stringResource(Res.string.pref_item_automatic_backups_disable_title),
-        contentColor = MaterialTheme.colorScheme.danger,
+        contentColor = MiuixTheme.colorScheme.danger,
         onClick = onDisableClick,
     )
 }

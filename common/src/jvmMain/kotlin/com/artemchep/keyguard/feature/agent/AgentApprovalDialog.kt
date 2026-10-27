@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,6 +31,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.painterResource
 import kotlin.time.Instant
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * The layout every approval window shares: a badged icon, the title, who
@@ -81,7 +81,7 @@ fun AgentApprovalDialog(
                         modifier = Modifier
                             .padding(horizontal = Dimens.textHorizontalPadding),
                         text = text,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MiuixTheme.textStyles.labelSmall,
                         color = LocalContentColor.current
                             .combineAlpha(DisabledEmphasisAlpha),
                     )

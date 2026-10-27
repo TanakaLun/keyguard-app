@@ -42,14 +42,13 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.DropdownMenu
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -158,6 +157,9 @@ import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
+import androidx.compose.ui.state.ToggleableState
 
 private val paddingValues = PaddingValues(
     horizontal = 8.dp,
@@ -185,7 +187,7 @@ fun LazyListScope.AddScreenItems(
             modifier = Modifier
                 .fillMaxWidth(0.75f)
                 .padding(horizontal = Dimens.horizontalPadding),
-            style = MaterialTheme.typography.labelMedium,
+            style = MiuixTheme.textStyles.labelMedium,
         )
     }
     item("items.skeleton.4") {
@@ -193,7 +195,7 @@ fun LazyListScope.AddScreenItems(
             modifier = Modifier
                 .fillMaxWidth(0.4f)
                 .padding(horizontal = Dimens.horizontalPadding),
-            style = MaterialTheme.typography.labelMedium,
+            style = MiuixTheme.textStyles.labelMedium,
         )
     }
 }
@@ -659,7 +661,7 @@ private fun PasswordTextField(
                 top = Dimens.topPaddingCaption,
                 bottom = Dimens.topPaddingCaption,
             ),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         text = stringResource(Res.string.generator_password_note, 16),
         color = LocalContentColor.current
             .combineAlpha(alpha = MediumEmphasisAlpha),
@@ -784,7 +786,7 @@ private fun NoteTextField(
                 modifier = Modifier
                     .weight(1f),
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
                 color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
             )
             Spacer(
@@ -828,7 +830,7 @@ private fun NoteTextField(
                         vertical = 8.dp,
                     ),
                 text = "Markdown",
-                style = MaterialTheme.typography.titleLarge,
+                style = MiuixTheme.textStyles.titleLarge,
             )
             MarkdownText(
                 modifier = Modifier
@@ -856,7 +858,7 @@ private fun SshKeyField(
         fileDrop = item.fileDrop,
     ) {
         FlatItemLayoutExpressive(
-            backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+            backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
             leading = icon<RowScope>(Icons.Outlined.Terminal, Icons.Outlined.Key),
             shapeState = shapeState,
             padding = PaddingValues(0.dp),
@@ -935,7 +937,7 @@ private fun GpgKeyField(
         )
         Column {
             FlatItemLayoutExpressive(
-                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
                 leading = icon<RowScope>(Icons.Outlined.KeyguardGpgKey),
                 shapeState = if (supportingRows.isNotEmpty()) {
                     shapeState and ShapeState.END.inv()
@@ -1007,7 +1009,7 @@ private fun GpgKeyField(
                 FlatItemSimpleExpressive(
                     modifier = Modifier
                         .padding(top = 3.dp),
-                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                    backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
                     shapeState = rowShapeState,
                     padding = PaddingValues(0.dp),
                     title = {
@@ -1141,8 +1143,8 @@ private fun AttachmentTextField(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .background(
-                                MaterialTheme.colorScheme.tertiaryContainer,
-                                MaterialTheme.shapes.extraSmall,
+                                MiuixTheme.colorScheme.tertiaryContainer,
+                                KgShapes.extraSmall,
                             ),
                     ) {
                         if (state.synced) {
@@ -1151,7 +1153,7 @@ private fun AttachmentTextField(
                                     .size(16.dp)
                                     .padding(1.dp),
                                 imageVector = Icons.Outlined.CloudDone,
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                tint = MiuixTheme.colorScheme.onTertiaryContainer,
                                 contentDescription = null,
                             )
                         }
@@ -1161,7 +1163,7 @@ private fun AttachmentTextField(
                                     .size(16.dp)
                                     .padding(1.dp),
                                 imageVector = Icons.Outlined.FileUpload,
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                tint = MiuixTheme.colorScheme.onTertiaryContainer,
                                 contentDescription = null,
                             )
                         }
@@ -1178,7 +1180,7 @@ private fun AttachmentTextField(
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = fileSize,
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MiuixTheme.textStyles.labelSmall,
                         )
                     }
                 }
@@ -1331,7 +1333,7 @@ private fun TextTextField(
                     top = Dimens.topPaddingCaption,
                     bottom = Dimens.topPaddingCaption,
                 ),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             text = item.note,
             color = LocalContentColor.current
                 .combineAlpha(alpha = MediumEmphasisAlpha),
@@ -1503,8 +1505,12 @@ private fun FieldSwitchField(
         value = state.label,
         trailing = {
             Checkbox(
-                checked = state.checked,
-                onCheckedChange = state.onCheckedChange,
+                state = ToggleableState(state.checked),
+                onClick = state.onCheckedChange?.let { cb ->
+                    {
+                        cb(!state.checked)
+                    }
+                },
             )
             OptionsButton(
                 actions = actions,
@@ -1654,9 +1660,9 @@ private fun SwitchField(
         shapeState = shapeState,
         leading = {
             Checkbox(
-                checked = state.checked,
+                state = ToggleableState(state.checked),
                 enabled = state.onChange != null,
-                onCheckedChange = null,
+                onClick = null,
             )
         },
         title = {
@@ -1858,12 +1864,12 @@ private fun SuggestionItemChip(
     item: AddStateItem.Suggestion.Item,
 ) {
     val backgroundColor =
-        if (item.selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+        if (item.selected) MiuixTheme.colorScheme.primaryContainer else MiuixTheme.colorScheme.surface
     Surface(
         modifier = modifier,
         border = if (item.selected) null else BorderStroke(0.dp, DividerColor),
         color = backgroundColor,
-        shape = MaterialTheme.shapes.small,
+        shape = KgShapes.small,
     ) {
         val contentColor = LocalContentColor.current
             .let { color ->
@@ -1895,11 +1901,11 @@ private fun SuggestionItemChip(
             ) {
                 Text(
                     text = item.text,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
                 Text(
                     text = item.source,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -2009,14 +2015,14 @@ private fun ToolbarContentItem(
             ) {
                 Text(
                     text = it.title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
                 if (it.text != null) {
                     Text(
                         text = it.text,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                     )
                 }
             }
@@ -2098,7 +2104,7 @@ fun ToolbarContentItemErrSkeleton(
                 modifier = Modifier
                     .shimmer()
                     .size(16.dp)
-                    .clip(MaterialTheme.shapes.small)
+                    .clip(KgShapes.small)
                     .background(contentColor),
             )
         }
@@ -2115,7 +2121,7 @@ fun ToolbarContentItemErrSkeleton(
                 SkeletonText(
                     modifier = Modifier
                         .fillMaxWidth(fraction),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             }
         }
@@ -2135,7 +2141,7 @@ fun ToolbarContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(paddingValues)
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .then(
                 if (onClick != null) {
                     Modifier
@@ -2164,7 +2170,7 @@ fun ToolbarContent(
                         val accentColors = account.items.firstOrNull()
                             ?.accentColors
                             ?: return@ToolbarContentItemErr
-                        val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+                        val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
                             accentColors.dark
                         } else {
                             accentColors.light

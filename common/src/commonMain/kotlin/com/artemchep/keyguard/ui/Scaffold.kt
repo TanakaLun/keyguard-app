@@ -39,7 +39,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.FabPosition
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -86,6 +85,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlin.math.log10
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 val screenMaxWidth = 768.dp
 val screenMaxWidthCompact = 480.dp
@@ -357,7 +357,7 @@ class MutableFabScope(
 
 @Composable
 fun FabScope.DefaultFab(
-    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    color: Color = MiuixTheme.colorScheme.primaryContainer,
     contentColor: Color = contentColorFor(color),
     icon: @Composable () -> Unit,
     text: @Composable () -> Unit,
@@ -385,7 +385,7 @@ fun FabScope.DefaultFab(
             } else {
                 color
                     .combineAlpha(DisabledEmphasisAlpha)
-                    .compositeOver(MaterialTheme.colorScheme.surfaceVariant)
+                    .compositeOver(MiuixTheme.colorScheme.surfaceVariant)
             }
         val containerColor by animateColorAsState(
             targetValue = containerColorTarget,
@@ -396,7 +396,7 @@ fun FabScope.DefaultFab(
             if (enabled) {
                 contentColor
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MiuixTheme.colorScheme.onSurfaceVariant
                     .combineAlpha(DisabledEmphasisAlpha)
             }
         val contentColor by animateColorAsState(
@@ -451,11 +451,11 @@ fun FabScope.SmallFab(
         val enabled = fabState.onClick != null
         val containerColorTarget =
             if (enabled) {
-                MaterialTheme.colorScheme.secondaryContainer
+                MiuixTheme.colorScheme.secondaryContainer
             } else {
-                MaterialTheme.colorScheme.secondaryContainer
+                MiuixTheme.colorScheme.secondaryContainer
                     .combineAlpha(DisabledEmphasisAlpha)
-                    .compositeOver(MaterialTheme.colorScheme.surfaceVariant)
+                    .compositeOver(MiuixTheme.colorScheme.surfaceVariant)
             }
         val containerColor by animateColorAsState(
             targetValue = containerColorTarget,
@@ -464,9 +464,9 @@ fun FabScope.SmallFab(
         )
         val contentColorTarget =
             if (enabled) {
-                MaterialTheme.colorScheme.onSecondaryContainer
+                MiuixTheme.colorScheme.onSecondaryContainer
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MiuixTheme.colorScheme.onSurfaceVariant
                     .combineAlpha(DisabledEmphasisAlpha)
             }
         val contentColor by animateColorAsState(

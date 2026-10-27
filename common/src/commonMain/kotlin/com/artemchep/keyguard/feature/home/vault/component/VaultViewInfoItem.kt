@@ -22,8 +22,7 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.ColorScheme
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +52,8 @@ import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.theme.onInfoContainer
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.ln
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun VaultViewInfoItem(
@@ -64,12 +65,12 @@ fun VaultViewInfoItem(
         mutableStateOf(!expandable)
     }
 
-    val contentColor = MaterialTheme.colorScheme.info
-    val backgroundColor = MaterialTheme.colorScheme.infoContainer
+    val contentColor = MiuixTheme.colorScheme.info
+    val backgroundColor = MiuixTheme.colorScheme.infoContainer
         .combineAlpha(DisabledEmphasisAlpha)
         // We want to composite it over the background because the overlay
         // requires us to have the opaque color as the background.
-        .compositeOver(MaterialTheme.colorScheme.background)
+        .compositeOver(MiuixTheme.colorScheme.background)
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -78,7 +79,7 @@ fun VaultViewInfoItem(
                 vertical = 2.dp,
             )
             .padding(bottom = 24.dp),
-        shape = MaterialTheme.shapes.large,
+        shape = KgShapes.large,
         color = backgroundColor,
     ) {
         Box {
@@ -102,8 +103,8 @@ fun VaultViewInfoItem(
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                     text = item.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onInfoContainer,
+                    style = MiuixTheme.textStyles.titleSmall,
+                    color = MiuixTheme.colorScheme.onInfoContainer,
                 )
                 ExpandedIfNotEmpty(
                     valueOrNull = item.message,
@@ -115,7 +116,7 @@ fun VaultViewInfoItem(
                             .padding(horizontal = 8.dp)
                             .animateContentHeight(),
                         text = message,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MiuixTheme.textStyles.bodySmall,
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
                         overflow = TextOverflow.Ellipsis,
@@ -150,7 +151,7 @@ fun VaultViewInfoItem(
 @Composable
 private fun LearnOverlay(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    backgroundColor: Color = MiuixTheme.colorScheme.surface,
     onClick: () -> Unit,
 ) {
     Column(
@@ -191,13 +192,13 @@ private fun LearnOverlay(
 @Composable
 private fun LearnButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    color: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MiuixTheme.colorScheme.surface,
+    color: Color = MiuixTheme.colorScheme.primary,
     shape: Shape = CircleShape,
     elevation: Dp = 0.dp,
     onClick: () -> Unit,
 ) {
-    val finalBackgroundColor = MaterialTheme.colorScheme.colorAtElevation(
+    val finalBackgroundColor = MiuixTheme.colorScheme.colorAtElevation(
         color = backgroundColor,
         elevation = elevation,
     )
@@ -227,7 +228,7 @@ private fun LearnButton(
         )
         Text(
             text = stringResource(Res.string.learn_more),
-            style = MaterialTheme.typography.labelLarge,
+            style = MiuixTheme.textStyles.labelLarge,
             color = color,
         )
     }

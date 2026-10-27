@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -65,6 +64,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private const val YUBIKEY_CHALLENGE_LENGTH = 32
 private const val YUBIKEY_SECRET_LENGTH = 20
@@ -217,7 +217,7 @@ fun settingYubiKeyUnlockProvider(
                             ) {
                                 Text(
                                     text = slot.toString(),
-                                    style = MaterialTheme.typography.labelSmall,
+                                    style = MiuixTheme.textStyles.labelSmall,
                                 )
                             }
                         },

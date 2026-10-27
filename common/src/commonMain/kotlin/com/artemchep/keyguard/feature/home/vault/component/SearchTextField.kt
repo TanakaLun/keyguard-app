@@ -21,7 +21,6 @@ import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,6 +71,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.pluralStringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SearchTextField(
@@ -283,7 +283,7 @@ fun SearchTextField(
                             Modifier
                                 .padding(horizontal = 8.dp),
                         text = resultsCount,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MiuixTheme.textStyles.labelSmall,
                         color =
                             LocalContentColor.current
                                 .combineAlpha(DisabledEmphasisAlpha),
@@ -374,7 +374,7 @@ private fun Modifier.searchTextFieldBackground(
         val colorAlphaTarget: Float
         val colorRgbTarget: Color
 
-        val backgroundColor = MaterialTheme.colorScheme.background
+        val backgroundColor = MiuixTheme.colorScheme.background
         val luminance = backgroundColor.luminance()
         if (luminance > 0.5f) { // light background
             colorAlphaTarget = 0.07f

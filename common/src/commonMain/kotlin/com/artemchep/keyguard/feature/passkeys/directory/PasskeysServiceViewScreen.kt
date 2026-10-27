@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,6 +46,8 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun PasskeysViewDialogScreen(
@@ -87,7 +88,7 @@ fun PasskeysViewDialogScreen(
 
             Text(
                 text = stringResource(Res.string.passkeys_directory_title),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )
@@ -234,13 +235,13 @@ private fun HeaderChips(
                 color = LocalContentColor.current
                     .combineAlpha(DisabledEmphasisAlpha)
                     .combineAlpha(DisabledEmphasisAlpha),
-                shape = MaterialTheme.shapes.small,
+                shape = KgShapes.small,
             )
             .padding(
                 horizontal = 4.dp,
                 vertical = 2.dp,
             )
-        val chipTextStyle = MaterialTheme.typography.labelSmall
+        val chipTextStyle = MiuixTheme.textStyles.labelSmall
         when (loadableState) {
             is Loadable.Loading -> {
                 repeat(2) {

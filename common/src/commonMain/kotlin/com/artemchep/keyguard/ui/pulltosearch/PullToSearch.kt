@@ -11,7 +11,6 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.pullrefresh.PullRefreshState
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -27,6 +26,7 @@ import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.log10
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun PullToSearch(
@@ -66,7 +66,7 @@ fun PullToSearch(
         ) {
             val tintTarget =
                 if (willSearch) {
-                    MaterialTheme.colorScheme.primary
+                    MiuixTheme.colorScheme.primary
                 } else {
                     LocalContentColor.current.combineAlpha(DisabledEmphasisAlpha)
                 }
@@ -83,7 +83,7 @@ fun PullToSearch(
             Text(
                 text = stringResource(Res.string.pull_to_search),
                 color = tint,
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
             )
         }
     }

@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Person
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -44,6 +43,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.PluralStringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private data class ImportCountRow(
     val icon: ImageVector,
@@ -148,7 +148,7 @@ internal fun LazyListScope.credentialExchangeImportEmptyContent(
                     vertical = 16.dp,
                 ),
             text = stringResource(Res.string.credential_exchange_import_empty_label),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
         )
     }
     credentialExchangeSkippedNotes(
@@ -184,11 +184,11 @@ internal fun ColumnScope.CredentialExchangeImportDoneContent(
         Icon(
             imageVector = Icons.Outlined.CheckCircle,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MiuixTheme.colorScheme.primary,
         )
         Text(
             text = stringResource(Res.string.credential_exchange_import_success_title),
-            style = MaterialTheme.typography.titleMedium,
+            style = MiuixTheme.textStyles.titleMedium,
         )
     }
     Text(
@@ -199,7 +199,7 @@ internal fun ColumnScope.CredentialExchangeImportDoneContent(
             stage.itemCount,
             stage.itemCount,
         ),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         color = LocalContentColor.current
             .combineAlpha(alpha = MediumEmphasisAlpha),
     )
@@ -238,11 +238,11 @@ internal fun ColumnScope.CredentialExchangeImportErrorContent(
         Icon(
             imageVector = Icons.Outlined.ErrorOutline,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
+            tint = MiuixTheme.colorScheme.error,
         )
         Text(
             text = stage.message,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
         )
     }
 }
@@ -272,7 +272,7 @@ private fun ColumnScope.CredentialExchangeImportCountRow(
         )
         Text(
             text = pluralStringResource(row.res, row.count, row.count),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
         )
     }
 }

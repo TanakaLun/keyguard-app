@@ -12,9 +12,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.RadioButton
+import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +43,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 internal fun GpgToolsKeyPickerScreen(
@@ -158,7 +159,7 @@ private fun GpgToolsKeySelectionRow(
         },
         leading = {
             if (multiple) {
-                Checkbox(checked = selected, onCheckedChange = null)
+                Checkbox(state = ToggleableState(selected), onClick = null)
             } else {
                 RadioButton(selected = selected, onClick = null)
             }

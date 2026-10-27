@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.IconSmallBox
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 /**
  * A small badge with an icon, a title and a secondary text,
@@ -43,9 +44,9 @@ fun VaultViewBadge(
     val updatedOnClick by rememberUpdatedState(onClick)
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surface,
-        shape = MaterialTheme.shapes.small,
-        tonalElevation = 1.dp,
+        color = MiuixTheme.colorScheme.surface,
+        shape = KgShapes.small,
+
     ) {
         Row(
             modifier = Modifier
@@ -59,7 +60,7 @@ fun VaultViewBadge(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val contentColor = if (error) {
-                MaterialTheme.colorScheme.error
+                MiuixTheme.colorScheme.error
             } else {
                 LocalContentColor.current
             }
@@ -79,7 +80,7 @@ fun VaultViewBadge(
                 text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
             if (text != null) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -93,7 +94,7 @@ fun VaultViewBadge(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontFamily = textFontFamily,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                 )
             }
         }

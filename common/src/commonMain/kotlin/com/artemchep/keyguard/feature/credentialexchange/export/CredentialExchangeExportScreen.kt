@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.IosShare
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -44,6 +43,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun CredentialExchangeExportScreen(
@@ -284,7 +284,7 @@ private fun CredentialExchangeExportEmptyLabel() {
                 vertical = 16.dp,
             ),
         text = stringResource(Res.string.credential_exchange_export_empty_label),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MiuixTheme.textStyles.bodyLarge,
     )
 }
 

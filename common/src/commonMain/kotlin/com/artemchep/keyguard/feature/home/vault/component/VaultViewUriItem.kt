@@ -23,8 +23,7 @@ import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -65,6 +64,8 @@ import com.artemchep.keyguard.ui.theme.warning
 import com.artemchep.keyguard.ui.theme.warningContainer
 import io.ktor.http.HttpStatusCode
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun VaultViewUriItem(
@@ -121,8 +122,8 @@ fun VaultViewUriItem(
             ExpandedIfNotEmpty(
                 item.warningTitle,
             ) { warningTitle ->
-                val contentColor = MaterialTheme.colorScheme.warning
-                val backgroundColor = MaterialTheme.colorScheme.warningContainer
+                val contentColor = MiuixTheme.colorScheme.warning
+                val backgroundColor = MiuixTheme.colorScheme.warningContainer
                     .combineAlpha(DisabledEmphasisAlpha)
                 Row(
                     modifier = Modifier
@@ -131,7 +132,7 @@ fun VaultViewUriItem(
                         )
                         .background(
                             backgroundColor,
-                            MaterialTheme.shapes.small,
+                            KgShapes.small,
                         )
                         .padding(
                             start = 4.dp,
@@ -152,7 +153,7 @@ fun VaultViewUriItem(
                     Text(
                         modifier = Modifier,
                         text = warningTitle,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MiuixTheme.textStyles.labelMedium,
                     )
                 }
             }
@@ -258,9 +259,9 @@ private fun UrlAppStoreListingItem(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surface,
-        shape = MaterialTheme.shapes.small,
-        tonalElevation = 1.dp,
+        color = MiuixTheme.colorScheme.surface,
+        shape = KgShapes.small,
+
     ) {
         val enabled = state.isRight { it != null }
         val alpha = if (enabled) {
@@ -306,7 +307,7 @@ private fun UrlAppStoreListingItem(
                         .combineAlpha(MediumEmphasisAlpha),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                 )
             }
             Spacer(
@@ -327,7 +328,7 @@ private fun UrlAppStoreListingItem(
                 text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
             )
             Text(
                 modifier = Modifier
@@ -338,7 +339,7 @@ private fun UrlAppStoreListingItem(
                 minLines = 2,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
             )
         }
     }
@@ -351,9 +352,9 @@ private fun UrlAppStoreListingSkeletonItem(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surface,
-        shape = MaterialTheme.shapes.small,
-        tonalElevation = 1.dp,
+        color = MiuixTheme.colorScheme.surface,
+        shape = KgShapes.small,
+
     ) {
         Column(
             modifier = Modifier
@@ -387,7 +388,7 @@ private fun UrlAppStoreListingSkeletonItem(
                         .combineAlpha(MediumEmphasisAlpha),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MiuixTheme.textStyles.labelSmall,
                 )
             }
             Spacer(
@@ -397,18 +398,18 @@ private fun UrlAppStoreListingSkeletonItem(
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.66f),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
             )
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.8f),
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
                 emphasis = MediumEmphasisAlpha,
             )
             SkeletonText(
                 modifier = Modifier
                     .fillMaxWidth(0.3f),
-                style = MaterialTheme.typography.bodySmall,
+                style = MiuixTheme.textStyles.bodySmall,
                 emphasis = MediumEmphasisAlpha,
             )
         }

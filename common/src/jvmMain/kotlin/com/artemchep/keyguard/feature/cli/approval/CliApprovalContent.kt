@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -42,6 +41,7 @@ import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Renders the content for an approval window of the CLI, styled like the
@@ -121,7 +121,7 @@ private fun CliApprovalNote(
         modifier = Modifier
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = stringResource(note),
-        style = MaterialTheme.typography.bodySmall,
+        style = MiuixTheme.textStyles.bodySmall,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
     )
@@ -179,7 +179,7 @@ private fun CliRunDetails(
         Text(
             text = command,
             fontFamily = FontFamily.Monospace,
-            style = MaterialTheme.typography.bodySmall,
+            style = MiuixTheme.textStyles.bodySmall,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )
@@ -188,7 +188,7 @@ private fun CliRunDetails(
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(Res.string.cli_approval_working_directory, workingDirectory),
-            style = MaterialTheme.typography.bodySmall,
+            style = MiuixTheme.textStyles.bodySmall,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
         )

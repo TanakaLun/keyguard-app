@@ -18,7 +18,6 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,6 +62,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun AddScreen(
@@ -423,7 +423,7 @@ private fun AddScreenMergeItem(
                 title = {
                     Text(
                         text = stringResource(postActionTitleStringRes),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MiuixTheme.textStyles.titleMedium,
                     )
                 },
             )

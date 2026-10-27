@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.HighEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun icon(
@@ -45,8 +45,8 @@ inline fun <T> icon(
 fun IconBox(
     main: ImageVector,
     secondary: ImageVector? = null,
-    secondaryBackground: @Composable () -> Color = { MaterialTheme.colorScheme.surfaceVariant },
-    secondaryTint: @Composable () -> Color = { MaterialTheme.colorScheme.onSurfaceVariant },
+    secondaryBackground: @Composable () -> Color = { MiuixTheme.colorScheme.surfaceVariant },
+    secondaryTint: @Composable () -> Color = { MiuixTheme.colorScheme.onSurfaceVariant },
 ) {
     Box {
         Icon(main, null)
@@ -77,8 +77,8 @@ fun IconBox(
 fun IconBoxContainer(
     main: @Composable () -> Unit,
     secondary: (@Composable () -> Unit)? = null,
-    secondaryBackground: @Composable () -> Color = { MaterialTheme.colorScheme.surfaceVariant },
-    secondaryTint: @Composable () -> Color = { MaterialTheme.colorScheme.onSurfaceVariant },
+    secondaryBackground: @Composable () -> Color = { MiuixTheme.colorScheme.surfaceVariant },
+    secondaryTint: @Composable () -> Color = { MiuixTheme.colorScheme.onSurfaceVariant },
     compact: Boolean = false,
 ) {
     Box {
@@ -144,8 +144,8 @@ inline fun <T> iconSmall(
 fun IconSmallBox(
     main: ImageVector,
     secondary: ImageVector? = null,
-    secondaryBackground: @Composable () -> Color = { MaterialTheme.colorScheme.surfaceVariant },
-    secondaryTint: @Composable () -> Color = { MaterialTheme.colorScheme.onSurfaceVariant },
+    secondaryBackground: @Composable () -> Color = { MiuixTheme.colorScheme.surfaceVariant },
+    secondaryTint: @Composable () -> Color = { MiuixTheme.colorScheme.onSurfaceVariant },
 ) {
     IconBoxContainer(
         main = {

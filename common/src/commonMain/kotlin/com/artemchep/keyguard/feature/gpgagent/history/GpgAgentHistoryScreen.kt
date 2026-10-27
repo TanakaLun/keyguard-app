@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -43,6 +42,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun GpgAgentHistoryScreen(
@@ -140,7 +140,7 @@ private fun ToolbarTitle(
     if (!subtitle.isNullOrBlank()) {
         Text(
             text = subtitle,
-            style = MaterialTheme.typography.labelSmall,
+            style = MiuixTheme.textStyles.labelSmall,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
             overflow = TextOverflow.Ellipsis,
@@ -148,7 +148,7 @@ private fun ToolbarTitle(
         )
         Text(
             text = stringResource(Res.string.agent_history_header_title, stringResource(Res.string.protocol_gpg)),
-            style = MaterialTheme.typography.titleMedium,
+            style = MiuixTheme.textStyles.titleMedium,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -238,7 +238,7 @@ private fun GpgAgentHistoryValueItem(
                     .widthIn(max = 96.dp),
                 text = item.responseText,
                 color = item.responseColor(),
-                style = MaterialTheme.typography.labelMedium,
+                style = MiuixTheme.textStyles.labelMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -249,13 +249,13 @@ private fun GpgAgentHistoryValueItem(
 
 @Composable
 private fun GpgAgentHistoryItem.Value.responseColor() = when (response) {
-    GpgUsageHistoryResponseType.SUCCESS -> MaterialTheme.colorScheme.ok
+    GpgUsageHistoryResponseType.SUCCESS -> MiuixTheme.colorScheme.ok
     GpgUsageHistoryResponseType.USER_DENIED,
     GpgUsageHistoryResponseType.KEY_NOT_FOUND,
     GpgUsageHistoryResponseType.VAULT_LOCKED,
     GpgUsageHistoryResponseType.UNSUPPORTED,
     GpgUsageHistoryResponseType.FAILURE,
-        -> MaterialTheme.colorScheme.error
+        -> MiuixTheme.colorScheme.error
 
-    GpgUsageHistoryResponseType.UNKNOWN -> MaterialTheme.colorScheme.onSurface
+    GpgUsageHistoryResponseType.UNKNOWN -> MiuixTheme.colorScheme.onSurface
 }

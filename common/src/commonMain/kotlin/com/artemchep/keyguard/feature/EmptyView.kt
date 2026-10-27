@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -46,6 +45,7 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.sin
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private const val PixelEmptyArtworkGridSize = 48
 
@@ -113,7 +113,7 @@ fun EmptyView(
                 CompositionLocalProvider(
                     LocalContentColor provides LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
-                    LocalTextStyle provides MaterialTheme.typography.labelLarge,
+                    LocalTextStyle provides MiuixTheme.textStyles.labelLarge,
                 ) {
                     if (icon != null) {
                         icon()
@@ -157,8 +157,8 @@ private fun PixelEmptyArtwork(
     val blink = (1f - abs(progress - 0.62f) / 0.055f)
         .coerceIn(0f, 1f)
 
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-    val contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val backgroundColor = MiuixTheme.colorScheme.surfaceVariant
+    val contentColor = MiuixTheme.colorScheme.onSurfaceVariant
     Canvas(
         modifier = modifier,
     ) {

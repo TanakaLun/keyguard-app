@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.skeleton.SkeletonItem
 import com.artemchep.keyguard.ui.theme.Dimens
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * The error stage's whole content: an icon and a sentence, with no retry.
@@ -38,11 +38,11 @@ internal fun ColumnScope.CredentialExchangeExportErrorContent(
         Icon(
             imageVector = Icons.Outlined.ErrorOutline,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.error,
+            tint = MiuixTheme.colorScheme.error,
         )
         Text(
             text = stage.message,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
         )
     }
 }
@@ -74,7 +74,7 @@ internal fun ColumnScope.CredentialExchangeExportUnavailableContent(
         )
         Text(
             text = stage.message,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MiuixTheme.textStyles.bodyLarge,
         )
     }
     CredentialExchangeExportCancelButton(

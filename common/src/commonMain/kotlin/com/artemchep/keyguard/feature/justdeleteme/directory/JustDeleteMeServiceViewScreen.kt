@@ -11,7 +11,6 @@ import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -43,6 +42,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun JustDeleteMeDialogScreen(
@@ -60,7 +60,7 @@ fun JustDeleteMeDialogScreen(
             )
             Text(
                 text = stringResource(Res.string.justdeleteme_title),
-                style = MaterialTheme.typography.titleSmall,
+                style = MiuixTheme.textStyles.titleSmall,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
             )

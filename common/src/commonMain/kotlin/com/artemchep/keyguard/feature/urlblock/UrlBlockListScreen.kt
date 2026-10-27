@@ -10,9 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.TypeSpecimen
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,6 +48,8 @@ import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun UrlBlockListScreen() {
@@ -192,7 +193,7 @@ private fun UrlBlockItem(
 ) {
     val selectableState by item.selectableState.collectAsState()
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
     FlatDropdownSimpleExpressive(
@@ -252,8 +253,8 @@ private fun UrlBlockItem(
                 Checkbox(
                     modifier = Modifier
                         .padding(start = 16.dp),
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

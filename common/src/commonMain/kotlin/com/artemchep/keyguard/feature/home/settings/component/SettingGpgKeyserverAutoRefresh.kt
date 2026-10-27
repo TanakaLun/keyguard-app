@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingGpgKeyserverAutoRefreshProvider(
     koinScope: Scope,
@@ -97,7 +97,7 @@ private fun SettingGpgKeyserverAutoRefresh(
                 Text(
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     text = stringResource(Res.string.pref_item_gpg_keyserver_auto_refresh_note),
                 )
             }

@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,6 +41,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.launch
 import kotlin.math.floor
 import kotlin.math.roundToInt
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Scrollbar for LazyColumn
@@ -61,7 +61,7 @@ fun LazyColumnScrollbar(
     thumbMinHeight: Float = 0.1f,
     thumbColor: Color = LocalContentColor.current
         .combineAlpha(DisabledEmphasisAlpha),
-    thumbSelectedColor: Color = MaterialTheme.colorScheme.primary,
+    thumbSelectedColor: Color = MiuixTheme.colorScheme.primary,
     thumbShape: Shape = CircleShape,
     selectionMode: ScrollbarSelectionMode = ScrollbarSelectionMode.default,
     enabled: Boolean = true,

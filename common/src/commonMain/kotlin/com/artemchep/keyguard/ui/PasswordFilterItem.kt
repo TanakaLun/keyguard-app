@@ -39,7 +39,6 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -78,6 +77,8 @@ import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 private inline val flatItemSmallCornerSizeDp get() = 4.dp
 
@@ -367,7 +368,7 @@ fun <T> ColumnScope.DropdownMenuExpandableContainer(
                         .padding(
                             horizontal = 8.dp,
                         )
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(KgShapes.medium)
                         .clickable {
                             maximized = true
                         },
@@ -434,9 +435,9 @@ fun ColumnScope.FlatItemTextContent(
     tint: Color = LocalContentColor.current,
     compact: Boolean = false,
 ) {
-    val titleStyle = MaterialTheme.typography.bodyLarge
+    val titleStyle = MiuixTheme.textStyles.bodyLarge
     val textStyle =
-        if (!compact) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodySmall
+        if (!compact) MiuixTheme.textStyles.bodyMedium else MiuixTheme.textStyles.bodySmall
     if (title != null) {
         val contentColor = tint
             .copy(alpha = 1f)
@@ -496,7 +497,7 @@ fun FlatItemLayout(
             .padding(paddingValues),
         color = contentColor,
     ) {
-        val shape = MaterialTheme.shapes.medium
+        val shape = KgShapes.medium
         val shapeBottomCornerDp by kotlin.run {
             val target = if (actions.isEmpty()) {
                 16.dp
@@ -523,7 +524,7 @@ fun FlatItemLayout(
 
             val bg = backgroundColor.takeIf { it.isSpecified }
                 ?: Color.Transparent
-            val fg = MaterialTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
+            val fg = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
             Modifier
                 .background(fg.compositeOver(bg))
         }
@@ -724,7 +725,7 @@ fun defaultAvatarColor() = LocalContentColor.current
 fun Avatar(
     modifier: Modifier = Modifier,
     color: Color = defaultAvatarColor(),
-    shape: Shape = MaterialTheme.shapes.medium,
+    shape: Shape = KgShapes.medium,
     content: @Composable BoxScope.() -> Unit,
 ) {
     Box(
@@ -756,7 +757,7 @@ fun AvatarBuilder(
             fits && active && color.isSpecified
         }
         ?.let { color ->
-            MaterialTheme.colorScheme.background
+            MiuixTheme.colorScheme.background
                 .combineAlpha(0.25f)
                 .compositeOver(
                     background = color,
@@ -775,9 +776,9 @@ fun AvatarBuilder(
     }
 
     val backgroundColor = if (!active) {
-        MaterialTheme.colorScheme.surfaceVariant
+        MiuixTheme.colorScheme.surfaceVariant
     } else {
-        MaterialTheme.colorScheme.tertiaryContainer
+        MiuixTheme.colorScheme.tertiaryContainer
     }
     AvatarBadgeSurface(
         modifier = Modifier
@@ -801,7 +802,7 @@ fun AvatarBadgeSurface(
     val contentColor = contentColorFor(backgroundColor)
     FlowRow(
         modifier = modifier
-            .clip(MaterialTheme.shapes.extraSmall)
+            .clip(KgShapes.extraSmall)
             .background(backgroundColor),
     ) {
         CompositionLocalProvider(

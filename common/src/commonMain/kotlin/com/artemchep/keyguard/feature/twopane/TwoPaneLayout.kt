@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -55,6 +54,7 @@ import com.artemchep.keyguard.ui.surface.splitLow
 import com.artemchep.keyguard.ui.surface.surfaceElevationColor
 import com.artemchep.keyguard.ui.text.AutoSizeText
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun TwoPaneScaffold(
@@ -246,17 +246,17 @@ fun EmptyKeyguardBox(
                     .size(48.dp),
                 imageVector = Icons.Outlined.Lock,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = MiuixTheme.colorScheme.onBackground,
             )
-            val textStyle = MaterialTheme.typography.displayLarge
+            val textStyle = MiuixTheme.textStyles.displayLarge
             AutoSizeText(
                 text = remember {
                     keyguardSpan()
                 },
-                minTextSize = MaterialTheme.typography.displayMedium.fontSize,
+                minTextSize = MiuixTheme.textStyles.displayMedium.fontSize,
                 maxTextSize = textStyle.fontSize,
                 style = textStyle,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = MiuixTheme.colorScheme.onBackground,
                 maxLines = 1,
             )
         }

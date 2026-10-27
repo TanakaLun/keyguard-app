@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Animation
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import kotlin.collections.map
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingScreenshotsProvider(
     koinScope: Scope,
@@ -141,7 +141,7 @@ private fun SettingAllowScreenshots(
                 Text(
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     text = text,
                 )
             }

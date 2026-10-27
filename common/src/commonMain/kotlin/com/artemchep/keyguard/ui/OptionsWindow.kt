@@ -16,7 +16,6 @@ import androidx.compose.material3.DropdownMenu
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -33,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.ui.theme.danger
 import com.artemchep.keyguard.ui.theme.selectedContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun DropdownScope.DropdownMenuItemFlat(
@@ -72,10 +73,10 @@ fun DropdownScope.DropdownMenuItemFlat(
                 horizontal = 8.dp,
                 vertical = 1.dp,
             )
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .then(
                 if (action.selected) {
-                    val background = MaterialTheme.colorScheme.selectedContainer
+                    val background = MiuixTheme.colorScheme.selectedContainer
                     Modifier
                         .background(background)
                 } else {
@@ -97,10 +98,10 @@ fun DropdownScope.DropdownMenuItemFlat(
     ) {
         val contentColor =
             if (action.selected) {
-                val background = MaterialTheme.colorScheme.selectedContainer
+                val background = MiuixTheme.colorScheme.selectedContainer
                 contentColorFor(background)
             } else if (action.danger) {
-                MaterialTheme.colorScheme.danger
+                MiuixTheme.colorScheme.danger
             } else {
                 LocalContentColor.current
             }

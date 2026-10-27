@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -49,6 +48,7 @@ import com.artemchep.keyguard.ui.theme.isDark
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingColorAccentProvider(
     koinScope: Scope,
@@ -94,7 +94,7 @@ fun settingColorAccentProvider(
                         // root keyguard theme.
                         val materialColorScheme = appColorScheme(
                             colors = colorsVariant,
-                            isDarkColorScheme = MaterialTheme.colorScheme.isDark,
+                            isDarkColorScheme = MiuixTheme.colorScheme.isDark,
                         )
 
                         val accentColor = materialColorScheme.primary
@@ -145,7 +145,7 @@ private fun SettingFont(
         trailing = {
             Box(
                 Modifier
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .background(MiuixTheme.colorScheme.primary, CircleShape)
                     .size(24.dp),
             )
         },

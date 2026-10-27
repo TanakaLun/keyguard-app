@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ColorLens
 import top.yukonga.miuix.kmp.basic.Icon
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun ColorPickerScreen(
@@ -98,7 +98,7 @@ private fun ColumnScope.Content(
         state = listState,
     ) {
         itemsIndexed(state.content.items) { index, item ->
-            val backgroundColor = if (MaterialTheme.colorScheme.isDark) {
+            val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
                 item.color.dark
             } else {
                 item.color.light

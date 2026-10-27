@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,6 +43,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun CollectionsScreen(
@@ -180,7 +181,7 @@ private fun OrganizationsScreenCollectionItem(
     item: CollectionsState.Content.Item.Collection,
 ) {
     val backgroundColor =
-        if (item.selected) MaterialTheme.colorScheme.primaryContainer else Color.Unspecified
+        if (item.selected) MiuixTheme.colorScheme.primaryContainer else Color.Unspecified
     FlatDropdownSimpleExpressive(
         modifier = modifier,
         backgroundColor = backgroundColor,
@@ -210,8 +211,8 @@ private fun OrganizationsScreenCollectionItem(
                 item.selected.takeIf { item.selecting },
             ) { selected ->
                 Checkbox(
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

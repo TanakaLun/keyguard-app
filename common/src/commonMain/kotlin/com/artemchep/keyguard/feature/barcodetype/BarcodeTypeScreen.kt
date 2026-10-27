@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.QrCode
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -48,6 +47,7 @@ import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.icons.icon
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun BarcodeTypeScreen(
@@ -155,7 +155,7 @@ private fun BarcodeTypeDropdown(format: BarcodeTypeState.Format?) {
                     ) {
                         Text(
                             text = selectedTitle,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MiuixTheme.textStyles.titleMedium,
                         )
                         Spacer(
                             modifier = Modifier
@@ -206,8 +206,8 @@ fun BarcodeImage(
                         .padding(8.dp),
                     text = e.message
                         ?: stringResource(Res.string.error_failed_unknown),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
+                    color = MiuixTheme.colorScheme.error,
+                    style = MiuixTheme.textStyles.bodyMedium,
                     maxLines = 6,
                     overflow = TextOverflow.Ellipsis,
                 )

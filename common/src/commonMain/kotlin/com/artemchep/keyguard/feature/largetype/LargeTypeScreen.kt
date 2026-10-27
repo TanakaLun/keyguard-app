@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.surfaceColorAtElevation
@@ -56,6 +55,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.monoFontFamily
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun LargeTypeScreen(
@@ -146,7 +146,7 @@ fun LargeTypeContent(
                 text = text,
                 color = LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         }
     }
@@ -170,7 +170,7 @@ private fun SymbolItem(
         }
 
         val targetBackgroundColor = if (selected) {
-            MaterialTheme.colorScheme.selectedContainer
+            MiuixTheme.colorScheme.selectedContainer
         } else {
             val isEven = index.rem(2) == 0
             val backgroundElevation = if (isEven) {
@@ -227,10 +227,10 @@ private fun SymbolItem(
         Text(
             text = text,
             fontFamily = monoFontFamily,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MiuixTheme.textStyles.headlineMedium,
         )
 
-        val indexTextStyle = MaterialTheme.typography.labelSmall
+        val indexTextStyle = MiuixTheme.textStyles.labelSmall
         val indexTextWidth = kotlin.run {
             val text = remember(length) {
                 val digits = length.toString().length

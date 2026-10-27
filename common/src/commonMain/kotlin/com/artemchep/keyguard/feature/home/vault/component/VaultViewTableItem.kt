@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +18,7 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.TableRowItem
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewTableItem(
@@ -43,14 +43,14 @@ fun VaultViewTableItem(
                         modifier = Modifier
                             .weight(1f),
                         text = item.title.orEmpty(),
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MiuixTheme.textStyles.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         modifier = Modifier
                             .weight(1f),
                         text = item.value.orEmpty(),
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MiuixTheme.textStyles.titleSmall,
                     )
                 }
                 Spacer(

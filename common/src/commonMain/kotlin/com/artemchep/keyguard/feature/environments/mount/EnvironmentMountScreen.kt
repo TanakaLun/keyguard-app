@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.FolderOpen
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -46,6 +45,7 @@ import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun EnvironmentMountScreen(
@@ -180,7 +180,7 @@ private fun EnvironmentMountPathField(
             .padding(horizontal = Dimens.horizontalPadding),
         label = stringResource(Res.string.environments_mount_path),
         value = state.path,
-        textStyle = MaterialTheme.typography.bodyLarge.copy(
+        textStyle = MiuixTheme.textStyles.bodyLarge.copy(
             fontFamily = FontFamily.Monospace,
         ),
         singleLine = true,
@@ -208,7 +208,7 @@ private fun EnvironmentMountFlatpakHelp(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding),
         text = stringResource(Res.string.environments_flatpak_note),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
     )

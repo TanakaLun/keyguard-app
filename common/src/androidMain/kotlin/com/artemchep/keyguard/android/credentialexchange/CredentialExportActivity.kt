@@ -2,7 +2,6 @@ package com.artemchep.keyguard.android.credentialexchange
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,6 +57,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * Handles the Android 15+/GMS "Transfer passwords & passkeys" import request
@@ -409,7 +409,7 @@ class CredentialExportActivity : BaseActivity(), KeyguardKoinOwner {
 
                         else -> stringResource(Res.string.credential_exchange_export_header_text)
                     },
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MiuixTheme.textStyles.titleMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 3,
                 )

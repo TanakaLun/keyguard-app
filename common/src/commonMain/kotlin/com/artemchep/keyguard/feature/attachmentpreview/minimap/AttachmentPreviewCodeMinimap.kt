@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -34,6 +33,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 internal fun AttachmentPreviewCodeMinimap(
@@ -98,7 +98,7 @@ internal fun AttachmentPreviewCodeMinimap(
 
         val lineColor = LocalContentColor.current
             .combineAlpha(DisabledEmphasisAlpha)
-        val viewportColor = MaterialTheme.colorScheme.primary
+        val viewportColor = MiuixTheme.colorScheme.primary
             .copy(alpha = 0.24f)
 
         Canvas(

@@ -23,7 +23,6 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -67,6 +66,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun SendViewScreen(
@@ -171,7 +172,7 @@ fun SendViewScreen(
                                     Modifier
                                         .height(13.dp)
                                         .fillMaxWidth(0.15f)
-                                        .clip(MaterialTheme.shapes.medium)
+                                        .clip(KgShapes.medium)
                                         .background(contentColor.copy(alpha = 0.2f)),
                                 )
                                 Box(
@@ -179,7 +180,7 @@ fun SendViewScreen(
                                         .padding(top = 4.dp)
                                         .height(18.dp)
                                         .fillMaxWidth(0.38f)
-                                        .clip(MaterialTheme.shapes.medium)
+                                        .clip(KgShapes.medium)
                                         .background(contentColor),
                                 )
                             },
@@ -200,7 +201,7 @@ fun SendViewScreen(
                                 .shimmer()
                                 .height(10.dp)
                                 .fillMaxWidth(0.38f)
-                                .clip(MaterialTheme.shapes.medium)
+                                .clip(KgShapes.medium)
                                 .background(contentColor.copy(alpha = 0.23f)),
                         )
                     }
@@ -215,7 +216,7 @@ fun SendViewScreen(
                                 .shimmer()
                                 .height(10.dp)
                                 .fillMaxWidth(0.38f)
-                                .clip(MaterialTheme.shapes.medium)
+                                .clip(KgShapes.medium)
                                 .background(contentColor.copy(alpha = 0.23f)),
                         )
                     }
@@ -320,7 +321,7 @@ private fun VaultViewTitle(
                 AutoSizeText(
                     text = title,
                     maxLines = 2,
-                    minTextSize = MaterialTheme.typography.titleSmall.fontSize,
+                    minTextSize = MiuixTheme.textStyles.titleSmall.fontSize,
                     maxTextSize = LocalTextStyle.current.fontSize,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -338,7 +339,7 @@ private fun VaultViewTitle(
         is SendViewState.Content.NotFound -> {
             Text(
                 text = "Not found",
-                color = MaterialTheme.colorScheme.error
+                color = MiuixTheme.colorScheme.error
                     .combineAlpha(LocalContentColor.current.alpha),
             )
         }

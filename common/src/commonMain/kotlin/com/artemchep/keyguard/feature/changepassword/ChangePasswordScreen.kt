@@ -9,11 +9,10 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -45,6 +44,8 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun ChangePasswordScreen() {
@@ -115,7 +116,7 @@ private fun LazyListScope.ChangePasswordContentSkeleton() {
                 SkeletonText(
                     modifier = Modifier
                         .fillMaxWidth(0.3f),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             enabled = true,
@@ -144,7 +145,7 @@ private fun LazyListScope.ChangePasswordContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.horizontalPadding)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             emphasis = MediumEmphasisAlpha,
         )
     }
@@ -153,7 +154,7 @@ private fun LazyListScope.ChangePasswordContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.horizontalPadding)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             emphasis = MediumEmphasisAlpha,
         )
     }
@@ -162,7 +163,7 @@ private fun LazyListScope.ChangePasswordContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.horizontalPadding)
                 .fillMaxWidth(0.6f),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MiuixTheme.textStyles.bodyMedium,
             emphasis = MediumEmphasisAlpha,
         )
     }
@@ -207,16 +208,16 @@ private fun ChangePasswordBiometricItem(
         leading = {
             Checkbox(
                 enabled = biometric.onChange != null,
-                checked = biometric.checked,
-                onCheckedChange = {
-                    biometric.onChange?.invoke(it)
+                state = ToggleableState(biometric.checked),
+                onClick = {
+                    biometric.onChange?.invoke(!biometric.checked)
                 },
             )
         },
         content = {
             Text(
                 text = stringResource(Res.string.changepassword_biometric_auth_checkbox),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = biometric.onChange?.partially1(!biometric.checked),
@@ -243,7 +244,7 @@ private fun ChangePasswordDisclaimerTextItem(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding),
         text = text,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MiuixTheme.textStyles.bodyMedium,
         color = LocalContentColor.current
             .combineAlpha(MediumEmphasisAlpha),
     )

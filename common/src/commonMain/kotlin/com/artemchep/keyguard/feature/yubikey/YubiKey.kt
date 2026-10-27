@@ -18,8 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -45,6 +44,7 @@ import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 typealias OnYubiKeyListener = (Either<Throwable, String>) -> Unit
 
@@ -90,7 +90,7 @@ fun YubiKeyUsbCard(
                     .width(8.dp),
             )
             val colorTarget =
-                if (isActive) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                if (isActive) MiuixTheme.colorScheme.primary else LocalContentColor.current
             val color by animateColorAsState(
                 targetValue = colorTarget,
                 animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
@@ -127,8 +127,8 @@ fun YubiKeyUsbCard(
                         modifier = Modifier
                             .weight(1f),
                         text = stringResource(Res.string.yubikey_usb_touch_the_gold_sensor_note),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
+                        style = MiuixTheme.textStyles.labelMedium,
+                        color = MiuixTheme.colorScheme.primary,
                     )
                     Spacer(
                         modifier = Modifier
@@ -217,7 +217,7 @@ private fun YubiKeyCard(
             )
 
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                LocalTextStyle provides MiuixTheme.textStyles.titleMedium
                     .merge(localTextStyle),
             ) {
                 Row {
@@ -227,7 +227,7 @@ private fun YubiKeyCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text,
-                style = MaterialTheme.typography.bodyMedium
+                style = MiuixTheme.textStyles.bodyMedium
                     .merge(localTextStyle),
                 color = LocalContentColor.current
                     .combineAlpha(localEmphasis)

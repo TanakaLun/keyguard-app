@@ -17,7 +17,6 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,6 +51,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun SyncScreen() {
@@ -125,7 +125,7 @@ private fun TestK(
                         Icon(
                             imageVector = Icons.Outlined.CheckCircle,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.ok,
+                            tint = MiuixTheme.colorScheme.ok,
                         )
                     }
 
@@ -133,7 +133,7 @@ private fun TestK(
                         Icon(
                             imageVector = Icons.Outlined.ErrorOutline,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error,
+                            tint = MiuixTheme.colorScheme.error,
                         )
                     }
                 }
@@ -184,7 +184,7 @@ private fun TestK(
                 )
                 Text(
                     text = item.lastSyncTimestamp,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
                 )
@@ -280,8 +280,8 @@ private fun BadgeStatusPending(
                     modifier = Modifier
                         .animateContentSize(),
                     text = "Pending",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    style = MiuixTheme.textStyles.labelMedium,
+                    color = MiuixTheme.colorScheme.onSecondaryContainer,
                 )
             }
         }

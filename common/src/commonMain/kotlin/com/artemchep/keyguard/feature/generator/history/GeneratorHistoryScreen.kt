@@ -12,12 +12,11 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.Checkbox
+import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,6 +52,8 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun GeneratorHistoryScreen() {
@@ -185,7 +186,7 @@ private fun GeneratorHistoryItem(
 ) {
     val selectableState by item.selectableState.collectAsState()
     val backgroundColor = when {
-        selectableState.selected -> MaterialTheme.colorScheme.primaryContainer
+        selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
     FlatDropdownSimpleExpressive(
@@ -270,8 +271,8 @@ private fun GeneratorHistoryItem(
                 selectableState.selected.takeIf { selectableState.selecting },
             ) { selected ->
                 Checkbox(
-                    checked = selected,
-                    onCheckedChange = null,
+                    state = ToggleableState(selected),
+                    onClick = null,
                 )
             }
         },

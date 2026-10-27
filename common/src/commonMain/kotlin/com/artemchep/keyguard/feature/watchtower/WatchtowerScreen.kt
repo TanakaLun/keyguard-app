@@ -45,7 +45,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -143,6 +142,8 @@ import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.roundToInt
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.KgShapes
 
 @Composable
 fun WatchtowerScreen(
@@ -557,7 +558,7 @@ private fun ColumnScope.DashboardContentData(
                 .height(8.dp),
         )
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.titleMedium,
+            LocalTextStyle provides MiuixTheme.textStyles.titleMedium,
         ) {
             Text(
                 modifier = Modifier
@@ -570,8 +571,8 @@ private fun ColumnScope.DashboardContentData(
                 .height(8.dp),
         )
 
-        val secondaryContainer = MaterialTheme.colorScheme.secondaryContainer
-        val errorContainer = MaterialTheme.colorScheme.errorContainer
+        val secondaryContainer = MiuixTheme.colorScheme.secondaryContainer
+        val errorContainer = MiuixTheme.colorScheme.errorContainer
         Box(
             modifier = Modifier
                 .height(24.dp)
@@ -646,10 +647,10 @@ private fun ColumnScope.DashboardContentData(
             }
 
             val updatedOnClick by rememberUpdatedState(item.onClick)
-            val tintColor = MaterialTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
+            val tintColor = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
             Row(
                 modifier = Modifier
-                    .clip(MaterialTheme.shapes.small)
+                    .clip(KgShapes.small)
                     .background(tintColor)
                     .clickable(enabled = item.onClick != null) {
                         updatedOnClick?.invoke()
@@ -692,7 +693,7 @@ private fun ColumnScope.DashboardContentData(
                         text = text,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MiuixTheme.textStyles.bodyMedium,
                     )
                 }
                 if (item.new > 0) {
@@ -725,21 +726,21 @@ private fun ColumnScope.DashboardContentSkeleton() {
             modifier = Modifier
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth(0.3f),
-            style = MaterialTheme.typography.titleMedium,
+            style = MiuixTheme.textStyles.titleMedium,
         )
         Spacer(
             modifier = Modifier
                 .height(8.dp),
         )
 
-        val secondaryContainer = MaterialTheme.colorScheme.secondaryContainer
+        val secondaryContainer = MiuixTheme.colorScheme.secondaryContainer
         Box(
             modifier = Modifier
                 .height(24.dp)
                 .padding(horizontal = Dimens.textHorizontalPadding)
                 .fillMaxWidth()
                 .shimmer()
-                .clip(MaterialTheme.shapes.small)
+                .clip(KgShapes.small)
                 .background(secondaryContainer),
         )
         Spacer(
@@ -762,7 +763,7 @@ private fun ColumnScope.DashboardContentSkeleton() {
                 .surfaceColorAtElevationSemi(1.dp)
             Row(
                 modifier = Modifier
-                    .clip(MaterialTheme.shapes.small)
+                    .clip(KgShapes.small)
                     .background(tintColor)
                     .padding(
                         start = 8.dp,
@@ -777,7 +778,7 @@ private fun ColumnScope.DashboardContentSkeleton() {
                         .shimmer()
                         .height(18.dp)
                         .width(44.dp)
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(KgShapes.small)
                         .background(LocalContentColor.current.copy(alpha = 0.2f)),
                 )
                 Spacer(
@@ -787,7 +788,7 @@ private fun ColumnScope.DashboardContentSkeleton() {
                 SkeletonText(
                     modifier = Modifier
                         .width(56.dp),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             }
         }
@@ -1232,7 +1233,7 @@ private fun RowScope.ContentCardsContentTitle(
                     modifier = Modifier
                         .align(Alignment.CenterVertically),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.ok,
+                    tint = MiuixTheme.colorScheme.ok,
                 )
             }
 
@@ -1242,7 +1243,7 @@ private fun RowScope.ContentCardsContentTitle(
                     modifier = Modifier
                         .align(Alignment.CenterVertically),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.info,
+                    tint = MiuixTheme.colorScheme.info,
                 )
             }
 
@@ -1252,7 +1253,7 @@ private fun RowScope.ContentCardsContentTitle(
                     modifier = Modifier
                         .align(Alignment.CenterVertically),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.warning,
+                    tint = MiuixTheme.colorScheme.warning,
                 )
             }
 
@@ -1262,7 +1263,7 @@ private fun RowScope.ContentCardsContentTitle(
                     modifier = Modifier
                         .align(Alignment.CenterVertically),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = MiuixTheme.colorScheme.error,
                 )
             }
         }
@@ -1367,7 +1368,7 @@ fun Card(
     onClick: (() -> Unit)? = null,
 ) {
     val backgroundModifier = if (number > 0) {
-        val tintColor = MaterialTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
+        val tintColor = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
         Modifier
             .background(tintColor)
     } else {
@@ -1375,7 +1376,7 @@ fun Card(
     }
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.large)
+            .clip(KgShapes.large)
             .then(backgroundModifier),
         propagateMinConstraints = true,
     ) {
@@ -1424,13 +1425,13 @@ fun Card(
             ) {
                 Text(
                     numberStr,
-                    style = MaterialTheme.typography.displayLarge
+                    style = MiuixTheme.textStyles.displayLarge
                         .merge(localTextStyle),
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                LocalTextStyle provides MiuixTheme.textStyles.titleMedium
                     .merge(localTextStyle),
             ) {
                 Row {
@@ -1440,7 +1441,7 @@ fun Card(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text,
-                style = MaterialTheme.typography.bodyMedium
+                style = MiuixTheme.textStyles.bodyMedium
                     .merge(localTextStyle),
             )
             if (content != null) {
@@ -1456,7 +1457,7 @@ fun CardSkeleton(
     modifier: Modifier = Modifier,
 ) {
     val backgroundModifier = run {
-        val tintColor = MaterialTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
+        val tintColor = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(1.dp)
         Modifier
             .background(tintColor)
     }
@@ -1464,7 +1465,7 @@ fun CardSkeleton(
         LocalContentColor.current.copy(alpha = DisabledEmphasisAlpha)
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
+            .clip(KgShapes.medium)
             .then(backgroundModifier),
     ) {
         Column(
@@ -1477,7 +1478,7 @@ fun CardSkeleton(
                     .padding(top = 16.dp)
                     .height(48.dp)
                     .width(30.dp)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor),
             )
             Spacer(modifier = Modifier.height(18.dp))
@@ -1485,7 +1486,7 @@ fun CardSkeleton(
                 Modifier
                     .height(18.dp)
                     .fillMaxWidth(0.72f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor),
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -1493,7 +1494,7 @@ fun CardSkeleton(
                 Modifier
                     .height(14.dp)
                     .fillMaxWidth(0.6f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor.copy(alpha = 0.2f)),
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -1501,7 +1502,7 @@ fun CardSkeleton(
                 Modifier
                     .height(14.dp)
                     .fillMaxWidth(0.6f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor.copy(alpha = 0.2f)),
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -1509,7 +1510,7 @@ fun CardSkeleton(
                 Modifier
                     .height(14.dp)
                     .fillMaxWidth(0.6f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor.copy(alpha = 0.2f)),
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -1517,7 +1518,7 @@ fun CardSkeleton(
                 Modifier
                     .height(14.dp)
                     .fillMaxWidth(0.3f)
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(KgShapes.medium)
                     .background(contentColor.copy(alpha = 0.2f)),
             )
         }

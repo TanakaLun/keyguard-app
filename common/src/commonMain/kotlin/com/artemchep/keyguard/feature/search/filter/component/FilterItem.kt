@@ -24,8 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
@@ -52,6 +51,7 @@ import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.util.DividerColor
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -187,7 +187,7 @@ fun FilterListItemComposable(
                                             end = 10.dp,
                                         )
                                         .background(
-                                            MaterialTheme.colorScheme.surfaceVariant,
+                                            MiuixTheme.colorScheme.surfaceVariant,
                                             CircleShape,
                                         ),
                                 )
@@ -304,7 +304,7 @@ private fun FilterItemComposableContent(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = LocalContentColor.current,
-            style = MaterialTheme.typography.labelLarge,
+            style = MiuixTheme.textStyles.labelLarge,
         )
         val summaryOrNull = text?.takeUnless { it.isBlank() }
         ExpandedIfNotEmpty(valueOrNull = summaryOrNull) { summary ->
@@ -312,7 +312,7 @@ private fun FilterItemComposableContent(
                 summary,
                 maxLines = textMaxLines ?: 2,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.labelSmall,
+                style = MiuixTheme.textStyles.labelSmall,
                 color = LocalContentColor.current
                     .combineAlpha(alpha = MediumEmphasisAlpha),
             )
@@ -333,7 +333,7 @@ fun FilterItemLayout(
 
     val backgroundColor =
         if (checked) {
-            MaterialTheme.colorScheme.selectedContainer
+            MiuixTheme.colorScheme.selectedContainer
         } else Color.Transparent
     Surface(
         modifier = modifier

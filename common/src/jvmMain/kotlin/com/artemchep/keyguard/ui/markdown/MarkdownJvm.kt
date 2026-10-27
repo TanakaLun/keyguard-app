@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.ui.markdown
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -27,6 +26,7 @@ import com.halilibo.richtext.ui.string.RichTextStringStyle
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 actual class MarkdownDocument(
     internal val node: AstNode,
@@ -110,8 +110,8 @@ private fun getRichTextStyle(): RichTextStyle =
     RichTextStyle().resolveDefaults().copy(
         stringStyle = RichTextStringStyle(
             linkStyle = TextLinkStyles(
-                style = MaterialTheme.typography.bodyLarge.toSpanStyle().copy(
-                    color = MaterialTheme.colorScheme.primary,
+                style = MiuixTheme.textStyles.bodyLarge.toSpanStyle().copy(
+                    color = MiuixTheme.colorScheme.primary,
                 ),
             ),
         ),

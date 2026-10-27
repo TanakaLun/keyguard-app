@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,6 +14,7 @@ import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewLabelItem(
@@ -38,10 +38,10 @@ fun VaultViewLabelItem(
         Text(
             text = item.text,
             textAlign = textAlign,
-            style = MaterialTheme.typography.labelMedium,
+            style = MiuixTheme.textStyles.labelMedium,
             color =
             if (item.error) {
-                MaterialTheme.colorScheme.error
+                MiuixTheme.colorScheme.error
             } else {
                 LocalContentColor.current
                     .combineAlpha(MediumEmphasisAlpha)

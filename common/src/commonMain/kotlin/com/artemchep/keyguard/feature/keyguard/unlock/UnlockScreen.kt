@@ -28,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -77,6 +76,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 val unlockScreenTitlePadding = 24.dp
 val unlockScreenActionPadding = 8.dp
@@ -207,7 +207,7 @@ fun UnlockDialog(
                     modifier = Modifier
                         .padding(horizontal = Dimens.textHorizontalPadding),
                     text = stringResource(Res.string.unlock_header_text),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
 
                 Spacer(
@@ -312,7 +312,7 @@ private fun UnlockScreen(
                         text = textResource(info),
                         color = LocalContentColor.current
                             .combineAlpha(MediumEmphasisAlpha),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MiuixTheme.textStyles.bodyMedium,
                     )
                 }
             },
@@ -538,7 +538,7 @@ fun UnlockScreenTheVaultIsLockedTitle(
         modifier = modifier,
         textAlign = TextAlign.Center,
         text = stringResource(Res.string.unlock_header_text),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MiuixTheme.textStyles.bodyLarge,
     )
 }
 

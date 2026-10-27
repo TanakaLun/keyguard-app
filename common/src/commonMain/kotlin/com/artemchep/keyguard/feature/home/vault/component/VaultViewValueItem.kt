@@ -15,7 +15,6 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -52,6 +51,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlin.time.Clock
 import kotlin.time.Instant
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun VaultViewValueItem(
@@ -275,7 +275,7 @@ fun ColumnScope.FlatItemTextContent2(
 ) {
     if (title != null) {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelMedium
+            LocalTextStyle provides MiuixTheme.textStyles.labelMedium
                 .let {
                     val color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha)
                     it.copy(color = color)
@@ -286,7 +286,7 @@ fun ColumnScope.FlatItemTextContent2(
     }
     if (text != null) {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyLarge,
+            LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
         ) {
             text()
         }

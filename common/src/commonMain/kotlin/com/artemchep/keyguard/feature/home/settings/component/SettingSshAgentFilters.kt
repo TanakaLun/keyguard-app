@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +29,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 fun settingSshAgentFiltersProvider(
     koinScope: Scope,
@@ -110,7 +110,7 @@ private fun SettingSshAgentFilters(
                 Text(
                     color = LocalContentColor.current
                         .combineAlpha(MediumEmphasisAlpha),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MiuixTheme.textStyles.bodySmall,
                     text = stringResource(
                         Res.string.pref_item_agent_filters_text,
                         stringResource(Res.string.protocol_ssh),

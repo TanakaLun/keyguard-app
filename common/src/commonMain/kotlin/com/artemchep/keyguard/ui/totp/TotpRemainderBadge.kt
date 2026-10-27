@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.ProgressIndicatorDefaults
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,7 +25,7 @@ import com.artemchep.keyguard.ui.theme.monoFontFamily
 @Composable
 fun TotpRemainderBadge(
     state: TotpCodeState,
-    textStyle: TextStyle = MaterialTheme.typography.labelMedium,
+    textStyle: TextStyle = MiuixTheme.textStyles.labelMedium,
 ) {
     val score = when (state) {
         is TotpCodeState.Loading -> null
