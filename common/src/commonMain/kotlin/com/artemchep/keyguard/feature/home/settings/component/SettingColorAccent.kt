@@ -42,13 +42,15 @@ import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.composable
 import com.artemchep.keyguard.ui.icons.KeyguardTwoFa
 import com.artemchep.keyguard.ui.icons.icon
-import com.artemchep.keyguard.ui.theme.appColorScheme
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.theme.ColorSchemeMode
+import top.yukonga.miuix.kmp.theme.ThemeController
+import androidx.compose.runtime.remember
 
 fun settingColorAccentProvider(
     koinScope: Scope,
@@ -89,15 +91,18 @@ fun settingColorAccentProvider(
                 },
                 trailing = if (colorsVariant != null) {
                     composable {
-                        // For an accurate re-presentation of the color we create a
-                        // proper color scheme object the same way we do it for the
-                        // root keyguard theme.
-                        val materialColorScheme = appColorScheme(
-                            colors = colorsVariant,
-                            isDarkColorScheme = MiuixTheme.colorScheme.isDark,
-                        )
-
-                        val accentColor = materialColorScheme.primary
+                        // Preview the accent with the same palette generation the
+                        // app theme uses.
+                        val controller = remember(colorsVariant, MiuixTheme.colorScheme.isDark) {
+                            ThemeController(
+                                colorSchemeMode = ColorSchemeMode.System,
+                                keyColor = colorsVariant
+                                    ?.color
+                                    ?.let(::Color),
+                                isDark = MiuixTheme.colorScheme.isDark,
+                            )
+                        }
+                        val accentColor = controller.currentColors().primary
                         Box(
                             Modifier
                                 .background(accentColor, CircleShape)

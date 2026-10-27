@@ -34,7 +34,6 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
-import com.artemchep.keyguard.ui.theme.m3.dynamicColorScheme
 import kotlin.Boolean
 import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.Font
@@ -46,187 +45,6 @@ import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import top.yukonga.miuix.kmp.basic.Scaffold
 import androidx.compose.foundation.LocalIndication
-
-val ColorScheme.selectedContainer
-    @ReadOnlyComposable
-    get() = secondaryContainer
-
-val ColorScheme.onSelectedContainer
-    @ReadOnlyComposable
-    get() = onSecondaryContainer
-
-val ColorScheme.badgeContainer
-    @ReadOnlyComposable
-    get() = tertiaryContainer
-
-private const val HUE_WARNING = 55f
-private const val HUE_INFO = 210f
-private const val HUE_OK = 120f
-
-/**
- * Returns `true` if the color scheme is dark or
- * black, `false` otherwise.
- */
-val ColorScheme.isDark
-    @ReadOnlyComposable
-    get() = background.luminance() < 0.5f
-
-inline val ColorScheme.searchHighlightBackgroundColor get() = tertiaryContainer
-
-inline val ColorScheme.searchHighlightContentColor get() = onTertiaryContainer
-
-val ColorScheme.danger: Color
-    @Composable
-    get() {
-        return MaterialTheme.colorScheme.error
-    }
-
-val ColorScheme.warning: Color
-    @Composable
-    get() = buildContentColor(HUE_WARNING)
-
-val ColorScheme.warningVariant: Color
-    @Composable
-    get() = warning
-
-val ColorScheme.info: Color
-    @Composable
-    get() = buildContentColor(HUE_INFO)
-
-val ColorScheme.infoVariant: Color
-    @Composable
-    get() = info
-
-val ColorScheme.ok: Color
-    @Composable
-    get() = buildContentColor(HUE_OK)
-
-val ColorScheme.okVariant: Color
-    @Composable
-    get() = ok
-
-@Composable
-private fun ColorScheme.buildContentColor(
-    hue: Float,
-): Color {
-    val isDark = isDark
-    val color = remember(isDark) {
-        buildContentColor(
-            hue = hue,
-            onDark = isDark,
-        )
-    }
-    return color
-}
-
-private fun buildContentColor(
-    hue: Float,
-    onDark: Boolean,
-): Color {
-    val saturation: Float
-    val lightness: Float
-    if (onDark) {
-        saturation = 0.72f // saturation
-        lightness = 0.86f // value
-    } else {
-        saturation = 0.96f // saturation
-        lightness = 0.80f // value
-    }
-    return Color.hsv(
-        hue = hue,
-        saturation = saturation,
-        value = lightness,
-    )
-}
-
-val ColorScheme.warningContainer: Color
-    @Composable
-    get() = buildContainerColor(HUE_WARNING)
-
-val ColorScheme.warningContainerVariant: Color
-    @Composable
-    get() = buildContainerColor(HUE_WARNING)
-
-val ColorScheme.onWarningContainer
-    @Composable
-    get() = buildOnContainerColor(HUE_WARNING)
-
-val ColorScheme.infoContainer: Color
-    @Composable
-    get() = buildContainerColor(HUE_INFO)
-
-val ColorScheme.infoContainerVariant: Color
-    @Composable
-    get() = buildContainerColor(HUE_INFO)
-
-val ColorScheme.onInfoContainer
-    @Composable
-    get() = buildOnContainerColor(HUE_INFO)
-
-val ColorScheme.okContainer: Color
-    @Composable
-    get() = buildContainerColor(HUE_OK)
-
-val ColorScheme.okContainerVariant: Color
-    @Composable
-    get() = buildContainerColor(HUE_OK)
-
-val ColorScheme.onOkContainer
-    @Composable
-    get() = buildOnContainerColor(HUE_OK)
-
-@Composable
-private fun ColorScheme.buildContainerColor(
-    hue: Float,
-): Color {
-    val tint = Color.hsv(
-        hue = hue,
-        saturation = 1f,
-        value = 1f,
-    )
-    val backgroundColor = if (isDark) {
-        surfaceVariant
-    } else {
-        surfaceVariant
-    }
-    return tint
-        .copy(alpha = 0.20f)
-        .compositeOver(backgroundColor)
-}
-
-@Composable
-private fun ColorScheme.buildOnContainerColor(
-    hue: Float,
-): Color {
-    val isDark = isDark
-    val color = remember(isDark) {
-        buildOnContainerColor(
-            hue = hue,
-            onDark = isDark,
-        )
-    }
-    return color
-}
-
-private fun buildOnContainerColor(
-    hue: Float,
-    onDark: Boolean,
-): Color {
-    val saturation: Float
-    val lightness: Float
-    if (onDark) {
-        saturation = 0.1f // saturation
-        lightness = 0.9f // value
-    } else {
-        saturation = 0.2f // saturation
-        lightness = 0.2f // value
-    }
-    return Color.hsv(
-        hue = hue,
-        saturation = saturation,
-        value = lightness,
-    )
-}
 
 val monoFontFamily: FontFamily
     @Composable
@@ -411,17 +229,7 @@ fun rememberThemeDarkState(
 }
 
 @Composable
-fun appColorScheme(
-    colors: AppColors?,
-    isDarkColorScheme: Boolean,
-): ColorScheme = colors?.let { c ->
-    runCatching {
-        dynamicColorScheme(
-            keyColor = Color(c.color),
-            isDark = isDarkColorScheme,
-        )
-    }.getOrNull()
-} ?: run {
+ ?: run {
     if (isDarkColorScheme) {
         appDynamicDarkColorScheme()
     } else {
