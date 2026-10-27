@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import com.artemchep.keyguard.common.model.NavAnimation
 import com.artemchep.keyguard.common.usecase.GetNavAnimation
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.nav.core.NavDisplay
@@ -77,7 +78,7 @@ private val CrossfadeNavTransition: NavTransition = navGraphicsTransition(
 @Composable
 internal fun MiuixNavHost(
     entries: PersistentList<NavigationEntry>,
-    visualEntries: PersistentList<NavigationEntry>,
+    visualEntries: ImmutableList<NavigationEntry>,
     fullscreenCount: Int,
     offset: Int,
     modifier: Modifier = Modifier,
@@ -172,7 +173,7 @@ internal fun MiuixNavHost(
  * as is, the tail is dropped and re-appended.
  */
 private fun MutableList<NavKey>.syncWith(
-    visualEntries: PersistentList<NavigationEntry>,
+    visualEntries: ImmutableList<NavigationEntry>,
     fullscreenCount: Int,
 ) {
     var prefix = 0
