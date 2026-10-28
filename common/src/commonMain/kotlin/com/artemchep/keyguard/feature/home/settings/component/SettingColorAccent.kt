@@ -96,7 +96,6 @@ fun settingColorAccentProvider(
                                 .size(24.dp),
                         )
                     }
-                    }
                 } else {
                     null
                 },
