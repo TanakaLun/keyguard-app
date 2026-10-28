@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.VisibilityOff
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
@@ -74,64 +77,68 @@ fun SettingListItem(
     backgroundColor: Color,
     onClick: () -> Unit,
 ) {
-    Column {
-        FlatItemLayoutExpressive(
-            backgroundColor = backgroundColor,
-            shapeState = item.shapeState,
-            leading = {
-                Avatar(
-                    shape = item.iconShape?.toShape()
-                        ?: KgShapes.large,
-                ) {
-                    when {
-                        item.leading != null -> {
-                            Row(
-                                modifier = Modifier
-                                    .align(Alignment.Center),
-                            ) {
-                                item.leading.invoke(this)
-                            }
-                        }
-
-                        item.icon != null -> {
-                            Icon(
-                                modifier = Modifier
-                                    .align(Alignment.Center),
-                                imageVector = item.icon,
-                                contentDescription = null,
-                            )
-                        }
-
-                        else -> {
+    BasicComponent(
+        modifier = if (backgroundColor.isSpecified) {
+            Modifier.background(backgroundColor)
+        } else {
+            Modifier
+        },
+        startAction = {
+            Avatar(
+                shape = item.iconShape?.toShape()
+                    ?: KgShapes.large,
+            ) {
+                when {
+                    item.leading != null -> {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                        ) {
+                            item.leading.invoke(this)
                         }
                     }
-                }
-            },
-            trailing = {
-                if (item.trailing != null) {
-                    item.trailing.invoke(this)
-                    Spacer(
-                        modifier = Modifier
-                            .width(8.dp),
-                    )
-                }
-                val isWatch = CurrentPlatform.hasWatch()
-                if (!isWatch) {
-                    ChevronIcon()
-                }
-            },
-            content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = textResource(item.title),
-                            style = MiuixTheme.textStyles.titleMedium,
+
+                    item.icon != null -> {
+                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                            imageVector = item.icon,
+                            contentDescription = null,
                         )
-                    },
+                    }
+
+                    else -> {
+                    }
+                }
+            }
+        },
+        endActions = {
+            if (item.trailing != null) {
+                item.trailing.invoke(this)
+                Spacer(
+                    modifier = Modifier
+                        .width(8.dp),
                 )
-            },
-            footer = item.footer,
-            onClick = onClick,
+            }
+            val isWatch = CurrentPlatform.hasWatch()
+            if (!isWatch) {
+                ChevronIcon()
+            }
+        },
+        bottomAction = item.footer?.let { footer ->
+            // composable
+            {
+                Column {
+                    footer()
+                }
+            }
+        },
+        insideMargin = BasicComponentDefaults.InsideMargin,
+        onClick = onClick,
+    ) {
+        Text(
+            text = textResource(item.title),
+            style = MiuixTheme.textStyles.main,
         )
     }
 }

@@ -78,6 +78,8 @@ import com.artemchep.keyguard.platform.util.isRelease
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.KeyguardPremium
 import com.artemchep.keyguard.ui.pulltosearch.PullToSearch
@@ -368,54 +370,122 @@ private fun SettingListScreenContent(
             )
         },
     ) {
-        items(
-            items = items,
-            key = { it.id },
-            contentType = { it.contentType },
-        ) {
-            when (it) {
-                is SettingsItem -> {
-                    val backgroundColor = run {
-                        if (LocalHasDetailPane.current) {
-                            val nextEntry = navigationNextEntryOrNull()
-                            val nextRoute = nextEntry?.route
-
-                            val selected = it.route === nextRoute
-                            if (selected) {
-                                return@run MiuixTheme.colorScheme.selectedContainer
-                            }
+        // The settings list follows the Miuix example: a SmallTitle per section
+        // and one Card per group of rows.
+        val groups = remember(items) {
+            val result = mutableListOf<SettingsListGroup>()
+            var card: MutableList<SettingsItem>? = null
+            items.forEach { item ->
+                when (item) {
+                    is SettingsItem -> {
+                        val current = card
+                        if (current == null) {
+                            val next = mutableListOf(item)
+                            card = next
+                            result.add(SettingsListGroup.Card(next))
+                        } else {
+                            current.add(item)
                         }
-
-                        Color.Unspecified
                     }
-                    SettingListItem(
-                        backgroundColor = backgroundColor,
-                        item = it,
-                        onClick = {
-                            val intent = NavigationIntent.Composite(
-                                listOf(
-                                    NavigationIntent.PopById(SettingsRoute.ROUTER_NAME),
-                                    NavigationIntent.NavigateToRoute(it.route),
-                                ),
+
+                    is SettingsSectionItem -> {
+                        card = null
+                        result.add(SettingsListGroup.Section(item.id, item.title))
+                    }
+
+                    is SettingsAccountsItem -> {
+                        card = null
+                        result.add(SettingsListGroup.Accounts(item))
+                    }
+                }
+            }
+            result
+        }
+        items(
+            items = groups,
+            key = { it.id },
+        ) { group ->
+            when (group) {
+                is SettingsListGroup.Section -> {
+                    val text = group.title
+                        ?.let { textResource(it) }
+                    if (text != null) {
+                        SmallTitle(
+                            text = text,
+                        )
+                    }
+                }
+
+                is SettingsListGroup.Card -> {
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 12.dp),
+                    ) {
+                        group.items.forEach { item ->
+                            val backgroundColor = run {
+                                if (LocalHasDetailPane.current) {
+                                    val nextEntry = navigationNextEntryOrNull()
+                                    val nextRoute = nextEntry?.route
+
+                                    val selected = item.route === nextRoute
+                                    if (selected) {
+                                        return@run MiuixTheme.colorScheme.selectedContainer
+                                    }
+                                }
+
+                                Color.Unspecified
+                            }
+                            SettingListItem(
+                                backgroundColor = backgroundColor,
+                                item = item,
+                                onClick = {
+                                    val intent = NavigationIntent.Composite(
+                                        listOf(
+                                            NavigationIntent.PopById(SettingsRoute.ROUTER_NAME),
+                                            NavigationIntent.NavigateToRoute(item.route),
+                                        ),
+                                    )
+                                    q.queue(intent)
+                                },
                             )
-                            q.queue(intent)
-                        },
-                    )
+                        }
+                    }
                 }
 
-                is SettingsSectionItem -> {
-                    val text = it.title?.let { textResource(it) }
-                    Section(
-                        text = text,
-                    )
-                }
-
-                is SettingsAccountsItem -> {
-                    SettingListAccountsItem(
-                        item = it,
-                    )
+                is SettingsListGroup.Accounts -> {
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 12.dp),
+                    ) {
+                        SettingListAccountsItem(
+                            item = group.item,
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+private sealed interface SettingsListGroup {
+    val id: String
+
+    data class Section(
+        override val id: String,
+        val title: TextHolder?,
+    ) : SettingsListGroup
+
+    data class Card(
+        val items: List<SettingsItem>,
+    ) : SettingsListGroup {
+        override val id: String get() = "card:${items.first().id}"
+    }
+
+    data class Accounts(
+        val item: SettingsAccountsItem,
+    ) : SettingsListGroup {
+        override val id: String get() = "accounts:${item.id}"
     }
 }

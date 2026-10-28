@@ -488,7 +488,7 @@ fun HomeScreenContent(
                                 )
                             }
                             NavigationBar(
-                                showDivider = false,
+                                showDivider = true,
                             ) {
                                 routesSplit.visible.forEach { r ->
                                     key(r.key) {
