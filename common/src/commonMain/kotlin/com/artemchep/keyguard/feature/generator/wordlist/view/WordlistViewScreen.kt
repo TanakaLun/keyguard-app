@@ -21,7 +21,6 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -78,6 +77,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun WordlistViewScreen(
@@ -94,7 +94,7 @@ fun WordlistViewScreen(
 fun WordlistViewScreen(
     loadableState: Loadable<WordlistViewState>,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
     val filterState = run {
         val filterFlow = loadableState.getOrNull()?.filter
         remember(filterFlow) {

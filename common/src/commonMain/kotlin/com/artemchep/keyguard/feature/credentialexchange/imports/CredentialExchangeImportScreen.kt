@@ -27,7 +27,7 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -90,7 +90,7 @@ fun CredentialExchangeImportScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeImportScreenSkeleton(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldColumn(
         modifier = Modifier
@@ -112,7 +112,7 @@ private fun CredentialExchangeImportScreenSkeleton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeImportToolbar(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     LargeToolbar(
         title = stringResource(Res.string.credential_exchange_import_header_title),
@@ -126,7 +126,7 @@ private fun CredentialExchangeImportToolbar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeImportScreenContent(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     state: CredentialExchangeImportState,
 ) {
     val context by rememberUpdatedState(LocalLeContext)

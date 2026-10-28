@@ -14,11 +14,9 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Surface
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,17 +28,20 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Velocity
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarColors
 import kotlin.math.abs
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomToolbar(
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior?,
+    scrollBehavior: ScrollBehavior?,
     content: @Composable () -> Unit,
 ) {
     val containerColor = ToolbarColors.containerColor()
     val scrolledContainerColor = ToolbarColors.scrolledContainerColor(containerColor)
-    val windowInsets = TopAppBarDefaults.windowInsets
+    val windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top)
 
     // Obtain the container color from the TopAppBarColors using the `overlapFraction`. This
     // ensures that the colors will adjust whether the app bar behavior is pinned or scrolled.
@@ -107,7 +108,6 @@ fun CustomToolbar(
  * Settles the app bar by flinging, in case the given velocity is greater than zero, and snapping
  * after the fling settles.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 private suspend fun settleAppBar(
     state: TopAppBarState,
     velocity: Float,

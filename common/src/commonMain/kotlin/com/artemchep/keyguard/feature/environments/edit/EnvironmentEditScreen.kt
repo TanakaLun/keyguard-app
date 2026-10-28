@@ -12,7 +12,7 @@ import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -152,7 +152,7 @@ private fun Modifier.environmentFileDropTarget(
 @Composable
 private fun EnvironmentEditToolbar(
     state: EnvironmentEditState?,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     LargeToolbar(
         title = state?.title.orEmpty(),

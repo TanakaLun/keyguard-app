@@ -13,7 +13,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +43,7 @@ import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.labelSmall
 import com.artemchep.keyguard.ui.theme.titleMedium
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun SearchSettingsScreen() {
@@ -67,7 +67,7 @@ fun SearchSettingsScreenContent(
             focusRequester.requestFocus()
         },
     )
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
 
     LaunchedEffect(focusRequester) {
         delay(500L)

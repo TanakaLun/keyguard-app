@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.ui.toolbar
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.platform.CurrentPlatform
@@ -16,8 +16,7 @@ fun LargeToolbar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    @Suppress("UNUSED_PARAMETER")
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: ScrollBehavior? = null,
 ) {
     if (CurrentPlatform is Platform.Desktop) {
         SmallToolbar(
@@ -38,5 +37,6 @@ fun LargeToolbar(
         navigationIcon = navigationIcon,
         actions = actions,
         color = containerColor,
+        scrollBehavior = scrollBehavior,
     )
 }

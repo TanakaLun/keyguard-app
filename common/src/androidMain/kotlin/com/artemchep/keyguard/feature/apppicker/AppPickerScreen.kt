@@ -13,7 +13,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +54,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun AppPickerScreen(
@@ -73,7 +73,7 @@ fun AppPickerScreen(
 fun ChangePasswordScreen(
     loadableState: Loadable<AppPickerState>,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
     val filterState = run {
         val filterFlow = loadableState.getOrNull()?.filter
         remember(filterFlow) {

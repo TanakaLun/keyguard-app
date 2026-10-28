@@ -56,8 +56,7 @@ import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -166,6 +165,7 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.titleLarge
 import com.artemchep.keyguard.ui.theme.titleMedium
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun GeneratorScreen(
@@ -250,7 +250,7 @@ private fun GeneratorPaneDetail(
     loadableState: Loadable<GeneratorState>,
     sliderInteractionSource: MutableInteractionSource,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
     ScaffoldColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -300,7 +300,7 @@ private fun GeneratorPaneMaster(
     loadableHistoryState: Loadable<GeneratorHistoryState>,
     tabletUi: Boolean,
     stickyValueUi: Boolean,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     sliderInteractionSource: MutableInteractionSource,
 ) {
     val loadedState = loadableGeneratorState.getOrNull()?.loadedState?.collectAsState()

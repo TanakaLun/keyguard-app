@@ -19,7 +19,7 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberUpdatedState
@@ -86,7 +86,7 @@ fun LogsScreen() {
 @Composable
 private fun LogsScreenSkeleton(
     modifier: Modifier,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldLazyColumn(
         modifier = modifier
@@ -114,7 +114,7 @@ private fun LogsScreenSkeleton(
 @Composable
 private fun LogsScreenContent(
     modifier: Modifier,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     state: LogsState,
 ) {
     val contentState = state.contentFlow.collectAsState()

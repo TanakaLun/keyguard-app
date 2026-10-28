@@ -20,7 +20,6 @@ import top.yukonga.miuix.kmp.basic.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -61,6 +60,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.titleSmall
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun LocalizationContributorsListScreen(
@@ -76,7 +76,7 @@ fun LocalizationContributorsListScreen(
 fun LocalizationContributorsListScreen(
     loadableState: Loadable<LocalizationContributorsListState>,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
     val filterState = run {
         val filterFlow = loadableState.getOrNull()?.filter
         remember(filterFlow) {

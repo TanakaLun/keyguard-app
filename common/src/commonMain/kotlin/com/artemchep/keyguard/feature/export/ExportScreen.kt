@@ -25,7 +25,7 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -116,7 +116,7 @@ fun ExportScreen(
 @Composable
 fun ExportScreenSkeleton(
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     TwoPaneScreen(
         header = { modifier ->
@@ -162,7 +162,7 @@ fun ExportScreenSkeleton(
 @Composable
 fun ExportScreenOk(
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     state: ExportState,
 ) {
     val items by state.itemsFlow.collectAsState()
@@ -268,7 +268,7 @@ private fun ExportScreen(
     loading: Boolean,
     tabletUi: Boolean,
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldColumn(
         modifier = modifier

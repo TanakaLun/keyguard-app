@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -78,6 +77,7 @@ import kotlinx.coroutines.flow.first
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
 import com.artemchep.keyguard.ui.theme.bodyMedium
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 
 @Composable
 fun CipherFiltersListScreen(
@@ -93,7 +93,7 @@ fun CipherFiltersListScreen(
 fun CipherFiltersListScreen(
     loadableState: Loadable<CipherFiltersListState>,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = MiuixScrollBehavior()
     val filterState = run {
         val filterFlow = loadableState.getOrNull()?.filter
         remember(filterFlow) {

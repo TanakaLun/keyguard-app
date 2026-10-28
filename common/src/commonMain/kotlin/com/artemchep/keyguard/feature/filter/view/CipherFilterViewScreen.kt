@@ -2,7 +2,7 @@ package com.artemchep.keyguard.feature.filter.view
 
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,7 +58,7 @@ fun CipherFilterViewScreen(
 @Composable
 fun CipherFilterViewSkeleton(
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldColumn(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun CipherFilterViewSkeleton(
 @Composable
 fun CipherFilterViewScreenOk(
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     state: CipherFilterViewState,
 ) {
     val content by state.toolbarFlow.collectAsState()

@@ -41,7 +41,7 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.FloatingActionButton
 import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -99,7 +99,7 @@ val screenMaxWidthCompact = 480.dp
 @Composable
 fun ScaffoldLazyColumn(
     modifier: Modifier = Modifier,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    topAppBarScrollBehavior: ScrollBehavior,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -194,7 +194,7 @@ fun ScaffoldLazyColumn(
 @Composable
 fun ScaffoldColumn(
     modifier: Modifier = Modifier,
-    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    topAppBarScrollBehavior: ScrollBehavior,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},

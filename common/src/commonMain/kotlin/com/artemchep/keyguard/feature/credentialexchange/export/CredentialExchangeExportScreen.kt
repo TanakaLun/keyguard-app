@@ -13,7 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
@@ -94,7 +94,7 @@ fun CredentialExchangeExportScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeExportScreenSkeleton(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldColumn(
         modifier = Modifier
@@ -116,7 +116,7 @@ private fun CredentialExchangeExportScreenSkeleton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeExportToolbar(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     LargeToolbar(
         title = stringResource(Res.string.credential_exchange_export_header_title),
@@ -130,7 +130,7 @@ private fun CredentialExchangeExportToolbar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CredentialExchangeExportScreenContent(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     stage: CredentialExchangeExportState.Stage.Reviewable,
 ) {
     ScaffoldLazyColumn(

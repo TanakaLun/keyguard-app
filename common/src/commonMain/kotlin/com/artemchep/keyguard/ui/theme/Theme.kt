@@ -229,15 +229,6 @@ fun rememberThemeDarkState(
 }
 
 @Composable
- ?: run {
-    if (isDarkColorScheme) {
-        appDynamicDarkColorScheme()
-    } else {
-        appDynamicLightColorScheme()
-    }
-}
-
-@Composable
 expect fun appDynamicDarkColorScheme(): ColorScheme
 
 @Composable
