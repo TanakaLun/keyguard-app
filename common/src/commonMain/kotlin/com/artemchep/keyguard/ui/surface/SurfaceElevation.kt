@@ -34,23 +34,9 @@ val SurfaceElevation.color: Color
 @Composable
 @ReadOnlyComposable
 fun surfaceElevationColor(elevation: Float): Color {
-    when (elevation) {
-        1.0f -> return MiuixTheme.colorScheme.background
-        0.75f -> return MiuixTheme.colorScheme.surfaceContainerLow
-        // Makes sense on practice after you have seen
-        // how these containers are positioned. If we just
-        // use the code below, then the difference between these
-        // containers becomes too subtle.
-        0.625f -> return MiuixTheme.colorScheme.surfaceContainer
-        0.5f -> return MiuixTheme.colorScheme.surfaceContainer
-        0.25f -> return MiuixTheme.colorScheme.surfaceContainerHigh
-    }
-
-    val min = MiuixTheme.colorScheme.surfaceContainerHigh
-    val max = MiuixTheme.colorScheme.background
-    return max
-        .combineAlpha(elevation)
-        .compositeOver(min)
+    // The Miuix page layout is flat: every page sits on the surface color and
+    // depth is expressed by containers (cards, bars), not by tonal elevation.
+    return MiuixTheme.colorScheme.surface
 }
 
 @Composable

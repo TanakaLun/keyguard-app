@@ -15,8 +15,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Surface
-import androidx.compose.material3.contentColorFor
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.contentColorForimport androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -71,9 +70,9 @@ import com.artemchep.keyguard.platform.recordException
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.AccessibilityDataProtectionEffect
-import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import com.artemchep.keyguard.ui.theme.KeyguardTheme
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -179,12 +178,12 @@ abstract class BaseActivity : AppCompatActivity(), KeyguardKoinOwner {
 
     @Composable
     protected open fun activityContainerColor(
-    ): Color = LocalBackgroundManager.current.colorHighest
+    ): Color = MiuixTheme.colorScheme.surface
 
     @Composable
     protected open fun activityContentColor(
         containerColor: Color,
-    ): Color = contentColorFor(containerColor)
+    ): Color = MiuixTheme.colorScheme.onSurface
 
     @Composable
     private fun Navigation(
