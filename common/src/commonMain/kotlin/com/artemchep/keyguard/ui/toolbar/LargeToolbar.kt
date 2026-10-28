@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.ui.toolbar
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.platform.CurrentPlatform

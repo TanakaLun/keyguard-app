@@ -277,7 +277,7 @@ private fun NavigationItemsSettingsContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NavigationItemsSettingsToolbar(
-    scrollBehavior: androidx.compose.material3.ScrollBehavior,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
     onReset: (() -> Unit)?,
 ) {
     LargeToolbar(

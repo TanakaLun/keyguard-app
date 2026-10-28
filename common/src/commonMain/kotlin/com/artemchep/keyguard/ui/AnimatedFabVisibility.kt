@@ -1,7 +1,7 @@
 package com.artemchep.keyguard.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember

@@ -56,7 +56,7 @@ import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
