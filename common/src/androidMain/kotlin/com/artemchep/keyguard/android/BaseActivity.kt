@@ -15,7 +15,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.material3.MaterialTheme
 import top.yukonga.miuix.kmp.basic.Surface
-import androidx.compose.material3.contentColorForimport androidx.compose.runtime.Composable
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
