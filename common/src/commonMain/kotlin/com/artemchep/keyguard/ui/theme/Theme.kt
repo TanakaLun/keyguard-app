@@ -46,6 +46,19 @@ import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import top.yukonga.miuix.kmp.basic.Scaffold
 import androidx.compose.foundation.LocalIndication
 
+/**
+ * Roles that are read from a captured color scheme value, outside of composition
+ * (for example by screen state producers).
+ */
+val ColorScheme.isDark: Boolean
+    get() = background.luminance() < 0.5f
+
+val ColorScheme.searchHighlightBackgroundColor: Color
+    get() = tertiaryContainer
+
+val ColorScheme.searchHighlightContentColor: Color
+    get() = onTertiaryContainer
+
 val monoFontFamily: FontFamily
     @Composable
     get() = robotoMonoFontFamily

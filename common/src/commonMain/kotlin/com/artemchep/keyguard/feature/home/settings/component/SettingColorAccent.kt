@@ -48,8 +48,6 @@ import kotlinx.coroutines.flow.combine
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.scope.Scope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.theme.ColorSchemeMode
-import top.yukonga.miuix.kmp.theme.ThemeController
 import androidx.compose.runtime.remember
 
 fun settingColorAccentProvider(
@@ -91,23 +89,13 @@ fun settingColorAccentProvider(
                 },
                 trailing = if (colorsVariant != null) {
                     composable {
-                        // Preview the accent with the same palette generation the
-                        // app theme uses.
-                        val controller = remember(colorsVariant, MiuixTheme.colorScheme.isDark) {
-                            ThemeController(
-                                colorSchemeMode = ColorSchemeMode.System,
-                                keyColor = colorsVariant
-                                    ?.color
-                                    ?.let(::Color),
-                                isDark = MiuixTheme.colorScheme.isDark,
-                            )
-                        }
-                        val accentColor = controller.currentColors().primary
+                        // The key color the Miuix theme is generated from.
                         Box(
                             Modifier
-                                .background(accentColor, CircleShape)
+                                .background(Color(colorsVariant.color), CircleShape)
                                 .size(24.dp),
                         )
+                    }
                     }
                 } else {
                     null
