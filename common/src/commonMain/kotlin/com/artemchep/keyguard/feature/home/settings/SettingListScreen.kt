@@ -329,6 +329,38 @@ private fun SettingListScreenContent(
         },
     )
     val scrollBehavior = ToolbarBehavior.behavior()
+
+    // The settings list follows the Miuix example: a SmallTitle per section
+    // and one Card per group of rows.
+    val groups = remember(items) {
+        val result = mutableListOf<SettingsListGroup>()
+        var card: MutableList<SettingsItem>? = null
+        items.forEach { item ->
+            when (item) {
+                is SettingsItem -> {
+                    val current = card
+                    if (current == null) {
+                        val next = mutableListOf(item)
+                        card = next
+                        result.add(SettingsListGroup.Card(next))
+                    } else {
+                        current.add(item)
+                    }
+                }
+
+                is SettingsSectionItem -> {
+                    card = null
+                    result.add(SettingsListGroup.Section(item.id, item.title))
+                }
+
+                is SettingsAccountsItem -> {
+                    card = null
+                    result.add(SettingsListGroup.Accounts(item))
+                }
+            }
+        }
+        result
+    }
     ScaffoldLazyColumn(
         modifier = Modifier
             .pullRefresh(pullRefreshState)
@@ -370,37 +402,6 @@ private fun SettingListScreenContent(
             )
         },
     ) {
-        // The settings list follows the Miuix example: a SmallTitle per section
-        // and one Card per group of rows.
-        val groups = remember(items) {
-            val result = mutableListOf<SettingsListGroup>()
-            var card: MutableList<SettingsItem>? = null
-            items.forEach { item ->
-                when (item) {
-                    is SettingsItem -> {
-                        val current = card
-                        if (current == null) {
-                            val next = mutableListOf(item)
-                            card = next
-                            result.add(SettingsListGroup.Card(next))
-                        } else {
-                            current.add(item)
-                        }
-                    }
-
-                    is SettingsSectionItem -> {
-                        card = null
-                        result.add(SettingsListGroup.Section(item.id, item.title))
-                    }
-
-                    is SettingsAccountsItem -> {
-                        card = null
-                        result.add(SettingsListGroup.Accounts(item))
-                    }
-                }
-            }
-            result
-        }
         items(
             items = groups,
             key = { it.id },

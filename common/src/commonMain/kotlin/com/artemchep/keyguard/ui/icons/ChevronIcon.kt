@@ -22,8 +22,9 @@ fun ChevronIcon(
     modifier: Modifier = Modifier,
 ) {
     val layoutDirection = LocalLayoutDirection.current
-    val colorFilter = remember(layoutDirection) {
-        ColorFilter.tint(MiuixTheme.colorScheme.onSurfaceVariantActions)
+    val color = MiuixTheme.colorScheme.onSurfaceVariantActions
+    val colorFilter = remember(color) {
+        ColorFilter.tint(color)
     }
     Image(
         modifier = modifier
