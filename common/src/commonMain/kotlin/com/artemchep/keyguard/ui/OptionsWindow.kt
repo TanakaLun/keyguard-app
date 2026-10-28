@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,14 +10,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.DropdownDefaults
+import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.basic.Check
 import top.yukonga.miuix.kmp.theme.LocalContentColor
-import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -25,14 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.home.vault.component.Section
-import com.artemchep.keyguard.ui.theme.danger
-import com.artemchep.keyguard.ui.theme.selectedContainer
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 
@@ -68,48 +72,65 @@ fun DropdownScope.DropdownMenuItemFlat(
 fun DropdownScope.DropdownMenuItemFlat(
     action: FlatItemAction,
 ) {
-    DropdownMenuItemFlatLayout(
+    // Mirrors the Miuix DropdownImpl row: selectable row with the standard
+    // paddings, colors and a trailing check icon on the selected option.
+    val colors = DropdownDefaults.dropdownColors()
+    val enabled = action.onClick != null
+    val hapticFeedback = LocalHapticFeedback.current
+    val backgroundColor = if (action.selected) {
+        colors.selectedContainerColor
+    } else {
+        Color.Transparent
+    }
+    val contentColor = when {
+        !enabled -> MiuixTheme.colorScheme.disabledOnSecondaryVariant
+        action.danger -> MiuixTheme.colorScheme.error
+        action.selected -> colors.selectedContentColor
+        else -> colors.contentColor
+    }
+    Row(
         modifier = Modifier
-            .padding(
-                horizontal = 8.dp,
-                vertical = 1.dp,
-            )
-            .clip(KgShapes.medium)
-            .then(
-                if (action.selected) {
-                    val background = MiuixTheme.colorScheme.selectedContainer
-                    Modifier
-                        .background(background)
-                } else {
-                    Modifier
-                }
-            )
-            .then(
-                if (action.onClick != null) {
-                    Modifier
-                        .clickable {
-                            action.onClick.invoke()
-                            onDismissRequest()
-                        }
-                } else {
-                    Modifier
+            .fillMaxWidth()
+            .drawBehind {
+                drawRect(backgroundColor)
+            }
+            .selectable(
+                selected = action.selected,
+                enabled = enabled,
+                role = Role.RadioButton,
+                onClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    action.onClick?.invoke()
+                    onDismissRequest()
                 },
             )
-            .minimumInteractiveComponentSize(),
+            .padding(
+                horizontal = DropdownDefaults.InsideHorizontalPadding,
+                vertical = DropdownDefaults.MiddleVerticalPadding,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        val contentColor =
-            if (action.selected) {
-                val background = MiuixTheme.colorScheme.selectedContainer
-                contentColorFor(background)
-            } else if (action.danger) {
-                MiuixTheme.colorScheme.danger
-            } else {
-                LocalContentColor.current
-            }
         CompositionLocalProvider(LocalContentColor provides contentColor) {
-            FlatItemActionContent(
-                action = action,
-                compact = true,
+            Row(
+                modifier = Modifier
+                    .weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                FlatItemActionContent(
+                    action = action,
+                    compact = true,
+                )
+            }
+        }
+        if (action.selected) {
+            Image(
+                modifier = Modifier
+                    .padding(start = DropdownDefaults.CheckIconStartPadding)
+                    .size(DropdownDefaults.CheckIconSize),
+                imageVector = MiuixIcons.Basic.Check,
+                colorFilter = ColorFilter.tint(colors.selectedIndicatorColor),
+                contentDescription = null,
             )
         }
     }

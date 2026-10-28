@@ -1,18 +1,20 @@
 package com.artemchep.keyguard.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
-import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
+import top.yukonga.miuix.kmp.basic.ListPopupColumn
+import top.yukonga.miuix.kmp.basic.PopupPositionProvider
 import top.yukonga.miuix.kmp.overlay.OverlayListPopup
-import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 val DropdownMinWidth = 256.dp
 
+/**
+ * A standard Miuix dropdown: an overlay list popup anchored to the caller and
+ * rendered through the root scaffold host.
+ */
 @Composable
 fun KeyguardDropdownMenu(
     modifier: Modifier = Modifier,
@@ -24,20 +26,17 @@ fun KeyguardDropdownMenu(
 ) {
     OverlayListPopup(
         show = expanded,
-        popupModifier = modifier.widthIn(min = DropdownMinWidth),
-        minWidth = DropdownMinWidth,
-        enableWindowDim = false,
+        popupModifier = modifier,
+        alignment = PopupPositionProvider.Align.End,
         onDismissRequest = onDismissRequest,
     ) {
         AccessibilityDataProtectionEffect()
-        Column {
-            val scope = DropdownScopeImpl(
-                parent = this,
-                onDismissRequest = onDismissRequest,
-            )
-            CompositionLocalProvider(
-                LocalSurfaceColor provides MiuixTheme.colorScheme.surfaceContainer,
-            ) {
+        ListPopupColumn {
+            Column {
+                val scope = DropdownScopeImpl(
+                    parent = this,
+                    onDismissRequest = onDismissRequest,
+                )
                 content(scope)
             }
         }
