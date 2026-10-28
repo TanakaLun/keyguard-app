@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.jetbrains.compose.foundation)
     implementation(libs.jetbrains.compose.material3)
     implementation(libs.jetbrains.compose.components.resources)
+    implementation(libs.miuix.ui)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.camera.core)
