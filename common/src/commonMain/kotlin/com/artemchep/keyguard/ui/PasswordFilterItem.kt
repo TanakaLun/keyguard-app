@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.isSpecified
@@ -501,36 +502,14 @@ fun FlatItemLayout(
             .padding(paddingValues),
         color = contentColor,
     ) {
-        val shape = KgShapes.medium
-        val shapeBottomCornerDp by kotlin.run {
-            val target = if (actions.isEmpty()) {
-                16.dp
-            } else {
-                flatItemSmallCornerSizeDp
-            }
-            animateDpAsState(targetValue = target)
-        }
+        // Rows are plain inside their container: the Miuix page composes depth
+        // with cards, not with per-row shapes or tonal elevation.
+        val shape = RectangleShape
 
-        val shapeWithBottomCorners = shape.copy(
-            bottomStart = CornerSize(shapeBottomCornerDp),
-            bottomEnd = CornerSize(shapeBottomCornerDp),
-        )
-
-        val backgroundModifier = kotlin.run {
-            // Check if there's actually a background color
-            // to render.
-            if (
-                backgroundColor.isUnspecified &&
-                elevation == 0.dp
-            ) {
-                return@run Modifier
-            }
-
-            val bg = backgroundColor.takeIf { it.isSpecified }
-                ?: Color.Transparent
-            val fg = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
+        val backgroundModifier = if (backgroundColor.isSpecified) {
+            Modifier.background(backgroundColor)
+        } else {
             Modifier
-                .background(fg.compositeOver(bg))
         }
 
         val haptic by rememberUpdatedState(LocalHapticFeedback.current)
@@ -539,7 +518,7 @@ fun FlatItemLayout(
 
         Row(
             modifier = Modifier
-                .clip(shapeWithBottomCorners)
+                .clip(shape)
                 .then(backgroundModifier)
                 .then(
                     if ((onClick != null || onLongClick != null) && enabled) {
@@ -599,21 +578,12 @@ fun FlatItemLayout(
             }
         }
         actions.forEachIndexed { actionIndex, action ->
-            val actionShape = if (actions.size - 1 == actionIndex) {
-                shape.copy(
-                    topStart = flatItemSmallCornerSize,
-                    topEnd = flatItemSmallCornerSize,
-                )
-            } else {
-                flatItemSmallShape
-            }
-
             Spacer(modifier = Modifier.height(2.dp))
             val updatedOnClick by rememberUpdatedState(action.onClick)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(actionShape)
+                    .clip(shape)
                     .then(backgroundModifier)
                     .then(
                         if (action.onClick != null) {

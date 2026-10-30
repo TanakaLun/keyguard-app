@@ -1021,16 +1021,10 @@ fun FlatItemLayoutExpressive(
     rowModifier: Modifier = Modifier,
 ) {
     val haptic by rememberUpdatedState(LocalHapticFeedback.current)
-    val background = run {
-        val color = rememberFlatSurfaceExpressiveColor(
-            elevation = elevation,
-            backgroundColor = backgroundColor,
-            expressive = expressive,
-        )
+    val background = if (backgroundColor.isSpecified) {
+        Modifier.background(backgroundColor)
+    } else {
         Modifier
-            .drawBehind {
-                drawRect(color)
-            }
     }
     val clickable = run {
         val onClickState = rememberUpdatedState(onClick)
@@ -1044,19 +1038,6 @@ fun FlatItemLayoutExpressive(
             .rightClickable(onLongClick)
     }
 
-    val shape: Shape = surfaceShape(
-        shapeState = shapeState,
-        expressive = expressive,
-    )
-    val dimens = Dimens
-    val outerHorizontalPadding: Dp = dimens.contentPadding
-    val innerHorizontalPadding: Dp = dimens.contentPadding
-    val innerVerticalPadding: Dp
-    if (expressive) {
-        innerVerticalPadding = 10.dp
-    } else {
-        innerVerticalPadding = 8.dp
-    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -1065,28 +1046,18 @@ fun FlatItemLayoutExpressive(
                     Modifier
                         .padding(padding)
                 } else {
-                    // Should match the values defined at
-                    // defaultFlatItemPaddingValues()
                     Modifier
-                        .padding(
-                            start = outerHorizontalPadding,
-                            end = outerHorizontalPadding,
-                            top = 1.dp,
-                            bottom = 2.dp, // in Android notifications the margin is 3 dp
-                        )
                 },
             )
-            .clip(shape)
             .then(background),
     ) {
         Row(
             modifier = rowModifier
                 .fillMaxWidth()
                 .then(clickable)
-                .minimumInteractiveComponentSize()
                 .padding(
-                    horizontal = innerHorizontalPadding,
-                    vertical = innerVerticalPadding,
+                    horizontal = 16.dp,
+                    vertical = 12.dp,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
