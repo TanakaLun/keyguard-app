@@ -22,6 +22,11 @@ import androidx.compose.material.icons.outlined.VisibilityOff
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
+import top.yukonga.miuix.kmp.basic.DropdownArrowEndAction
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -29,6 +34,9 @@ import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,8 +64,10 @@ import com.artemchep.keyguard.ui.Avatar
 import com.artemchep.keyguard.ui.AvatarBadgeIcon
 import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.ChevronIcon
@@ -287,33 +297,52 @@ fun SettingListAccountsItem(
         }
 
         // Add new account
-        val shapeState = if (hasItems) {
-            ShapeState.END
-        } else {
-            ShapeState.ALL
+        var dropdownExpanded by remember {
+            mutableStateOf(false)
         }
-        FlatDropdownSimpleExpressive(
-            shapeState = shapeState,
-            leading = {
-                Avatar {
-                    Icon(
-                        modifier = Modifier
-                            .align(Alignment.Center),
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = null,
+        val hapticFeedback = LocalHapticFeedback.current
+        Box {
+            BasicComponent(
+                startAction = {
+                    Avatar {
+                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                endActions = {
+                    DropdownArrowEndAction(
+                        actionColor = MiuixTheme.colorScheme.onSurfaceVariantActions,
+                    )
+                },
+                insideMargin = BasicComponentDefaults.InsideMargin,
+                role = Role.DropdownList,
+                holdDownState = dropdownExpanded,
+                onClick = {
+                    dropdownExpanded = true
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
+                },
+            ) {
+                Text(
+                    text = stringResource(Res.string.account_main_add_account_title),
+                    style = MiuixTheme.textStyles.main,
+                )
+            }
+            KeyguardDropdownMenu(
+                expanded = dropdownExpanded,
+                onDismissRequest = {
+                    dropdownExpanded = false
+                },
+            ) {
+                data.addNewAccountOptions.forEach { action ->
+                    DropdownMenuItemFlat(
+                        action = action,
                     )
                 }
-            },
-            content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.account_main_add_account_title),
-                        )
-                    },
-                )
-            },
-            dropdown = data.addNewAccountOptions,
-        )
+            }
+        }
     }
 }

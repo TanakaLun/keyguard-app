@@ -231,6 +231,10 @@ fun HomeScreenContent(
         routes = routes,
     )
 
+    // The navigation bar belongs to the tab roots. A pushed screen is a full
+    // screen page and hides it, just like any other sub-screen.
+    val showNavigation = navBarVisible && backStack.size <= 1
+
     ResponsiveLayout {
         val maxWidth = maxWidth
         val maxHeight = maxHeight
@@ -266,7 +270,7 @@ fun HomeScreenContent(
             AnimatedVisibility(
                 modifier = Modifier
                     .zIndex(2f),
-                visible = LocalHomeLayout.current is HomeLayout.Horizontal && navBarVisible,
+                visible = LocalHomeLayout.current is HomeLayout.Horizontal && showNavigation,
             ) {
                 Row {
                     val scope = rememberCoroutineScope()
@@ -360,7 +364,7 @@ fun HomeScreenContent(
                 .union(WindowInsets.leDisplayCutout)
                 .only(WindowInsetsSides.Bottom)
             val bottomNavBarVisible =
-                LocalHomeLayout.current is HomeLayout.Vertical && navBarVisible
+                LocalHomeLayout.current is HomeLayout.Vertical && showNavigation
 
             val snackbarHostState = remember {
                 SnackbarHostState()

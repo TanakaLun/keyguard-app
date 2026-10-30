@@ -91,13 +91,13 @@ private val flatItemSmallCornerSize = CornerSize(flatItemSmallCornerSizeDp)
 private val flatItemSmallShape = RoundedCornerShape(flatItemSmallCornerSizeDp)
 
 private val defaultPaddingValues: PaddingValues = PaddingValues(
-    horizontal = 8.dp,
-    vertical = 2.dp,
+    horizontal = 16.dp,
+    vertical = 0.dp,
 )
 
 private val defaultContentPadding: PaddingValues = PaddingValues(
-    horizontal = 8.dp,
-    vertical = 8.dp,
+    horizontal = 16.dp,
+    vertical = 16.dp,
 )
 
 sealed interface ContextItem {
