@@ -48,6 +48,7 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -230,19 +231,9 @@ fun Section(
     expressive: Boolean = false,
 ) {
     if (text != null) {
-        Text(
-            modifier = modifier
-                .padding(
-                    vertical = Dimens.contentPadding
-                        .coerceAtLeast(16.dp),
-                    horizontal = Dimens.textHorizontalPadding,
-                ),
-            text = if (caps) text.uppercase() else text,
-            style = MiuixTheme.textStyles.labelLarge,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = LocalContentColor.current
-                .combineAlpha(MediumEmphasisAlpha),
+        SmallTitle(
+            modifier = modifier,
+            text = text,
         )
     } else if (expressive) {
         Spacer(
