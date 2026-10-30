@@ -38,6 +38,7 @@ import com.artemchep.keyguard.LocalAppMode
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.home.vault.component.VaultItemIcon2
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewItem
+import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem as VaultViewItemModel
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemIcon
@@ -230,9 +231,9 @@ fun VaultViewScreenContent(
                 // card per run of rows.
                 val groups = run {
                     val result = mutableListOf<VaultViewGroup>()
-                    var card: MutableList<VaultViewItem>? = null
+                    var card: MutableList<VaultViewItemModel>? = null
                     list.forEach { model ->
-                        if (model is VaultViewItem.Section) {
+                        if (model is VaultViewItemModel.Section) {
                             card = null
                             result.add(VaultViewGroup.SectionItem(model))
                         } else {
@@ -423,13 +424,13 @@ private sealed interface VaultViewGroup {
     val id: String
 
     data class SectionItem(
-        val item: VaultViewItem.Section,
+        val item: VaultViewItemModel.Section,
     ) : VaultViewGroup {
         override val id: String get() = "section:${item.id}"
     }
 
     data class CardGroup(
-        val items: List<VaultViewItem>,
+        val items: List<VaultViewItemModel>,
     ) : VaultViewGroup {
         override val id: String get() = "card:${items.first().id}"
     }
