@@ -236,9 +236,8 @@ fun HomeScreenContent(
     // one pushed by a nested router such as the settings one — is a full screen
     // page and hides it.
     val backHandler = LocalNavigationBackHandler.current
-    val backStackSizes by backHandler.eek.collectAsState()
-    val deepestStackSize = backStackSizes
-        .value
+    val backStacks by backHandler.eek.collectAsState()
+    val deepestStackSize = backStacks
         .values
         .maxOfOrNull { it.backStack.size }
         ?: 0
