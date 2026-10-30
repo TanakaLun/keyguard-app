@@ -103,6 +103,7 @@ import com.artemchep.keyguard.feature.home.navigation.resolveHomeNavigationItems
 import com.artemchep.keyguard.feature.home.navigation.splitHomeNavigationItemsByMinSize
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.textResource
+import com.artemchep.keyguard.feature.navigation.LocalNavigationBackHandler
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.LocalNavigationNodeVisualStack
 import com.artemchep.keyguard.feature.navigation.NavigationController
@@ -231,9 +232,19 @@ fun HomeScreenContent(
         routes = routes,
     )
 
-    // The navigation bar belongs to the tab roots. A pushed screen is a full
-    // screen page and hides it, just like any other sub-screen.
-    val showNavigation = navBarVisible && backStack.size <= 1
+    // The navigation bar belongs to the tab roots. Any pushed screen — including
+    // one pushed by a nested router such as the settings one — is a full screen
+    // page and hides it.
+    val backHandler = LocalNavigationBackHandler.current
+    val backStackSizes by backHandler.eek.collectAsState()
+    val deepestStackSize = backStackSizes
+        .value
+        .values
+        .maxOfOrNull { it.backStack.size }
+        ?: 0
+    val showNavigation = navBarVisible &&
+            backStack.size <= 1 &&
+            deepestStackSize <= 2
 
     ResponsiveLayout {
         val maxWidth = maxWidth
