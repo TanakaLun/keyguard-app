@@ -22,6 +22,8 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -535,54 +537,134 @@ fun VaultHomeScreenListPane(
                 }
 
                 val list = (state.content as? VaultListState.Content.Items)?.list.orEmpty()
-                items(
-                    items = list,
-                    key = { model -> model.id },
-                    contentType = { model -> model.contentType },
-                ) { model ->
-                    if (model is VaultItem2.QuickFilters && !tabletUi) {
-                        Box(
-                            modifier = Modifier
-                                .animateItem(),
+                // Group rows into Miuix cards: a SmallTitle per section and one
+                // card per run of rows, exactly like the settings page.
+                val groups = remember(list) {
+                    val result = mutableListOf<VaultListGroup>()
+                    var card: MutableList<VaultItem2>? = null
+                    list.forEach { model ->
+                        if (model is VaultItem2.Section) {
+                            card = null
+                            result.add(VaultListGroup.SectionItem(model))
+                        } else if (
+                            model is VaultItem2.QuickFilters ||
+                            model is VaultItem2.NoItems ||
+                            model is VaultItem2.NoSuggestions
                         ) {
-                            val arg2 = LocalAppMode.current
-                            val llll = remember(state.filters) {
-                                state.filters
-                                    .filter { it.sectionId == "custom" && it is FilterItem.ChipItem }
-                                    .map { it as FilterItem.ChipItem }
-                            }
-                            if (llll.isNotEmpty() && fab && arg2 is AppMode.Main && state.query.text == "") Column(
-                                modifier = Modifier,
-                            ) {
-                                FlowRow(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = Dimens.contentPadding),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    llll.forEach { item ->
-                                        FilterChipItemComposable(
-                                            leading = item.leading,
-                                            title = item.title,
-                                            text = null,
-                                            checked = item.checked,
-                                            onClick = item.onClick,
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(16.dp))
+                            card = null
+                            result.add(VaultListGroup.Single(model))
+                        } else {
+                            val current = card
+                            if (current == null) {
+                                val next = mutableListOf(model)
+                                card = next
+                                result.add(VaultListGroup.CardGroup(next))
+                            } else {
+                                current.add(model)
                             }
                         }
-                    } else {
-                        VaultListItem(
-                            modifier = Modifier
-                                .animateItem(),
-                            item = model,
-                        )
+                    }
+                    result
+                }
+                items(
+                    items = groups,
+                    key = { group -> group.id },
+                ) { group ->
+                    when (group) {
+                        is VaultListGroup.SectionItem -> {
+                            val text = group.item.text
+                                ?.let { textResource(it) }
+                            if (text != null) {
+                                SmallTitle(
+                                    text = text,
+                                )
+                            }
+                        }
+
+                        is VaultListGroup.CardGroup -> {
+                            Card(
+                                modifier = Modifier
+                                    .animateItem()
+                                    .padding(horizontal = 12.dp)
+                                    .padding(bottom = 12.dp),
+                            ) {
+                                group.items.forEach { model ->
+                                    VaultListItem(
+                                        item = model,
+                                    )
+                                }
+                            }
+                        }
+
+                        is VaultListGroup.Single -> {
+                            val model = group.item
+                            if (model is VaultItem2.QuickFilters && !tabletUi) {
+                                Box(
+                                    modifier = Modifier
+                                        .animateItem(),
+                                ) {
+                                    val arg2 = LocalAppMode.current
+                                    val llll = remember(state.filters) {
+                                        state.filters
+                                            .filter { it.sectionId == "custom" && it is FilterItem.ChipItem }
+                                            .map { it as FilterItem.ChipItem }
+                                    }
+                                    if (llll.isNotEmpty() && fab && arg2 is AppMode.Main && state.query.text == "") Column(
+                                        modifier = Modifier,
+                                    ) {
+                                        FlowRow(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = Dimens.contentPadding),
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                                        ) {
+                                            llll.forEach { item ->
+                                                FilterChipItemComposable(
+                                                    leading = item.leading,
+                                                    title = item.title,
+                                                    text = null,
+                                                    checked = item.checked,
+                                                    onClick = item.onClick,
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                    }
+                                }
+                            } else {
+                                VaultListItem(
+                                    modifier = Modifier
+                                        .animateItem(),
+                                    item = model,
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+private sealed interface VaultListGroup {
+    val id: String
+
+    data class SectionItem(
+        val item: VaultItem2.Section,
+    ) : VaultListGroup {
+        override val id: String get() = "section:${item.id}"
+    }
+
+    data class CardGroup(
+        val items: List<VaultItem2>,
+    ) : VaultListGroup {
+        override val id: String get() = "card:${items.first().id}"
+    }
+
+    data class Single(
+        val item: VaultItem2,
+    ) : VaultListGroup {
+        override val id: String get() = "single:${item.id}"
     }
 }
