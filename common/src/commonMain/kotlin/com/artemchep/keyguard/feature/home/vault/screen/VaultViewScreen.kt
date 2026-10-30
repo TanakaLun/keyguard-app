@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -224,15 +226,57 @@ fun VaultViewScreenContent(
                         NoItemsPlaceholder()
                     }
                 }
+                // Group rows into Miuix cards: a SmallTitle per section and one
+                // card per run of rows.
+                val groups = run {
+                    val result = mutableListOf<VaultViewGroup>()
+                    var card: MutableList<VaultViewItem>? = null
+                    list.forEach { model ->
+                        if (model is VaultViewItem.Section) {
+                            card = null
+                            result.add(VaultViewGroup.SectionItem(model))
+                        } else {
+                            val current = card
+                            if (current == null) {
+                                val next = mutableListOf(model)
+                                card = next
+                                result.add(VaultViewGroup.CardGroup(next))
+                            } else {
+                                current.add(model)
+                            }
+                        }
+                    }
+                    result
+                }
                 items(
-                    items = list,
-                    key = { model -> model.id },
-                ) { model ->
-                    VaultViewItem(
-                        modifier = Modifier,
-                        // .animateItemPlacement(),
-                        item = model,
-                    )
+                    items = groups,
+                    key = { group -> group.id },
+                ) { group ->
+                    when (group) {
+                        is VaultViewGroup.SectionItem -> {
+                            val text = group.item.text
+                            if (text != null) {
+                                SmallTitle(
+                                    text = text,
+                                )
+                            }
+                        }
+
+                        is VaultViewGroup.CardGroup -> {
+                            Card(
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .padding(bottom = 12.dp),
+                            ) {
+                                group.items.forEach { model ->
+                                    VaultViewItem(
+                                        modifier = Modifier,
+                                        item = model,
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -373,4 +417,20 @@ fun NoItemsPlaceholder() {
             Text(text = "No items")
         },
     )
+}
+
+private sealed interface VaultViewGroup {
+    val id: String
+
+    data class SectionItem(
+        val item: VaultViewItem.Section,
+    ) : VaultViewGroup {
+        override val id: String get() = "section:${item.id}"
+    }
+
+    data class CardGroup(
+        val items: List<VaultViewItem>,
+    ) : VaultViewGroup {
+        override val id: String get() = "card:${items.first().id}"
+    }
 }
