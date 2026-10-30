@@ -539,7 +539,7 @@ fun VaultHomeScreenListPane(
                 val list = (state.content as? VaultListState.Content.Items)?.list.orEmpty()
                 // Group rows into Miuix cards: a SmallTitle per section and one
                 // card per run of rows, exactly like the settings page.
-                val groups = remember(list) {
+                val groups = run {
                     val result = mutableListOf<VaultListGroup>()
                     var card: MutableList<VaultItem2>? = null
                     list.forEach { model ->
