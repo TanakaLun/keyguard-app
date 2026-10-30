@@ -502,15 +502,15 @@ fun FlatItemLayout(
             .padding(paddingValues),
         color = contentColor,
     ) {
-        // Rows are plain inside their container: the Miuix page composes depth
-        // with cards, not with per-row shapes or tonal elevation.
-        val shape = RectangleShape
+        // Every row is a Miuix card: a rounded surfaceContainer on the page
+        // surface, inset from the screen edges.
+        val shape = KgShapes.large
 
-        val backgroundModifier = if (backgroundColor.isSpecified) {
-            Modifier.background(backgroundColor)
-        } else {
-            Modifier
-        }
+        val backgroundModifier = Modifier
+            .background(
+                backgroundColor.takeIf { it.isSpecified }
+                    ?: MiuixTheme.colorScheme.surfaceContainer,
+            )
 
         val haptic by rememberUpdatedState(LocalHapticFeedback.current)
         val updatedOnClick by rememberUpdatedState(onClick)
@@ -518,6 +518,7 @@ fun FlatItemLayout(
 
         Row(
             modifier = Modifier
+                .padding(horizontal = 12.dp)
                 .clip(shape)
                 .then(backgroundModifier)
                 .then(
