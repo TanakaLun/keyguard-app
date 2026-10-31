@@ -119,7 +119,7 @@ fun LocalizationContributorsListScreen(
     )
     ScaffoldLazyColumn(
         modifier = Modifier
-            .pullRefresh(pullRefreshState)
+            .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         expressive = true,
         topAppBarScrollBehavior = scrollBehavior,

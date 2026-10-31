@@ -1012,15 +1012,12 @@ fun FlatItemLayoutExpressive(
     rowModifier: Modifier = Modifier,
 ) {
     val haptic by rememberUpdatedState(LocalHapticFeedback.current)
-    // Every row is a Miuix card: a rounded surfaceContainer on the page
-    // surface, inset from the screen edges.
-    val background = Modifier
-        .padding(horizontal = 12.dp)
-        .clip(KgShapes.large)
-        .background(
-            backgroundColor.takeIf { it.isSpecified }
-                ?: MiuixTheme.colorScheme.surfaceContainer,
-        )
+    // Rows are plain: the surrounding card owns the shape and the spacing.
+    val background = if (backgroundColor.isSpecified) {
+        Modifier.background(backgroundColor)
+    } else {
+        Modifier
+    }
     val clickable = run {
         val onClickState = rememberUpdatedState(onClick)
         Modifier

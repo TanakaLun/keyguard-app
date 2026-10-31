@@ -30,63 +30,13 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.bodySmall
 import androidx.compose.material3.MaterialTheme
 
+/**
+ * Pull-to-search is disabled: screens open the search from their toolbars.
+ */
 @Composable
+@Suppress("UNUSED_PARAMETER")
 fun PullToSearch(
     modifier: Modifier = Modifier,
     pullRefreshState: PullRefreshState,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center,
-    ) {
-        val willSearch by remember(pullRefreshState) {
-            derivedStateOf {
-                pullRefreshState.progress >= 1f
-            }
-        }
-        Row(
-            modifier = Modifier
-                .graphicsLayer {
-                    val progress =
-                        log10(pullRefreshState.progress.coerceAtLeast(0f) * 10 + 1)
-                    alpha = progress.coerceIn(0f..1f)
-                    val scale = progress
-                        .coerceAtLeast(0.1f)
-                        .coerceAtMost(1f)
-                    scaleX = scale
-                    scaleY = scale
-                    // move down a bit
-                    translationY = (progress - 1f) * 32f * density
-                }
-                .padding(
-                    vertical = 16.dp,
-                    horizontal = 16.dp,
-                ),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            val tintTarget =
-                if (willSearch) {
-                    MiuixTheme.colorScheme.primary
-                } else {
-                    LocalContentColor.current.combineAlpha(DisabledEmphasisAlpha)
-                }
-            val tint by animateColorAsState(
-                targetValue = tintTarget,
-                animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
-                label = "PullToSearchTint",
-            )
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = null,
-                tint = tint,
-            )
-            Text(
-                text = stringResource(Res.string.pull_to_search),
-                color = tint,
-                style = MiuixTheme.textStyles.bodySmall,
-            )
-        }
-    }
 }

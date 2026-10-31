@@ -271,7 +271,7 @@ private fun SendScreenContent(
     }
     ScaffoldLazyColumn(
         modifier = modifier
-            .pullRefresh(pullRefreshState)
+            .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
