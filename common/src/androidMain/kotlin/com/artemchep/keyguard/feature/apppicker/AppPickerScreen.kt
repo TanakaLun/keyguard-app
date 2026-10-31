@@ -30,7 +30,7 @@ import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.ui.icons.FaviconIcon
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -259,10 +259,11 @@ private fun AppItem(
     modifier: Modifier,
     item: AppPickerState.Item,
 ) {
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
+        title = item.name,
+        summary = item.text,
+        startAction = {
             FaviconIcon(
                 modifier = Modifier
                     .size(24.dp)
@@ -272,13 +273,7 @@ private fun AppItem(
                 },
             )
         },
-        title = {
-            Text(item.name)
-        },
-        text = {
-            Text(item.text)
-        },
-        trailing = {
+        endActions = {
             if (item.system) {
                 val elevation = LocalAbsoluteTonalElevation.current
                 Text(

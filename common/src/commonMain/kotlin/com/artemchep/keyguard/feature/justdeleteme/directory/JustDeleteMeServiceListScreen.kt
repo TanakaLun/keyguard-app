@@ -1,14 +1,17 @@
 package com.artemchep.keyguard.feature.justdeleteme.directory
 
+import androidx.compose.foundation.background
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import com.artemchep.keyguard.URL_JUST_DELETE_ME
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.feature.EmptySearchView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.justdeleteme.AhDifficulty
+import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.navigationNextEntryOrNull
 import com.artemchep.keyguard.feature.servicedirectory.ServiceDirectoryListScaffold
 import com.artemchep.keyguard.feature.twopane.LocalHasDetailPane
@@ -98,17 +101,20 @@ private fun AppItem(
 
         Color.Unspecified
     }
-    FlatItemSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
-        leading = {
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            ),
+        title = textResource(item.name),
+        startAction = {
             item.icon()
         },
-        title = {
-            Text(item.name)
-        },
-        trailing = {
+        endActions = {
             AhDifficulty(
                 modifier = Modifier,
                 model = item.data,

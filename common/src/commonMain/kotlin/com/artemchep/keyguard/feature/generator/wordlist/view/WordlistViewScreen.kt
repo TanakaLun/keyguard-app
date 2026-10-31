@@ -41,7 +41,7 @@ import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
@@ -270,12 +270,9 @@ private fun AppItem(
     modifier: Modifier,
     item: WordlistViewState.Item,
 ) {
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        title = {
-            Text(item.name)
-        },
+        title = item.name,
         onClick = item.onClick,
     )
 }

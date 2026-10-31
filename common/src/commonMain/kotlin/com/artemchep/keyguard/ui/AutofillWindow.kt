@@ -68,7 +68,6 @@ import com.artemchep.keyguard.feature.generator.colorizePasswordOrEmpty
 import com.artemchep.keyguard.feature.generator.produceGeneratorState
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.HorizontalContextItems
 import com.artemchep.keyguard.feature.home.vault.component.Section

@@ -92,7 +92,7 @@ import com.artemchep.keyguard.feature.gpgkey.userids.GpgUserIdsDialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewTotpBadge2
@@ -1004,48 +1004,12 @@ private fun GpgKeyField(
                 },
                 enabled = state.enabled,
             )
-            supportingRows.forEachIndexed { index, (titleRes, row) ->
-                val rowShapeState = if (index == supportingRows.lastIndex) {
-                    shapeState and ShapeState.START.inv()
-                } else {
-                    shapeState and ShapeState.START.inv() and ShapeState.END.inv()
-                }
-                FlatItemSimpleExpressive(
+            supportingRows.forEach { (titleRes, row) ->
+                BasicComponent(
                     modifier = Modifier
                         .padding(top = 3.dp),
-                    backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
-                    shapeState = rowShapeState,
-                    padding = PaddingValues(0.dp),
-                    title = {
-                        Text(text = stringResource(titleRes))
-                    },
-                    text = when {
-                        row.value != null -> {
-                            {
-                                Column {
-                                    Text(text = row.value)
-                                    row.text?.let { text ->
-                                        Text(
-                                            modifier = Modifier.alpha(MediumEmphasisAlpha),
-                                            text = text,
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        row.text != null -> {
-                            {
-                                Text(
-                                    modifier = Modifier.alpha(MediumEmphasisAlpha),
-                                    text = row.text,
-                                )
-                            }
-                        }
-
-                        else -> null
-                    },
-                    trailing = if (row.onClick != null) {
+                    endActions = if (row.onClick != null) {
+                        // composable
                         {
                             Icon(
                                 imageVector = Icons.Outlined.ArrowDropDown,
@@ -1057,7 +1021,34 @@ private fun GpgKeyField(
                     },
                     onClick = row.onClick,
                     enabled = row.onClick != null,
-                )
+                ) {
+                    val enabled = row.onClick != null
+                    Text(
+                        text = stringResource(titleRes),
+                        fontSize = MiuixTheme.textStyles.headline1.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        color = if (enabled) {
+                            MiuixTheme.colorScheme.onBackground
+                        } else {
+                            MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                        },
+                    )
+                    row.value?.let { value ->
+                        Text(
+                            text = value,
+                            fontSize = MiuixTheme.textStyles.body2.fontSize,
+                            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                        )
+                    }
+                    row.text?.let { text ->
+                        Text(
+                            modifier = Modifier.alpha(MediumEmphasisAlpha),
+                            text = text,
+                            fontSize = MiuixTheme.textStyles.body2.fontSize,
+                            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                        )
+                    }
+                }
             }
         }
     }
@@ -1659,30 +1650,16 @@ private fun SwitchField(
             field.onChange?.invoke(!field.checked)
         }
     }
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = shapeState,
-        leading = {
+        title = item.title,
+        summary = item.text,
+        startAction = {
             Checkbox(
                 state = ToggleableState(state.checked),
                 enabled = state.onChange != null,
                 onClick = null,
             )
-        },
-        title = {
-            Text(
-                text = item.title,
-            )
-        },
-        text = if (item.text != null) {
-            // composable
-            {
-                Text(
-                    text = item.text,
-                )
-            }
-        } else {
-            null
         },
         onClick = onClick,
     )

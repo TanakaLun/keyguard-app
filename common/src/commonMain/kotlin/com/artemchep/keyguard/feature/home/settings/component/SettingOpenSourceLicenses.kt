@@ -11,7 +11,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import com.artemchep.keyguard.feature.home.settings.KgAction
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.license.LicenseRouteFactory
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIntent

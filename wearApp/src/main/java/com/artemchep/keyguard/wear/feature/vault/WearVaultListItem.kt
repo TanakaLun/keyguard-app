@@ -1,19 +1,24 @@
 package com.artemchep.keyguard.wear.feature.vault
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +31,6 @@ import androidx.wear.compose.material3.Text
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.attachments.SelectableItemState
 import com.artemchep.keyguard.feature.home.vault.component.AccountListItemTextIcon
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.model.VaultItem2
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.res.Res
@@ -100,24 +104,41 @@ fun VaultListItemButton(
     modifier: Modifier = Modifier,
     item: VaultItem2.Button,
 ) {
-    FlatItemSimpleExpressive(
-        modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
-            val leading = item.leading
-            if (leading != null) {
-                Avatar {
-                    leading.invoke()
-                }
-            }
-        },
-        title = {
-            Text(
-                text = item.title,
+    val onClick = item.onClick
+    val leading = item.leading
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(
+                if (onClick != null) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier
+                },
             )
-        },
-        onClick = item.onClick,
-    )
+            .padding(
+                horizontal = Dimens.textHorizontalPadding,
+                vertical = Dimens.contentPadding,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (leading != null) {
+            Avatar {
+                leading.invoke()
+            }
+            Spacer(
+                modifier = Modifier
+                    .width(12.dp),
+            )
+        }
+        Text(
+            modifier = Modifier
+                .weight(1f),
+            text = item.title,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
 }
 
 @Composable

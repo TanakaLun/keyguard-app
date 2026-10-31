@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,7 +16,6 @@ import com.artemchep.keyguard.feature.home.vault.model.Visibility
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.icons.VisibilityIcon
 import com.artemchep.keyguard.ui.markdown.MarkdownText
 import com.artemchep.keyguard.ui.theme.Dimens
@@ -36,24 +36,15 @@ fun VaultViewNoteItem(
     ) {
         if (!visibilityState.value.value) {
             val updatedVisibilityConfig by rememberUpdatedState(visibilityConfig)
-            FlatItemSimpleExpressive(
-                leading = {
+            BasicComponent(
+                title = stringResource(Res.string.reveal_secure_note),
+                startAction = {
                     VisibilityIcon(
                         visible = visibilityState.value.value,
                     )
                 },
-                title = {
-                    val text = if (visibilityState.value.value) {
-                        stringResource(Res.string.hide_secure_note)
-                    } else {
-                        stringResource(Res.string.reveal_secure_note)
-                    }
-                    Text(
-                        text = text,
-                    )
-                },
                 onClick = {
-                    updatedVisibilityConfig.transformUserEvent(!visibilityState.value.value) { newValue ->
+                    updatedVisibilityConfig.transformUserEvent(true) { newValue ->
                         visibilityState.value = Visibility.Event(
                             value = newValue,
                             timestamp = Clock.System.now(),

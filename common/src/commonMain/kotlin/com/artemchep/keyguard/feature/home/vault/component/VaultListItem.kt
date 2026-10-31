@@ -42,6 +42,7 @@ import androidx.compose.material.icons.outlined.PhoneIphone
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.icons.outlined.Title
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -203,21 +204,19 @@ fun VaultListItemButton(
     modifier: Modifier = Modifier,
     item: VaultItem2.Button,
 ) {
-    FlatItemSimpleExpressive(
+    val leading = item.leading
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
-            val leading = item.leading
-            if (leading != null) {
+        title = item.title,
+        startAction = if (leading != null) {
+            // composable
+            {
                 Avatar {
                     leading.invoke()
                 }
             }
-        },
-        title = {
-            Text(
-                text = item.title,
-            )
+        } else {
+            null
         },
         onClick = item.onClick,
     )
@@ -947,48 +946,6 @@ fun FlatDropdownLayoutExpressive(
         enabled = enabled,
     )
 }
-
-@Composable
-fun FlatItemSimpleExpressive(
-    modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = backgroundColor
-        .takeIf { it.isSpecified }
-        ?.let { contentColorFor(it) }
-        ?: LocalContentColor.current,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
-    padding: PaddingValues? = null,
-    title: @Composable () -> Unit,
-    text: (@Composable () -> Unit)? = null,
-    footer: (@Composable ColumnScope.() -> Unit)? = null,
-    leading: (@Composable RowScope.() -> Unit)? = null,
-    trailing: (@Composable RowScope.() -> Unit)? = null,
-    onClick: (() -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null,
-    enabled: Boolean = onClick != null,
-) = FlatItemLayoutExpressive(
-    modifier = modifier,
-    elevation = elevation,
-    backgroundColor = backgroundColor,
-    contentColor = contentColor,
-    shapeState = shapeState,
-    expressive = expressive,
-    padding = padding,
-    content = {
-        FlatItemTextContent(
-            title = title,
-            text = text,
-        )
-    },
-    footer = footer,
-    leading = leading,
-    trailing = trailing,
-    onClick = onClick,
-    onLongClick = onLongClick,
-    enabled = enabled,
-)
 
 @Composable
 fun FlatItemLayoutExpressive(

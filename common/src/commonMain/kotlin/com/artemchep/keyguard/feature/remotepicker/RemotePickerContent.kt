@@ -32,7 +32,7 @@ import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.create_database
@@ -265,25 +265,12 @@ private fun RemotePickerItem(
     shapeState: Int,
 ) {
     val enabled = item.onClick != null
-    FlatItemSimpleExpressive(
-        shapeState = shapeState,
-        title = {
-            Text(
-                text = item.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        text = item.size
+    BasicComponent(
+        title = item.name,
+        summary = item.size
             ?.takeUnless { item.isFolder }
-            ?.let { size ->
-                {
-                    Text(
-                        text = humanReadableByteCountSI(size),
-                    )
-                }
-            },
-        leading = {
+            ?.let { size -> humanReadableByteCountSI(size) },
+        startAction = {
             Icon(
                 imageVector = if (item.isFolder) {
                     Icons.Outlined.Folder

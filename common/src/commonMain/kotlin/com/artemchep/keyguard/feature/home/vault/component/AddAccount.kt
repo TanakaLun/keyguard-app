@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -57,27 +58,17 @@ fun AddAccountView(
         val entries = remember {
             AccountType.entries
         }
-        entries.forEachIndexed { index, type ->
-            val shapeState = getShapeState(
-                list = entries,
-                index = index,
-                predicate = { _, _ -> true },
-            )
-            FlatItemSimpleExpressive(
-                elevation = 1.dp,
-                shapeState = shapeState,
-                title = {
-                    Text(
-                        text = type.fullName,
-                        style = MiuixTheme.textStyles.titleMedium,
+        entries.forEach { type ->
+            BasicComponent(
+                title = type.fullName,
+                summary = stringResource(type.descriptionRes),
+                startAction = {
+                    Icon(
+                        imageVector = type.iconImageVector,
+                        contentDescription = null,
                     )
                 },
-                text = {
-                    Text(
-                        text = stringResource(type.descriptionRes),
-                    )
-                },
-                trailing = {
+                endActions = {
                     if (type.beta) {
                         BetaBadge()
                         Spacer(
@@ -86,12 +77,6 @@ fun AddAccountView(
                         )
                     }
                     ChevronIcon()
-                },
-                leading = {
-                    Icon(
-                        imageVector = type.iconImageVector,
-                        contentDescription = null,
-                    )
                 },
                 onClick = {
                     updatedOnClick?.invoke(type)

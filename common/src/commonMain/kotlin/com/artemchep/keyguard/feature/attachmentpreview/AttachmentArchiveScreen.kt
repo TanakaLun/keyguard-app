@@ -37,7 +37,7 @@ import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.FilePickerIntent
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.PasswordFlatTextField
 import com.artemchep.keyguard.ui.ProvideScaffoldLocalValues
@@ -106,24 +106,10 @@ private fun AttachmentArchiveItem(
     val onOpen = item.onOpen.takeUnless { busy }
     val onSave = item.onSave.takeUnless { busy }
     val summary = item.summary(canSave = true)
-    FlatItemSimpleExpressive(
-        shapeState = shapeState,
-        title = {
-            Text(
-                text = item.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        text = summary?.let {
-            // composable
-            {
-                Text(
-                    text = summary,
-                )
-            }
-        },
-        leading = {
+    BasicComponent(
+        title = item.name,
+        summary = summary,
+        startAction = {
             Icon(
                 imageVector = if (item.isDirectory) {
                     Icons.Outlined.Folder
@@ -133,7 +119,7 @@ private fun AttachmentArchiveItem(
                 contentDescription = null,
             )
         },
-        trailing = item.onSave?.let {
+        endActions = item.onSave?.let {
             // composable
             {
                 IconButton(

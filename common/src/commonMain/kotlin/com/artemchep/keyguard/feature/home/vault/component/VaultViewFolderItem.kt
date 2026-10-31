@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.home.vault.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,25 +17,23 @@ fun VaultViewFolderItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.Folder,
 ) {
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
+        startAction = {
             Icon(
                 Icons.Outlined.Folder,
                 null,
             )
         },
-        trailing = {
+        endActions = {
             ChevronIcon()
         },
-        title = {
-            VaultViewFolderTree(
-                item = item,
-            )
-        },
         onClick = item.onClick,
-    )
+    ) {
+        VaultViewFolderTree(
+            item = item,
+        )
+    }
 }
 
 @Composable

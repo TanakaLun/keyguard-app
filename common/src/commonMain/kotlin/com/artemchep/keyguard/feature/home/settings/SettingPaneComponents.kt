@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import arrow.core.partially1
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.rememberFlatSurfaceExpressiveColor
 import com.artemchep.keyguard.feature.home.vault.component.surfaceShape
 import com.artemchep.keyguard.ui.AnimatedNewCounterBadge

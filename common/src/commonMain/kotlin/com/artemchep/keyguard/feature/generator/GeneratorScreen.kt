@@ -102,7 +102,6 @@ import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryItem
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryState
 import com.artemchep.keyguard.feature.generator.history.produceGeneratorHistoryState
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -968,34 +967,27 @@ private fun FilterSwitchItemMainContent(
     trailing: (@Composable RowScope.() -> Unit)? = null,
     footer: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-    FlatItemSimpleExpressive(
-        shapeState = shapeState,
-        leading = {
+    BasicComponent(
+        title = item.title,
+        summary = item.text,
+        startAction = {
             Checkbox(
                 state = ToggleableState(item.model.checked),
                 enabled = item.model.onChange != null,
                 onClick = null,
             )
         },
-        title = {
-            Text(
-                text = item.title,
-                maxLines = 2,
-            )
-        },
-        text = if (item.text != null) {
+        endActions = trailing,
+        bottomAction = if (footer != null) {
             // composable
             {
-                Text(
-                    text = item.text,
-                    maxLines = 1,
-                )
+                Column {
+                    footer()
+                }
             }
         } else {
             null
         },
-        trailing = trailing,
-        footer = footer,
         onClick = item.model.onChange?.partially1(!item.model.checked),
     )
 }

@@ -24,7 +24,7 @@ import com.artemchep.keyguard.PLACEHOLDER_S3_REGION
 import com.artemchep.keyguard.PLACEHOLDER_URL_S3_ENDPOINT
 import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.permission.PermissionState
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.permissions.LocalNetworkPermissionNote
@@ -283,18 +283,10 @@ private fun LazyListScope.s3OptionItems(
         )
     }
     item("path_style") {
-        FlatItemSimpleExpressive(
-            title = {
-                Text(
-                    text = stringResource(Res.string.s3_settings_path_style_title),
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(Res.string.s3_settings_path_style_text),
-                )
-            },
-            trailing = {
+        BasicComponent(
+            title = stringResource(Res.string.s3_settings_path_style_title),
+            summary = stringResource(Res.string.s3_settings_path_style_text),
+            endActions = {
                 SwitchExpressive(
                     checked = state.pathStyle.value,
                     onCheckedChange = null,

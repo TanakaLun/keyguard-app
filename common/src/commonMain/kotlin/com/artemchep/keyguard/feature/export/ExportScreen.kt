@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.export
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
@@ -40,7 +41,7 @@ import androidx.compose.ui.zIndex
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.service.permission.PermissionState
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.search.filter.FilterButton
@@ -62,7 +63,7 @@ import com.artemchep.keyguard.ui.SwitchExpressive
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.KeyguardAttachment
 import com.artemchep.keyguard.ui.icons.KeyguardCipher
-import com.artemchep.keyguard.ui.icons.icon
+import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.skeleton.SkeletonTextField
 import com.artemchep.keyguard.ui.theme.badgeContainer
 import com.artemchep.keyguard.ui.theme.combineAlpha
@@ -412,15 +413,16 @@ private fun ColumnScope.ExportContentOk(
         CompositionLocalProvider(
             LocalContentColor provides MiuixTheme.colorScheme.onWarningContainer,
         ) {
-            FlatItemSimpleExpressive(
+            BasicComponent(
                 modifier = Modifier
                     .padding(horizontal = 12.dp)
-                    .padding(bottom = 12.dp),
-                backgroundColor = MiuixTheme.colorScheme.warningContainer,
-                leading = icon<RowScope>(Icons.Outlined.Storage, Icons.Outlined.Warning),
-                title = {
-                    Text(
-                        text = stringResource(Res.string.pref_item_permission_write_external_storage_grant),
+                    .padding(bottom = 12.dp)
+                    .background(MiuixTheme.colorScheme.warningContainer),
+                title = stringResource(Res.string.pref_item_permission_write_external_storage_grant),
+                startAction = {
+                    IconBox(
+                        main = Icons.Outlined.Storage,
+                        secondary = Icons.Outlined.Warning,
                     )
                 },
                 onClick = {

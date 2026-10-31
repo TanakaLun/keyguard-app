@@ -30,13 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.flatMap
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.ErrorView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -243,10 +244,9 @@ private fun LocalizationContributorItem(
     modifier: Modifier,
     item: LocalizationContributorsListState.Item,
 ) {
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
+        startAction = {
             BadgedBox(
                 badge = {
                     if (item.index <= 2) {
@@ -262,21 +262,7 @@ private fun LocalizationContributorItem(
                 item.icon()
             }
         },
-        title = {
-            Text(item.name)
-        },
-        text = {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item.data.languages.forEach { language ->
-                    Text(
-                        text = language.name,
-                    )
-                }
-            }
-        },
-        trailing = {
+        endActions = {
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
@@ -293,7 +279,22 @@ private fun LocalizationContributorItem(
             )
         },
         onClick = item.onClick,
-    )
+    ) {
+        Text(
+            text = item.name,
+            fontSize = MiuixTheme.textStyles.headline1.fontSize,
+            fontWeight = FontWeight.Medium,
+        )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            item.data.languages.forEach { language ->
+                Text(
+                    text = language.name,
+                )
+            }
+        }
+    }
 }
 
 @Composable

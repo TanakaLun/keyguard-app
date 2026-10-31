@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.usecase.GetNavAnimation
 import com.artemchep.keyguard.feature.dialog.Dialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.link.CipherLinkPickerItems
 import com.artemchep.keyguard.feature.home.vault.link.CipherLinkPickerListMaxHeight
 import com.artemchep.keyguard.feature.navigation.NavigationAnimation
@@ -40,7 +40,7 @@ import com.artemchep.keyguard.res.cipher_field_picker_fields_title
 import com.artemchep.keyguard.res.cipher_field_picker_items_empty
 import com.artemchep.keyguard.res.cipher_field_picker_items_title
 import com.artemchep.keyguard.res.close
-import com.artemchep.keyguard.ui.icons.icon
+import com.artemchep.keyguard.ui.icons.IconBox
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -171,19 +171,16 @@ private fun CipherFieldPickerFields(
             items = step.fields,
             key = { field -> field.id },
         ) { field ->
-            FlatItemSimpleExpressive(
-                shapeState = field.shapeState,
-                leading = icon<RowScope>(
-                    when (field.kind) {
-                        CipherFieldPickerState.Field.Kind.Password -> Icons.Outlined.Key
-                        CipherFieldPickerState.Field.Kind.Custom -> Icons.Outlined.TextFields
-                    },
-                ),
-                title = {
-                    Text(field.title)
-                },
-                text = {
-                    Text(field.text)
+            BasicComponent(
+                title = field.title,
+                summary = field.text,
+                startAction = {
+                    IconBox(
+                        main = when (field.kind) {
+                            CipherFieldPickerState.Field.Kind.Password -> Icons.Outlined.Key
+                            CipherFieldPickerState.Field.Kind.Custom -> Icons.Outlined.TextFields
+                        },
+                    )
                 },
                 onClick = field.onClick,
             )

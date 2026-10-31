@@ -2,6 +2,8 @@ package com.artemchep.keyguard.feature.filter.list
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +32,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
@@ -39,7 +42,7 @@ import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.feature.filter.view.CipherFilterViewFullRoute
 import com.artemchep.keyguard.feature.generator.wordlist.view.WordlistViewRoute
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -317,11 +320,21 @@ private fun FilterItem(
             Color.Unspecified
         }
     }
-    FlatItemSimpleExpressive(
-        modifier = modifier,
-        shapeState = item.shapeState,
-        backgroundColor = backgroundColor,
-        leading = {
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .combinedClickable(
+                onClick = onClick ?: {},
+                onLongClick = onLongClick,
+            ),
+        title = item.name,
+        startAction = {
             AvatarBuilder(
                 icon = item.icon,
                 accent = defaultAvatarColor(),
@@ -331,10 +344,7 @@ private fun FilterItem(
                 },
             )
         },
-        title = {
-            Text(item.name)
-        },
-        trailing = {
+        endActions = {
             Spacer(
                 modifier = Modifier
                     .width(8.dp),
@@ -368,7 +378,5 @@ private fun FilterItem(
                 }
             }
         },
-        onClick = onClick,
-        onLongClick = onLongClick,
     )
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.LargeSection
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
@@ -39,13 +39,9 @@ import com.artemchep.keyguard.ui.theme.bodyMedium
 
 private data class SocialNetworkItem(
     val title: String,
-    val username: String,
-    val shapeState: Int = ShapeState.ALL,
-    val leading: @Composable RowScope.() -> Unit,
+    val leading: @Composable () -> Unit,
     val onClick: () -> Unit,
-) : GroupableShapeItem<SocialNetworkItem> {
-    override fun withShape(shape: Int) = copy(shapeState = shape)
-}
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +53,6 @@ fun AboutTeamScreen() {
         .map { socialNetwork ->
             SocialNetworkItem(
                 title = socialNetwork.title,
-                username = socialNetwork.username,
                 leading = {
                     AboutTeamSocialNetworkAvatar(socialNetwork)
                 },
@@ -112,15 +107,12 @@ fun AboutTeamScreen() {
             items = socialNetworkItems,
             key = { item -> "social.${item.title}" },
         ) { item ->
-            FlatItemSimpleExpressive(
-                leading = item.leading,
-                shapeState = item.shapeState,
-                trailing = {
+            BasicComponent(
+                startAction = item.leading,
+                endActions = {
                     ChevronIcon()
                 },
-                title = {
-                    Text(item.title)
-                },
+                title = item.title,
                 onClick = item.onClick,
             )
         }

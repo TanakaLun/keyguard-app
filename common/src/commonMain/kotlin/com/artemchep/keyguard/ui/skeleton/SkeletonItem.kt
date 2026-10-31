@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.ui.Avatar
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.shimmer.shimmer
@@ -40,9 +40,8 @@ fun SkeletonItem(
 ) {
     val contentColor = LocalContentColor.current
         .combineAlpha(DisabledEmphasisAlpha)
-    FlatItemSimpleExpressive(
-        shapeState = shapeState,
-        leading = when (avatar) {
+    BasicComponent(
+        startAction = when (avatar) {
             SkeletonItemAvatar.LARGE -> {
                 // composable
                 {
@@ -68,25 +67,19 @@ fun SkeletonItem(
             }
             SkeletonItemAvatar.NONE -> null
         },
-        title = {
+        enabled = true,
+    ) {
+        SkeletonText(
+            modifier = Modifier
+                .fillMaxWidth(titleWidthFraction),
+        )
+        if (textWidthFraction != null) {
             SkeletonText(
                 modifier = Modifier
-                    .fillMaxWidth(titleWidthFraction),
+                    .fillMaxWidth(textWidthFraction),
             )
-        },
-        text = if (textWidthFraction != null) {
-            // composable
-            {
-                SkeletonText(
-                    modifier = Modifier
-                        .fillMaxWidth(textWidthFraction),
-                )
-            }
-        } else {
-            null
-        },
-        enabled = true,
-    )
+        }
+    }
 }
 
 fun LazyListScope.skeletonItems(

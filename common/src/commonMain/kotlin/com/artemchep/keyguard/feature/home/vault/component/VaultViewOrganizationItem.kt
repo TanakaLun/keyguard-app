@@ -1,13 +1,11 @@
 package com.artemchep.keyguard.feature.home.vault.component
 
 import androidx.compose.material.icons.Icons
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
-import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.KeyguardOrganization
 
@@ -16,24 +14,17 @@ fun VaultViewOrganizationItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.Organization,
 ) {
-    FlatItemSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
+        title = item.title,
+        startAction = {
             Icon(
                 Icons.Outlined.KeyguardOrganization,
                 null,
             )
         },
-        trailing = {
+        endActions = {
             ChevronIcon()
-        },
-        title = {
-            Text(
-                text = item.title,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 5,
-            )
         },
         onClick = item.onClick,
     )

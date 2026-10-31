@@ -81,7 +81,7 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.formatLocalized
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.appreview.RequestAppReviewEffect
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
@@ -298,8 +298,9 @@ fun WatchtowerScreen2(
                             modifier = Modifier
                                 .height(Dimens.contentPadding),
                         )
-                        FlatItemSimpleExpressive(
-                            leading = {
+                        BasicComponent(
+                            title = stringResource(Res.string.watchtower_item_new_alerts_title),
+                            startAction = {
                                 BadgedBox(
                                     modifier = Modifier
                                         .zIndex(20f),
@@ -315,12 +316,7 @@ fun WatchtowerScreen2(
                                     )
                                 }
                             },
-                            title = {
-                                Text(
-                                    text = stringResource(Res.string.watchtower_item_new_alerts_title),
-                                )
-                            },
-                            trailing = if (unreadThreats.onClick != null) {
+                            endActions = if (unreadThreats.onClick != null) {
                                 // composable
                                 {
                                     ChevronIcon()
