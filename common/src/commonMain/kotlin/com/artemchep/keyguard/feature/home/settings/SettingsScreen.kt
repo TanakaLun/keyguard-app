@@ -3,10 +3,13 @@ package com.artemchep.keyguard.feature.home.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.artemchep.keyguard.feature.navigation.LocalNavigationNodeVisualStack
-import com.artemchep.keyguard.feature.navigation.NavigationRouter
-import com.artemchep.keyguard.feature.twopane.TwoPaneNavigationContent
-import com.artemchep.keyguard.ui.screenMaxWidthCompact
 
+/**
+ * The settings tab.
+ *
+ * Settings pages are pushed onto the tab stack, so the home shell keeps a single
+ * navigation stack per tab.
+ */
 @Composable
 fun SettingsScreen() {
     // Vault screen actually does not add any depth to the
@@ -18,15 +21,6 @@ fun SettingsScreen() {
     CompositionLocalProvider(
         LocalNavigationNodeVisualStack provides visualStack,
     ) {
-        NavigationRouter(
-            id = SettingsRoute.ROUTER_NAME,
-            initial = SettingListRoute,
-            persist = false,
-        ) { backStack ->
-            TwoPaneNavigationContent(
-                backStack,
-                detailPaneMaxWidth = screenMaxWidthCompact,
-            )
-        }
+        SettingListRoute.Content()
     }
 }

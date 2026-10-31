@@ -444,28 +444,22 @@ fun HomeScreenContent(
             // The same shell as the Miuix example: the page content is the
             // scaffold content, the navigation bar is the bottom bar, and the
             // snackbars belong to the scaffold.
-            val navigationBarContent: (@Composable () -> Unit)? = if (bottomNavBarVisible) {
-                {
-                    HomeNavigationBar(
-                        bottomInsets = bottomInsets,
-                        accountStatusState = accountStatusState,
-                        routes = routes,
-                        maxWidth = maxWidth,
-                        navLabelState = navLabelState,
-                        backStack = backStack,
-                    )
-                }
-            } else {
-                null
-            }
-            CompositionLocalProvider(
-                LocalNavigationBarContent provides navigationBarContent,
-            ) {
             Scaffold(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                bottomBar = {},
+                bottomBar = {
+                    if (bottomNavBarVisible) {
+                        HomeNavigationBar(
+                            bottomInsets = bottomInsets,
+                            accountStatusState = accountStatusState,
+                            routes = routes,
+                            maxWidth = maxWidth,
+                            navLabelState = navLabelState,
+                            backStack = backStack,
+                        )
+                    }
+                },
                 snackbarHost = {
                     SnackbarHost(
                         state = snackbarHostState,
@@ -484,7 +478,6 @@ fun HomeScreenContent(
                         entries = backStack,
                     )
                 }
-            }
             }
         }
     }
