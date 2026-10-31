@@ -158,6 +158,7 @@ import com.artemchep.keyguard.ui.theme.labelSmall
 import com.artemchep.keyguard.ui.theme.surfaceContainerLow
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
+import com.artemchep.keyguard.ui.LocalNavigationBarContent
 
 private const val ROUTE_NAME = "home"
 
@@ -442,91 +443,28 @@ fun HomeScreenContent(
             // The same shell as the Miuix example: the page content is the
             // scaffold content, the navigation bar is the bottom bar, and the
             // snackbars belong to the scaffold.
+            val navigationBarContent: (@Composable () -> Unit)? = if (bottomNavBarVisible) {
+                {
+                    HomeNavigationBar(
+                        bottomInsets = bottomInsets,
+                        accountStatusState = accountStatusState,
+                        routes = routes,
+                        maxWidth = maxWidth,
+                        navLabelState = navLabelState,
+                        backStack = backStack,
+                    )
+                }
+            } else {
+                null
+            }
+            CompositionLocalProvider(
+                LocalNavigationBarContent provides navigationBarContent,
+            ) {
             Scaffold(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                bottomBar = {
-                    AnimatedVisibility(
-                        visible = bottomNavBarVisible,
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(bottomInsets.asPaddingValues()),
-                        ) {
-                            val isSyncingState = remember(
-                                accountStatusState,
-                            ) {
-                                derivedStateOf {
-                                    accountStatusState.value.error == null &&
-                                            accountStatusState.value.pending != null
-                                }
-                            }
-                            androidx.compose.animation.AnimatedVisibility(
-                                visible = isSyncingState.value,
-                            ) {
-                                LinearProgressIndicator(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                )
-                            }
-
-                            BannerStatusBadge(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                statusState = accountStatusState,
-                            )
-                            val density = LocalDensity.current
-                            val routesSplit = remember(
-                                routes,
-                                maxWidth,
-                                density,
-                            ) {
-                                splitHomeNavigationItemsByMinSize(
-                                    items = routes,
-                                    availableSizePx = with(density) {
-                                        maxWidth.roundToPx()
-                                    },
-                                    itemMinSizePx = with(density) {
-                                        bottomNavigationItemMinSize.roundToPx()
-                                    },
-                                )
-                            }
-                            NavigationBar(
-                                showDivider = true,
-                            ) {
-                                routesSplit.visible.forEach { r ->
-                                    key(r.key) {
-                                        val counterState = r.counterFlow.collectAsState(null)
-                                        BottomNavigationControllerItem(
-                                            modifier = Modifier
-                                                .homeNavigationTestTag(r.testTag),
-                                            backStack = backStack,
-                                            item = r,
-                                            count = counterState.value,
-                                            label = if (navLabelState.value) {
-                                                textResource(r.label)
-                                            } else {
-                                                ""
-                                            },
-                                        )
-                                    }
-                                }
-                                if (routesSplit.overflow.isNotEmpty()) {
-                                    BottomNavigationOverflowItem(
-                                        backStack = backStack,
-                                        items = routesSplit.overflow,
-                                        label = if (navLabelState.value) {
-                                            stringResource(Res.string.options)
-                                        } else {
-                                            ""
-                                        },
-                                    )
-                                }
-                            }
-                        }
-                    }
-                },
+                bottomBar = {},
                 snackbarHost = {
                     SnackbarHost(
                         state = snackbarHostState,
@@ -545,6 +483,7 @@ fun HomeScreenContent(
                         entries = backStack,
                     )
                 }
+            }
             }
         }
     }
@@ -1165,4 +1104,94 @@ private fun navigateSyncStatus(
 ) {
     val intent = NavigationIntent.NavigateToRoute(SyncRoute)
     controller.queue(intent)
+}
+
+/**
+ * The home navigation bar. It is rendered by the stack root screen (see
+ * [LocalNavigationBarContent]), so any screen pushed on top hides it.
+ */
+@Composable
+private fun HomeNavigationBar(
+    bottomInsets: WindowInsets,
+    accountStatusState: State<DAccountStatus>,
+    routes: ImmutableList<HomeNavigationItem>,
+    maxWidth: Dp,
+    navLabelState: State<Boolean>,
+    backStack: ImmutableList<NavigationEntry>,
+) {
+                        Column(
+                            modifier = Modifier
+                                .padding(bottomInsets.asPaddingValues()),
+                        ) {
+                            val isSyncingState = remember(
+                                accountStatusState,
+                            ) {
+                                derivedStateOf {
+                                    accountStatusState.value.error == null &&
+                                            accountStatusState.value.pending != null
+                                }
+                            }
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = isSyncingState.value,
+                            ) {
+                                LinearProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                )
+                            }
+
+                            BannerStatusBadge(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                statusState = accountStatusState,
+                            )
+                            val density = LocalDensity.current
+                            val routesSplit = remember(
+                                routes,
+                                maxWidth,
+                                density,
+                            ) {
+                                splitHomeNavigationItemsByMinSize(
+                                    items = routes,
+                                    availableSizePx = with(density) {
+                                        maxWidth.roundToPx()
+                                    },
+                                    itemMinSizePx = with(density) {
+                                        bottomNavigationItemMinSize.roundToPx()
+                                    },
+                                )
+                            }
+                            NavigationBar(
+                                showDivider = true,
+                            ) {
+                                routesSplit.visible.forEach { r ->
+                                    key(r.key) {
+                                        val counterState = r.counterFlow.collectAsState(null)
+                                        BottomNavigationControllerItem(
+                                            modifier = Modifier
+                                                .homeNavigationTestTag(r.testTag),
+                                            backStack = backStack,
+                                            item = r,
+                                            count = counterState.value,
+                                            label = if (navLabelState.value) {
+                                                textResource(r.label)
+                                            } else {
+                                                ""
+                                            },
+                                        )
+                                    }
+                                }
+                                if (routesSplit.overflow.isNotEmpty()) {
+                                    BottomNavigationOverflowItem(
+                                        backStack = backStack,
+                                        items = routesSplit.overflow,
+                                        label = if (navLabelState.value) {
+                                            stringResource(Res.string.options)
+                                        } else {
+                                            ""
+                                        },
+                                    )
+                                }
+                            }
+                        }
 }
