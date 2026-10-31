@@ -335,22 +335,20 @@ fun CompactVaultItem(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = onClick != null,
 ) {
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = shapeState,
-        padding = padding,
         content = {
             VaultItemTextContent(
                 item = item,
                 textMaxLines = 1,
             )
         },
-        leading = {
+        startAction = {
             AccountListItemTextIcon(
                 item = item,
             )
         },
-        trailing = trailing,
+        endActions = trailing,
         onClick = onClick,
         enabled = enabled,
     )
@@ -431,10 +429,19 @@ fun VaultListItemText(
 
         else -> Color.Unspecified
     }
-    FlatItemLayoutExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .combinedClickable(
+                onClick = onClick ?: {},
+                onLongClick = onLongClick,
+            ),
         content = {
             VaultItemTextContent(item = item)
 
@@ -546,22 +553,24 @@ fun VaultListItemText(
                 }
             }
         },
-        leading = {
-            if (leading != null) {
-                leading {
+        startAction = {
+            Row {
+                if (leading != null) {
+                    leading {
+                        AccountListItemTextIcon(
+                            modifier = Modifier,
+                            item = item,
+                        )
+                    }
+                } else {
                     AccountListItemTextIcon(
                         modifier = Modifier,
                         item = item,
                     )
                 }
-            } else {
-                AccountListItemTextIcon(
-                    modifier = Modifier,
-                    item = item,
-                )
             }
         },
-        trailing = {
+        endActions = {
             when (item.feature) {
                 is VaultItem2.Item.Feature.Organization -> {
                     val backgroundColor = if (MiuixTheme.colorScheme.isDark) {
@@ -645,8 +654,6 @@ fun VaultListItemText(
                 }
             }
         },
-        onClick = onClick,
-        onLongClick = onLongClick,
     )
 }
 
@@ -906,13 +913,37 @@ fun FlatDropdownLayoutExpressive(
     enabled: Boolean = dropdown != null || onClick != null || onLongClick != null,
 ) {
     var isContentDropdownExpanded by remember { mutableStateOf(false) }
-    FlatItemLayoutExpressive(
-        modifier = modifier,
-        elevation = elevation,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        shapeState = shapeState,
-        expressive = expressive,
+    val handleClick: (() -> Unit)? = when {
+        onClick != null -> onClick
+        dropdown != null -> {
+            // lambda
+            {
+                isContentDropdownExpanded = !isContentDropdownExpanded
+            }
+        }
+
+        else -> null
+    }
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .then(
+                if (handleClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(
+                        onClick = handleClick ?: {},
+                        onLongClick = onLongClick,
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+        enabled = enabled,
         content = {
             content()
 
@@ -927,23 +958,20 @@ fun FlatDropdownLayoutExpressive(
             ) {
                 dropdown?.invoke(this)
             }
+
+            footer?.invoke(this)
         },
-        footer = footer,
-        leading = leading,
-        trailing = trailing,
-        onClick = when {
-            onClick != null -> onClick
-            dropdown != null -> {
-                // lambda
-                {
-                    isContentDropdownExpanded = !isContentDropdownExpanded
+        startAction = if (leading != null) {
+            // composable
+            {
+                Row {
+                    leading?.invoke(this)
                 }
             }
-
-            else -> null
+        } else {
+            null
         },
-        onLongClick = onLongClick,
-        enabled = enabled,
+        endActions = trailing,
     )
 }
 

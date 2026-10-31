@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Key
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -23,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
-import com.artemchep.keyguard.ui.icons.icon
+import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
@@ -38,50 +38,12 @@ fun VaultViewPasskeyItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.Passkey,
 ) {
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = icon<RowScope>(Icons.Outlined.Key),
-        content = {
-            val columnLayout = item.onUse != null
-            if (columnLayout) {
-                Column {
-                    if (item.source.userDisplayName != null) {
-                        TextUserName(
-                            text = item.source.userDisplayName,
-                        )
-                    }
-                    TextRpId(
-                        text = item.source.rpId,
-                    )
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    if (item.source.userDisplayName != null) {
-                        TextUserName(
-                            modifier = Modifier
-                                .alignByBaseline()
-                                .weight(0.6f, fill = false),
-                            text = item.source.userDisplayName,
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .width(8.dp),
-                        )
-                    }
-                    TextRpId(
-                        modifier = Modifier
-                            .alignByBaseline()
-                            .weight(0.4f, fill = false),
-                        text = item.source.rpId,
-                    )
-                }
-            }
+        startAction = {
+            IconBox(main = Icons.Outlined.Key)
         },
-        trailing = if (item.onUse != null) {
+        endActions = if (item.onUse != null) {
             // composable
             {
                 val updatedOnUse by rememberUpdatedState(item.onUse)
@@ -105,7 +67,45 @@ fun VaultViewPasskeyItem(
             null
         },
         onClick = item.onClick,
-    )
+    ) {
+        val columnLayout = item.onUse != null
+        if (columnLayout) {
+            Column {
+                if (item.source.userDisplayName != null) {
+                    TextUserName(
+                        text = item.source.userDisplayName,
+                    )
+                }
+                TextRpId(
+                    text = item.source.rpId,
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                if (item.source.userDisplayName != null) {
+                    TextUserName(
+                        modifier = Modifier
+                            .alignByBaseline()
+                            .weight(0.6f, fill = false),
+                        text = item.source.userDisplayName,
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .width(8.dp),
+                    )
+                }
+                TextRpId(
+                    modifier = Modifier
+                        .alignByBaseline()
+                        .weight(0.4f, fill = false),
+                    text = item.source.rpId,
+                )
+            }
+        }
+    }
 }
 
 @Composable
