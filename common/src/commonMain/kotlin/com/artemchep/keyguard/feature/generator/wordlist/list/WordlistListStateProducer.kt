@@ -111,7 +111,7 @@ suspend fun RememberStateFlowScope.wordlistListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(WordlistsRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === WordlistsRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

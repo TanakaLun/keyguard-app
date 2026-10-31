@@ -113,7 +113,7 @@ suspend fun RememberStateFlowScope.cipherFiltersListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(CipherFiltersRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === CipherFiltersRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

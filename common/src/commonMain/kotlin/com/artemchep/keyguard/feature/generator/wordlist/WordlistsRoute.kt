@@ -2,9 +2,11 @@ package com.artemchep.keyguard.feature.generator.wordlist
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import com.artemchep.keyguard.feature.generator.wordlist.list.WordlistListScreen
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.Route
+import com.artemchep.keyguard.feature.navigation.RouteDescriptor
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -14,7 +16,8 @@ import com.artemchep.keyguard.ui.icons.KeyguardWordlist
 import com.artemchep.keyguard.ui.icons.iconSmall
 
 object WordlistsRoute : Route {
-    const val ROUTER_NAME = "wordlists"
+    override val descriptor
+        get() = RouteDescriptor.WordlistList
 
     fun actionOrNull(
         translator: TranslatorScope,
@@ -43,6 +46,6 @@ object WordlistsRoute : Route {
 
     @Composable
     override fun Content() {
-        WordlistsScreen()
+        WordlistListScreen()
     }
 }

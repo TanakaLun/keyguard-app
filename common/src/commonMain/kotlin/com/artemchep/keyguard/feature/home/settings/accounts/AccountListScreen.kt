@@ -41,7 +41,7 @@ fun AccountListScreen() {
     }
 
     val accountListStateWrapper = accountListScreenState(
-        rootRouterName = "accounts",
+        rootRoute = AccountsRoute,
     )
     val accountListState = remember(accountListStateWrapper) {
         accountListStateWrapper.unwrap(

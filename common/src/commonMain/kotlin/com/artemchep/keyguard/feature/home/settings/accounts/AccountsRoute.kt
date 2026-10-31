@@ -6,6 +6,6 @@ import com.artemchep.keyguard.feature.navigation.Route
 object AccountsRoute : Route {
     @Composable
     override fun Content() {
-        AccountsScreen()
+        AccountListScreen()
     }
 }

@@ -178,8 +178,8 @@ suspend fun RememberStateFlowScope.watchtowerNewAlertsStateProducer(
     val copy = copier()
 
     fun navigatePopAll() {
-        val intent = NavigationIntent.PopById(
-            WatchtowerAlertsRoute.ROUTER_NAME,
+        val intent = NavigationIntent.PopUntil(
+            predicate = { it is WatchtowerAlertsRoute },
             exclusive = false,
         )
         navigate(intent)
@@ -195,7 +195,7 @@ suspend fun RememberStateFlowScope.watchtowerNewAlertsStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(WatchtowerAlertsRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it is WatchtowerAlertsRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

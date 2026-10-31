@@ -214,7 +214,7 @@ suspend fun RememberStateFlowScope.duplicatesListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(DuplicatesRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it is DuplicatesRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

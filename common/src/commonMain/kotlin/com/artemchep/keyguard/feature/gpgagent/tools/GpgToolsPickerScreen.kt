@@ -101,7 +101,7 @@ private fun navigateTo(
 ) {
     val intent = NavigationIntent.Composite(
         listOf(
-            NavigationIntent.PopById(GpgToolsRoute.ROUTER_NAME),
+            NavigationIntent.PopUntil { it === GpgToolsRoute },
             NavigationIntent.NavigateToRoute(
                 route = route,
             ),

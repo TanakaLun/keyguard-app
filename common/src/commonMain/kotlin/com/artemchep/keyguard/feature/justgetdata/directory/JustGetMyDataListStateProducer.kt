@@ -62,7 +62,7 @@ suspend fun RememberStateFlowScope.justGetMyDataListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(JustGetMyDataServicesRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === JustGetMyDataServicesRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

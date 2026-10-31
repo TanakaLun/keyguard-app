@@ -8,10 +8,6 @@ import com.artemchep.keyguard.feature.navigation.RouteDescriptor
 data class WatchtowerAlertsRoute(
     val args: Args = Args(),
 ) : Route {
-    companion object {
-        const val ROUTER_NAME = "watchtower_alerts"
-    }
-
     data class Args(
         val filter: DFilter? = null,
     )
@@ -20,7 +16,7 @@ data class WatchtowerAlertsRoute(
 
     @Composable
     override fun Content() {
-        WatchtowerAlerts(
+        WatchtowerNewAlerts(
             args = args,
         )
     }

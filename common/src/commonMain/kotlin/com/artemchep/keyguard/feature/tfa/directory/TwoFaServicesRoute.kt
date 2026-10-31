@@ -16,8 +16,6 @@ import com.artemchep.keyguard.ui.icons.KeyguardTwoFa
 import com.artemchep.keyguard.ui.icons.iconSmall
 
 object TwoFaServicesRoute : Route {
-    const val ROUTER_NAME = "twofa_services"
-
     suspend fun actionOrNull(
         translator: TranslatorScope,
         navigate: (NavigationIntent) -> Unit,
@@ -48,6 +46,6 @@ object TwoFaServicesRoute : Route {
 
     @Composable
     override fun Content() {
-        TwoFaServicesScreen()
+        TwoFaServiceListScreen()
     }
 }

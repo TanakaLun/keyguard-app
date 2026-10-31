@@ -62,7 +62,7 @@ suspend fun RememberStateFlowScope.twoFaServiceListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(TwoFaServicesRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === TwoFaServicesRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

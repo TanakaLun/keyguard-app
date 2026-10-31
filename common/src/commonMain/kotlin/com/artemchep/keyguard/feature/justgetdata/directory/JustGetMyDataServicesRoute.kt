@@ -16,8 +16,6 @@ import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.iconSmall
 
 object JustGetMyDataServicesRoute : Route {
-    const val ROUTER_NAME = "justgetmydata_services"
-
     fun actionOrNull(
         translator: TranslatorScope,
         navigate: (NavigationIntent) -> Unit,
@@ -47,6 +45,6 @@ object JustGetMyDataServicesRoute : Route {
 
     @Composable
     override fun Content() {
-        JustGetMyDataServicesScreen()
+        JustGetMyDataListScreen()
     }
 }

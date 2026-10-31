@@ -5,6 +5,7 @@ import com.artemchep.keyguard.common.model.DSendFilter
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.Route
 import com.artemchep.keyguard.feature.navigation.RouteDescriptor
+import com.artemchep.keyguard.feature.send.list.SendListScreen
 import com.artemchep.keyguard.feature.send.search.SendSort
 
 data class SendRoute(
@@ -53,6 +54,6 @@ data class SendRoute(
 
     @Composable
     override fun Content() {
-        SendScreen(args)
+        SendListScreen(args = args)
     }
 }

@@ -10,7 +10,7 @@ import com.artemchep.keyguard.feature.filter.CipherFiltersRoute
 import com.artemchep.keyguard.feature.generator.GeneratorRoute
 import com.artemchep.keyguard.feature.generator.emailrelay.EmailRelayListRoute
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryRoute
-import com.artemchep.keyguard.feature.generator.wordlist.list.WordlistListRoute
+import com.artemchep.keyguard.feature.generator.wordlist.WordlistsRoute
 import com.artemchep.keyguard.feature.generator.wordlist.view.WordlistViewRoute
 import com.artemchep.keyguard.feature.home.vault.VaultRoute
 import com.artemchep.keyguard.feature.home.vault.collections.CollectionsRoute
@@ -128,7 +128,7 @@ fun RouteDescriptor.toRoute(): Route? = when (this) {
     RouteDescriptor.CipherFilters -> CipherFiltersRoute
     RouteDescriptor.GeneratorHistory -> GeneratorHistoryRoute
     RouteDescriptor.EmailRelayList -> EmailRelayListRoute
-    RouteDescriptor.WordlistList -> WordlistListRoute
+    RouteDescriptor.WordlistList -> WordlistsRoute
     RouteDescriptor.Feedback -> FeedbackRoute
     RouteDescriptor.Subscriptions -> SubscriptionsSettingsRoute
     RouteDescriptor.TwoFaServices -> TwoFaServicesRoute

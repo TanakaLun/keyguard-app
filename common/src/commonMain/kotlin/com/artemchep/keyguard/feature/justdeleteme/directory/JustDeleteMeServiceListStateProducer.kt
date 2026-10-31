@@ -62,7 +62,7 @@ suspend fun RememberStateFlowScope.justDeleteMeServiceListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(JustDeleteMeServicesRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === JustDeleteMeServicesRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

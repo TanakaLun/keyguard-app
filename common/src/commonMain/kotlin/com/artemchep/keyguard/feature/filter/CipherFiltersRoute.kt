@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.runtime.Composable
+import com.artemchep.keyguard.feature.filter.list.CipherFiltersListScreen
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.Route
@@ -17,8 +18,6 @@ import com.artemchep.keyguard.ui.icons.KeyguardCipherFilter
 import com.artemchep.keyguard.ui.icons.iconSmall
 
 object CipherFiltersRoute : Route {
-    const val ROUTER_NAME = "cipher_filters"
-
     fun actionOrNull(
         translator: TranslatorScope,
         navigate: (NavigationIntent) -> Unit,
@@ -48,6 +47,6 @@ object CipherFiltersRoute : Route {
 
     @Composable
     override fun Content() {
-        CipherFiltersScreen()
+        CipherFiltersListScreen()
     }
 }

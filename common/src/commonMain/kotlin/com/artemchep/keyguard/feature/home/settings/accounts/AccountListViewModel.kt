@@ -38,6 +38,7 @@ import com.artemchep.keyguard.feature.home.vault.model.short
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
+import com.artemchep.keyguard.feature.navigation.Route
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
@@ -66,10 +67,10 @@ import org.koin.compose.currentKoinScope
 
 @Composable
 fun accountListScreenState(
-    rootRouterName: String?,
+    rootRoute: Route?,
 ): AccountListStateWrapper = with(currentKoinScope()) {
     accountListScreenState(
-        rootRouterName = rootRouterName,
+        rootRoute = rootRoute,
         queueSyncById = get(),
         syncSupervisor = get(),
         removeAccountById = get(),
@@ -86,7 +87,7 @@ fun accountListScreenState(
 
 @Composable
 fun accountListScreenState(
-    rootRouterName: String?,
+    rootRoute: Route?,
     queueSyncById: QueueSyncById,
     syncSupervisor: SupervisorRead,
     removeAccountById: RemoveAccountById,
@@ -112,7 +113,7 @@ fun accountListScreenState(
     ),
 ) {
     accountListScreenStateProducer(
-        rootRouterName = rootRouterName,
+        rootRoute = rootRoute,
         queueSyncById = queueSyncById,
         syncSupervisor = syncSupervisor,
         removeAccountById = removeAccountById,
@@ -128,7 +129,7 @@ fun accountListScreenState(
 }
 
 suspend fun RememberStateFlowScope.accountListScreenStateProducer(
-    rootRouterName: String?,
+    rootRoute: Route?,
     queueSyncById: QueueSyncById,
     syncSupervisor: SupervisorRead,
     removeAccountById: RemoveAccountById,
@@ -322,8 +323,8 @@ suspend fun RememberStateFlowScope.accountListScreenStateProducer(
                             val route = accountViewRouteFactory.create(it.id)
                             val intent = NavigationIntent.Composite(
                                 listOfNotNull(
-                                    rootRouterName
-                                        ?.let(NavigationIntent::PopById),
+                                    rootRoute
+                                        ?.let { pop -> NavigationIntent.PopUntil { it === pop } },
                                     NavigationIntent.NavigateToRoute(route),
                                 ),
                             )

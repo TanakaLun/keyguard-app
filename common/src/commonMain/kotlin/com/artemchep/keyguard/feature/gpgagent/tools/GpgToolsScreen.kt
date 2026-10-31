@@ -29,7 +29,6 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,10 +47,7 @@ import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.textResource
-import com.artemchep.keyguard.feature.navigation.LocalNavigationNodeVisualStack
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
-import com.artemchep.keyguard.feature.navigation.NavigationRouter
-import com.artemchep.keyguard.feature.twopane.TwoPaneNavigationContent
 import com.artemchep.keyguard.platform.util.isRelease
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.choose_file
@@ -97,25 +93,6 @@ import androidx.compose.ui.state.ToggleableState
 import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
-
-@Composable
-fun GpgToolsScreen() {
-    // GPG tools acts like Vault/Send/Settings: the root route hosts sub-windows.
-    val visualStack = LocalNavigationNodeVisualStack.current
-        .run {
-            removeAt(lastIndex)
-        }
-    CompositionLocalProvider(
-        LocalNavigationNodeVisualStack provides visualStack,
-    ) {
-        NavigationRouter(
-            id = GpgToolsRoute.ROUTER_NAME,
-            initial = GpgToolsPickerRoute,
-        ) { backStack ->
-            TwoPaneNavigationContent(backStack)
-        }
-    }
-}
 
 @Composable
 fun GpgToolsOperationScreen(

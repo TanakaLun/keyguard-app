@@ -505,6 +505,14 @@ private fun NavigationIntentScope.exec(
         backStack.copy(entries = newEntries)
     }
 
+    is NavigationIntent.PopUntil -> run {
+        val newEntries = backStack.entries.popUntil(
+            predicate = { intent.predicate(it.route) },
+            exclusive = intent.exclusive,
+        ) ?: return@run null
+        backStack.copy(entries = newEntries)
+    }
+
     is NavigationIntent.Manual -> {
         val factory = fun(routeId: String?, route: Route): NavigationEntry =
             NavigationEntryImpl(
@@ -527,8 +535,16 @@ private fun generateRouteId(route: Route): String {
 fun PersistentList<NavigationEntry>.popById(
     id: String,
     exclusive: Boolean,
+) = popUntil(
+    predicate = { it.id == id },
+    exclusive = exclusive,
+)
+
+private fun PersistentList<NavigationEntry>.popUntil(
+    predicate: (NavigationEntry) -> Boolean,
+    exclusive: Boolean,
 ) = kotlin.run {
-    val i = indexOfLast { it.id == id }
+    val i = indexOfLast(predicate)
     if (i >= 0) {
         val offset = if (exclusive) 1 else 0
         subList(0, i + offset)

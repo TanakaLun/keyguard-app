@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,10 +29,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.CloudUpload
-import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Screenshot
 import top.yukonga.miuix.kmp.basic.BadgedBox
@@ -49,13 +43,8 @@ import top.yukonga.miuix.kmp.basic.SnackbarDuration
 import top.yukonga.miuix.kmp.basic.SnackbarHost
 import top.yukonga.miuix.kmp.basic.SnackbarHostState
 import top.yukonga.miuix.kmp.basic.SnackbarResult
-import androidx.compose.material3.contentColorFor
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
-import top.yukonga.miuix.kmp.basic.NavigationRail
-import top.yukonga.miuix.kmp.basic.NavigationRailItem
-import top.yukonga.miuix.kmp.basic.NavigationRailValue
-import top.yukonga.miuix.kmp.basic.rememberNavigationRailState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -77,12 +66,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.artemchep.keyguard.common.io.attempt
 import com.artemchep.keyguard.common.io.launchIn
 import com.artemchep.keyguard.common.model.AllowScreenshots
@@ -121,26 +107,18 @@ import com.artemchep.keyguard.platform.leStatusBars
 import com.artemchep.keyguard.platform.leSystemBars
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
-import com.artemchep.keyguard.ui.AnimatedCounterBadge
 import com.artemchep.keyguard.ui.AnimatedNewCounterBadge
 import com.artemchep.keyguard.ui.AnimatedTotalCounterBadge
-import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.ChevronIcon
-import com.artemchep.keyguard.ui.shimmer.shimmer
-import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
-import com.artemchep.keyguard.ui.theme.ok
-import com.artemchep.keyguard.ui.theme.onWarningContainer
-import com.artemchep.keyguard.ui.theme.warningContainer
-import com.artemchep.keyguard.ui.time.rememberLocalizedRelativeTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
@@ -148,25 +126,20 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import com.artemchep.keyguard.ui.theme.labelLarge
 import com.artemchep.keyguard.ui.theme.labelMedium
-import com.artemchep.keyguard.ui.theme.labelSmall
-import com.artemchep.keyguard.ui.theme.surfaceContainerLow
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
-import com.artemchep.keyguard.ui.LocalNavigationBarContent
 
 private const val ROUTE_NAME = "home"
 
 // Min size restriction is used to collapse extra items into
 // a dedicated overflow item when needed.
 private val bottomNavigationItemMinSize = 64.dp
-private val railNavigationItemMinSize = 64.dp
 
 @Composable
 fun HomeScreen(
@@ -234,13 +207,12 @@ fun HomeScreenContent(
         routes = routes,
     )
 
-    // The navigation bar belongs to the tab roots; the stacks pushed on top
-    // hide it through LocalIsStackRootScreen.
+    // The navigation bar belongs to the home shell: it is the scaffold bottom
+    // bar and stays there only while the tab stack is at its root.
     val showNavigation = navBarVisible && backStack.size <= 1
 
     ResponsiveLayout {
         val maxWidth = maxWidth
-        val maxHeight = maxHeight
 
         val horizontalInsets = WindowInsets.leStatusBars
             .union(WindowInsets.leNavigationBars)
@@ -268,106 +240,10 @@ fun HomeScreenContent(
             val accountStatusState = remember(getAccountStatus) {
                 getAccountStatus()
             }.collectAsState(DAccountStatus())
-            // The first row is a row that contains rail navigation
-            // bar and should be shown on tablets.
-            AnimatedVisibility(
-                modifier = Modifier
-                    .zIndex(2f),
-                visible = LocalHomeLayout.current is HomeLayout.Horizontal && showNavigation,
-            ) {
-                Row {
-                    val scope = rememberCoroutineScope()
-
-                    val railState = rememberNavigationRailState(
-                        initialValue = NavigationRailValue.Expanded,
-                    )
-                    val verticalInsets = WindowInsets.leSystemBars
-                        .union(WindowInsets.leIme)
-                        .only(WindowInsetsSides.Vertical)
-
-                    val canExpand = maxHeight >= 480.dp
-                    LaunchedEffect(canExpand) {
-                        if (!canExpand) railState.collapse()
-                    }
-                    val density = LocalDensity.current
-                    val routesSplit = remember(
-                        routes,
-                        maxHeight,
-                        canExpand,
-                        density,
-                    ) {
-                        val reservedHeight = if (canExpand) 168.dp else 112.dp
-                        splitHomeNavigationItemsByMinSize(
-                            items = routes,
-                            availableSizePx = with(density) {
-                                (maxHeight - reservedHeight)
-                                    .coerceAtLeast(0.dp)
-                                    .roundToPx()
-                            },
-                            itemMinSizePx = with(density) {
-                                railNavigationItemMinSize.roundToPx()
-                            },
-                        )
-                    }
-
-                    NavigationRail(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        state = railState,
-                        color = Color.Transparent,
-                        showDivider = false,
-                    ) {
-                        routesSplit.visible.forEach { r ->
-                            key(r.key) {
-                                val counterState = r.counterFlow.collectAsState(null)
-                                RailNavigationControllerItem(
-                                    modifier = Modifier
-                                        .homeNavigationTestTag(r.testTag),
-                                    backStack = backStack,
-                                    item = r,
-                                    count = counterState.value,
-                                    label = if (navLabelState.value) {
-                                        textResource(r.label)
-                                    } else {
-                                        ""
-                                    },
-                                )
-                            }
-                        }
-                        if (routesSplit.overflow.isNotEmpty()) {
-                            RailNavigationOverflowItem(
-                                backStack = backStack,
-                                items = routesSplit.overflow,
-                                label = if (navLabelState.value) {
-                                    stringResource(Res.string.options)
-                                } else {
-                                    ""
-                                },
-                            )
-                        }
-                        Spacer(
-                            modifier = Modifier
-                                .height(24.dp),
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                                .width(IntrinsicSize.Min),
-                        ) {
-                            RailStatusBadge(
-                                modifier = Modifier,
-                                statusState = accountStatusState,
-                            )
-                        }
-                    }
-                }
-            }
             val bottomInsets = WindowInsets.leStatusBars
                 .union(WindowInsets.leNavigationBars)
                 .union(WindowInsets.leDisplayCutout)
                 .only(WindowInsetsSides.Bottom)
-            val bottomNavBarVisible =
-                LocalHomeLayout.current is HomeLayout.Vertical && showNavigation
 
             val snackbarHostState = remember {
                 SnackbarHostState()
@@ -449,7 +325,7 @@ fun HomeScreenContent(
                     .weight(1f)
                     .fillMaxHeight(),
                 bottomBar = {
-                    if (bottomNavBarVisible) {
+                    if (showNavigation) {
                         HomeNavigationBar(
                             bottomInsets = bottomInsets,
                             accountStatusState = accountStatusState,
@@ -656,220 +532,6 @@ private fun BannerStatusBadgeContent(
     }
 }
 
-@Composable
-private fun RailStatusBadge(
-    modifier: Modifier = Modifier,
-    statusState: State<DAccountStatus>,
-) {
-    val updatedContext by rememberUpdatedState(LocalLeContext)
-    val updatedNavController by rememberUpdatedState(LocalNavigationController.current)
-    Box(
-        modifier = modifier
-            .width(80.dp)
-            .heightIn(min = 80.dp)
-            .padding(4.dp)
-            .clip(KgShapes.medium)
-            .clickable {
-                val status = statusState.value
-                when {
-                    status.error != null &&
-                            status.pending != null -> {
-                        navigateSyncStatus(updatedNavController)
-                    }
-
-                    status.pendingPermissions.isNotEmpty() -> {
-                        val permission = status.pendingPermissions
-                            .firstOrNull()
-                        if (permission?.permission == Permission.LOCAL_NETWORK) {
-                            // The sync page also offers settings recovery after denial.
-                            navigateSyncStatus(updatedNavController)
-                        } else {
-                            permission?.ask?.invoke(updatedContext)
-                        }
-                    }
-
-                    else -> {
-                        navigateSyncStatus(updatedNavController)
-                    }
-                }
-            },
-        contentAlignment = Alignment.Center,
-    ) {
-        val status = statusState.value
-        when {
-            status.error != null -> {
-                RailStatusBadgeContent(
-                    contentColor = MiuixTheme.colorScheme.error,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.ErrorOutline,
-                            contentDescription = null,
-                        )
-                    },
-                    badge = status.error.count
-                        .takeIf { it > 0 }
-                        ?.toString(),
-                    text = stringResource(Res.string.syncstatus_status_failed),
-                )
-            }
-
-            status.pending != null -> {
-                RailStatusBadgeContent(
-                    modifier = Modifier
-                        .shimmer(),
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.CloudUpload,
-                            contentDescription = null,
-                        )
-                    },
-                    badge = status.pending.count
-                        .takeIf { it > 0 }
-                        ?.toString(),
-                    text = stringResource(Res.string.syncstatus_status_syncing),
-                )
-            }
-
-            status.pendingPermissions.isNotEmpty() -> {
-                val permission = status.pendingPermissions.first()
-                RailStatusBadgeContent(
-                    contentColor = MiuixTheme.colorScheme.info,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = null,
-                        )
-                    },
-                    text = stringResource(permission.permission.homePresentation().title),
-                )
-            }
-
-            else -> {
-                val subText = status.lastSyncTimestamp
-                    ?.let { rememberLocalizedRelativeTime(it) }
-                RailStatusBadgeContent(
-                    contentColor = MiuixTheme.colorScheme.ok,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
-                            contentDescription = null,
-                        )
-                    },
-                    text = stringResource(Res.string.syncstatus_status_up_to_date),
-                    subText = subText,
-                )
-            }
-        }
-    }
-}
-
-private data class HomePermissionPresentation(
-    val title: StringResource,
-    val text: StringResource,
-)
-
-private fun Permission.homePresentation(): HomePermissionPresentation = when (this) {
-    Permission.POST_NOTIFICATIONS -> HomePermissionPresentation(
-        title = Res.string.post_notifications_permission_banner_title,
-        text = Res.string.post_notifications_permission_banner_text,
-    )
-
-    Permission.LOCAL_NETWORK -> HomePermissionPresentation(
-        title = Res.string.local_network_permission_banner_title,
-        text = Res.string.local_network_permission_banner_text,
-    )
-
-    else -> HomePermissionPresentation(
-        title = Res.string.pref_item_permission_write_external_storage_grant,
-        text = Res.string.pref_item_permission_write_external_storage_text,
-    )
-}
-
-@Composable
-private fun RailStatusBadgeContent(
-    modifier: Modifier = Modifier,
-    contentColor: Color = LocalContentColor.current,
-    icon: @Composable () -> Unit,
-    badge: String? = null,
-    text: String,
-    subText: String? = null,
-) {
-    Column(
-        modifier = modifier
-            .padding(
-                horizontal = 4.dp,
-                vertical = 16.dp,
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        BadgedBox(
-            badge = {
-                AnimatedCounterBadge(
-                    text = badge,
-                )
-            },
-        ) {
-            CompositionLocalProvider(
-                LocalContentColor provides contentColor,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(18.dp),
-                ) {
-                    icon()
-                }
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .height(4.dp),
-        )
-        Text(
-            text = text,
-            style = MiuixTheme.textStyles.labelSmall,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            color = contentColor,
-        )
-        if (subText != null) {
-            Text(
-                text = subText,
-                style = MiuixTheme.textStyles.labelSmall,
-                textAlign = TextAlign.Center,
-                fontSize = 9.sp,
-                maxLines = 1,
-                color = contentColorFor(LocalSurfaceColor.current)
-                    .combineAlpha(DisabledEmphasisAlpha),
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun RailNavigationControllerItem(
-    modifier: Modifier = Modifier,
-    backStack: ImmutableList<NavigationEntry>,
-    item: HomeNavigationItem,
-    count: Int?,
-    label: String,
-) {
-    val controller = LocalNavigationController.current
-    val selected = item.isSelected(backStack)
-    NavigationRailItem(
-        modifier = modifier,
-        selected = selected,
-        onClick = {
-            navigateOnClick(controller, item)
-        },
-        icon = if (selected) item.iconSelected else item.icon,
-        label = label,
-        badge = {
-            AnimatedTotalCounterBadge(count = count)
-        },
-    )
-}
-
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun RowScope.BottomNavigationControllerItem(
@@ -893,48 +555,6 @@ private fun RowScope.BottomNavigationControllerItem(
             AnimatedTotalCounterBadge(count = count)
         },
     )
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun RailNavigationOverflowItem(
-    backStack: ImmutableList<NavigationEntry>,
-    items: List<HomeNavigationItem>,
-    label: String,
-) {
-    val controller = LocalNavigationController.current
-    var menuExpanded by remember {
-        mutableStateOf(false)
-    }
-    val selected = items.any { item ->
-        item.isSelected(backStack)
-    }
-    val count = rememberOverflowCount(items)
-    Box {
-        NavigationRailItem(
-            selected = selected,
-            onClick = {
-                menuExpanded = true
-            },
-            icon = Icons.Filled.MoreVert,
-            label = label,
-            badge = {
-                AnimatedTotalCounterBadge(count = count)
-            },
-        )
-        HomeNavigationOverflowMenu(
-            expanded = menuExpanded,
-            onDismissRequest = {
-                menuExpanded = false
-            },
-            items = items,
-            backStack = backStack,
-            onItemClick = { item ->
-                menuExpanded = false
-                navigateOnClick(controller, item)
-            },
-        )
-    }
 }
 
 @Composable
@@ -1101,8 +721,8 @@ private fun navigateSyncStatus(
 }
 
 /**
- * The home navigation bar. It is rendered by the stack root screen (see
- * [LocalNavigationBarContent]), so any screen pushed on top hides it.
+ * The home navigation bar. It is the [Scaffold] bottom bar of the home shell,
+ * so a screen pushed on top of the tab stack simply covers it.
  */
 @Composable
 private fun HomeNavigationBar(

@@ -62,7 +62,7 @@ suspend fun RememberStateFlowScope.passkeysServiceListStateProducer(
         )
         val intent = NavigationIntent.Composite(
             listOf(
-                NavigationIntent.PopById(PasskeysServicesRoute.ROUTER_NAME),
+                NavigationIntent.PopUntil { it === PasskeysServicesRoute },
                 NavigationIntent.NavigateToRoute(route),
             ),
         )

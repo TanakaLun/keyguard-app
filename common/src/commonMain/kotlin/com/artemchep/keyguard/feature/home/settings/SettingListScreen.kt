@@ -150,7 +150,7 @@ fun SettingListScreen() {
     }
 
     val accountListStateWrapper = accountListScreenState(
-        rootRouterName = SettingsRoute.ROUTER_NAME,
+        rootRoute = SettingsRoute,
     )
     val accountListState = remember(accountListStateWrapper) {
         accountListStateWrapper.unwrap(
@@ -443,7 +443,7 @@ private fun SettingListScreenContent(
                                 onClick = {
                                     val intent = NavigationIntent.Composite(
                                         listOf(
-                                            NavigationIntent.PopById(SettingsRoute.ROUTER_NAME),
+                                            NavigationIntent.PopUntil { it === SettingsRoute },
                                             NavigationIntent.NavigateToRoute(item.route),
                                         ),
                                     )

@@ -118,6 +118,17 @@ sealed interface NavigationIntent {
         val exclusive: Boolean = true,
     ) : NavigationIntent
 
+    /**
+     * Pops up to the last entry whose route matches [predicate].
+     *
+     * @param exclusive `true` to keep the matching entry, `false` to remove it
+     *   as well.
+     */
+    data class PopUntil(
+        val predicate: (Route) -> Boolean,
+        val exclusive: Boolean = true,
+    ) : NavigationIntent
+
     // manual
 
     /**

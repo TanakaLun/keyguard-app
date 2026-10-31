@@ -3,6 +3,7 @@ package com.artemchep.keyguard.feature.home.vault
 import androidx.compose.runtime.Composable
 import com.artemchep.keyguard.common.model.DFilter
 import com.artemchep.keyguard.feature.home.vault.search.sort.Sort
+import com.artemchep.keyguard.feature.home.vault.screen.VaultListScreen
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.Route
 import com.artemchep.keyguard.feature.navigation.RouteDescriptor
@@ -60,7 +61,7 @@ data class VaultRoute(
 
     @Composable
     override fun Content() {
-        VaultScreen(
+        VaultListScreen(
             args = args,
         )
     }

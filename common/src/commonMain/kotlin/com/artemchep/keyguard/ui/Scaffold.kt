@@ -135,15 +135,7 @@ fun ScaffoldLazyColumn(
         Scaffold(
             modifier = modifier,
             topBar = topBar,
-            bottomBar = {
-                bottomBar()
-                // The Miuix example renders the navigation bar inside the tab
-                // root screen, so it disappears with any screen pushed on top.
-                val navigationBar = LocalNavigationBarContent.current
-                if (LocalIsStackRootScreen.current && navigationBar != null) {
-                    navigationBar()
-                }
-            },
+            bottomBar = bottomBar,
             snackbarHost = snackbarHost,
             floatingActionButton = {
                 val expandedState = topAppBarScrollBehavior.rememberFabExpanded()
@@ -227,15 +219,7 @@ fun ScaffoldColumn(
         Scaffold(
             modifier = modifier,
             topBar = topBar,
-            bottomBar = {
-                bottomBar()
-                // The Miuix example renders the navigation bar inside the tab
-                // root screen, so it disappears with any screen pushed on top.
-                val navigationBar = LocalNavigationBarContent.current
-                if (LocalIsStackRootScreen.current && navigationBar != null) {
-                    navigationBar()
-                }
-            },
+            bottomBar = bottomBar,
             snackbarHost = snackbarHost,
             floatingActionButton = {
                 val expandedState = topAppBarScrollBehavior.rememberFabExpanded()

@@ -16,8 +16,6 @@ import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.iconSmall
 
 object PasskeysServicesRoute : Route {
-    const val ROUTER_NAME = "passkeys_services"
-
     suspend fun actionOrNull(
         translator: TranslatorScope,
         navigate: (NavigationIntent) -> Unit,
@@ -48,6 +46,6 @@ object PasskeysServicesRoute : Route {
 
     @Composable
     override fun Content() {
-        TwoFaServicesScreen()
+        PasskeysListScreen()
     }
 }
