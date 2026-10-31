@@ -1,17 +1,22 @@
 package com.artemchep.keyguard.feature.attachments
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
+import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.attachments.compose.ItemAttachment
@@ -80,6 +85,39 @@ fun AttachmentsScreen(
     tabletUi: Boolean,
     scrollBehavior: ScrollBehavior,
 ) {
+    val itemList = state.getOrNull()?.items.orEmpty()
+
+    // One section title per section, and one Card per group of rows.
+    val groups = remember(itemList) {
+        buildList<AttachmentsGroup> {
+            var card: MutableList<AttachmentsState.Item.Attachment>? = null
+            itemList.forEach { value ->
+                when (value) {
+                    is AttachmentsState.Item.Section -> {
+                        card = null
+                        add(
+                            AttachmentsGroup.Section(
+                                key = value.key,
+                                name = value.name,
+                            ),
+                        )
+                    }
+
+                    is AttachmentsState.Item.Attachment -> {
+                        val current = card
+                        if (current == null) {
+                            val next = mutableListOf(value)
+                            card = next
+                            add(AttachmentsGroup.Card(next))
+                        } else {
+                            current.add(value)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     ScaffoldLazyColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -119,22 +157,50 @@ fun AttachmentsScreen(
             }
 
             is Loadable.Ok -> {
-                val items = state.getOrNull()?.items.orEmpty()
-                if (items.isEmpty()) {
+                if (itemList.isEmpty()) {
                     item("header.empty") {
                         NoItemsPlaceholder()
                     }
                 }
 
-                items(items, key = { it.key }) { item ->
-                    Item(
-                        modifier = Modifier
-                            .animateItem(),
-                        item = item,
-                    )
+                items(groups, key = { it.key }) { group ->
+                    when (group) {
+                        is AttachmentsGroup.Section -> Section(
+                            text = group.name,
+                        )
+
+                        is AttachmentsGroup.Card -> Card(
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 12.dp),
+                        ) {
+                            group.items.forEach { value ->
+                                ItemAttachment(
+                                    modifier = Modifier,
+                                    item = value.item,
+                                    shapeState = ShapeState.ALL,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
+}
+
+private sealed interface AttachmentsGroup {
+    val key: String
+
+    data class Section(
+        override val key: String,
+        val name: String,
+    ) : AttachmentsGroup
+
+    data class Card(
+        val items: List<AttachmentsState.Item.Attachment>,
+    ) : AttachmentsGroup {
+        override val key: String get() = "card:${items.first().key}"
     }
 }
 
@@ -149,35 +215,5 @@ private fun NoItemsPlaceholder(
                 text = stringResource(Res.string.downloads_empty_label),
             )
         },
-    )
-}
-
-@Composable
-private fun Item(
-    modifier: Modifier,
-    item: AttachmentsState.Item,
-) = when (item) {
-    is AttachmentsState.Item.Section ->
-        ItemSection(
-            modifier = modifier,
-            item = item,
-        )
-
-    is AttachmentsState.Item.Attachment ->
-        ItemAttachment(
-            modifier = modifier,
-            item = item.item,
-            shapeState = item.shapeState,
-        )
-}
-
-@Composable
-private fun ItemSection(
-    modifier: Modifier,
-    item: AttachmentsState.Item.Section,
-) {
-    Section(
-        modifier = modifier,
-        text = item.name,
     )
 }

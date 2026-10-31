@@ -3,7 +3,6 @@ package com.artemchep.keyguard.feature.export
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.Badge
 import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -38,11 +38,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.permission.PermissionState
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.search.filter.FilterButton
@@ -55,8 +53,6 @@ import com.artemchep.keyguard.ui.AutofillButton
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItem
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
@@ -68,7 +64,6 @@ import com.artemchep.keyguard.ui.icons.KeyguardAttachment
 import com.artemchep.keyguard.ui.icons.KeyguardCipher
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.skeleton.SkeletonTextField
-import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.badgeContainer
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.onWarningContainer
@@ -354,7 +349,7 @@ private fun ExportScreen(
         )
         Icon(
             modifier = Modifier
-                .padding(horizontal = Dimens.textHorizontalPadding),
+                .padding(horizontal = 12.dp),
             imageVector = Icons.Outlined.Info,
             contentDescription = null,
             tint = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
@@ -365,7 +360,7 @@ private fun ExportScreen(
         )
         Text(
             modifier = Modifier
-                .padding(horizontal = Dimens.textHorizontalPadding),
+                .padding(horizontal = 12.dp),
             text = stringResource(Res.string.exportaccount_format_note),
             style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current
@@ -381,7 +376,7 @@ private fun ExportScreen(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = Dimens.textHorizontalPadding),
+                        .padding(horizontal = 12.dp),
                     text = stringResource(Res.string.exportaccount_attachments_note),
                     style = MiuixTheme.textStyles.bodyMedium,
                     color = LocalContentColor.current
@@ -398,7 +393,8 @@ private fun ColumnScope.ExportContentSkeleton(
     SkeletonTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.fieldHorizontalPadding),
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
     )
 }
 
@@ -418,7 +414,8 @@ private fun ColumnScope.ExportContentOk(
         ) {
             FlatItemSimpleExpressive(
                 modifier = Modifier
-                    .padding(bottom = 24.dp),
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 12.dp),
                 backgroundColor = MiuixTheme.colorScheme.warningContainer,
                 leading = icon<RowScope>(Icons.Outlined.Storage, Icons.Outlined.Warning),
                 title = {
@@ -435,10 +432,10 @@ private fun ColumnScope.ExportContentOk(
     PasswordFlatTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimens.fieldHorizontalPadding),
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
         label = stringResource(Res.string.exportaccount_password_label),
         value = password.model,
-        shapeState = if (attachments.onToggle != null) ShapeState.START else ShapeState.ALL,
         trailing = {
             AutofillButton(
                 key = "password",
@@ -448,52 +445,49 @@ private fun ColumnScope.ExportContentOk(
         },
     )
     if (attachments.onToggle != null) {
-        Spacer(
+        Card(
             modifier = Modifier
-                .height(2.dp),
-        )
-        FlatItemLayoutExpressive(
-            shapeState = ShapeState.END,
-            leading = {
-                Icon(Icons.Outlined.KeyguardAttachment, null)
-            },
-            content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.exportaccount_include_attachments_title),
-                        )
-                    },
-                    text = {
-                        val size = attachments.size
-                            ?: return@FlatItemTextContent
-                        Text(size)
-                    },
-                )
-            },
-            trailing = {
-                SwitchExpressive(
-                    checked = attachments.enabled,
-                    onCheckedChange = null,
-                )
-            },
-            onClick = attachments.onToggle,
-        )
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 12.dp),
+        ) {
+            FlatItemLayoutExpressive(
+                leading = {
+                    Icon(Icons.Outlined.KeyguardAttachment, null)
+                },
+                content = {
+                    FlatItemTextContent(
+                        title = {
+                            Text(
+                                text = stringResource(Res.string.exportaccount_include_attachments_title),
+                            )
+                        },
+                        text = {
+                            val size = attachments.size
+                                ?: return@FlatItemTextContent
+                            Text(size)
+                        },
+                    )
+                },
+                trailing = {
+                    SwitchExpressive(
+                        checked = attachments.enabled,
+                        onCheckedChange = null,
+                    )
+                },
+                onClick = attachments.onToggle,
+            )
+        }
     }
-    Section(
-        expressive = true,
-    )
 
     val updateOnClickView by rememberUpdatedState(items.onView)
     Button(
         modifier = Modifier
-            .padding(horizontal = Dimens.buttonHorizontalPadding),
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
         onClick = {
             updateOnClickView
                 ?.invoke()
         },
-
-
         enabled = updateOnClickView != null,
     ) {
         BadgedBox(

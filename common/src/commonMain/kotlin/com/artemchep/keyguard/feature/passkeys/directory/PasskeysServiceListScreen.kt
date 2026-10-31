@@ -44,7 +44,6 @@ fun PasskeysListScreen(
         contentRevision = PasskeysServiceListState.Content::revision,
         contentItems = PasskeysServiceListState.Content::items,
         itemKey = { it.key },
-        itemContentType = { it.contentType },
         sectionNameOrNull = { item ->
             (item as? PasskeysServiceListState.Item.Section)?.name
         },

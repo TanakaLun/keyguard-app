@@ -53,7 +53,6 @@ fun GpgKeyserverSearchScreen(
         contentRevision = GpgKeyserverSearchState.Content::revision,
         contentItems = GpgKeyserverSearchState.Content::items,
         itemKey = { it.key },
-        itemContentType = { it.contentType },
         sectionNameOrNull = { null },
         contentItemOrNull = { item ->
             item as? GpgKeyserverSearchState.Item.Content

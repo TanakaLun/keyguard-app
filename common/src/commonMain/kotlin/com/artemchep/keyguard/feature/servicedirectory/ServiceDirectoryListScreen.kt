@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.flatMap
@@ -64,7 +66,6 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
     contentRevision: (Content) -> Int,
     contentItems: (Content) -> List<Item>,
     itemKey: (Item) -> String,
-    itemContentType: (Item) -> String,
     sectionNameOrNull: (Item) -> String?,
     contentItemOrNull: (Item) -> ContentItem?,
     noItems: @Composable (Modifier) -> Unit,
@@ -114,6 +115,27 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
             focusRequester.requestFocus()
         },
     )
+
+    // One section title per section, and one Card per group of rows.
+    val contentItemsList = loadableState
+        .getOrNull()
+        ?.let(content)
+        ?.getOrNull()
+        ?.getOrNull()
+        ?.let(contentItems)
+    val groups = remember(contentItemsList) {
+        contentItemsList
+            ?.let {
+                groupItems(
+                    items = it,
+                    itemKey = itemKey,
+                    sectionNameOrNull = sectionNameOrNull,
+                    contentItemOrNull = contentItemOrNull,
+                )
+            }
+            .orEmpty()
+    }
+
     ScaffoldLazyColumn(
         modifier = Modifier
             .pullRefresh(pullRefreshState, enabled = false)
@@ -216,31 +238,34 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
                             )
                         }
                     },
-                    ifRight = { listContent ->
-                        val items = contentItems(listContent)
-                        if (items.isEmpty()) {
+                    ifRight = {
+                        if (groups.isEmpty()) {
                             item("empty") {
                                 noItems(Modifier)
                             }
                         }
 
                         items(
-                            items = items,
-                            key = itemKey,
-                            contentType = itemContentType,
-                        ) { item ->
-                            val serviceItem = contentItemOrNull(item)
-                            if (serviceItem != null) {
-                                contentItem(
-                                    Modifier.animateItem(),
-                                    serviceItem,
+                            items = groups,
+                            key = { it.key },
+                        ) { group ->
+                            val title = group.title
+                            if (title != null) {
+                                Section(
+                                    text = title,
                                 )
                             } else {
-                                val sectionName = sectionNameOrNull(item)
-                                if (sectionName != null) {
-                                    Section(
-                                        text = sectionName,
-                                    )
+                                Card(
+                                    modifier = Modifier
+                                        .padding(horizontal = 12.dp)
+                                        .padding(bottom = 12.dp),
+                                ) {
+                                    group.items.forEach { value ->
+                                        contentItem(
+                                            Modifier,
+                                            value,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -249,4 +274,56 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
             }
         }
     }
+}
+
+/**
+ * A list row group: either a section title ([title] is not null), or a
+ * card of [items].
+ */
+private data class ServiceDirectoryGroup<Item>(
+    val key: String,
+    val title: String?,
+    val items: List<Item>,
+)
+
+private fun <Item, ContentItem> groupItems(
+    items: List<Item>,
+    itemKey: (Item) -> String,
+    sectionNameOrNull: (Item) -> String?,
+    contentItemOrNull: (Item) -> ContentItem?,
+): List<ServiceDirectoryGroup<ContentItem>> {
+    val result = mutableListOf<ServiceDirectoryGroup<ContentItem>>()
+    var card: MutableList<ContentItem>? = null
+    items.forEach { item ->
+        val value = contentItemOrNull(item)
+        if (value != null) {
+            val current = card
+            if (current == null) {
+                val next = mutableListOf(value)
+                card = next
+                result.add(
+                    ServiceDirectoryGroup(
+                        key = "card:${itemKey(item)}",
+                        title = null,
+                        items = next,
+                    ),
+                )
+            } else {
+                current.add(value)
+            }
+        } else {
+            val name = sectionNameOrNull(item)
+            if (name != null) {
+                card = null
+                result.add(
+                    ServiceDirectoryGroup(
+                        key = "section:${itemKey(item)}",
+                        title = name,
+                        items = emptyList(),
+                    ),
+                )
+            }
+        }
+    }
+    return result
 }

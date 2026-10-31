@@ -44,7 +44,6 @@ fun TwoFaServiceListScreen(
         contentRevision = TwoFaServiceListState.Content::revision,
         contentItems = TwoFaServiceListState.Content::items,
         itemKey = { it.key },
-        itemContentType = { it.contentType },
         sectionNameOrNull = { item ->
             (item as? TwoFaServiceListState.Item.Section)?.name
         },

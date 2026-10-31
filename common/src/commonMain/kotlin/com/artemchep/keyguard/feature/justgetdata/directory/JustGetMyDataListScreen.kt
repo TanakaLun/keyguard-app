@@ -46,7 +46,6 @@ fun JustGetMyDataListScreen(
         contentRevision = JustGetMyDataListState.Content::revision,
         contentItems = JustGetMyDataListState.Content::items,
         itemKey = { it.key },
-        itemContentType = { it.contentType },
         sectionNameOrNull = { item ->
             (item as? JustGetMyDataListState.Item.Section)?.name
         },

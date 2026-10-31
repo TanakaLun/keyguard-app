@@ -46,7 +46,6 @@ fun JustDeleteMeListScreen(
         contentRevision = JustDeleteMeServiceListState.Content::revision,
         contentItems = JustDeleteMeServiceListState.Content::items,
         itemKey = { it.key },
-        itemContentType = { it.contentType },
         sectionNameOrNull = { item ->
             (item as? JustDeleteMeServiceListState.Item.Section)?.name
         },
