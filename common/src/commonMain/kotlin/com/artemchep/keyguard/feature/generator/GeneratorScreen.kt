@@ -166,6 +166,7 @@ import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.titleLarge
 import com.artemchep.keyguard.ui.theme.titleMedium
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Card
 
 @Composable
 fun GeneratorScreen(
@@ -873,27 +874,36 @@ private fun ColumnScope.GeneratorFilterItems(
         )
     }
 
-    ExpandedIfNotEmpty(
-        filter.length,
+    // One card for the whole generation configuration.
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
     ) {
-        DecoratedSlider(
-            modifier = Modifier
-                .padding(bottom = 24.dp),
-            filterLength = it,
-            interactionSource = sliderInteractionSource,
-            shapeState = ShapeState.ALL,
-        )
-    }
+        Column {
+            ExpandedIfNotEmpty(
+                filter.length,
+            ) {
+                DecoratedSlider(
+                    modifier = Modifier
+                        .padding(bottom = 24.dp),
+                    filterLength = it,
+                    interactionSource = sliderInteractionSource,
+                    shapeState = ShapeState.ALL,
+                )
+            }
 
-    val items = filter.items
-    items.forEachIndexed { index, item ->
-        key(item.key) {
-            val shapeState = getShapeState(
-                list = items,
-                index = index,
-                predicate = { el, _ -> el is GroupableShapeItem<*> },
-            )
-            FilterItem(item, shapeState = shapeState)
+            val items = filter.items
+            items.forEachIndexed { index, item ->
+                key(item.key) {
+                    val shapeState = getShapeState(
+                        list = items,
+                        index = index,
+                        predicate = { el, _ -> el is GroupableShapeItem<*> },
+                    )
+                    FilterItem(item, shapeState = shapeState)
+                }
+            }
         }
     }
 }
