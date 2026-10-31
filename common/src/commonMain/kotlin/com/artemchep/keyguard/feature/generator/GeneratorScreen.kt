@@ -167,6 +167,8 @@ import com.artemchep.keyguard.ui.theme.titleLarge
 import com.artemchep.keyguard.ui.theme.titleMedium
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 
 @Composable
 fun GeneratorScreen(
@@ -807,51 +809,35 @@ private fun ColumnScope.GeneratorFilterTip(
     ExpandedIfNotEmpty(
         valueOrNull = tipState.value,
     ) { tip ->
-        Column(
+        // Standard basic component: the icon is the start action, the text is
+        // the content, and the action lives in the end actions.
+        BasicComponent(
             modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .height(32.dp),
-            )
-            Icon(
-                modifier = Modifier
-                    .padding(horizontal = Dimens.textHorizontalPadding),
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null,
-                tint = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha),
-            )
-            Spacer(
-                modifier = Modifier
-                    .height(16.dp),
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-            ) {
-                Spacer(modifier = Modifier.width(Dimens.textHorizontalPadding))
-                Text(
-                    modifier = Modifier
-                        .weight(1f),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                    text = tip.text,
-                    color = LocalContentColor.current
-                        .combineAlpha(alpha = MediumEmphasisAlpha),
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 12.dp),
+            startAction = {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+            },
+            endActions = {
                 if (tip.onLearnMore != null) {
                     TextButton(
-    text = stringResource(Res.string.learn_more),
-
+                        text = stringResource(Res.string.learn_more),
                         onClick = {
                             tip.onLearnMore.invoke()
                         },
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
+            },
+            insideMargin = BasicComponentDefaults.InsideMargin,
+        ) {
+            Text(
+                text = tip.text,
+                style = MiuixTheme.textStyles.body2,
+            )
         }
     }
 }
