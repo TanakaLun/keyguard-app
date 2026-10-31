@@ -1,22 +1,24 @@
 package com.artemchep.keyguard.ui
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
  * `true` while the rendered screen is the root of its navigation stack.
  *
- * Follows the Miuix example: the navigation bar belongs to the tab root screen
- * and is not rendered by the screens pushed on top of it.
+ * Follows the Miuix example: the navigation bar belongs to the home shell and is
+ * not shown by the screens pushed on top of a tab root.
  */
 val LocalIsStackRootScreen = compositionLocalOf {
     true
 }
 
 /**
- * The home navigation bar, provided by the home screen for the stack roots.
+ * The state the home shell reads to decide whether the navigation bar belongs to
+ * the currently visible screen. The stack root screen reports into it.
  */
-val LocalNavigationBarContent = staticCompositionLocalOf<(@Composable () -> Unit)?> {
-    null
+val LocalIsStackRootScreenSink = staticCompositionLocalOf<MutableState<Boolean>> {
+    mutableStateOf(true)
 }
