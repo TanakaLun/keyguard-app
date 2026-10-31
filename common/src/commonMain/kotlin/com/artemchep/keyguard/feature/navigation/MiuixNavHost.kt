@@ -22,6 +22,10 @@ import top.yukonga.miuix.kmp.nav.transition.NavSwipeDirection
 import top.yukonga.miuix.kmp.nav.transition.NavTransition
 import top.yukonga.miuix.kmp.nav.transition.NavTransitions
 import top.yukonga.miuix.kmp.nav.transition.navGraphicsTransition
+import top.yukonga.miuix.kmp.nav.core.NavDisplayEffects
+import top.yukonga.miuix.kmp.nav.core.NavCornerClipMode
+import top.yukonga.miuix.kmp.nav.core.rememberNavSystemCornerRadius
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 /**
  * A miuix navigation key that wraps a keyguard [NavigationEntry].
@@ -169,6 +173,17 @@ internal fun MiuixNavHost(
     } else {
         NavSwipeDirection.LeftToRight
     }
+    // Visual effects follow the Miuix example: the entering page is clipped to
+    // the device corner, dimmed while it moves over the page below, and the
+    // backdrop is the page surface color.
+    val effects = NavDisplayEffects(
+        enableCornerClip = true,
+        cornerClipRadius = rememberNavSystemCornerRadius(),
+        cornerClipMode = NavCornerClipMode.Leading,
+        dimAmount = 0.5f,
+        blockInputDuringTransition = true,
+        backdropColor = MiuixTheme.colorScheme.surface,
+    )
 
     NavDisplay(
         backStack = backStack,
@@ -177,6 +192,7 @@ internal fun MiuixNavHost(
             controller.queue(NavigationIntent.Pop)
         },
         transition = transition,
+        effects = effects,
     ) {
         entry<KgNavKey>(
             contentKey = { it.entry.id },

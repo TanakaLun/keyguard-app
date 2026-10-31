@@ -140,8 +140,16 @@ fun ScaffoldLazyColumn(
                 // The Miuix example renders the navigation bar inside the tab
                 // root screen, so it disappears with any screen pushed on top.
                 val navigationBar = LocalNavigationBarContent.current
-                if (LocalIsStackRootScreen.current && navigationBar != null) {
-                    navigationBar()
+                if (navigationBar != null) {
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = LocalIsStackRootScreen.current,
+                        enter = androidx.compose.animation.fadeIn() +
+                                androidx.compose.animation.expandVertically(),
+                        exit = androidx.compose.animation.fadeOut() +
+                                androidx.compose.animation.shrinkVertically(),
+                    ) {
+                        navigationBar()
+                    }
                 }
             },
             snackbarHost = snackbarHost,
@@ -232,8 +240,16 @@ fun ScaffoldColumn(
                 // The Miuix example renders the navigation bar inside the tab
                 // root screen, so it disappears with any screen pushed on top.
                 val navigationBar = LocalNavigationBarContent.current
-                if (LocalIsStackRootScreen.current && navigationBar != null) {
-                    navigationBar()
+                if (navigationBar != null) {
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = LocalIsStackRootScreen.current,
+                        enter = androidx.compose.animation.fadeIn() +
+                                androidx.compose.animation.expandVertically(),
+                        exit = androidx.compose.animation.fadeOut() +
+                                androidx.compose.animation.shrinkVertically(),
+                    ) {
+                        navigationBar()
+                    }
                 }
             },
             snackbarHost = snackbarHost,
