@@ -21,7 +21,7 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.license.model.License
 import com.artemchep.keyguard.feature.EmptySearchView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
@@ -114,9 +114,8 @@ private fun LicenseItem(
     val model = item.toLicenseItemModel()
     val navigationController by rememberUpdatedState(LocalNavigationController.current)
     val scmUrl by rememberUpdatedState(model.scmUrl)
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = shapeState,
         content = {
             FlatItemTextContent(
                 title = {
@@ -163,7 +162,7 @@ private fun LicenseItem(
                 }
             }
         },
-        trailing = if (scmUrl != null) {
+        endActions = if (scmUrl != null) {
             // composable
             {
                 ChevronIcon()

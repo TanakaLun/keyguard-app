@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.io.attempt
 import com.artemchep.keyguard.common.io.launchIn
 import com.artemchep.keyguard.common.usecase.PutOnboardingLastVisitInstant
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.platform.CurrentPlatform
@@ -247,7 +247,7 @@ private fun OnboardingContainer(
     modifier: Modifier = Modifier,
     items: List<OnboardingItem>,
 ) {
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
         content = {
             SimpleGridLayout(

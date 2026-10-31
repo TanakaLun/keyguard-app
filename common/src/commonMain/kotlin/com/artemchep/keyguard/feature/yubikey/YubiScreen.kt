@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.ToastMessage
 import com.artemchep.keyguard.common.usecase.ShowMessage
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.*
@@ -91,7 +91,7 @@ fun YubiScreen() {
         Section(
             expressive = true,
         )
-        FlatItemLayoutExpressive(
+        BasicComponent(
             content = {
                 SimpleGridLayout {
                     YubiKeyUsbCard(

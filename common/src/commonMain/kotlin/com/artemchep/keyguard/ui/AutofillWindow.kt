@@ -67,7 +67,7 @@ import com.artemchep.keyguard.feature.generator.GeneratorType
 import com.artemchep.keyguard.feature.generator.colorizePasswordOrEmpty
 import com.artemchep.keyguard.feature.generator.produceGeneratorState
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.HorizontalContextItems
 import com.artemchep.keyguard.feature.home.vault.component.Section
@@ -493,10 +493,9 @@ fun ColumnScope.GeneratorSuggestions(
                 horizontalArrangement = Arrangement.spacedBy(Dimens.contentPadding)
             ) {
                 value.forEach { i ->
-                    FlatItemLayoutExpressive(
+                    BasicComponent(
                         modifier = Modifier
                             .widthIn(max = 220.dp),
-                        padding = PaddingValues(0.dp),
                         content = {
                             FlatItemTextContent2(
                                 title = if (i.context != null) {

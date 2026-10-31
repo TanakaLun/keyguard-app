@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.FlatItemTextContent
@@ -51,8 +51,7 @@ fun CredentialExchangeItemRow(
     onSelectedChange: ((Boolean) -> Unit)? = null,
 ) {
     val updatedOnSelectedChange by rememberUpdatedState(onSelectedChange)
-    FlatItemLayoutExpressive(
-        shapeState = item.shapeState,
+    BasicComponent(
         content = {
             FlatItemTextContent(
                 title = {
@@ -69,7 +68,7 @@ fun CredentialExchangeItemRow(
                 },
             )
         },
-        trailing = selected?.let { checked ->
+        endActions = selected?.let { checked ->
             // composable
             {
                 Checkbox(

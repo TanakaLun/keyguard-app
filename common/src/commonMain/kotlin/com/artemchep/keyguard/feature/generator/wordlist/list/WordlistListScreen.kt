@@ -2,6 +2,8 @@ package com.artemchep.keyguard.feature.generator.wordlist.list
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Book
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -34,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -285,11 +289,20 @@ private fun WordlistItem(
             Color.Unspecified
         }
     }
-    FlatItemLayoutExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
-        leading = {
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .combinedClickable(
+                onClick = onClick ?: {},
+                onLongClick = onLongClick,
+            ),
+        startAction = {
             val accent = rememberSecretAccentColor(
                 accentLight = item.accentLight,
                 accentDark = item.accentDark,
@@ -340,7 +353,7 @@ private fun WordlistItem(
                 },
             )
         },
-        trailing = {
+        endActions = {
             Spacer(
                 modifier = Modifier
                     .width(8.dp),
@@ -374,7 +387,5 @@ private fun WordlistItem(
                 }
             }
         },
-        onClick = onClick,
-        onLongClick = onLongClick,
     )
 }

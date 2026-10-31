@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.favicon.AppIconUrl
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -105,10 +105,9 @@ private fun ConnectedCryptoAppItem(
     modifier: Modifier = Modifier,
     app: ConnectedCryptoAppsState.App,
 ) {
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = app.shapeState,
-        leading = {
+        startAction = {
             Avatar {
                 FaviconIcon(
                     modifier = Modifier
@@ -128,8 +127,7 @@ private fun ConnectedCryptoAppItem(
                     ConnectedCryptoAppDetails(app)
                 },
             )
-        },
-        footer = {
+
             val title = if (app.signerMismatch) {
                 stringResource(Res.string.connected_crypto_apps_status_signer_changed)
             } else {
@@ -138,14 +136,14 @@ private fun ConnectedCryptoAppItem(
             FlatSimpleNote(
                 modifier = Modifier
                     .padding(
-                        bottom = 16.dp,
+                        top = 8.dp,
                     ),
                 type = if (app.signerMismatch) SimpleNote.Type.ERROR else SimpleNote.Type.INFO,
                 title = title,
                 text = app.signer,
             )
         },
-        trailing = {
+        endActions = {
             IconButton(
                 onClick = app.onRevoke,
             ) {

@@ -48,7 +48,7 @@ import com.artemchep.keyguard.common.model.VaultState
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 import com.artemchep.keyguard.feature.biometric.BiometricPromptEffect
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.keyguard.unlock.unlockScreenActionPadding
 import com.artemchep.keyguard.feature.keyguard.unlock.unlockScreenTitlePadding
 import com.artemchep.keyguard.res.*
@@ -214,19 +214,12 @@ fun ColumnScope.SetupContent(
         Spacer(Modifier.height(3.dp))
 
         val updatedBiometric by rememberUpdatedState(setupState.biometric)
-        FlatItemLayoutExpressive(
-            shapeState = ShapeState.CENTER,
-            padding = PaddingValues(0.dp),
-            leading = {
+        BasicComponent(
+            title = stringResource(Res.string.setup_checkbox_biometric_auth),
+            startAction = {
                 Checkbox(
                     state = ToggleableState(setupState.biometric.checked),
                     onClick = null,
-                )
-            },
-            content = {
-                Text(
-                    text = stringResource(Res.string.setup_checkbox_biometric_auth),
-                    style = MiuixTheme.textStyles.bodyMedium,
                 )
             },
             onClick = {
@@ -238,19 +231,12 @@ fun ColumnScope.SetupContent(
     }
     Spacer(Modifier.height(3.dp))
     val updatedCrashlytics by rememberUpdatedState(setupState.crashlytics)
-    FlatItemLayoutExpressive(
-        shapeState = ShapeState.END,
-        padding = PaddingValues(0.dp),
-        leading = {
+    BasicComponent(
+        title = stringResource(Res.string.setup_button_send_crash_reports),
+        startAction = {
             Checkbox(
                 state = ToggleableState(setupState.crashlytics.checked),
                 onClick = null,
-            )
-        },
-        content = {
-            Text(
-                text = stringResource(Res.string.setup_button_send_crash_reports),
-                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = {
