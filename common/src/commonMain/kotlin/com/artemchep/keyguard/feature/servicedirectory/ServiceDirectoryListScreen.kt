@@ -299,7 +299,7 @@ private fun <Item, ContentItem> groupItems(
         if (value != null) {
             val current = card
             if (current == null) {
-                val next = mutableListOf(value)
+                val next = mutableListOf<ContentItem>(value)
                 card = next
                 result.add(
                     ServiceDirectoryGroup(

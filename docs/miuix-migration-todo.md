@@ -17,11 +17,11 @@
 - [x] Generator: whole configuration in one `Card`
 - [x] Generator tip: standard `BasicComponent` (icon in `startAction`)
 - [x] Search field: Miuix `SearchBar` container
+- [x] List screens group their rows into `Card`s: accounts, sync, export,
+      attachments, directory pages
 
 ## Remaining
 
-- [ ] Form/list screens still render plain rows without a `Card` around a group:
-      accounts, sync, export, attachments, directory pages
 - [ ] Replace the legacy row primitives with `BasicComponent` based rows and delete
       `FlatItemLayout`, `FlatItemLayoutExpressive`, `FlatDropdownSimpleExpressive`
       (note: `FlatItemLayoutExpressive` carries `onLongClick`, which `BasicComponent`
