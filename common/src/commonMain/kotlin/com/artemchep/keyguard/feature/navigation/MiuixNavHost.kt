@@ -10,6 +10,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import com.artemchep.keyguard.ui.LocalIsStackRootScreen
 import com.artemchep.keyguard.common.model.NavAnimation
 import com.artemchep.keyguard.common.usecase.GetNavAnimation
 import kotlinx.collections.immutable.ImmutableList
@@ -148,6 +149,7 @@ internal fun MiuixNavHost(
                 LocalNavigationNodeLogicalStack provides (stacks?.logical ?: baseLogicalStack),
                 LocalNavigationNodeVisualStack provides (stacks?.visual ?: baseVisualStack),
                 LocalNavigationNodeFinishing provides parentFinishing,
+                LocalIsStackRootScreen provides true,
             ) {
                 NavigationRoute(
                     entry = entry,
@@ -182,10 +184,12 @@ internal fun MiuixNavHost(
         ) { key ->
             val entry = key.entry
             val stacks = stacksById[entry.id] ?: lastStacks[entry.id]
+            val isRoot = visualEntries.indexOfFirst { it.id == entry.id } == 0
             CompositionLocalProvider(
                 LocalNavigationNodeLogicalStack provides (stacks?.logical ?: baseLogicalStack),
                 LocalNavigationNodeVisualStack provides (stacks?.visual ?: baseVisualStack),
                 LocalNavigationNodeFinishing provides (parentFinishing || entry.id !in stacksById),
+                LocalIsStackRootScreen provides isRoot,
             ) {
                 NavigationRoute(
                     entry = entry,

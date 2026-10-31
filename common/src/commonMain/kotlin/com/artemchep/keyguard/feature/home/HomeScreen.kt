@@ -232,18 +232,9 @@ fun HomeScreenContent(
         routes = routes,
     )
 
-    // The navigation bar belongs to the tab roots. Any pushed screen — including
-    // one pushed by a nested router such as the settings one — is a full screen
-    // page and hides it.
-    val backHandler = LocalNavigationBackHandler.current
-    val backStacks by backHandler.eek.collectAsState()
-    val deepestStackSize = backStacks
-        .values
-        .maxOfOrNull { it.backStack.size }
-        ?: 0
-    val showNavigation = navBarVisible &&
-            backStack.size <= 1 &&
-            deepestStackSize <= 2
+    // The navigation bar belongs to the tab roots; the stacks pushed on top
+    // hide it through LocalIsStackRootScreen.
+    val showNavigation = navBarVisible && backStack.size <= 1
 
     ResponsiveLayout {
         val maxWidth = maxWidth
