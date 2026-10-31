@@ -163,11 +163,9 @@ internal fun MiuixNavHost(
         return
     }
 
-    val transition: NavTransition = when (getNavAnimation().value) {
-        NavAnimation.DISABLED -> NavTransitions.None
-        NavAnimation.CROSSFADE -> CrossfadeNavTransition
-        NavAnimation.DYNAMIC -> NavTransitions.MiuixDefault
-    }
+    // The navigation style is the Miuix one, matching the example. The old
+    // keyguard animation preference no longer switches the transition.
+    val transition: NavTransition = NavTransitions.MiuixDefault
     val swipeDismiss = if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
         NavSwipeDirection.RightToLeft
     } else {
