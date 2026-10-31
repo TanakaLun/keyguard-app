@@ -160,6 +160,10 @@ import com.artemchep.keyguard.ui.theme.surfaceContainerLow
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import com.artemchep.keyguard.ui.LocalIsStackRootScreenSink
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 
 private const val ROUTE_NAME = "home"
 
