@@ -272,7 +272,7 @@ private fun AppItem(
 ) {
     BasicComponent(
         modifier = modifier,
-        title = item.name,
+        title = item.name.text,
         onClick = item.onClick,
     )
 }

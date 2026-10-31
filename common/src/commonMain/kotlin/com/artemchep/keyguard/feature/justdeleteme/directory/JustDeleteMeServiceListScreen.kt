@@ -11,7 +11,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.feature.EmptySearchView
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.justdeleteme.AhDifficulty
-import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.navigationNextEntryOrNull
 import com.artemchep.keyguard.feature.servicedirectory.ServiceDirectoryListScaffold
 import com.artemchep.keyguard.feature.twopane.LocalHasDetailPane
@@ -110,7 +109,7 @@ private fun AppItem(
                     Modifier
                 },
             ),
-        title = textResource(item.name),
+        title = item.name.text,
         startAction = {
             item.icon()
         },

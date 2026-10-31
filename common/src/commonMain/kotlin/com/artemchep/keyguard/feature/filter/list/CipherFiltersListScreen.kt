@@ -333,7 +333,7 @@ private fun FilterItem(
                 onClick = onClick ?: {},
                 onLongClick = onLongClick,
             ),
-        title = item.name,
+        title = item.name.text,
         startAction = {
             AvatarBuilder(
                 icon = item.icon,
