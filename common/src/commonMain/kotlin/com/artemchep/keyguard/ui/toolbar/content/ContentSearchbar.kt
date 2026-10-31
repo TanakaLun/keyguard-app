@@ -10,6 +10,7 @@ import com.artemchep.keyguard.feature.home.vault.search.query.VaultSearchQualifi
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.focus.FocusRequester2
+import top.yukonga.miuix.kmp.basic.SearchBar
 
 @Composable
 fun CustomSearchbarContent(
@@ -40,29 +41,38 @@ fun CustomSearchbarContent(
                 actions = actions,
             )
         }
-        SearchTextField(
+        // The Miuix search bar owns the field's container, the expand/collapse
+        // animation and the trailing action area.
+        SearchBar(
+            inputField = {
+                SearchTextField(
+                    modifier = Modifier,
+                text = searchFieldModel.text,
+                textRevision = searchFieldModel.textRevision,
+                placeholder = searchFieldPlaceholder,
+                searchIcon = !hasTopBar,
+                focusRequester = focusRequester,
+                focusFlow = searchFieldModel.focusFlow,
+                visualTransformation = searchFieldVisualTransformation,
+                qualifierSuggestion = searchFieldQualifierSuggestion,
+                onQualifierSuggestion = onSearchFieldQualifierSuggestion,
+                playPromo = playPromo,
+                leading = {
+                    if (!hasTopBar) {
+                        icon()
+                    }
+                },
+                trailing = {
+                    if (!hasTopBar) {
+                        actions()
+                    }
+                },
+                onTextChange = searchFieldModel.onChange,
+            )
+            },
+            onExpandedChange = {},
             modifier = searchFieldModifier,
-            text = searchFieldModel.text,
-            textRevision = searchFieldModel.textRevision,
-            placeholder = searchFieldPlaceholder,
-            searchIcon = !hasTopBar,
-            focusRequester = focusRequester,
-            focusFlow = searchFieldModel.focusFlow,
-            visualTransformation = searchFieldVisualTransformation,
-            qualifierSuggestion = searchFieldQualifierSuggestion,
-            onQualifierSuggestion = onSearchFieldQualifierSuggestion,
-            playPromo = playPromo,
-            leading = {
-                if (!hasTopBar) {
-                    icon()
-                }
-            },
-            trailing = {
-                if (!hasTopBar) {
-                    actions()
-                }
-            },
-            onTextChange = searchFieldModel.onChange,
-        )
+        ) {
+        }
     }
 }
