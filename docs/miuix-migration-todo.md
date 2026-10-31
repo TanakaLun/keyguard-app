@@ -1,4 +1,4 @@
-# Miuix migration — remaining work
+# Miuix migration — status
 
 ## Done
 
@@ -12,16 +12,17 @@
 - [x] Settings root + sub-pages: `SmallTitle` + `Card` + `BasicComponent`
 - [x] Vault list + vault item detail: `SmallTitle` + `Card`
 - [x] Navigation bar belongs to the stack root screen, no navigation animation
-- [x] Navigation transition/effects: `MiuixDefault` + `NavDisplayEffects`
+- [x] Navigation transition/effects: `MiuixDefault` + `NavDisplayEffects(rememberNavSystemCornerRadius, …)`
 - [x] Pull-to-search disabled
+- [x] Generator: whole configuration in one `Card`
+- [x] Generator tip: standard `BasicComponent` (icon in `startAction`)
+- [x] Search field: Miuix `SearchBar` container
 
-## Next
+## Remaining
 
-- [ ] Generator: group the generation behaviour rows (checkboxes) into one `Card`
-- [ ] Vault: both `ArrowPreference`s belong to one `Card`
-- [ ] Description/explanation rows: `BasicComponent` with the icon in `startAction`, standard icon size
-- [ ] Search: use the Miuix `SearchBar` for the in-page search fields
-- [ ] Remaining form/list screens: group rows into `Card`s (accounts, sync, export,
-      attachments, directories)
-- [ ] Delete the legacy row primitives after the migration:
+- [ ] Form/list screens still render plain rows without a `Card` around a group:
+      accounts, sync, export, attachments, directory pages
+- [ ] Replace the legacy row primitives with `BasicComponent` based rows and delete
       `FlatItemLayout`, `FlatItemLayoutExpressive`, `FlatDropdownSimpleExpressive`
+      (note: `FlatItemLayoutExpressive` carries `onLongClick`, which `BasicComponent`
+      does not expose — keep the long-press behaviour when migrating)
