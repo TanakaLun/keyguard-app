@@ -159,11 +159,7 @@ import com.artemchep.keyguard.ui.theme.labelSmall
 import com.artemchep.keyguard.ui.theme.surfaceContainerLow
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
-import com.artemchep.keyguard.ui.LocalIsStackRootScreenSink
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import com.artemchep.keyguard.ui.LocalNavigationBarContent
 
 private const val ROUTE_NAME = "home"
 
@@ -448,32 +444,28 @@ fun HomeScreenContent(
             // The same shell as the Miuix example: the page content is the
             // scaffold content, the navigation bar is the bottom bar, and the
             // snackbars belong to the scaffold.
-            val navigationBarVisibleState = remember {
-                mutableStateOf(true)
+            val navigationBarContent: (@Composable () -> Unit)? = if (bottomNavBarVisible) {
+                {
+                    HomeNavigationBar(
+                        bottomInsets = bottomInsets,
+                        accountStatusState = accountStatusState,
+                        routes = routes,
+                        maxWidth = maxWidth,
+                        navLabelState = navLabelState,
+                        backStack = backStack,
+                    )
+                }
+            } else {
+                null
             }
             CompositionLocalProvider(
-                LocalIsStackRootScreenSink provides navigationBarVisibleState,
+                LocalNavigationBarContent provides navigationBarContent,
             ) {
             Scaffold(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                bottomBar = {
-                    AnimatedVisibility(
-                        visible = bottomNavBarVisible && navigationBarVisibleState.value,
-                        enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically(),
-                    ) {
-                        HomeNavigationBar(
-                            bottomInsets = bottomInsets,
-                            accountStatusState = accountStatusState,
-                            routes = routes,
-                            maxWidth = maxWidth,
-                            navLabelState = navLabelState,
-                            backStack = backStack,
-                        )
-                    }
-                },
+                bottomBar = {},
                 snackbarHost = {
                     SnackbarHost(
                         state = snackbarHostState,
@@ -1117,7 +1109,7 @@ private fun navigateSyncStatus(
 
 /**
  * The home navigation bar. It is rendered by the stack root screen (see
- * the home shell), so any screen pushed on top hides it.
+ * [LocalNavigationBarContent]), so any screen pushed on top hides it.
  */
 @Composable
 private fun HomeNavigationBar(

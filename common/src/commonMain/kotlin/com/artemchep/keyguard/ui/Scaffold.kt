@@ -87,7 +87,6 @@ import kotlin.math.log10
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.SideEffect
 
 val screenMaxWidth = 768.dp
 val screenMaxWidthCompact = 480.dp
@@ -130,18 +129,21 @@ fun ScaffoldLazyColumn(
     }
     val translationYAnimatedState = animateFloatStateOneWayAsState(translationYState)
 
-    val isStackRoot = LocalIsStackRootScreen.current
-    val stackRootSink = LocalIsStackRootScreenSink.current
-    SideEffect {
-        stackRootSink.value = isStackRoot
-    }
     ProvideScaffoldLocalValues(
         expressive = expressive,
     ) {
         Scaffold(
             modifier = modifier,
             topBar = topBar,
-            bottomBar = bottomBar,
+            bottomBar = {
+                bottomBar()
+                // The Miuix example renders the navigation bar inside the tab
+                // root screen, so it disappears with any screen pushed on top.
+                val navigationBar = LocalNavigationBarContent.current
+                if (LocalIsStackRootScreen.current && navigationBar != null) {
+                    navigationBar()
+                }
+            },
             snackbarHost = snackbarHost,
             floatingActionButton = {
                 val expandedState = topAppBarScrollBehavior.rememberFabExpanded()
@@ -219,18 +221,21 @@ fun ScaffoldColumn(
     columnScrollState: ScrollState = rememberScrollState(),
     columnContent: @Composable ColumnScope.() -> Unit,
 ) {
-    val isStackRoot = LocalIsStackRootScreen.current
-    val stackRootSink = LocalIsStackRootScreenSink.current
-    SideEffect {
-        stackRootSink.value = isStackRoot
-    }
     ProvideScaffoldLocalValues(
         expressive = expressive,
     ) {
         Scaffold(
             modifier = modifier,
             topBar = topBar,
-            bottomBar = bottomBar,
+            bottomBar = {
+                bottomBar()
+                // The Miuix example renders the navigation bar inside the tab
+                // root screen, so it disappears with any screen pushed on top.
+                val navigationBar = LocalNavigationBarContent.current
+                if (LocalIsStackRootScreen.current && navigationBar != null) {
+                    navigationBar()
+                }
+            },
             snackbarHost = snackbarHost,
             floatingActionButton = {
                 val expandedState = topAppBarScrollBehavior.rememberFabExpanded()
