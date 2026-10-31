@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.auth.AccountViewRoute
 import com.artemchep.keyguard.feature.home.settings.accounts.model.AccountItem
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.justdeleteme.directory.JustDeleteMeServiceViewFullRoute
 import com.artemchep.keyguard.feature.navigation.navigationNextEntryOrNull
@@ -58,20 +57,8 @@ import androidx.compose.ui.state.ToggleableState
 
 @Composable
 fun AccountListItem(
-    item: AccountItem,
-) = when (item) {
-    is AccountItem.Section -> AccountListItemSection(item)
-    is AccountItem.Item -> AccountListItemText(item)
-}
-
-@Composable
-fun AccountListItemSection(
-    item: AccountItem.Section,
-) {
-    Section(
-        text = item.text.orEmpty(),
-    )
-}
+    item: AccountItem.Item,
+) = AccountListItemText(item)
 
 @Composable
 fun AccountListItemText(

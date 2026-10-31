@@ -125,8 +125,8 @@ sealed interface NavigationIntent {
      *   as well.
      */
     data class PopUntil(
-        val predicate: (Route) -> Boolean,
         val exclusive: Boolean = true,
+        val predicate: (Route) -> Boolean,
     ) : NavigationIntent
 
     // manual

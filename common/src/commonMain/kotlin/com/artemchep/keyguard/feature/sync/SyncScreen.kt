@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ErrorOutline
 import top.yukonga.miuix.kmp.basic.BadgedBox
+import top.yukonga.miuix.kmp.basic.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -94,30 +94,33 @@ private fun SyncContent(
             )
         },
     ) {
-        itemsIndexed(
-            items = s.value,
-            key = { _, it -> it.key },
-        ) { index, item ->
-            if (index > 0) {
-                HorizontalDivider()
+        item(key = "accounts") {
+            val accounts = s.value
+            if (accounts.isNotEmpty()) {
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 12.dp),
+                ) {
+                    accounts.forEachIndexed { index, item ->
+                        if (index > 0) {
+                            HorizontalDivider()
+                        }
+                        SyncAccountItem(
+                            item = item,
+                        )
+                    }
+                }
             }
-            TestK(
-                modifier = Modifier
-                    .animateItem(),
-                item = item,
-            )
         }
     }
 }
 
 @Composable
-private fun TestK(
-    modifier: Modifier = Modifier,
+private fun SyncAccountItem(
     item: SyncState.Item,
 ) {
-    Column(
-        modifier = modifier,
-    ) {
+    Column {
         FlatItemLayoutExpressive(
             leading = {
                 when (item.status) {
