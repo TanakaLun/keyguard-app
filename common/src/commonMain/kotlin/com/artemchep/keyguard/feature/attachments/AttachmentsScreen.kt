@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -164,7 +165,7 @@ fun AttachmentsScreen(
 
                 items(groups, key = { it.key }) { group ->
                     when (group) {
-                        is AttachmentsGroup.Section -> Section(
+                        is AttachmentsGroup.Section -> SmallTitle(
                             text = group.name,
                         )
 

@@ -598,10 +598,12 @@ private fun LoginItemSection(
     modifier: Modifier = Modifier,
     item: LoginStateItem.Section,
 ) {
-    SmallTitle(
-        modifier = modifier,
-        text = item.text,
-    )
+    if (item.text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = item.text,
+        )
+    }
 }
 
 @Composable

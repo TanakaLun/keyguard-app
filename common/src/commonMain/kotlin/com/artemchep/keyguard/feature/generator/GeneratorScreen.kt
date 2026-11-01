@@ -1225,9 +1225,11 @@ private fun FilterEnumItem(
 private fun FilterSectionItem(
     item: GeneratorState.Filter.Item.Section,
 ) {
-    SmallTitle(
-        text = item.text,
-    )
+    if (item.text != null) {
+        SmallTitle(
+            text = item.text,
+        )
+    }
 }
 
 @Composable

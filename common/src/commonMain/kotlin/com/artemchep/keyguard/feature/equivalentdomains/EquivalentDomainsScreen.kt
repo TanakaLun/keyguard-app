@@ -144,10 +144,12 @@ private fun EquivalentDomainsSectionItem(
     modifier: Modifier = Modifier,
     item: EquivalentDomainsState.Content.Item.Section,
 ) {
-    SmallTitle(
-        modifier = modifier,
-        text = item.text,
-    )
+    if (item.text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = item.text,
+        )
+    }
 }
 
 @Composable

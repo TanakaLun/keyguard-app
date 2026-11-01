@@ -1817,10 +1817,12 @@ private fun SectionItem(
     modifier: Modifier = Modifier,
     item: AddStateItem.Section,
 ) {
-    SmallTitle(
-        modifier = modifier,
-        text = item.text,
-    )
+    if (item.text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = item.text,
+        )
+    }
 }
 
 context(addScope: AddScreenScope)
