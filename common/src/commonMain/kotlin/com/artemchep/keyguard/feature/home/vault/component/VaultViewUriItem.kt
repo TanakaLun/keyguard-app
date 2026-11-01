@@ -24,10 +24,12 @@ import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
-import top.yukonga.miuix.kmp.theme.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +56,6 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.DropdownScopeImpl
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.FaviconIcon
@@ -68,6 +69,8 @@ import io.ktor.http.HttpStatusCode
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.labelSmall
@@ -105,8 +108,9 @@ fun VaultViewUriItem(
                 item.icon()
             },
             content = {
-            FlatItemTextContent(
-                title = {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -131,20 +135,18 @@ fun VaultViewUriItem(
                             )
                         }
                     }
-                },
-                text = if (item.text != null) {
-                    // composable
-                    {
-                        Text(
-                            text = item.text,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 5,
-                        )
-                    }
-                } else {
-                    null
-                },
-            )
+                }
+                if (item.text != null) {
+                    Text(
+                        text = item.text,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 5,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
+            }
             ExpandedIfNotEmpty(
                 item.warningTitle,
             ) { warningTitle ->

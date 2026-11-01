@@ -23,10 +23,12 @@ import androidx.compose.material.icons.outlined.Warning
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +48,6 @@ import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatItemActionContent
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.KeyguardPremium
@@ -57,6 +58,8 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 
 @Composable
 fun AccountListItem(
@@ -136,31 +139,32 @@ fun AccountListItemText(
             )
         },
         content = {
-            FlatItemTextContent(
-                title = {
-                    if (item.title != null) {
-                        Text(
-                            text = item.title,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(Res.string.empty_value),
-                            color = LocalContentColor.current
-                                .combineAlpha(DisabledEmphasisAlpha),
-                        )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                if (item.title != null) {
+                    Text(
+                        text = item.title,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(Res.string.empty_value),
+                        color = LocalContentColor.current
+                            .combineAlpha(DisabledEmphasisAlpha),
+                    )
+                }
+            }
+            item.text
+                ?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
+                    ) {
+                        TextContent(text = it)
                     }
-                },
-                text = item.text
-                    ?.takeIf { it.isNotEmpty() }
-                    ?.let {
-                        // composable
-                        {
-                            TextContent(text = it)
-                        }
-                    },
-            )
+                }
         },
         endActions = {
             if (item.error) {

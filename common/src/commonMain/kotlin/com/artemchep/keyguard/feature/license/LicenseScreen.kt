@@ -28,13 +28,13 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextFieldBadge
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
@@ -117,23 +117,20 @@ private fun LicenseItem(
     BasicComponent(
         modifier = modifier,
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = model.name
-                            ?: stringResource(Res.string.empty_value),
-                        color = LocalContentColor.current
-                            .let { color ->
-                                // If the name doesn't exist, then show it with
-                                // a different accent.
-                                if (model.name != null) {
-                                    color
-                                } else {
-                                    color.combineAlpha(DisabledEmphasisAlpha)
-                                }
-                            },
-                    )
-                },
+            Text(
+                text = model.name
+                    ?: stringResource(Res.string.empty_value),
+                color = LocalContentColor.current
+                    .let { color ->
+                        // If the name doesn't exist, then show it with
+                        // a different accent.
+                        if (model.name != null) {
+                            color
+                        } else {
+                            color.combineAlpha(DisabledEmphasisAlpha)
+                        }
+                    },
+                style = MiuixTheme.textStyles.bodyLarge,
             )
             Text(
                 text = model.dependency,

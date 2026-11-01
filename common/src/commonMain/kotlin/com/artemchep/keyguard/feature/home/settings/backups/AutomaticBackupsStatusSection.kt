@@ -40,7 +40,6 @@ import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.theme.Dimens
@@ -48,6 +47,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelMedium
 import com.artemchep.keyguard.ui.theme.onSurfaceVariant
@@ -153,12 +153,9 @@ private fun AutomaticBackupsStatusPanel(
 
         BasicComponent(
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.pref_item_automatic_backups_panel_repository_title),
-                        )
-                    },
+                Text(
+                    text = stringResource(Res.string.pref_item_automatic_backups_panel_repository_title),
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
                 ExpandedIfNotEmpty(
                     Unit
@@ -203,12 +200,9 @@ private fun AutomaticBackupsStatusPanel(
 
         BasicComponent(
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.pref_item_automatic_backups_panel_last_sync_title),
-                        )
-                    },
+                Text(
+                    text = stringResource(Res.string.pref_item_automatic_backups_panel_last_sync_title),
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
                 ExpandedIfNotEmpty(
                     Unit

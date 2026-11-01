@@ -107,10 +107,11 @@ fun VaultViewTotpItem(
                     },
                 ),
             content = {
-            FlatItemTextContent2(
-                title = {
-                    Text(item.title)
-                },
+            Text(
+                text = item.title,
+                style = MiuixTheme.textStyles.labelMedium,
+                color = LocalContentColor.current
+                    .combineAlpha(MediumEmphasisAlpha),
             )
             Spacer(
                 modifier = Modifier

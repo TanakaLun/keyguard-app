@@ -35,7 +35,6 @@ import com.artemchep.keyguard.res.environments_approval_message_unknown_app
 import com.artemchep.keyguard.res.environments_approval_title
 import com.artemchep.keyguard.res.ipc_approval_approve
 import com.artemchep.keyguard.res.ipc_approval_deny
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.Dimens
@@ -142,23 +141,17 @@ private fun CliRunItem(
         content = {
             val subtitle = listOfNotNull(operation.environmentName, operation.accountName)
                 .joinToString(separator = " • ")
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.cli_capability_run),
-                    )
-                },
-                text = if (subtitle.isNotEmpty()) {
-                    // composable
-                    {
-                        Text(
-                            text = subtitle,
-                        )
-                    }
-                } else {
-                    null
-                },
+            Text(
+                text = stringResource(Res.string.cli_capability_run),
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            if (subtitle.isNotEmpty()) {
+                Text(
+                    text = subtitle,
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                )
+            }
             CliRunDetails(operation)
         },
     )

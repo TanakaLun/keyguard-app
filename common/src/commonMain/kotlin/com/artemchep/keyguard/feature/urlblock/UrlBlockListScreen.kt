@@ -16,8 +16,11 @@ import androidx.compose.material.icons.outlined.TypeSpecimen
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,14 +48,17 @@ import com.artemchep.keyguard.ui.DefaultSelection
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.KeyguardWebsite
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemAvatar
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
@@ -252,36 +258,41 @@ private fun UrlBlockItem(
                 )
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
-                    text = {
-                        Column {
-                            if (item.text.isNotEmpty()) {
-                                Text(
-                                    text = item.text,
-                                )
-                            }
-                            if (item.uri.isNotEmpty()) {
-                                MiniRow(
-                                    modifier = Modifier
-                                        .padding(top = 4.dp),
-                                    icon = Icons.Outlined.KeyguardWebsite,
-                                    text = item.uri,
-                                )
-                            }
-                            if (item.mode.isNotEmpty()) {
-                                MiniRow(
-                                    modifier = Modifier
-                                        .padding(top = 4.dp),
-                                    icon = Icons.Outlined.TypeSpecimen,
-                                    text = item.mode,
-                                )
-                            }
-                        }
-                    },
+                Text(
+                    text = item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                        .copy(
+                            color = LocalContentColor.current
+                                .combineAlpha(MediumEmphasisAlpha),
+                        ),
+                ) {
+                    Column {
+                        if (item.text.isNotEmpty()) {
+                            Text(
+                                text = item.text,
+                            )
+                        }
+                        if (item.uri.isNotEmpty()) {
+                            MiniRow(
+                                modifier = Modifier
+                                    .padding(top = 4.dp),
+                                icon = Icons.Outlined.KeyguardWebsite,
+                                text = item.uri,
+                            )
+                        }
+                        if (item.mode.isNotEmpty()) {
+                            MiniRow(
+                                modifier = Modifier
+                                    .padding(top = 4.dp),
+                                icon = Icons.Outlined.TypeSpecimen,
+                                text = item.mode,
+                            )
+                        }
+                    }
+                }
             },
             endActions = {
                 ExpandedIfNotEmptyForRow(

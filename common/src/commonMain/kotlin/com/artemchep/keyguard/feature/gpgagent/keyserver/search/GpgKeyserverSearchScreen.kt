@@ -21,14 +21,16 @@ import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.qr.ScanQrButton
 import com.artemchep.keyguard.feature.servicedirectory.ServiceDirectoryListScaffold
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
@@ -129,21 +131,18 @@ private fun KeyItem(
                 IconBox(Icons.Outlined.Key)
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = item.title,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = item.description,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    },
+                Text(
+                    text = item.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MiuixTheme.textStyles.bodyLarge,
+                )
+                Text(
+                    text = item.description,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
                 )
             },
             endActions = {

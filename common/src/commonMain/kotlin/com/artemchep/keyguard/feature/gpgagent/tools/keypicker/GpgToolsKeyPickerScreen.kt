@@ -37,13 +37,14 @@ import com.artemchep.keyguard.res.gpg_tools_select_recipients
 import com.artemchep.keyguard.res.gpg_tools_select_signing_key
 import com.artemchep.keyguard.res.gpg_tools_selection_done
 import com.artemchep.keyguard.res.gpg_tools_sign_none
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
 
 @Composable
 internal fun GpgToolsKeyPickerScreen(
@@ -111,10 +112,9 @@ internal fun DialogContentScope.GpgToolsKeyPickerBody(
                         multiple = false,
                         onSelect = onSelectNone,
                     ) {
-                        FlatItemTextContent(
-                            title = {
-                                Text(stringResource(Res.string.gpg_tools_sign_none))
-                            },
+                        Text(
+                            stringResource(Res.string.gpg_tools_sign_none),
+                            style = MiuixTheme.textStyles.bodyLarge,
                         )
                     }
                 }

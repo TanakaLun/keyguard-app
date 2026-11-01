@@ -54,7 +54,6 @@ import com.artemchep.keyguard.ui.DefaultSelection
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
@@ -66,6 +65,8 @@ import com.artemchep.keyguard.ui.icons.OfflineIcon
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemPilled
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.badgeContainer
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
@@ -327,19 +328,18 @@ private fun FoldersScreenFolderItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
-                    text = if (item.text != null) {
-                        // composable
-                        {
-                            Text(item.text)
-                        }
-                    } else {
-                        null
-                    },
+                Text(
+                    text = item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
+                if (item.text != null) {
+                    Text(
+                        text = item.text,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
             },
             endActions = {
                 ExpandedIfNotEmptyForRow(

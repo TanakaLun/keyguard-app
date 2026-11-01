@@ -18,11 +18,13 @@ import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,10 +46,10 @@ import com.artemchep.keyguard.ui.DefaultSelection
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.colorizePassword
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.KeyguardGpgKey
@@ -57,6 +59,7 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonItem
 import com.artemchep.keyguard.ui.skeleton.SkeletonSection
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.theme.monoFontFamily
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
@@ -252,34 +255,33 @@ private fun GeneratorHistoryItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        when (item.type) {
-                            GeneratorHistoryItem.Value.Type.USERNAME,
-                            GeneratorHistoryItem.Value.Type.EMAIL,
-                            GeneratorHistoryItem.Value.Type.EMAIL_RELAY,
-                            ->
-                                Text(
-                                    text = item.title,
-                                    fontFamily = monoFontFamily,
-                                )
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
+                    when (item.type) {
+                        GeneratorHistoryItem.Value.Type.USERNAME,
+                        GeneratorHistoryItem.Value.Type.EMAIL,
+                        GeneratorHistoryItem.Value.Type.EMAIL_RELAY,
+                        ->
+                            Text(
+                                text = item.title,
+                                fontFamily = monoFontFamily,
+                            )
 
-                            else ->
-                                Text(
-                                    text = colorizePassword(item.title, LocalContentColor.current),
-                                    fontFamily = monoFontFamily,
-                                )
-                        }
-                    },
-                    text = if (item.text.isNotBlank()) {
-                        // composable
-                        {
-                            Text(item.text)
-                        }
-                    } else {
-                        null
-                    },
-                )
+                        else ->
+                            Text(
+                                text = colorizePassword(item.title, LocalContentColor.current),
+                                fontFamily = monoFontFamily,
+                            )
+                    }
+                }
+                if (item.text.isNotBlank()) {
+                    Text(
+                        item.text,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
             },
             endActions = {
                 val onCopyAction = remember(item.dropdown) {

@@ -115,7 +115,6 @@ import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FingerprintPlaneta
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
@@ -1197,13 +1196,14 @@ private fun FilterEnumItem(
                 null
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
-                    text = {
-                        Text(item.model.value)
-                    },
+                Text(
+                    item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
+                )
+                Text(
+                    item.model.value,
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
                 )
             },
         )

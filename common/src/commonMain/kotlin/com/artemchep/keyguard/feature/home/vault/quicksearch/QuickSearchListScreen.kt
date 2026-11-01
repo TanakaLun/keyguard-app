@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
@@ -33,6 +34,7 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -96,7 +98,7 @@ import com.artemchep.keyguard.platform.LocalAnimationFactor
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.PlainTextField
 import com.artemchep.keyguard.ui.focus.FocusRequester2
 import com.artemchep.keyguard.ui.focus.focusRequester2
@@ -106,6 +108,8 @@ import com.artemchep.keyguard.ui.surface.ProvideSurfaceColor
 import com.artemchep.keyguard.ui.surface.ReportSurfaceColor
 import com.artemchep.keyguard.ui.surface.surfaceElevationColor
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.util.VerticalDivider
 import kotlinx.coroutines.delay
@@ -639,43 +643,42 @@ private fun QuickSearchResultRow(
                     },
                 ),
         content = {
-            FlatItemTextContent(
-                title = {
-                    val title =
-                        item.title
-                            .takeUnless { it.isEmpty() }
-                    if (title != null) {
-                        Text(
-                            text = title,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            style = MiuixTheme.textStyles.titleMedium,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(Res.string.empty_value),
-                            color =
-                                LocalContentColor.current
-                                    .combineAlpha(DisabledEmphasisAlpha),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                    }
-                },
-                text =
-                    item.text
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.let {
-                            // composable
-                            {
-                                Text(
-                                    text = it,
-                                    overflow = TextOverflow.Ellipsis,
-                                    maxLines = if (item.source.type == DSecret.Type.SecureNote) 4 else 2,
-                                )
-                            }
-                        },
-            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                val title =
+                    item.title
+                        .takeUnless { it.isEmpty() }
+                if (title != null) {
+                    Text(
+                        text = title,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        style = MiuixTheme.textStyles.titleMedium,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(Res.string.empty_value),
+                        color =
+                            LocalContentColor.current
+                                .combineAlpha(DisabledEmphasisAlpha),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                }
+            }
+            item.text
+                ?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    Text(
+                        text = it,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = if (item.source.type == DSecret.Type.SecureNote) 4 else 2,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
             item.searchContextBadge?.let { badge ->
                 VaultItemSearchContextBadge(
                     modifier = Modifier

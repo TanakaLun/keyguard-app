@@ -68,7 +68,6 @@ import com.artemchep.keyguard.feature.generator.GeneratorType
 import com.artemchep.keyguard.feature.generator.colorizePasswordOrEmpty
 import com.artemchep.keyguard.feature.generator.produceGeneratorState
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.HorizontalContextItems
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.wrap
@@ -87,6 +86,8 @@ import kotlinx.coroutines.flow.StateFlow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.titleLarge
 import com.artemchep.keyguard.ui.theme.titleMedium
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.labelMedium
 
 @Composable
 fun AutofillButton(
@@ -526,26 +527,21 @@ fun ColumnScope.GeneratorSuggestions(
                         modifier = Modifier
                             .widthIn(max = 220.dp),
                         content = {
-                            FlatItemTextContent2(
-                                title = if (i.context != null) {
-                                    // composable
-                                    {
-                                        Text(
-                                            text = i.context,
-                                        )
-                                    }
-                                } else {
-                                    null
-                                },
-                                text = {
-                                    Text(
-                                        text = colorizePasswordOrEmpty(i.value),
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontFamily = FontFamily.Monospace,
-                                        fontSize = 12.sp,
-                                    )
-                                },
+                            if (i.context != null) {
+                                Text(
+                                    text = i.context,
+                                    style = MiuixTheme.textStyles.labelMedium,
+                                    color = LocalContentColor.current
+                                        .combineAlpha(MediumEmphasisAlpha),
+                                )
+                            }
+                            Text(
+                                text = colorizePasswordOrEmpty(i.value),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 12.sp,
+                                style = MiuixTheme.textStyles.bodyLarge,
                             )
                         },
                         onClick = {

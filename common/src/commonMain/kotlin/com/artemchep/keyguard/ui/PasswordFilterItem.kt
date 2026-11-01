@@ -486,10 +486,22 @@ fun FlatItem(
         endActions = trailing,
         enabled = enabled,
         content = {
-            FlatItemTextContent(
-                title = title,
-                text = text,
-            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                title()
+            }
+            if (text != null) {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                        .copy(
+                            color = LocalContentColor.current
+                                .combineAlpha(MediumEmphasisAlpha),
+                        ),
+                ) {
+                    text()
+                }
+            }
         },
     )
     actions.forEachIndexed { _, action ->
@@ -502,41 +514,6 @@ fun FlatItem(
                     compact = true,
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun ColumnScope.FlatItemTextContent(
-    title: (@Composable () -> Unit)? = null,
-    text: (@Composable () -> Unit)? = null,
-    tint: Color = LocalContentColor.current,
-    compact: Boolean = false,
-) {
-    val titleStyle = MiuixTheme.textStyles.bodyLarge
-    val textStyle =
-        if (!compact) MiuixTheme.textStyles.bodyMedium else MiuixTheme.textStyles.bodySmall
-    if (title != null) {
-        val contentColor = tint
-            .copy(alpha = 1f)
-            .combineAlpha(LocalContentColor.current.alpha)
-        CompositionLocalProvider(
-            LocalTextStyle provides titleStyle
-                .copy(color = contentColor),
-        ) {
-            title()
-        }
-    }
-    if (text != null) {
-        val contentColor = tint
-            .copy(alpha = 1f)
-            .combineAlpha(LocalContentColor.current.alpha)
-            .combineAlpha(MediumEmphasisAlpha)
-        CompositionLocalProvider(
-            LocalTextStyle provides textStyle
-                .copy(color = contentColor),
-        ) {
-            text()
         }
     }
 }
@@ -585,29 +562,27 @@ fun RowScope.FlatItemActionContent(
                 .weight(1f),
             verticalArrangement = Arrangement.Center,
         ) {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = textResource(action.title),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                text = if (action.text != null) {
-                    // composable
-                    {
-                        Text(
-                            text = textResource(action.text),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 13.sp,
-                        )
-                    }
-                } else {
-                    null
-                },
-                compact = compact,
+            Text(
+                text = textResource(action.title),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            if (action.text != null) {
+                Text(
+                    text = textResource(action.text),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 13.sp,
+                    style = if (compact) {
+                        MiuixTheme.textStyles.bodySmall
+                    } else {
+                        MiuixTheme.textStyles.bodyMedium
+                    },
+                    color = LocalContentColor.current
+                        .combineAlpha(MediumEmphasisAlpha),
+                )
+            }
         }
         if (action.trailing != null) {
             Spacer(Modifier.width(8.dp))

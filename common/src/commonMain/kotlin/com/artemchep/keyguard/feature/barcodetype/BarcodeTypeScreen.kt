@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.QrCode
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +43,6 @@ import com.artemchep.keyguard.feature.dialog.DialogContentScope
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatDropdown
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeepScreenOnEffect
 import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.icons.icon
@@ -149,24 +150,24 @@ internal fun DialogContentScope.BarcodeTypeBody(
 private fun BarcodeTypeDropdown(format: BarcodeTypeState.Format?) {
     FlatDropdown(
         content = {
-            FlatItemTextContent(
-                title = {
-                    val selectedTitle = format?.format.orEmpty()
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = selectedTitle,
-                            style = MiuixTheme.textStyles.titleMedium,
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .width(8.dp),
-                        )
-                        DropdownIcon()
-                    }
-                },
-            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                val selectedTitle = format?.format.orEmpty()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = selectedTitle,
+                        style = MiuixTheme.textStyles.titleMedium,
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .width(8.dp),
+                    )
+                    DropdownIcon()
+                }
+            }
         },
         dropdown = format?.options.orEmpty(),
     )

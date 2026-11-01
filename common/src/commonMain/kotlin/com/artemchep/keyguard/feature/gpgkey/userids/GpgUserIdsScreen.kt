@@ -41,7 +41,6 @@ import com.artemchep.keyguard.ui.DialogPopup
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ProvideScaffoldLocalValues
@@ -51,6 +50,8 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 
 /**
@@ -289,17 +290,17 @@ private fun GpgUserIdItem(identity: GpgUserIdsState.Identity) {
     // Clicking a row with actions opens them in a dropdown.
     FlatDropdown(
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(identity.value)
-                },
-                text = identity.status?.let { status ->
-                    // composable
-                    {
-                        Text(status)
-                    }
-                },
+            Text(
+                identity.value,
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            identity.status?.let { status ->
+                Text(
+                    status,
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                )
+            }
         },
         dropdown = actions,
         enabled = true,

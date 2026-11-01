@@ -30,12 +30,14 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
@@ -100,7 +102,6 @@ import com.artemchep.keyguard.ui.DropdownMinWidth
 import com.artemchep.keyguard.ui.DropdownScopeImpl
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
@@ -116,6 +117,8 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonItemAvatar
 import com.artemchep.keyguard.ui.skeleton.SkeletonSection
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.toolbar.CustomToolbar
 import com.artemchep.keyguard.ui.toolbar.content.CustomSearchbarContent
@@ -585,40 +588,40 @@ fun VaultSendItemText(
                 onLongClick = onLongClick,
             ),
         content = {
-            FlatItemTextContent(
-                title = {
-                    val title = item.title
-                        .takeUnless { it.isEmpty() }
-                    if (title != null) {
-                        Text(
-                            text = title,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MiuixTheme.textStyles.titleMedium,
-                            maxLines = 1,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(Res.string.empty_value),
-                            color = LocalContentColor.current
-                                .combineAlpha(DisabledEmphasisAlpha),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                    }
-                },
-                text = item.text
-                    ?.takeIf { it.isNotEmpty() }
-                    ?.let {
-                        // composable
-                        {
-                            Text(
-                                text = it,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
-                            )
-                        }
-                    },
-            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                val title = item.title
+                    .takeUnless { it.isEmpty() }
+                if (title != null) {
+                    Text(
+                        text = title,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MiuixTheme.textStyles.titleMedium,
+                        maxLines = 1,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(Res.string.empty_value),
+                        color = LocalContentColor.current
+                            .combineAlpha(DisabledEmphasisAlpha),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                }
+            }
+            item.text
+                ?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    Text(
+                        text = it,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
 
             if (!item.notes.isNullOrEmpty()) {
                 Spacer(

@@ -51,7 +51,6 @@ import com.artemchep.keyguard.res.environments_capability_update
 import com.artemchep.keyguard.res.environments_capability_variables
 import com.artemchep.keyguard.res.ipc_approval_approve
 import com.artemchep.keyguard.res.ipc_approval_deny
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.Dimens
@@ -188,23 +187,17 @@ private fun EnvironmentApprovalRequestItem(
         content = {
             val subtitle = listOfNotNull(environmentName, accountName)
                 .joinToString(separator = " • ")
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = stringResource(environmentCapabilityLabel(request.capability)),
-                    )
-                },
-                text = if (subtitle.isNotEmpty()) {
-                    // composable
-                    {
-                        Text(
-                            text = subtitle,
-                        )
-                    }
-                } else {
-                    null
-                },
+            Text(
+                text = stringResource(environmentCapabilityLabel(request.capability)),
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            if (subtitle.isNotEmpty()) {
+                Text(
+                    text = subtitle,
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                )
+            }
             EnvironmentApprovalRequestDetails(request)
         },
     )

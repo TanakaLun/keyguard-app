@@ -9,11 +9,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,7 +30,6 @@ import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -36,6 +37,8 @@ import com.artemchep.keyguard.ui.icons.KeyguardSshKey
 import com.artemchep.keyguard.ui.icons.Stub
 import com.artemchep.keyguard.ui.skeleton.SkeletonSection
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.ok
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
@@ -211,29 +214,32 @@ private fun SshAgentHistoryValueItem(
             }
         },
         content = {
-            FlatItemTextContent(
-                title = {
+            Text(
+                text = item.caller,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MiuixTheme.textStyles.bodyLarge,
+            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                    .copy(
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    ),
+            ) {
+                Column {
                     Text(
-                        text = item.caller,
+                        text = item.description,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = item.formattedDate,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                },
-                text = {
-                    Column {
-                        Text(
-                            text = item.description,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        Text(
-                            text = item.formattedDate,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                },
-            )
+                }
+            }
         },
         endActions = {
             Text(

@@ -25,9 +25,12 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.colorizePassword
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.monoFontFamily
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
@@ -78,22 +81,19 @@ fun VaultPasswordHistoryValueItem(
                 Icon(icon, null)
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = colorizePassword(item.value, LocalContentColor.current),
-                            fontFamily = if (item.monospace) monoFontFamily else null,
-                        )
-                    },
-                    text = if (!item.date.isNullOrBlank()) {
-                        // composable
-                        {
-                            Text(item.date)
-                        }
-                    } else {
-                        null
-                    },
+                Text(
+                    text = colorizePassword(item.value, LocalContentColor.current),
+                    fontFamily = if (item.monospace) monoFontFamily else null,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
+                if (!item.date.isNullOrBlank()) {
+                    Text(
+                        text = item.date,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
             },
             endActions = {
                 val onCopyAction = remember(item.dropdown) {

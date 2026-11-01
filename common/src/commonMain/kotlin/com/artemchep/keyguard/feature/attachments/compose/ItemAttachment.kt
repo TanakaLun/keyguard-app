@@ -62,12 +62,14 @@ import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.AttachmentIcon
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
@@ -376,27 +378,21 @@ private fun ItemAttachmentLayout(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = name,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    },
-                    text = if (size != null) {
-                        // composable
-                        {
-                            Text(
-                                text = size,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    } else {
-                        null
-                    },
+                Text(
+                    text = name,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
+                if (size != null) {
+                    Text(
+                        text = size,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
                 content?.invoke()
             },
             endActions = {

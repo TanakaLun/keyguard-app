@@ -15,11 +15,13 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +48,6 @@ import com.artemchep.keyguard.res.status_starting
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -234,29 +235,28 @@ private fun EnvironmentMountItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = item.path,
-                            fontFamily = FontFamily.Monospace,
-                        )
-                    },
-                    text = {
-                        Column {
-                            item.environmentName?.let { name ->
-                                Text(text = name)
-                            }
-                            Text(
-                                text = stringResource(item.status.titleH()),
-                                color = if (item.status == EnvironmentMountStatus.Error) {
-                                    MiuixTheme.colorScheme.error
-                                } else {
-                                    MiuixTheme.colorScheme.onSurfaceVariant
-                                },
-                            )
-                        }
-                    },
+                Text(
+                    text = item.path,
+                    fontFamily = FontFamily.Monospace,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
+                ) {
+                    Column {
+                        item.environmentName?.let { name ->
+                            Text(text = name)
+                        }
+                        Text(
+                            text = stringResource(item.status.titleH()),
+                            color = if (item.status == EnvironmentMountStatus.Error) {
+                                MiuixTheme.colorScheme.error
+                            } else {
+                                MiuixTheme.colorScheme.onSurfaceVariant
+                            },
+                        )
+                    }
+                }
             },
         )
         KeyguardDropdownMenu(

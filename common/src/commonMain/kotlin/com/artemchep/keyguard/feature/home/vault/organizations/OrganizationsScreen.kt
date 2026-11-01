@@ -45,12 +45,12 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatDropdown
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.animatedNumberText
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemPilled
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
@@ -224,10 +224,9 @@ private fun OrganizationsScreenItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
+                Text(
+                    text = item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             },
             endActions = {

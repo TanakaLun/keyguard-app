@@ -110,57 +110,57 @@ fun VaultViewValueItem(
                 concealed = !visibilityState.value.value || visibilityConfig.hidden,
             )
 
-            FlatItemTextContent2(
-                title = if (!item.title.isNullOrBlank()) {
-                    // composable
-                    {
-                        Text(item.title)
-                    }
-                } else {
-                    null
-                },
-                text = {
-                    Row(
+            if (!item.title.isNullOrBlank()) {
+                Text(
+                    text = item.title,
+                    style = MiuixTheme.textStyles.labelMedium,
+                    color = LocalContentColor.current
+                        .combineAlpha(MediumEmphasisAlpha),
+                )
+            }
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
+                            .weight(1f)
+                            .animateContentHeight(),
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .animateContentHeight(),
-                        ) {
-                            val fontFamily = if (item.monospace) monoFontFamily else null
-                            if (shownValue.isNotBlank()) {
-                                Text(
-                                    text = shownValue,
-                                    fontFamily = fontFamily,
-                                    maxLines = item.maxLines,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            } else {
-                                Text(
-                                    modifier = Modifier
-                                        .alpha(MediumEmphasisAlpha),
-                                    text = stringResource(Res.string.empty_value),
-                                    fontFamily = fontFamily,
-                                )
-                            }
-                        }
-                        ExpandedIfNotEmptyForRow(
-                            item.label,
-                        ) { label ->
-                            VaultViewOutlinedBadge(
+                        val fontFamily = if (item.monospace) monoFontFamily else null
+                        if (shownValue.isNotBlank()) {
+                            Text(
+                                text = shownValue,
+                                fontFamily = fontFamily,
+                                maxLines = item.maxLines,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        } else {
+                            Text(
                                 modifier = Modifier
-                                    .padding(
-                                        start = 8.dp,
-                                    ),
-                                text = label,
+                                    .alpha(MediumEmphasisAlpha),
+                                text = stringResource(Res.string.empty_value),
+                                fontFamily = fontFamily,
                             )
                         }
                     }
-                },
-            )
+                    ExpandedIfNotEmptyForRow(
+                        item.label,
+                    ) { label ->
+                        VaultViewOutlinedBadge(
+                            modifier = Modifier
+                                .padding(
+                                    start = 8.dp,
+                                ),
+                            text = label,
+                        )
+                    }
+                }
+            }
 
             VaultViewValueReference(
                 reference = item.reference,
@@ -303,27 +303,3 @@ fun rememberVisibilityState(
     return visibilityState
 }
 
-@Composable
-fun ColumnScope.FlatItemTextContent2(
-    title: (@Composable () -> Unit)? = null,
-    text: (@Composable () -> Unit)? = null,
-) {
-    if (title != null) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MiuixTheme.textStyles.labelMedium
-                .let {
-                    val color = LocalContentColor.current.combineAlpha(alpha = MediumEmphasisAlpha)
-                    it.copy(color = color)
-                },
-        ) {
-            title()
-        }
-    }
-    if (text != null) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
-        ) {
-            text()
-        }
-    }
-}

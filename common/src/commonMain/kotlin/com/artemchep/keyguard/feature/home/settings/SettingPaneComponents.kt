@@ -33,7 +33,6 @@ import com.artemchep.keyguard.feature.home.vault.component.rememberFlatSurfaceEx
 import com.artemchep.keyguard.feature.home.vault.component.surfaceShape
 import com.artemchep.keyguard.ui.AnimatedNewCounterBadge
 import com.artemchep.keyguard.ui.ContextItem
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FlatItemAction

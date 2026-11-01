@@ -44,7 +44,6 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatDropdown
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -56,6 +55,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevation
 
 @Composable
@@ -242,10 +242,9 @@ private fun OrganizationsScreenCollectionItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
+                Text(
+                    text = item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             },
             endActions = {

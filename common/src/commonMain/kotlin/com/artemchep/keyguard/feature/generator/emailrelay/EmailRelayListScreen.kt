@@ -46,7 +46,6 @@ import com.artemchep.keyguard.ui.DropdownMinWidth
 import com.artemchep.keyguard.ui.DropdownScopeImpl
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -288,10 +287,9 @@ private fun AppItem(
                 )
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(item.title)
-                    },
+                Text(
+                    item.title,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             },
             endActions = {

@@ -12,11 +12,13 @@ import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -27,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.icons.KeyguardNote
 import com.artemchep.keyguard.ui.icons.KeyguardPasskey
 import com.artemchep.keyguard.ui.icons.KeyguardSshKey
@@ -53,20 +54,19 @@ fun CredentialExchangeItemRow(
     val updatedOnSelectedChange by rememberUpdatedState(onSelectedChange)
     BasicComponent(
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = item.title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                text = {
-                    CredentialKindBadges(
-                        credentials = item.credentials,
-                    )
-                },
+            Text(
+                text = item.title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
+            ) {
+                CredentialKindBadges(
+                    credentials = item.credentials,
+                )
+            }
         },
         endActions = selected?.let { checked ->
             // composable

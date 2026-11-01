@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
@@ -50,7 +51,6 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.OptionsButton
@@ -67,6 +67,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.titleMedium
 
 @Composable
@@ -455,14 +456,14 @@ private fun AddScreenMergeItem(
                 null
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(postActionTitleStringRes),
-                            style = MiuixTheme.textStyles.titleMedium,
-                        )
-                    },
-                )
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
+                    Text(
+                        text = stringResource(postActionTitleStringRes),
+                        style = MiuixTheme.textStyles.titleMedium,
+                    )
+                }
             },
             endActions = {
                 DropdownIcon()

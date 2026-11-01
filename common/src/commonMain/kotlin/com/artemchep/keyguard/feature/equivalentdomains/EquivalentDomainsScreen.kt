@@ -30,7 +30,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.FlatDropdown
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemPilled
@@ -38,6 +37,7 @@ import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun EquivalentDomainsScreen(
@@ -167,10 +167,9 @@ private fun EquivalentDomainsContentItem(
                 },
             ),
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
+            Text(
+                item.title,
+                style = MiuixTheme.textStyles.bodyLarge,
             )
         },
     )

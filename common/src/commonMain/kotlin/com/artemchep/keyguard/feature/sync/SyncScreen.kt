@@ -38,7 +38,6 @@ import com.artemchep.keyguard.ui.AhContainer
 import com.artemchep.keyguard.ui.AnimatedCounterBadge
 import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.icons.ChevronIcon

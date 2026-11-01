@@ -24,10 +24,12 @@ import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,14 +64,15 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.DropdownMinWidth
 import com.artemchep.keyguard.ui.DropdownScopeImpl
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
+import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.skeleton.SkeletonItem
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
@@ -315,41 +318,43 @@ private fun WordlistItem(
             )
         },
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
-                text = {
-                    Column {
+            Text(
+                item.title,
+                style = MiuixTheme.textStyles.bodyLarge,
+            )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                    .copy(color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha)),
+            ) {
+                Column {
+                    Spacer(
+                        modifier = Modifier
+                            .height(4.dp),
+                    )
+                    val codeModifier = Modifier
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .width(14.dp),
+                            imageVector = Icons.Outlined.Book,
+                            contentDescription = null,
+                            tint = LocalTextStyle.current.color,
+                        )
                         Spacer(
                             modifier = Modifier
-                                .height(4.dp),
+                                .width(8.dp),
                         )
-                        val codeModifier = Modifier
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .width(14.dp),
-                                imageVector = Icons.Outlined.Book,
-                                contentDescription = null,
-                                tint = LocalTextStyle.current.color,
-                            )
-                            Spacer(
-                                modifier = Modifier
-                                    .width(8.dp),
-                            )
-                            Text(
-                                modifier = codeModifier,
-                                text = item.counter,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 2,
-                            )
-                        }
+                        Text(
+                            modifier = codeModifier,
+                            text = item.counter,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2,
+                        )
                     }
-                },
-            )
+                }
+            }
         },
         endActions = {
             Spacer(

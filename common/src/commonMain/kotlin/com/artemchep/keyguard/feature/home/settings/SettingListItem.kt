@@ -29,11 +29,13 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +67,6 @@ import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -78,6 +79,8 @@ import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.titleMedium
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -269,36 +272,36 @@ fun SettingListAccountsItem(
                     }
                 },
                 content = {
-                    FlatItemTextContent(
-                        title = {
-                            if (accountItem.title != null) {
-                                Text(
-                                    text = accountItem.title,
-                                    style = MiuixTheme.textStyles.titleMedium,
-                                    overflow = TextOverflow.Ellipsis,
-                                    maxLines = 1,
-                                )
-                            } else {
-                                Text(
-                                    text = stringResource(Res.string.empty_value),
-                                    style = MiuixTheme.textStyles.titleMedium,
-                                    color = LocalContentColor.current
-                                        .combineAlpha(DisabledEmphasisAlpha),
-                                )
-                            }
-                        },
-                        text = accountItem.text
-                            ?.takeIf { it.isNotEmpty() }
-                            ?.let {
-                                // composable
-                                {
-                                    Text(
-                                        text = it,
-                                        maxLines = 1,
-                                    )
-                                }
-                            },
-                    )
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                    ) {
+                        if (accountItem.title != null) {
+                            Text(
+                                text = accountItem.title,
+                                style = MiuixTheme.textStyles.titleMedium,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(Res.string.empty_value),
+                                style = MiuixTheme.textStyles.titleMedium,
+                                color = LocalContentColor.current
+                                    .combineAlpha(DisabledEmphasisAlpha),
+                            )
+                        }
+                    }
+                    accountItem.text
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.let { text ->
+                            Text(
+                                text = text,
+                                maxLines = 1,
+                                style = MiuixTheme.textStyles.bodyMedium,
+                                color = LocalContentColor.current
+                                    .combineAlpha(MediumEmphasisAlpha),
+                            )
+                        }
                 },
             )
         }

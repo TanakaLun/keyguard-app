@@ -13,8 +13,10 @@ import androidx.compose.material.icons.outlined.Remove
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,6 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.favicon.AppIconUrl
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.connected_crypto_apps_empty
@@ -36,7 +37,6 @@ import com.artemchep.keyguard.res.connected_crypto_apps_title
 import com.artemchep.keyguard.res.package_name
 import com.artemchep.keyguard.res.status
 import com.artemchep.keyguard.ui.Avatar
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.SimpleNote
@@ -47,6 +47,7 @@ import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -119,14 +120,15 @@ private fun ConnectedCryptoAppItem(
             }
         },
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(app.label)
-                },
-                text = {
-                    ConnectedCryptoAppDetails(app)
-                },
+            Text(
+                app.label,
+                style = MiuixTheme.textStyles.bodyLarge,
             )
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
+            ) {
+                ConnectedCryptoAppDetails(app)
+            }
 
             val title = if (app.signerMismatch) {
                 stringResource(Res.string.connected_crypto_apps_status_signer_changed)

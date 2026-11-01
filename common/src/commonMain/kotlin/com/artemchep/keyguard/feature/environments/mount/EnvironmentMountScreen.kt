@@ -43,7 +43,6 @@ import com.artemchep.keyguard.res.environments_flatpak_note
 import com.artemchep.keyguard.res.environments_mount_create
 import com.artemchep.keyguard.res.environments_mount_path
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
@@ -191,17 +190,14 @@ private fun EnvironmentMountEnvironmentItem(
                 }
             },
             content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = environment.name,
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = stringResource(Res.string.cipher_type_environment),
-                        )
-                    },
+                Text(
+                    text = environment.name,
+                    style = MiuixTheme.textStyles.bodyLarge,
+                )
+                Text(
+                    text = stringResource(Res.string.cipher_type_environment),
+                    style = MiuixTheme.textStyles.bodyMedium,
+                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
                 )
             },
         )

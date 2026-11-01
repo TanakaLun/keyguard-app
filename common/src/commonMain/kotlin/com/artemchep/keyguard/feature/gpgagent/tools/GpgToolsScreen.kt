@@ -75,7 +75,6 @@ import com.artemchep.keyguard.res.remove
 import com.artemchep.keyguard.res.run_action
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -530,15 +529,12 @@ private fun GpgSigningKeyRow(
             if (keyItem != null) {
                 GpgToolsKeyIdentity(key = keyItem)
             } else {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            stringResource(
-                                if (optional) Res.string.gpg_tools_sign_none
-                                else Res.string.gpg_tools_choose_signing_key,
-                            ),
-                        )
-                    },
+                Text(
+                    stringResource(
+                        if (optional) Res.string.gpg_tools_sign_none
+                        else Res.string.gpg_tools_choose_signing_key,
+                    ),
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             }
         },

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -21,6 +22,7 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -32,7 +34,6 @@ import com.artemchep.keyguard.LocalAppMode
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.dialog.Dialog
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
@@ -50,6 +51,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.labelMedium
 
@@ -163,32 +165,33 @@ private fun PasskeysCredentialItem(
                     IconBox(item.icon)
                 },
                 content = {
-                    FlatItemTextContent2(
-                        title = {
-                            Text(
-                                text = stringResource(Res.string.passkey_relying_party),
-                            )
-                        },
-                        text = {
-                            Column {
-                                Text(
-                                    text = item.rpName
-                                        ?: stringResource(Res.string.empty_value),
-                                    color = if (item.rpName != null) {
-                                        LocalContentColor.current
-                                    } else {
-                                        LocalContentColor.current
-                                            .combineAlpha(DisabledEmphasisAlpha)
-                                    },
-                                )
-                                Text(
-                                    text = item.rpId,
-                                    fontFamily = FontFamily.Monospace,
-                                    style = MiuixTheme.textStyles.bodyMedium,
-                                )
-                            }
-                        },
+                    Text(
+                        text = stringResource(Res.string.passkey_relying_party),
+                        style = MiuixTheme.textStyles.labelMedium,
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
                     )
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                    ) {
+                        Column {
+                            Text(
+                                text = item.rpName
+                                    ?: stringResource(Res.string.empty_value),
+                                color = if (item.rpName != null) {
+                                    LocalContentColor.current
+                                } else {
+                                    LocalContentColor.current
+                                        .combineAlpha(DisabledEmphasisAlpha)
+                                },
+                            )
+                            Text(
+                                text = item.rpId,
+                                fontFamily = FontFamily.Monospace,
+                                style = MiuixTheme.textStyles.bodyMedium,
+                            )
+                        }
+                    }
                 },
                 endActions = {
                     PasskeysCredentialInfoButton(
@@ -265,24 +268,22 @@ private fun PasskeysCredentialTextItem(
             )
         },
         content = {
-            FlatItemTextContent2(
-                title = {
-                    Text(
-                        text = title,
-                    )
+            Text(
+                text = title,
+                style = MiuixTheme.textStyles.labelMedium,
+                color = LocalContentColor.current
+                    .combineAlpha(MediumEmphasisAlpha),
+            )
+            Text(
+                text = value
+                    ?: stringResource(Res.string.empty_value),
+                color = if (value != null || !showEmptyValue) {
+                    LocalContentColor.current
+                } else {
+                    LocalContentColor.current
+                        .combineAlpha(DisabledEmphasisAlpha)
                 },
-                text = {
-                    Text(
-                        text = value
-                            ?: stringResource(Res.string.empty_value),
-                        color = if (value != null || !showEmptyValue) {
-                            LocalContentColor.current
-                        } else {
-                            LocalContentColor.current
-                                .combineAlpha(DisabledEmphasisAlpha)
-                        },
-                    )
-                },
+                style = MiuixTheme.textStyles.bodyLarge,
             )
         },
         endActions = if (infoUrl != null) {

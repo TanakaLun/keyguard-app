@@ -47,6 +47,7 @@ import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.ProvideTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -104,7 +105,6 @@ import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.DropdownScope
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.animatedConcealedText
@@ -137,6 +137,7 @@ import kotlin.math.ln
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
 import androidx.compose.ui.state.ToggleableState
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelLarge
@@ -289,40 +290,40 @@ fun ColumnScope.VaultItemTextContent(
     item: VaultItemPresentation,
     textMaxLines: Int = if (item.source.type == DSecret.Type.SecureNote) 4 else 2,
 ) {
-    FlatItemTextContent(
-        title = {
-            val title = item.title
-                .takeUnless { it.isEmpty() }
-            if (title != null) {
-                Text(
-                    text = title,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    style = MiuixTheme.textStyles.titleMedium,
-                )
-            } else {
-                Text(
-                    text = stringResource(Res.string.empty_value),
-                    color = LocalContentColor.current
-                        .combineAlpha(DisabledEmphasisAlpha),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-            }
-        },
-        text = item.text
-            ?.takeIf { it.isNotEmpty() }
-            ?.let {
-                // composable
-                {
-                    Text(
-                        text = it,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = textMaxLines,
-                    )
-                }
-            },
-    )
+    CompositionLocalProvider(
+        LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+    ) {
+        val title = item.title
+            .takeUnless { it.isEmpty() }
+        if (title != null) {
+            Text(
+                text = title,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MiuixTheme.textStyles.titleMedium,
+            )
+        } else {
+            Text(
+                text = stringResource(Res.string.empty_value),
+                color = LocalContentColor.current
+                    .combineAlpha(DisabledEmphasisAlpha),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+        }
+    }
+    item.text
+        ?.takeIf { it.isNotEmpty() }
+        ?.let { text ->
+            Text(
+                text = text,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = textMaxLines,
+                style = MiuixTheme.textStyles.bodyMedium,
+                color = LocalContentColor.current
+                    .combineAlpha(MediumEmphasisAlpha),
+            )
+        }
 }
 
 @Composable

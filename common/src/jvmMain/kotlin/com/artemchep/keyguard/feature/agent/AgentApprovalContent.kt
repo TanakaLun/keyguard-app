@@ -17,6 +17,7 @@ import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -38,7 +39,6 @@ import com.artemchep.keyguard.res.cancel
 import com.artemchep.keyguard.res.ok
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FingerprintPlaneta
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.focus.FocusRequester2
 import com.artemchep.keyguard.ui.focus.focusRequester2
@@ -139,12 +139,9 @@ fun AgentApprovalContent(
                     cipherId = cipherId,
                     initialValue = keyName,
                 )
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = cipherName,
-                        )
-                    },
+                Text(
+                    text = cipherName,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
                 ExpandedIfNotEmpty(
                     keyFingerprint.takeIf { showKeyDetails },

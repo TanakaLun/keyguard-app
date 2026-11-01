@@ -14,7 +14,6 @@ import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.pref_item_color_scheme_title
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.theme.Dimens
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

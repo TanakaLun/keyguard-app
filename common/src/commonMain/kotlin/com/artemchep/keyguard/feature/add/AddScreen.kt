@@ -92,7 +92,6 @@ import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.gpgkey.userids.GpgUserIdsDialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewTotpBadge2
 import com.artemchep.keyguard.feature.home.vault.component.defaultFlatItemPaddingValues
@@ -117,7 +116,6 @@ import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FakeFlatTextField
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.FlatTextFieldBadge
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
@@ -872,22 +870,16 @@ private fun SshKeyField(
             content = {
                 val fingerprint = state.keyPair?.fingerprint
                 if (!fingerprint.isNullOrEmpty()) {
-                    FlatItemTextContent(
-                        title = {
-                            Text(
-                                text = fingerprint,
-                            )
-                        },
+                    Text(
+                        text = fingerprint,
+                        style = MiuixTheme.textStyles.bodyLarge,
                     )
                 } else {
-                    FlatItemTextContent(
-                        title = {
-                            Text(
-                                modifier = Modifier
-                                    .alpha(DisabledEmphasisAlpha),
-                                text = stringResource(Res.string.key_ssh_value_placeholder),
-                            )
-                        },
+                    Text(
+                        modifier = Modifier
+                            .alpha(DisabledEmphasisAlpha),
+                        text = stringResource(Res.string.key_ssh_value_placeholder),
+                        style = MiuixTheme.textStyles.bodyLarge,
                     )
                 }
             },
@@ -954,22 +946,16 @@ private fun GpgKeyField(
                 content = {
                     val fingerprint = state.gpgKey?.fingerprint
                     if (!fingerprint.isNullOrEmpty()) {
-                        FlatItemTextContent(
-                            title = {
-                                Text(
-                                    text = fingerprint,
-                                )
-                            },
+                        Text(
+                            text = fingerprint,
+                            style = MiuixTheme.textStyles.bodyLarge,
                         )
                     } else {
-                        FlatItemTextContent(
-                            title = {
-                                Text(
-                                    modifier = Modifier
-                                        .alpha(DisabledEmphasisAlpha),
-                                    text = stringResource(Res.string.key_gpg_value_placeholder),
-                                )
-                            },
+                        Text(
+                            modifier = Modifier
+                                .alpha(DisabledEmphasisAlpha),
+                            text = stringResource(Res.string.key_gpg_value_placeholder),
+                            style = MiuixTheme.textStyles.bodyLarge,
                         )
                     }
                 },
@@ -1218,21 +1204,17 @@ private fun LinkField(
     BasicComponent(
         modifier = modifier,
         content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.cipher_link_unavailable_title),
-                        color = LocalContentColor.current
-                            .combineAlpha(DisabledEmphasisAlpha),
-                    )
-                },
-                text = {
-                    Text(
-                        text = state.link?.remoteCipherId.orEmpty(),
-                        color = LocalContentColor.current
-                            .combineAlpha(DisabledEmphasisAlpha),
-                    )
-                },
+            Text(
+                text = stringResource(Res.string.cipher_link_unavailable_title),
+                color = LocalContentColor.current
+                    .combineAlpha(DisabledEmphasisAlpha),
+                style = MiuixTheme.textStyles.bodyLarge,
+            )
+            Text(
+                text = state.link?.remoteCipherId.orEmpty(),
+                color = LocalContentColor.current
+                    .combineAlpha(DisabledEmphasisAlpha),
+                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         endActions = {
@@ -1262,36 +1244,35 @@ private fun PasskeyField(
         content = {
             val passkey = state.passkey
             if (passkey != null) {
-                FlatItemTextContent(
-                    title = {
-                        val userName = passkey.userDisplayName
-                        if (userName != null) {
-                            Text(
-                                text = userName,
-                            )
-                        }
-                    },
-                    text = {
-                        val rpName = passkey.rpName
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
+                    val userName = passkey.userDisplayName
+                    if (userName != null) {
                         Text(
-                            text = rpName
-                                ?: stringResource(Res.string.empty_value),
-                            color = if (rpName != null) {
-                                LocalContentColor.current
-                            } else {
-                                LocalContentColor.current
-                                    .combineAlpha(DisabledEmphasisAlpha)
-                            },
+                            text = userName,
                         )
-                    },
-                )
+                    }
+                }
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyMedium,
+                ) {
+                    val rpName = passkey.rpName
+                    Text(
+                        text = rpName
+                            ?: stringResource(Res.string.empty_value),
+                        color = if (rpName != null) {
+                            LocalContentColor.current
+                        } else {
+                            LocalContentColor.current
+                                .combineAlpha(DisabledEmphasisAlpha)
+                        },
+                    )
+                }
             } else {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.passkey),
-                        )
-                    },
+                Text(
+                    text = stringResource(Res.string.passkey),
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             }
         },
@@ -1802,13 +1783,15 @@ private fun EnumItem(
                 null
             },
             content = {
-                FlatItemTextContent2(
-                    title = {
-                        Text(item.label)
-                    },
-                    text = {
-                        Text(state.value)
-                    },
+                Text(
+                    text = item.label,
+                    style = MiuixTheme.textStyles.labelMedium,
+                    color = LocalContentColor.current
+                        .combineAlpha(MediumEmphasisAlpha),
+                )
+                Text(
+                    text = state.value,
+                    style = MiuixTheme.textStyles.bodyLarge,
                 )
             },
         )
