@@ -2,6 +2,9 @@ package com.artemchep.keyguard.feature.generator.history
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -12,6 +15,7 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -21,23 +25,27 @@ import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DefaultSelection
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.colorizePassword
@@ -189,95 +197,133 @@ private fun GeneratorHistoryItem(
         selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState or shapeMaskOr,
-        leading = {
-            Crossfade(targetState = item.type) { type ->
-                val primaryIcon = when (type) {
-                    GeneratorHistoryItem.Value.Type.USERNAME -> Icons.Outlined.AlternateEmail
-                    GeneratorHistoryItem.Value.Type.EMAIL -> Icons.Outlined.Email
-                    GeneratorHistoryItem.Value.Type.EMAIL_RELAY -> Icons.AutoMirrored.Outlined.ForwardToInbox
-                    GeneratorHistoryItem.Value.Type.PASSWORD -> Icons.Outlined.Password
-                    GeneratorHistoryItem.Value.Type.SSH_KEY -> Icons.Outlined.Terminal
-                    GeneratorHistoryItem.Value.Type.GPG_KEY -> Icons.Outlined.KeyguardGpgKey
-                    null -> Icons.Stub
-                }
-                val secondaryIcon = when (type) {
-                    GeneratorHistoryItem.Value.Type.SSH_KEY -> Icons.Outlined.KeyguardSshKey
-                    else -> null
-                }
-                IconBox(
-                    main = primaryIcon,
-                    secondary = secondaryIcon,
-                )
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onLongClick = selectableState.onLongClick
+    val onClick: (() -> Unit)? = when {
+        selectableState.onClick != null -> selectableState.onClick
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
             }
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    when (item.type) {
-                        GeneratorHistoryItem.Value.Type.USERNAME,
-                        GeneratorHistoryItem.Value.Type.EMAIL,
-                        GeneratorHistoryItem.Value.Type.EMAIL_RELAY,
-                        ->
-                            Text(
-                                text = item.title,
-                                fontFamily = monoFontFamily,
-                            )
+        }
 
-                        else ->
-                            Text(
-                                text = colorizePassword(item.title, LocalContentColor.current),
-                                fontFamily = monoFontFamily,
-                            )
-                    }
-                },
-                text = if (item.text.isNotBlank()) {
-                    // composable
-                    {
-                        Text(item.text)
-                    }
-                } else {
-                    null
-                },
-            )
-        },
-        dropdown = item.dropdown,
-        trailing = {
-            val onCopyAction = remember(item.dropdown) {
-                item.dropdown
-                    .firstNotNullOfOrNull {
-                        val action = it as? FlatItemAction
-                        action?.takeIf { it.type == FlatItemAction.Type.COPY }
-                    }
-            }
-            if (onCopyAction != null) {
-                val onCopy = onCopyAction.onClick
-                IconButton(
-                    enabled = onCopy != null,
-                    onClick = {
-                        onCopy?.invoke()
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
                     },
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ContentCopy,
-                        contentDescription = null,
+                )
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                Crossfade(targetState = item.type) { type ->
+                    val primaryIcon = when (type) {
+                        GeneratorHistoryItem.Value.Type.USERNAME -> Icons.Outlined.AlternateEmail
+                        GeneratorHistoryItem.Value.Type.EMAIL -> Icons.Outlined.Email
+                        GeneratorHistoryItem.Value.Type.EMAIL_RELAY -> Icons.AutoMirrored.Outlined.ForwardToInbox
+                        GeneratorHistoryItem.Value.Type.PASSWORD -> Icons.Outlined.Password
+                        GeneratorHistoryItem.Value.Type.SSH_KEY -> Icons.Outlined.Terminal
+                        GeneratorHistoryItem.Value.Type.GPG_KEY -> Icons.Outlined.KeyguardGpgKey
+                        null -> Icons.Stub
+                    }
+                    val secondaryIcon = when (type) {
+                        GeneratorHistoryItem.Value.Type.SSH_KEY -> Icons.Outlined.KeyguardSshKey
+                        else -> null
+                    }
+                    IconBox(
+                        main = primaryIcon,
+                        secondary = secondaryIcon,
                     )
                 }
-            }
-            ExpandedIfNotEmptyForRow(
-                selectableState.selected.takeIf { selectableState.selecting },
-            ) { selected ->
-                Checkbox(
-                    state = ToggleableState(selected),
-                    onClick = null,
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        when (item.type) {
+                            GeneratorHistoryItem.Value.Type.USERNAME,
+                            GeneratorHistoryItem.Value.Type.EMAIL,
+                            GeneratorHistoryItem.Value.Type.EMAIL_RELAY,
+                            ->
+                                Text(
+                                    text = item.title,
+                                    fontFamily = monoFontFamily,
+                                )
+
+                            else ->
+                                Text(
+                                    text = colorizePassword(item.title, LocalContentColor.current),
+                                    fontFamily = monoFontFamily,
+                                )
+                        }
+                    },
+                    text = if (item.text.isNotBlank()) {
+                        // composable
+                        {
+                            Text(item.text)
+                        }
+                    } else {
+                        null
+                    },
+                )
+            },
+            endActions = {
+                val onCopyAction = remember(item.dropdown) {
+                    item.dropdown
+                        .firstNotNullOfOrNull {
+                            val action = it as? FlatItemAction
+                            action?.takeIf { it.type == FlatItemAction.Type.COPY }
+                        }
+                }
+                if (onCopyAction != null) {
+                    val onCopy = onCopyAction.onClick
+                    IconButton(
+                        enabled = onCopy != null,
+                        onClick = {
+                            onCopy?.invoke()
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ContentCopy,
+                            contentDescription = null,
+                        )
+                    }
+                }
+                ExpandedIfNotEmptyForRow(
+                    selectableState.selected.takeIf { selectableState.selecting },
+                ) { selected ->
+                    Checkbox(
+                        state = ToggleableState(selected),
+                        onClick = null,
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-        },
-        onClick = selectableState.onClick,
-        onLongClick = selectableState.onLongClick,
-        enabled = true,
-    )
+        }
+    }
 }

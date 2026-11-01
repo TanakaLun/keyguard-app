@@ -2,6 +2,7 @@ package com.artemchep.keyguard.ui
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +67,6 @@ import com.artemchep.keyguard.feature.generator.GeneratorState
 import com.artemchep.keyguard.feature.generator.GeneratorType
 import com.artemchep.keyguard.feature.generator.colorizePasswordOrEmpty
 import com.artemchep.keyguard.feature.generator.produceGeneratorState
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.HorizontalContextItems
@@ -268,7 +268,6 @@ fun ColumnScope.AutofillWindowContent(
     GeneratorValue2(
         loadedFlow = state.loadedState,
         valueFlow = state.valueState,
-        sliderInteractionSource = filterLengthSliderInteractionSource,
         onComplete = onComplete,
     )
 
@@ -319,7 +318,6 @@ fun ColumnScope.AutofillWindowContent(
 private fun ColumnScope.GeneratorValue2(
     loadedFlow: StateFlow<GeneratorState.Loading?>,
     valueFlow: StateFlow<GeneratorState.Value?>,
-    sliderInteractionSource: MutableInteractionSource,
     onComplete: (GetPasswordResult?) -> Unit,
 ) {
     val loadedState = loadedFlow.collectAsState()
@@ -370,10 +368,30 @@ private fun ColumnScope.GeneratorValue2(
         }
 
         Column {
-            val sliderInteractionSourceIsInteracted =
-                sliderInteractionSource.collectIsInteractedWith()
-            FlatDropdownSimpleExpressive(
-                content = {
+            var dropdownExpanded by remember { mutableStateOf(false) }
+            val onClick: (() -> Unit)? = when {
+                value.dropdown.isNotEmpty() -> {
+                    // lambda
+                    {
+                        dropdownExpanded = true
+                    }
+                }
+
+                else -> null
+            }
+            Box {
+                BasicComponent(
+                    modifier = Modifier
+                        .then(
+                            if (onClick != null) {
+                                Modifier.combinedClickable(
+                                    onClick = onClick,
+                                )
+                            } else {
+                                Modifier
+                            },
+                        ),
+                    content = {
                     ExpandedIfNotEmpty(
                         valueOrNull = value.title,
                     ) { title ->
@@ -421,7 +439,7 @@ private fun ColumnScope.GeneratorValue2(
                         showLength = value.length,
                     )
                 },
-                trailing = {
+                endActions = {
                     val updatedPassword by rememberUpdatedState(value.password)
                     val updatedSource by rememberUpdatedState(value.source)
                     val updatedOnClick by rememberUpdatedState(onComplete)
@@ -451,9 +469,20 @@ private fun ColumnScope.GeneratorValue2(
                         },
                     )
                 },
-                dropdown = value.dropdown,
-                enabled = !sliderInteractionSourceIsInteracted,
-            )
+                )
+                KeyguardDropdownMenu(
+                    expanded = dropdownExpanded,
+                    onDismissRequest = {
+                        dropdownExpanded = false
+                    },
+                ) {
+                    value.dropdown.forEach { action ->
+                        DropdownMenuItemFlat(
+                            action = action,
+                        )
+                    }
+                }
+            }
             HorizontalContextItems(
                 modifier = Modifier
                     .padding(top = 4.dp),

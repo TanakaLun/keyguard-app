@@ -1,6 +1,9 @@
 package com.artemchep.keyguard.feature.environments.mounts
 
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -12,11 +15,16 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontFamily
@@ -25,7 +33,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.common.service.environment.EnvironmentMountStatus
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -37,9 +44,11 @@ import com.artemchep.keyguard.res.environments_mount_status_error
 import com.artemchep.keyguard.res.status_ready
 import com.artemchep.keyguard.res.status_starting
 import com.artemchep.keyguard.ui.DefaultFab
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.icons.IconBox
@@ -195,37 +204,74 @@ private fun EnvironmentMountItem(
     modifier: Modifier,
     item: EnvironmentMountsState.Item,
 ) {
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        shapeState = item.shapeState,
-        leading = icon<RowScope>(Icons.Outlined.Description),
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = item.path,
-                        fontFamily = FontFamily.Monospace,
-                    )
-                },
-                text = {
-                    Column {
-                        item.environmentName?.let { name ->
-                            Text(text = name)
-                        }
-                        Text(
-                            text = stringResource(item.status.titleH()),
-                            color = if (item.status == EnvironmentMountStatus.Error) {
-                                MiuixTheme.colorScheme.error
-                            } else {
-                                MiuixTheme.colorScheme.onSurfaceVariant
-                            },
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = null,
                         )
-                    }
-                },
-            )
-        },
-        dropdown = item.dropdown,
-    )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                Row {
+                    icon<RowScope>(Icons.Outlined.Description).invoke(this)
+                }
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(
+                            text = item.path,
+                            fontFamily = FontFamily.Monospace,
+                        )
+                    },
+                    text = {
+                        Column {
+                            item.environmentName?.let { name ->
+                                Text(text = name)
+                            }
+                            Text(
+                                text = stringResource(item.status.titleH()),
+                                color = if (item.status == EnvironmentMountStatus.Error) {
+                                    MiuixTheme.colorScheme.error
+                                } else {
+                                    MiuixTheme.colorScheme.onSurfaceVariant
+                                },
+                            )
+                        }
+                    },
+                )
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 /** The delivery status of a local .env file. */

@@ -1,6 +1,8 @@
 package com.artemchep.keyguard.feature.home.vault.component
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.CreditCardOff
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -15,8 +18,10 @@ import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,7 +31,9 @@ import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.model.Visibility
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FlatItemAction
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.animatedCardNumberText
 import com.artemchep.keyguard.ui.shortcut.ShortcutTooltip
@@ -117,11 +124,30 @@ fun VaultViewCardItem(
     )
 
     val updatedVisibilityConfig by rememberUpdatedState(visibilityConfig)
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        elevation = item.elevation,
-        shapeState = item.shapeState,
-        content = {
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            content = {
             val brand = item.data.brand
                 ?: item.data.creditCardType?.name
             if (brand != null) {
@@ -186,7 +212,7 @@ fun VaultViewCardItem(
                 )
             }
         },
-        trailing = {
+        endActions = {
             if (item.visibility.concealed && cardNumber != null) {
                 VisibilityToggle(
                     visible = visibilityState.value.value,
@@ -226,6 +252,18 @@ fun VaultViewCardItem(
                 }
             }
         },
-        dropdown = item.dropdown,
-    )
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }

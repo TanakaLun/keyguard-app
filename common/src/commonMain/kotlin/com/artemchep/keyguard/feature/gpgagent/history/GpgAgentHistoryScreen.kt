@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -21,7 +22,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -195,10 +195,9 @@ private fun GpgAgentHistoryValueItem(
     modifier: Modifier,
     item: GpgAgentHistoryItem.Value,
 ) {
-    FlatDropdownSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
+        startAction = {
             val icon = when (item.request) {
                 GpgUsageHistoryRequestType.AGENT_LIST_KEYS -> Icons.Outlined.KeyguardGpgKey
                 GpgUsageHistoryRequestType.AGENT_SIGN_HASH -> Icons.Outlined.KeyguardFileSign
@@ -235,7 +234,7 @@ private fun GpgAgentHistoryValueItem(
                 },
             )
         },
-        trailing = {
+        endActions = {
             Text(
                 modifier = Modifier
                     .widthIn(max = 96.dp),
@@ -246,7 +245,6 @@ private fun GpgAgentHistoryValueItem(
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        enabled = true,
     )
 }
 

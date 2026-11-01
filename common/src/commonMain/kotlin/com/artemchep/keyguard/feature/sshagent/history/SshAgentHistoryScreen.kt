@@ -2,12 +2,14 @@ package com.artemchep.keyguard.feature.sshagent.history
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -22,7 +24,6 @@ import com.artemchep.keyguard.common.model.SshUsageHistoryResponseType
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -194,19 +195,20 @@ private fun SshAgentHistoryValueItem(
     modifier: Modifier,
     item: SshAgentHistoryItem.Value,
 ) {
-    FlatDropdownSimpleExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
-            val icon = when (item.request) {
-                SshUsageHistoryRequestType.AGENT_LIST_KEYS -> Icons.Stub
-                SshUsageHistoryRequestType.AGENT_SIGN_DATA -> Icons.Outlined.KeyguardSshKey
-                SshUsageHistoryRequestType.UNKNOWN -> Icons.Stub
+        startAction = {
+            Row {
+                val icon = when (item.request) {
+                    SshUsageHistoryRequestType.AGENT_LIST_KEYS -> Icons.Stub
+                    SshUsageHistoryRequestType.AGENT_SIGN_DATA -> Icons.Outlined.KeyguardSshKey
+                    SshUsageHistoryRequestType.UNKNOWN -> Icons.Stub
+                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                )
             }
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-            )
         },
         content = {
             FlatItemTextContent(
@@ -233,7 +235,7 @@ private fun SshAgentHistoryValueItem(
                 },
             )
         },
-        trailing = {
+        endActions = {
             Text(
                 modifier = Modifier
                     .widthIn(max = 96.dp),
@@ -244,7 +246,6 @@ private fun SshAgentHistoryValueItem(
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        enabled = true,
     )
 }
 

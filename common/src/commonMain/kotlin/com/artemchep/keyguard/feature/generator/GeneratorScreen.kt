@@ -101,7 +101,6 @@ import com.artemchep.keyguard.feature.auth.common.IntFieldModel
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryItem
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryState
 import com.artemchep.keyguard.feature.generator.history.produceGeneratorHistoryState
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -694,79 +693,102 @@ fun ColumnScope.GeneratorValue(
         val sliderInteractionSourceIsInteracted =
             sliderInteractionSource.collectIsInteractedWith()
         Column {
-            FlatDropdownSimpleExpressive(
-                elevation = 1.dp,
-                content = {
-                    ExpandedIfNotEmpty(
-                        valueOrNull = value.title,
-                    ) { title ->
-                        Text(
-                            modifier = Modifier
-                                .padding(bottom = 4.dp),
-                            text = title,
-                            style = MiuixTheme.textStyles.titleMedium,
-                        )
+            var dropdownExpanded by remember { mutableStateOf(false) }
+            val onClick: (() -> Unit)? = when {
+                value.dropdown.isNotEmpty() -> {
+                    // lambda
+                    {
+                        dropdownExpanded = true
                     }
-                    Crossfade(
-                        targetState = value.password,
-                        modifier = Modifier
-                            .animateContentHeight(),
-                    ) { password ->
-                        AutoResizeText(
-                            text = colorizePasswordOrEmpty(password),
-                        )
-                    }
-                    Spacer(
-                        modifier = Modifier
-                            .height(4.dp),
-                    )
-                    GeneratorBadgesRow(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        value = value.password,
-                        showStrength = value.strength,
-                        showLength = value.length,
-                    )
-                },
-                trailing = {
-                    val fingerprint = when (val source = value.source) {
-                        is GetPasswordResult.AsyncKey -> source.keyPair.publicKey.fingerprint
-                        is GetPasswordResult.AsyncGpgKey -> source.gpgKey.fingerprint
-                        else -> null
-                    }
-                    if (fingerprint != null) {
-                        Box(
-                            modifier = Modifier
-                                .size(72.dp),
-                        ) {
-                            FingerprintPlaneta(
-                                fingerprint = fingerprint,
+                }
+
+                else -> null
+            }
+            Box {
+                BasicComponent(
+                    onClick = onClick,
+                    content = {
+                        ExpandedIfNotEmpty(
+                            valueOrNull = value.title,
+                        ) { title ->
+                            Text(
                                 modifier = Modifier
-                                    .wrapContentSize(unbounded = true)
-                                    .size(96.dp),
+                                    .padding(bottom = 4.dp),
+                                text = title,
+                                style = MiuixTheme.textStyles.titleMedium,
                             )
                         }
-                    }
-                    ExpandedIfNotEmptyForRow(
-                        valueOrNull = Unit.takeIf { value.onCopy != null },
-                    ) {
-                        val updatedOnCopy by rememberUpdatedState(value.onCopy)
-                        IconButton(
-                            enabled = value.onCopy != null,
-                            onClick = {
-                                updatedOnCopy?.invoke()
-                            },
+                        Crossfade(
+                            targetState = value.password,
+                            modifier = Modifier
+                                .animateContentHeight(),
+                        ) { password ->
+                            AutoResizeText(
+                                text = colorizePasswordOrEmpty(password),
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .height(4.dp),
+                        )
+                        GeneratorBadgesRow(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            value = value.password,
+                            showStrength = value.strength,
+                            showLength = value.length,
+                        )
+                    },
+                    endActions = {
+                        val fingerprint = when (val source = value.source) {
+                            is GetPasswordResult.AsyncKey -> source.keyPair.publicKey.fingerprint
+                            is GetPasswordResult.AsyncGpgKey -> source.gpgKey.fingerprint
+                            else -> null
+                        }
+                        if (fingerprint != null) {
+                            Box(
+                                modifier = Modifier
+                                    .size(72.dp),
+                            ) {
+                                FingerprintPlaneta(
+                                    fingerprint = fingerprint,
+                                    modifier = Modifier
+                                        .wrapContentSize(unbounded = true)
+                                        .size(96.dp),
+                                )
+                            }
+                        }
+                        ExpandedIfNotEmptyForRow(
+                            valueOrNull = Unit.takeIf { value.onCopy != null },
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.ContentCopy,
-                                contentDescription = null,
-                            )
+                            val updatedOnCopy by rememberUpdatedState(value.onCopy)
+                            IconButton(
+                                enabled = value.onCopy != null,
+                                onClick = {
+                                    updatedOnCopy?.invoke()
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.ContentCopy,
+                                    contentDescription = null,
+                                )
+                            }
                         }
+                    },
+                )
+                KeyguardDropdownMenu(
+                    expanded = dropdownExpanded,
+                    onDismissRequest = {
+                        dropdownExpanded = false
+                    },
+                ) {
+                    value.dropdown.forEach { action ->
+                        DropdownMenuItemFlat(
+                            action = action,
+                        )
                     }
-                },
-                dropdown = value.dropdown,
-                enabled = !sliderInteractionSourceIsInteracted,
-            )
+                }
+            }
         }
     }
 }
@@ -1150,25 +1172,54 @@ private fun FilterEnumItem(
     item: GeneratorState.Filter.Item.Enum,
     shapeState: Int,
 ) {
-    FlatDropdownSimpleExpressive(
-        shapeState = shapeState,
-        leading = if (item.icon != null) {
-            icon<RowScope>(item.icon)
-        } else {
-            null
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
-                text = {
-                    Text(item.model.value)
-                },
-            )
-        },
-        dropdown = item.model.dropdown,
-    )
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        item.model.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            onClick = onClick,
+            startAction = if (item.icon != null) {
+                // composable
+                {
+                    Row {
+                        icon<RowScope>(item.icon).invoke(this)
+                    }
+                }
+            } else {
+                null
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(item.title)
+                    },
+                    text = {
+                        Text(item.model.value)
+                    },
+                )
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.model.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 @Composable

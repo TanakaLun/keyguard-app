@@ -2,7 +2,9 @@
 
 package com.artemchep.keyguard.feature.home.vault.add
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.*
@@ -37,18 +40,19 @@ import com.artemchep.keyguard.feature.add.getAnyFieldShapeState
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.fileDropTarget
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DefaultFab
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.button.FavouriteToggleButton
@@ -413,26 +417,70 @@ private fun AddScreenMergeItem(
             }
             .toImmutableList()
     }
-    FlatDropdownSimpleExpressive(
-        dropdown = postActionDropdown,
-        leading = postActionIconImageVector
-            ?.let { icon ->
-                icon<RowScope>(icon)
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val leading = postActionIconImageVector
+        ?.let { icon ->
+            icon<RowScope>(icon)
+        }
+    val onClick: (() -> Unit)? = when {
+        postActionDropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = Modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = if (leading != null) {
+                // composable
+                {
+                    Row {
+                        leading.invoke(this)
+                    }
+                }
+            } else {
+                null
             },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = stringResource(postActionTitleStringRes),
-                        style = MiuixTheme.textStyles.titleMedium,
-                    )
-                },
-            )
-        },
-        trailing = {
-            DropdownIcon()
-        },
-    )
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(
+                            text = stringResource(postActionTitleStringRes),
+                            style = MiuixTheme.textStyles.titleMedium,
+                        )
+                    },
+                )
+            },
+            endActions = {
+                DropdownIcon()
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            postActionDropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 private fun CreateRequest.Merge.PostAction?.titleStringRes() = when (this) {

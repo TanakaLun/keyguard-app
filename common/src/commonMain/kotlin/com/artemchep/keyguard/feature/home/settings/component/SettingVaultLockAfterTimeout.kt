@@ -14,7 +14,6 @@ import com.artemchep.keyguard.feature.home.settings.KgPicker
 import com.artemchep.keyguard.feature.home.settings.KgSwitch
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.platform.LeContext

@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -90,7 +91,6 @@ import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.gpgkey.userids.GpgUserIdsDialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.Section
@@ -1767,21 +1767,64 @@ private fun EnumItem(
     item: AddStateItem.Enum<*>,
 ) {
     val state by item.state.flow.collectAsState()
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        leading = item.leading,
-        content = {
-            FlatItemTextContent2(
-                title = {
-                    Text(item.label)
-                },
-                text = {
-                    Text(state.value)
-                },
-            )
-        },
-        dropdown = state.dropdown,
-    )
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        state.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = null,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = if (item.leading != null) {
+                // composable
+                {
+                    Row {
+                        item.leading?.invoke(this)
+                    }
+                }
+            } else {
+                null
+            },
+            content = {
+                FlatItemTextContent2(
+                    title = {
+                        Text(item.label)
+                    },
+                    text = {
+                        Text(state.value)
+                    },
+                )
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            state.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 context(addScope: AddScreenScope)

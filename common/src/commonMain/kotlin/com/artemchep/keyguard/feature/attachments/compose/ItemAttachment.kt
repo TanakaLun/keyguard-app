@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.DownloadDone
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -39,25 +41,29 @@ import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.attachments.SelectableItemState
 import com.artemchep.keyguard.feature.attachments.model.AttachmentItem
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.ContextItem
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.icons.AttachmentIcon
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
@@ -299,147 +305,187 @@ private fun ItemAttachmentLayout(
         } else {
             Color.Unspecified
         }
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = shapeState,
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = name,
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                text = if (size != null) {
-                    // composable
-                    {
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onLongClick = selectable.onLongClick
+    val onClick: (() -> Unit)? = when {
+        selectable.onClick != null -> selectable.onClick
+        dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
+                    },
+                )
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                Row {
+                    Box {
+                        val url = previewUrlProvider()
+                        val downloaded = downloadedProvider()
+                        AttachmentIcon(
+                            uri = url,
+                            name = name,
+                            encrypted = false,
+                        )
+                        Row(
+                            modifier = Modifier
+                                .offset(x = 6.dp, y = 6.dp)
+                                .align(Alignment.BottomEnd),
+                        ) {
+                            AnimatedVisibility(
+                                visible = downloaded,
+                                enter = fadeIn() + scaleIn(),
+                                exit = scaleOut() + fadeOut(),
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .background(
+                                            MiuixTheme.colorScheme.tertiaryContainer,
+                                            KgShapes.extraSmall,
+                                        )
+                                        .size(16.dp)
+                                        .padding(1.dp),
+                                    imageVector = Icons.Outlined.DownloadDone,
+                                    tint = MiuixTheme.colorScheme.onTertiaryContainer,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
                         Text(
-                            text = size,
-                            maxLines = 2,
+                            text = name,
+                            maxLines = 4,
                             overflow = TextOverflow.Ellipsis,
                         )
-                    }
-                } else {
-                    null
-                },
-            )
-            content?.invoke()
-        },
-        leading = {
-            Box {
-                val url = previewUrlProvider()
-                val downloaded = downloadedProvider()
-                AttachmentIcon(
-                    uri = url,
-                    name = name,
-                    encrypted = false,
+                    },
+                    text = if (size != null) {
+                        // composable
+                        {
+                            Text(
+                                text = size,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    } else {
+                        null
+                    },
                 )
-                Row(
-                    modifier = Modifier
-                        .offset(x = 6.dp, y = 6.dp)
-                        .align(Alignment.BottomEnd),
+                content?.invoke()
+            },
+            endActions = {
+                Crossfade(
+                    targetState = selectable.selecting,
                 ) {
-                    AnimatedVisibility(
-                        visible = downloaded,
-                        enter = fadeIn() + scaleIn(),
-                        exit = scaleOut() + fadeOut(),
-                    ) {
-                        Icon(
+                    if (it) {
+                        Checkbox(
                             modifier = Modifier
-                                .background(
-                                    MiuixTheme.colorScheme.tertiaryContainer,
-                                    KgShapes.extraSmall,
-                                )
-                                .size(16.dp)
-                                .padding(1.dp),
-                            imageVector = Icons.Outlined.DownloadDone,
-                            tint = MiuixTheme.colorScheme.onTertiaryContainer,
-                            contentDescription = null,
+                                .sizeIn(
+                                    minWidth = 48.dp,
+                                    minHeight = 48.dp,
+                                ),
+                            state = ToggleableState(selected),
+                            onClick = null,
                         )
-                    }
-                }
-            }
-        },
-        trailing = {
-            Crossfade(
-                targetState = selectable.selecting,
-            ) {
-                if (it) {
-                    Checkbox(
-                        modifier = Modifier
-                            .sizeIn(
-                                minWidth = 48.dp,
-                                minHeight = 48.dp,
-                            ),
-                        state = ToggleableState(selected),
-                        onClick = null,
-                    )
-                } else {
-                    Row(
-                        modifier = Modifier
-                            .sizeIn(
-                                minWidth = 48.dp,
-                                minHeight = 48.dp,
-                            ),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        val onLaunchAction = remember(dropdown) {
-                            dropdown
-                                .firstNotNullOfOrNull {
-                                    val action = it as? FlatItemAction
-                                    action?.takeIf { it.type == FlatItemAction.Type.VIEW }
-                                }
-                        }
-                        ExpandedIfNotEmptyForRow(
-                            valueOrNull = onLaunchAction,
-                        ) { action ->
-                            val onCopy = action.onClick
-                            IconButton(
-                                enabled = onCopy != null,
-                                onClick = {
-                                    onCopy?.invoke()
-                                },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Outlined.Launch,
-                                    contentDescription = null,
-                                )
+                    } else {
+                        Row(
+                            modifier = Modifier
+                                .sizeIn(
+                                    minWidth = 48.dp,
+                                    minHeight = 48.dp,
+                                ),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            val onLaunchAction = remember(dropdown) {
+                                dropdown
+                                    .firstNotNullOfOrNull {
+                                        val action = it as? FlatItemAction
+                                        action?.takeIf { it.type == FlatItemAction.Type.VIEW }
+                                    }
                             }
-                        }
+                            ExpandedIfNotEmptyForRow(
+                                valueOrNull = onLaunchAction,
+                            ) { action ->
+                                val onCopy = action.onClick
+                                IconButton(
+                                    enabled = onCopy != null,
+                                    onClick = {
+                                        onCopy?.invoke()
+                                    },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Outlined.Launch,
+                                        contentDescription = null,
+                                    )
+                                }
+                            }
 
-                        val onDownloadAction = remember(dropdown) {
-                            dropdown
-                                .firstNotNullOfOrNull {
-                                    val action = it as? FlatItemAction
-                                    action?.takeIf { it.type == FlatItemAction.Type.DOWNLOAD }
+                            val onDownloadAction = remember(dropdown) {
+                                dropdown
+                                    .firstNotNullOfOrNull {
+                                        val action = it as? FlatItemAction
+                                        action?.takeIf { it.type == FlatItemAction.Type.DOWNLOAD }
+                                    }
+                            }
+                            ExpandedIfNotEmptyForRow(
+                                valueOrNull = onDownloadAction,
+                            ) { action ->
+                                val onCopy = action.onClick
+                                IconButton(
+                                    enabled = onCopy != null,
+                                    onClick = {
+                                        onCopy?.invoke()
+                                    },
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Download,
+                                        contentDescription = null,
+                                    )
                                 }
-                        }
-                        ExpandedIfNotEmptyForRow(
-                            valueOrNull = onDownloadAction,
-                        ) { action ->
-                            val onCopy = action.onClick
-                            IconButton(
-                                enabled = onCopy != null,
-                                onClick = {
-                                    onCopy?.invoke()
-                                },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Download,
-                                    contentDescription = null,
-                                )
                             }
                         }
                     }
                 }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
             }
-        },
-        dropdown = dropdown,
-        onClick = selectable.onClick,
-        onLongClick = selectable.onLongClick,
-        enabled = true,
-    )
+        }
+    }
 }

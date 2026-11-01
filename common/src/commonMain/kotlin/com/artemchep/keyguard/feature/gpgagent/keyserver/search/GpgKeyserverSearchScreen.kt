@@ -1,21 +1,28 @@
 package com.artemchep.keyguard.feature.gpgagent.keyserver.search
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import com.artemchep.keyguard.common.model.GpgKeyserverConfig
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.qr.ScanQrButton
 import com.artemchep.keyguard.feature.servicedirectory.ServiceDirectoryListScaffold
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.icons.IconBox
@@ -103,45 +110,69 @@ private fun KeyItem(
     modifier: Modifier,
     item: GpgKeyserverSearchState.Item.Content,
 ) {
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        shapeState = item.shapeState,
-        dropdown = item.dropdown,
-        leading = {
-            IconBox(Icons.Outlined.Key)
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = item.title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                text = {
-                    Text(
-                        text = item.description,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-            )
-        },
-        trailing = {
-            if (item.result.revoked) {
-                Text(
-                    color = MiuixTheme.colorScheme.error,
-                    style = MiuixTheme.textStyles.labelMedium,
-                    text = stringResource(Res.string.gpg_keyserver_search_revoked_label),
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier,
+            onClick = onClick,
+            startAction = {
+                IconBox(Icons.Outlined.Key)
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(
+                            text = item.title,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = item.description,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
                 )
-            } else if (item.result.publicKeyArmored == null) {
-                Text(
-                    color = LocalContentColor.current.combineAlpha(0.64f),
-                    style = MiuixTheme.textStyles.labelMedium,
-                    text = stringResource(Res.string.gpg_keyserver_search_index_label),
+            },
+            endActions = {
+                if (item.result.revoked) {
+                    Text(
+                        color = MiuixTheme.colorScheme.error,
+                        style = MiuixTheme.textStyles.labelMedium,
+                        text = stringResource(Res.string.gpg_keyserver_search_revoked_label),
+                    )
+                } else if (item.result.publicKeyArmored == null) {
+                    Text(
+                        color = LocalContentColor.current.combineAlpha(0.64f),
+                        style = MiuixTheme.textStyles.labelMedium,
+                        text = stringResource(Res.string.gpg_keyserver_search_index_label),
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-        },
-    )
+        }
+    }
 }

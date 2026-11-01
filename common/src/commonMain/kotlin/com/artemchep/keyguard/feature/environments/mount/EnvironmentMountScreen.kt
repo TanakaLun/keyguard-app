@@ -1,15 +1,19 @@
 package com.artemchep.keyguard.feature.environments.mount
 
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.FolderOpen
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -17,7 +21,10 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -26,7 +33,6 @@ import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.agent.help.AgentSetupCodeBlock
 import com.artemchep.keyguard.feature.dialog.Dialog
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
@@ -36,9 +42,11 @@ import com.artemchep.keyguard.res.cipher_type_environment
 import com.artemchep.keyguard.res.environments_flatpak_note
 import com.artemchep.keyguard.res.environments_mount_create
 import com.artemchep.keyguard.res.environments_mount_path
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.FlatTextField
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.SimpleNote
 import com.artemchep.keyguard.ui.icons.icon
@@ -153,24 +161,63 @@ private fun EnvironmentMountContent(
 private fun EnvironmentMountEnvironmentItem(
     environment: EnvironmentMountState.Environment,
 ) {
-    FlatDropdownSimpleExpressive(
-        leading = icon<RowScope>(Icons.Outlined.Code),
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(
-                        text = environment.name,
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(Res.string.cipher_type_environment),
-                    )
-                },
-            )
-        },
-        dropdown = environment.dropdown,
-    )
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        environment.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = Modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = null,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                Row {
+                    icon<RowScope>(Icons.Outlined.Code).invoke(this)
+                }
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(
+                            text = environment.name,
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.cipher_type_environment),
+                        )
+                    },
+                )
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            environment.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 @Composable

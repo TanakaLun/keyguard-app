@@ -3,6 +3,8 @@
 package com.artemchep.keyguard.feature.home.vault.folders
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.FolderOff
 import top.yukonga.miuix.kmp.basic.Badge
 import top.yukonga.miuix.kmp.basic.BadgedBox
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
@@ -27,26 +30,32 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.DefaultSelection
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -276,60 +285,101 @@ private fun FoldersScreenFolderItem(
 ) {
     val backgroundColor =
         if (item.selected) MiuixTheme.colorScheme.primaryContainer else Color.Unspecified
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
-        dropdown = item.actions,
-        leading = {
-            FoldersScreenFolderItemBadge(
-                foldersCount = item.folders,
-                ciphersCount = item.ciphers,
-            )
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
-                text = if (item.text != null) {
-                    // composable
-                    {
-                        Text(item.text)
-                    }
-                } else {
-                    null
-                },
-            )
-        },
-        trailing = {
-            ExpandedIfNotEmptyForRow(
-                Unit.takeUnless { item.synced },
-                modifier = Modifier
-                    .alpha(LocalContentColor.current.alpha),
-            ) {
-                OfflineIcon(
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onLongClick = item.onLongClick
+    val onClick: (() -> Unit)? = when {
+        item.onClick != null -> item.onClick
+        item.actions.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
+                    },
+                )
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                Row {
+                    FoldersScreenFolderItemBadge(
+                        foldersCount = item.folders,
+                        ciphersCount = item.ciphers,
+                    )
+                }
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(item.title)
+                    },
+                    text = if (item.text != null) {
+                        // composable
+                        {
+                            Text(item.text)
+                        }
+                    } else {
+                        null
+                    },
+                )
+            },
+            endActions = {
+                ExpandedIfNotEmptyForRow(
+                    Unit.takeUnless { item.synced },
                     modifier = Modifier
-                        .padding(end = 8.dp),
+                        .alpha(LocalContentColor.current.alpha),
+                ) {
+                    OfflineIcon(
+                        modifier = Modifier
+                            .padding(end = 8.dp),
+                    )
+                }
+                ExpandedIfNotEmptyForRow(
+                    Unit.takeIf { !item.selecting },
+                ) {
+                    ChevronIcon()
+                }
+                ExpandedIfNotEmptyForRow(
+                    item.selected.takeIf { item.selecting },
+                ) { selected ->
+                    Checkbox(
+                        state = ToggleableState(selected),
+                        onClick = null,
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.actions.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-            ExpandedIfNotEmptyForRow(
-                Unit.takeIf { !item.selecting },
-            ) {
-                ChevronIcon()
-            }
-            ExpandedIfNotEmptyForRow(
-                item.selected.takeIf { item.selecting },
-            ) { selected ->
-                Checkbox(
-                    state = ToggleableState(selected),
-                    onClick = null,
-                )
-            }
-        },
-        onClick = item.onClick,
-        onLongClick = item.onLongClick,
-    )
+        }
+    }
 }
 
 @Composable

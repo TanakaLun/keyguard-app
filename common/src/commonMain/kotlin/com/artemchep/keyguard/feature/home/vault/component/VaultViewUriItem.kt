@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.home.vault.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.outlined.Warning
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Surface
@@ -76,13 +78,33 @@ fun VaultViewUriItem(
     modifier: Modifier = Modifier,
     item: VaultViewItem.Uri,
 ) {
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        shapeState = item.shapeState,
-        leading = {
-            item.icon()
-        },
-        content = {
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onClick: (() -> Unit)? = when {
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (onClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                item.icon()
+            },
+            content = {
             FlatItemTextContent(
                 title = {
                     Row(
@@ -162,7 +184,7 @@ fun VaultViewUriItem(
                 }
             }
         },
-        footer = {
+        bottomAction = {
             var selectedDropdown by remember {
                 mutableStateOf<List<ContextItem>>(emptyList())
             }
@@ -210,8 +232,20 @@ fun VaultViewUriItem(
                 }
             }
         },
-        dropdown = item.dropdown,
-    )
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 @Composable

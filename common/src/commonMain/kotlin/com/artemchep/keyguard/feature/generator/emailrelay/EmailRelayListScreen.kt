@@ -1,13 +1,17 @@
 package com.artemchep.keyguard.feature.generator.emailrelay
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Text
@@ -17,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -28,7 +34,6 @@ import com.artemchep.keyguard.common.model.flatMap
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -235,67 +240,105 @@ private fun AppItem(
         selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
-        leading = {
-            val accent = rememberSecretAccentColor(
-                accentLight = item.accentLight,
-                accentDark = item.accentDark,
-            )
-            AvatarBuilder(
-                icon = item.icon,
-                accent = accent,
-                active = true,
-                badge = {
-                    // Do nothing.
-                },
-            )
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
-            )
-        },
-        trailing = {
-            Text(
-                modifier = Modifier
-                    .widthIn(max = 128.dp)
-                    .padding(
-                        top = 8.dp,
-                        bottom = 8.dp,
-                    )
-                    .border(
-                        Dp.Hairline,
-                        DividerColor,
-                        KgShapes.small,
-                    )
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 4.dp,
-                    ),
-                text = item.service,
-                style = MiuixTheme.textStyles.labelSmall,
-                textAlign = TextAlign.End,
-                maxLines = 2,
-            )
-            ExpandedIfNotEmptyForRow(
-                selectableState.selected.takeIf { selectableState.selecting },
-            ) { selected ->
-                Checkbox(
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onLongClick = selectableState.onLongClick
+    val onClick: (() -> Unit)? = when {
+        selectableState.onClick != null -> selectableState.onClick
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
+                    },
+                )
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                val accent = rememberSecretAccentColor(
+                    accentLight = item.accentLight,
+                    accentDark = item.accentDark,
+                )
+                AvatarBuilder(
+                    icon = item.icon,
+                    accent = accent,
+                    active = true,
+                    badge = {
+                        // Do nothing.
+                    },
+                )
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(item.title)
+                    },
+                )
+            },
+            endActions = {
+                Text(
                     modifier = Modifier
-                        .padding(start = 16.dp),
-                    state = ToggleableState(selected),
-                    onClick = null,
+                        .widthIn(max = 128.dp)
+                        .padding(
+                            top = 8.dp,
+                            bottom = 8.dp,
+                        )
+                        .border(
+                            Dp.Hairline,
+                            DividerColor,
+                            KgShapes.small,
+                        )
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp,
+                        ),
+                    text = item.service,
+                    style = MiuixTheme.textStyles.labelSmall,
+                    textAlign = TextAlign.End,
+                    maxLines = 2,
+                )
+                ExpandedIfNotEmptyForRow(
+                    selectableState.selected.takeIf { selectableState.selecting },
+                ) { selected ->
+                    Checkbox(
+                        modifier = Modifier
+                            .padding(start = 16.dp),
+                        state = ToggleableState(selected),
+                        onClick = null,
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-        },
-        dropdown = item.dropdown,
-        onClick = selectableState.onClick,
-        onLongClick = selectableState.onLongClick,
-        enabled = true,
-    )
+        }
+    }
 }
