@@ -26,8 +26,9 @@
       `FlatDropdownSimpleExpressive` and `FlatDropdownLayoutExpressive` are deleted
 - [x] Text rows use Miuix text styles directly: `FlatItemTextContent` and
       `FlatItemTextContent2` are deleted
+- [x] Section headers are `SmallTitle`, dividers `HorizontalDivider`, spacers
+      `Spacer(24.dp)`: the `Section` shim is deleted
 
 ## Remaining
 
-- [ ] Delete the `Category` / `Section` shims in favour of `SmallTitle` / `Card`
 - [ ] Delete the `ShapeState`, `getShapeState` and `LocalExpressive` leftovers
