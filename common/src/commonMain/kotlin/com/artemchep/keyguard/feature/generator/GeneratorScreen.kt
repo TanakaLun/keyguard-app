@@ -52,6 +52,7 @@ import androidx.compose.material3.IconButtonDefaults
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Slider
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import androidx.compose.material3.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -102,7 +103,6 @@ import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryItem
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryState
 import com.artemchep.keyguard.feature.generator.history.produceGeneratorHistoryState
 import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.twopane.TwoPaneScreen
 import com.artemchep.keyguard.res.Res
@@ -133,7 +133,6 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonSection
 import com.artemchep.keyguard.ui.skeleton.SkeletonSlider
 import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.horizontalPaddingHalf
 import com.artemchep.keyguard.ui.theme.monoFontFamily
@@ -875,7 +874,7 @@ private fun ColumnScope.GeneratorFilterItems(
     ExpandedIfNotEmpty(
         Unit.takeIf { showSection },
     ) {
-        Section(
+        SmallTitle(
             text = stringResource(Res.string.filter_header_title),
         )
     }
@@ -1226,9 +1225,8 @@ private fun FilterEnumItem(
 private fun FilterSectionItem(
     item: GeneratorState.Filter.Item.Section,
 ) {
-    Section(
+    SmallTitle(
         text = item.text,
-        expressive = LocalExpressive.current,
     )
 }
 

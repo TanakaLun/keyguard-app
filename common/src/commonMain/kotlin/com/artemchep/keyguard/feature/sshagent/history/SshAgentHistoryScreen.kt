@@ -3,6 +3,7 @@ package com.artemchep.keyguard.feature.sshagent.history
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -11,8 +12,10 @@ import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,7 +29,6 @@ import com.artemchep.keyguard.common.model.SshUsageHistoryResponseType
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -186,11 +188,20 @@ private fun SshAgentHistorySectionItem(
     modifier: Modifier,
     item: SshAgentHistoryItem.Section,
 ) {
-    Section(
-        modifier = modifier,
-        text = item.text,
-        caps = item.caps,
-    )
+    val text = item.text
+    if (text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = text,
+        )
+    } else {
+        HorizontalDivider(
+            modifier = modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
+    }
 }
 
 @Composable

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.dialog.Dialog
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.tfa.directory.FlatLaunchBrowserItem
 import com.artemchep.keyguard.res.Res
@@ -187,7 +187,7 @@ fun ColumnScope.Content(
 
     val category = state?.model?.category
     if (category != null) {
-        Section(
+        SmallTitle(
             text = stringResource(Res.string.category),
         )
         Text(

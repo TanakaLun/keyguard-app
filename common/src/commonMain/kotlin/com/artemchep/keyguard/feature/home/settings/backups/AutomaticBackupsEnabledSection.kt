@@ -1,5 +1,8 @@
 package com.artemchep.keyguard.feature.home.settings.backups
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -9,13 +12,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.service.backup.BackupRetention
 import com.artemchep.keyguard.common.usecase.DateFormatter
 import com.artemchep.keyguard.feature.home.settings.KgAction
 import com.artemchep.keyguard.feature.home.settings.KgPicker
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.home.settings.SettingPaneComponents
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -24,6 +27,8 @@ import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.danger
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 internal fun LazyListScope.AutomaticBackupsEnabledContent(
@@ -47,9 +52,8 @@ internal fun LazyListScope.AutomaticBackupsEnabledContent(
     )
 
     item("config.header") {
-        Section(
+        SmallTitle(
             text = managementSectionTitle,
-            expressive = LocalExpressive.current,
         )
     }
 
@@ -62,9 +66,19 @@ internal fun LazyListScope.AutomaticBackupsEnabledContent(
     }
 
     item("management.header") {
-        Section(
-            expressive = LocalExpressive.current,
-        )
+        if (LocalExpressive.current) {
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp),
+            )
+        } else {
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(
+                        vertical = 8.dp,
+                    ),
+            )
+        }
     }
 
     item("management.turn_off") {

@@ -12,6 +12,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +31,6 @@ import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
@@ -251,7 +251,7 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
                         ) { group ->
                             val title = group.title
                             if (title != null) {
-                                Section(
+                                SmallTitle(
                                     text = title,
                                 )
                             } else {

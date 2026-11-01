@@ -35,7 +35,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.common.service.environment.EnvironmentMountStatus
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.add
@@ -140,8 +139,8 @@ private fun LazyListScope.populateItems(
     }
     if (state.notes.isNotEmpty()) {
         item("notes.section") {
-            Section(
-                expressive = true,
+            Spacer(
+                modifier = Modifier.height(24.dp),
             )
         }
     }

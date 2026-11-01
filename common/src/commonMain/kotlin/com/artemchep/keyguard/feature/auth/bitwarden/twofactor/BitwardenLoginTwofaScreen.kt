@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.dp
 import arrow.core.partially1
 import arrow.core.right
 import com.artemchep.keyguard.common.model.getOrNull
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.yubikey.YubiKeyManual
@@ -654,8 +653,8 @@ private fun ColumnScope.LoginOtpScreenContentYubiKey(
                     updatedSend?.invoke(result)
                 },
             )
-            Section(
-                expressive = true,
+            Spacer(
+                modifier = Modifier.height(24.dp),
             )
         }
     }
@@ -671,8 +670,8 @@ private fun ColumnScope.LoginOtpScreenContentYubiKey(
             }
         },
     )
-    Section(
-        expressive = true,
+    Spacer(
+        modifier = Modifier.height(24.dp),
     )
     BasicComponent(
         title = stringResource(Res.string.remember_me),

@@ -21,6 +21,7 @@ import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.*
@@ -41,7 +42,6 @@ import com.artemchep.keyguard.feature.add.getAnyFieldShapeState
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.fileDropTarget
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -228,7 +228,12 @@ private fun LazyListScope.populateItemsSkeleton(
         AddScreenToolbarSkeletonItem()
     }
     item("ownership.section") {
-        Section()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
     }
     item("items") {
         Spacer(
@@ -252,7 +257,12 @@ private fun LazyListScope.populateItemsContent(
         )
     }
     item("ownership.section") {
-        Section()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
     }
     if (state.merge != null) {
         item("merge") {
@@ -262,7 +272,12 @@ private fun LazyListScope.populateItemsContent(
             )
         }
         item("merge.section") {
-            Section()
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(
+                        vertical = 8.dp,
+                    ),
+            )
         }
     }
     item("items") {

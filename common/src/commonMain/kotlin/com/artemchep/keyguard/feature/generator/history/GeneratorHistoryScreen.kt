@@ -22,6 +22,7 @@ import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -38,7 +39,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -184,10 +184,9 @@ private fun GeneratorHistoryItem(
     modifier: Modifier,
     item: GeneratorHistoryItem.Section,
 ) {
-    Section(
+    SmallTitle(
         modifier = modifier,
         text = item.text,
-        caps = item.caps,
     )
 }
 

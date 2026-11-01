@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +48,6 @@ import com.artemchep.keyguard.common.io.attempt
 import com.artemchep.keyguard.common.io.launchIn
 import com.artemchep.keyguard.common.usecase.PutOnboardingLastVisitInstant
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.util.hasWatch
@@ -230,7 +230,7 @@ fun OnboardingScreen() {
 fun ColumnScope.OnboardingScreenContent() {
     onboardingSections.forEach { section ->
         section.title?.let { title ->
-            Section(
+            SmallTitle(
                 text = stringResource(title),
             )
         }

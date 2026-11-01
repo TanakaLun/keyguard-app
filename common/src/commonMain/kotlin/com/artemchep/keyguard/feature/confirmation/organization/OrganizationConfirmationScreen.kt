@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -20,7 +21,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.confirmation.folder.CreateNewFolder
 import com.artemchep.keyguard.feature.dialog.Dialog
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.search.filter.component.FilterChipItemComposable
 import com.artemchep.keyguard.res.Res
@@ -153,7 +153,7 @@ private fun ColumnScope.FolderSection(
         valueOrNull = section?.takeUnless { it.items.isEmpty() },
     ) { l ->
         Column {
-            Section(text = title)
+            SmallTitle(text = title)
             FlowRow(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)

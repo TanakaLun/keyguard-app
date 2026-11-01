@@ -21,7 +21,6 @@ import com.artemchep.keyguard.feature.agent.help.AgentSetupScaffold
 import com.artemchep.keyguard.feature.agent.help.AgentSetupSectionDivider
 import com.artemchep.keyguard.feature.agent.help.AgentSetupTermuxInstall
 import com.artemchep.keyguard.feature.home.vault.component.LargeSection
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
@@ -31,6 +30,7 @@ import com.artemchep.keyguard.ui.tabs.SegmentedButtonGroup
 import com.artemchep.keyguard.ui.tabs.TabItem
 import com.artemchep.keyguard.ui.theme.Dimens
 import kotlinx.collections.immutable.persistentListOf
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -119,7 +119,7 @@ private fun ColumnScope.SshAgentSetupSupportedPlatformContent(
         else -> SSH_AGENT_SETUP_LINUX_SOCKET
     }
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_step_1_title),
     )
     AgentSetupParagraph(
@@ -127,7 +127,7 @@ private fun ColumnScope.SshAgentSetupSupportedPlatformContent(
     )
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_step_2_title),
     )
     AgentSetupParagraph(
@@ -220,7 +220,7 @@ private fun ColumnScope.SshAgentSetupSupportedPlatformContent(
     }
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_step_3_title),
     )
     AgentSetupParagraph(
@@ -260,7 +260,7 @@ private fun ColumnScope.SshAgentSetupAndroidPlatformContent() {
     AgentSetupTermuxInstall(
         installCommand = SSH_AGENT_TERMUX_PKG_INSTALL,
     )
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_android_termux_step_3_title),
     )
     AgentSetupParagraph(
@@ -280,7 +280,7 @@ private fun ColumnScope.SshAgentSetupAndroidPlatformContent() {
     AgentSetupCodeBlock(
         text = SSH_AGENT_TERMUX_PKG_SETUP,
     )
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_android_termux_step_4_title),
     )
     AgentSetupParagraph(

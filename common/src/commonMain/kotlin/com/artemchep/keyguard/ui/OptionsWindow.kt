@@ -35,7 +35,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.feature.home.vault.component.Section
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -46,11 +47,22 @@ fun DropdownScope.DropdownMenuItemFlat(
 ) {
     when (action) {
         is ContextItem.Section -> {
-            Section(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = action.title,
-            )
+            val title = action.title
+            if (title != null) {
+                SmallTitle(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = title,
+                )
+            } else {
+                HorizontalDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 8.dp,
+                        ),
+                )
+            }
         }
 
         is ContextItem.Custom -> {

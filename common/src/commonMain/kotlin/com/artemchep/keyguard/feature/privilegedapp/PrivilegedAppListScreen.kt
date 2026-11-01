@@ -18,6 +18,7 @@ import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -36,7 +37,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.urloverride.MiniRow
 import com.artemchep.keyguard.res.Res
@@ -185,7 +185,7 @@ private fun PrivilegedAppItem(
 
 private val commonPrivilegedAppItemRenderers = PrivilegedAppItemRenderers(
     section = { modifier, item ->
-        Section(
+        SmallTitle(
             modifier = modifier,
             text = item.name,
         )

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
@@ -16,8 +17,10 @@ import androidx.compose.material.icons.outlined.SaveAlt
 import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -32,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.service.logging.LogLevel
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -221,11 +223,20 @@ private fun LogItem(
     modifier: Modifier,
     item: LogsItem.Section,
 ) {
-    Section(
-        modifier = modifier,
-        text = item.text,
-        caps = item.caps,
-    )
+    val text = item.text
+    if (text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = text,
+        )
+    } else {
+        HorizontalDivider(
+            modifier = modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
+    }
 }
 
 @Composable

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
@@ -53,7 +53,7 @@ internal fun ColumnScope.AgentSetupTermuxInstall(
     installCommand: String,
 ) {
     val navigationController by rememberUpdatedState(LocalNavigationController.current)
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_android_termux_step_1_title),
     )
     AgentSetupParagraph(
@@ -81,7 +81,7 @@ internal fun ColumnScope.AgentSetupTermuxInstall(
             text = stringResource(Res.string.learn_more),
         )
     }
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.ssh_agent_setup_android_termux_step_2_title),
     )
     AgentSetupParagraph(

@@ -30,7 +30,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import com.artemchep.keyguard.feature.credentialexchange.CredentialExchangeItemRow
 import com.artemchep.keyguard.feature.credentialexchange.credentialExchangeSkippedNotes
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -113,8 +112,8 @@ internal fun LazyListScope.credentialExchangeImportReviewContent(
     }
     if (stage.items.isNotEmpty()) {
         item {
-            Section(
-                expressive = true,
+            Spacer(
+                modifier = Modifier.height(24.dp),
             )
         }
         items(stage.items) { item ->

@@ -50,8 +50,9 @@ fun AddAccountView(
             text = stringResource(Res.string.addaccount_promo_title),
             style = MiuixTheme.textStyles.titleMediumEmphasized,
         )
-        Section(
-            expressive = true,
+        Spacer(
+            modifier = Modifier
+                .height(24.dp),
         )
 
         val updatedOnClick by rememberUpdatedState(onClick)

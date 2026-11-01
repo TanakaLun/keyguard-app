@@ -13,8 +13,10 @@ import androidx.compose.material.icons.Icons
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -76,10 +78,20 @@ private fun HorizontalContextItem(
     item: ContextItem,
 ) = when (item) {
     is ContextItem.Section -> {
-        Section(
-            modifier = modifier,
-            text = item.title,
-        )
+        val text = item.title
+        if (text != null) {
+            SmallTitle(
+                modifier = modifier,
+                text = text,
+            )
+        } else {
+            HorizontalDivider(
+                modifier = modifier
+                    .padding(
+                        vertical = 8.dp,
+                    ),
+            )
+        }
     }
 
     is ContextItem.Custom -> {

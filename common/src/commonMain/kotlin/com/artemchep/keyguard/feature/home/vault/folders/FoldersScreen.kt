@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,9 +26,11 @@ import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,7 +48,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -201,8 +203,9 @@ fun FoldersScreenContent(
 
                 if (ciphers != null) {
                     item("ciphers.section") {
-                        Section(
-                            expressive = true,
+                        Spacer(
+                            modifier = Modifier
+                                .height(24.dp),
                         )
                     }
                     item("ciphers.button") {
@@ -273,10 +276,20 @@ private fun FoldersScreenSectionItem(
     modifier: Modifier = Modifier,
     item: FoldersState.Content.Item.Section,
 ) {
-    Section(
-        modifier = modifier,
-        text = item.text,
-    )
+    val text = item.text
+    if (text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = text,
+        )
+    } else {
+        HorizontalDivider(
+            modifier = modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
+    }
 }
 
 @Composable

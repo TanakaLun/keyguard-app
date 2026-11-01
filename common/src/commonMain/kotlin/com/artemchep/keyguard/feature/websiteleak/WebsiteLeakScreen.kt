@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FactCheck
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.ProvideTextStyle
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -32,7 +33,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.common.usecase.NumberFormatter
 import com.artemchep.keyguard.feature.dialog.Dialog
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItem
@@ -162,7 +162,7 @@ private fun ColumnScope.Content(
             type = SimpleNote.Type.WARNING,
             title = stringResource(Res.string.websiteleak_breach_found_title),
         )
-        Section(
+        SmallTitle(
             text = stringResource(Res.string.websiteleak_breach_section),
         )
     } else {

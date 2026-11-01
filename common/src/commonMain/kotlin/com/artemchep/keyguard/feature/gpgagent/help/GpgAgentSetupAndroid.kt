@@ -10,10 +10,10 @@ import com.artemchep.keyguard.feature.agent.help.AgentSetupCodeBlock
 import com.artemchep.keyguard.feature.agent.help.AgentSetupParagraph
 import com.artemchep.keyguard.feature.agent.help.AgentSetupTermuxInstall
 import com.artemchep.keyguard.feature.home.vault.component.LargeSection
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.basic.SmallTitle
 
 private const val GPG_AGENT_TERMUX_PKG_INSTALL = """pkg install gnupg keyguard-android-gpg-agent"""
 
@@ -89,7 +89,7 @@ private fun ColumnScope.GpgAgentSetupAndroidStep(
     texts: List<String>,
     commands: List<String>,
 ) {
-    Section(
+    SmallTitle(
         text = title,
     )
     texts.forEach { text ->

@@ -69,7 +69,6 @@ import com.artemchep.keyguard.feature.generator.colorizePasswordOrEmpty
 import com.artemchep.keyguard.feature.generator.produceGeneratorState
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.HorizontalContextItems
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.state.LaunchParameterEffect
 import com.artemchep.keyguard.res.Res
@@ -81,6 +80,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.flow.StateFlow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -281,7 +281,7 @@ fun ColumnScope.AutofillWindowContent(
     ExpandedIfNotEmpty(
         Unit.takeIf { showSection },
     ) {
-        Section(
+        SmallTitle(
             text = stringResource(Res.string.filter_header_title),
         )
     }
@@ -512,9 +512,8 @@ fun ColumnScope.GeneratorSuggestions(
         Column(
             modifier = Modifier,
         ) {
-            Section(
+            SmallTitle(
                 text = stringResource(Res.string.context_based_suggestions),
-                expressive = true,
             )
             Row(
                 modifier = Modifier

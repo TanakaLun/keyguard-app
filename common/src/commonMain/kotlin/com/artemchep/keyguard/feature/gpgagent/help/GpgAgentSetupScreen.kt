@@ -12,12 +12,12 @@ import com.artemchep.keyguard.feature.agent.help.AgentSetupCodeBlock
 import com.artemchep.keyguard.feature.agent.help.AgentSetupParagraph
 import com.artemchep.keyguard.feature.agent.help.AgentSetupScaffold
 import com.artemchep.keyguard.feature.agent.help.AgentSetupSectionDivider
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import org.jetbrains.compose.resources.stringResource
+import top.yukonga.miuix.kmp.basic.SmallTitle
 
 private const val BUILD_TYPE_DEV = "DEV"
 private const val GPG_AGENT_SETUP_MACOS_DEV_HOME =
@@ -133,7 +133,7 @@ private fun ColumnScope.GpgAgentSetupSupportedPlatformContent(
     commands: GpgAgentSetupCommands,
     prerequisiteNote: String?,
 ) {
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.gpg_agent_setup_step_1_title),
     )
     AgentSetupParagraph(
@@ -148,7 +148,7 @@ private fun ColumnScope.GpgAgentSetupSupportedPlatformContent(
     }
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.gpg_agent_setup_step_2_title),
     )
     AgentSetupParagraph(
@@ -163,7 +163,7 @@ private fun ColumnScope.GpgAgentSetupSupportedPlatformContent(
     )
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.gpg_agent_setup_step_3_title),
     )
     AgentSetupParagraph(
@@ -181,7 +181,7 @@ private fun ColumnScope.GpgAgentSetupSupportedPlatformContent(
     )
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.gpg_agent_setup_step_4_title),
     )
     AgentSetupParagraph(
@@ -199,7 +199,7 @@ private fun ColumnScope.GpgAgentSetupSupportedPlatformContent(
     )
     AgentSetupSectionDivider()
 
-    Section(
+    SmallTitle(
         text = stringResource(Res.string.gpg_agent_setup_step_5_title),
     )
     AgentSetupParagraph(

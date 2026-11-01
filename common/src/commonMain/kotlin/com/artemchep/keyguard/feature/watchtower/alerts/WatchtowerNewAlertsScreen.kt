@@ -21,8 +21,10 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -38,7 +40,6 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.VaultListItemText
 import com.artemchep.keyguard.feature.home.vault.screen.VaultViewRoute
 import com.artemchep.keyguard.feature.localization.textResource
@@ -328,9 +329,17 @@ fun VaultListItemSection(
     item: WatchtowerNewAlertsState.Item.Section,
 ) {
     val text = item.text?.let { textResource(it) }
-    Section(
-        modifier = modifier,
-        text = text,
-        caps = item.caps,
-    )
+    if (text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = text,
+        )
+    } else {
+        HorizontalDivider(
+            modifier = modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
+    }
 }

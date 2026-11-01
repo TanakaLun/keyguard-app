@@ -34,6 +34,8 @@ import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
@@ -68,7 +70,6 @@ import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.home.vault.component.AddAccountView
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.localization.textResource
@@ -526,11 +527,20 @@ fun VaultSendItemText(
     )
 
     is SendItem.Section -> {
-        Section(
-            modifier = modifier,
-            text = item.text,
-            caps = item.caps,
-        )
+        val text = item.text
+        if (text != null) {
+            SmallTitle(
+                modifier = modifier,
+                text = text,
+            )
+        } else {
+            HorizontalDivider(
+                modifier = modifier
+                    .padding(
+                        vertical = 8.dp,
+                    ),
+            )
+        }
     }
 
     is SendItem.NoItems -> {

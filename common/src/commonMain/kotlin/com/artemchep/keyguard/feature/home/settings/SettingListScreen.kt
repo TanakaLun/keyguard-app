@@ -59,7 +59,6 @@ import com.artemchep.keyguard.feature.home.settings.search.SearchSettingsRoute
 import com.artemchep.keyguard.feature.home.settings.security.SecuritySettingsRouteFactory
 import com.artemchep.keyguard.feature.home.settings.subscriptions.SubscriptionsSettingsRoute
 import com.artemchep.keyguard.feature.home.settings.watchtower.WatchtowerSettingsRoute
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController

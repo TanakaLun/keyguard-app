@@ -45,6 +45,7 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -82,7 +83,6 @@ import com.artemchep.keyguard.common.model.formatLocalized
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.appreview.RequestAppReviewEffect
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -1305,7 +1305,7 @@ private fun ContentLayout(
                 ) {
                     dashboardContent()
                 }
-                Section(
+                SmallTitle(
                     text = stringResource(Res.string.watchtower_section_security_label),
                 )
                 val mainAxisSpacing = 8.dp
@@ -1319,7 +1319,7 @@ private fun ContentLayout(
                 ) {
                     cardsContent()
                 }
-                Section(
+                SmallTitle(
                     text = stringResource(Res.string.watchtower_section_maintenance_label),
                 )
                 GridLayout(

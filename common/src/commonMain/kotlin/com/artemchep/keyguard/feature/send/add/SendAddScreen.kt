@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Save
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,7 +38,6 @@ import com.artemchep.keyguard.feature.add.ToolbarContentItemErrSkeleton
 import com.artemchep.keyguard.feature.add.getAnyFieldShapeState
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.home.vault.add.AddState
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -173,7 +173,12 @@ private fun LazyListScope.populateItemsSkeleton(
         AddScreenToolbarSkeletonItem()
     }
     item("ownership.section") {
-        Section()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
     }
     item("items") {
         Spacer(
@@ -196,7 +201,12 @@ private fun LazyListScope.populateItemsContent(
         )
     }
     item("ownership.section") {
-        Section()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
     }
     item("items") {
         Spacer(

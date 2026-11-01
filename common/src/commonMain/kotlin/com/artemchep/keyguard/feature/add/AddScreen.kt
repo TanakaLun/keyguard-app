@@ -92,7 +92,7 @@ import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.gpgkey.userids.GpgUserIdsDialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.Section
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewTotpBadge2
 import com.artemchep.keyguard.feature.home.vault.component.defaultFlatItemPaddingValues
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
@@ -1817,10 +1817,9 @@ private fun SectionItem(
     modifier: Modifier = Modifier,
     item: AddStateItem.Section,
 ) {
-    Section(
+    SmallTitle(
         modifier = modifier,
         text = item.text,
-        expressive = true,
     )
 }
 

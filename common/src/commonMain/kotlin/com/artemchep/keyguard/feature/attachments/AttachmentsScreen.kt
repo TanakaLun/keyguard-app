@@ -22,7 +22,6 @@ import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.attachments.compose.ItemAttachment
 import com.artemchep.keyguard.feature.watchtower.VaultHomeScreenFilterButton2
 import com.artemchep.keyguard.feature.watchtower.VaultHomeScreenFilterPaneCard2
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.twopane.TwoPaneScreen
 import com.artemchep.keyguard.res.Res

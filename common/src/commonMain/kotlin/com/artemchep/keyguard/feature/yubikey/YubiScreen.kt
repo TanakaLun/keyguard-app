@@ -23,7 +23,6 @@ import com.artemchep.keyguard.common.model.ToastMessage
 import com.artemchep.keyguard.common.usecase.ShowMessage
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
@@ -88,8 +87,9 @@ fun YubiScreen() {
                 // Do nothing.
             },
         )
-        Section(
-            expressive = true,
+        Spacer(
+            modifier = Modifier
+                .height(24.dp),
         )
         BasicComponent(
             content = {

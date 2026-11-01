@@ -192,12 +192,17 @@ fun VaultListItemSection(
     item: VaultItem2.Section,
 ) {
     val text = item.text?.let { textResource(it) }
-    Section(
-        modifier = modifier,
-        text = text,
-        caps = item.caps,
-        expressive = true,
-    )
+    if (text != null) {
+        SmallTitle(
+            modifier = modifier,
+            text = text,
+        )
+    } else {
+        Spacer(
+            modifier = Modifier
+                .height(24.dp),
+        )
+    }
 }
 
 @Composable
@@ -221,33 +226,6 @@ fun VaultListItemButton(
         },
         onClick = item.onClick,
     )
-}
-
-@Composable
-fun Section(
-    modifier: Modifier = Modifier,
-    text: String? = null,
-    caps: Boolean = true,
-    expressive: Boolean = false,
-) {
-    if (text != null) {
-        SmallTitle(
-            modifier = modifier,
-            text = text,
-        )
-    } else if (expressive) {
-        Spacer(
-            modifier = Modifier
-                .height(24.dp),
-        )
-    } else {
-        HorizontalDivider(
-            modifier = modifier
-                .padding(
-                    vertical = 8.dp,
-                ),
-        )
-    }
 }
 
 @Composable

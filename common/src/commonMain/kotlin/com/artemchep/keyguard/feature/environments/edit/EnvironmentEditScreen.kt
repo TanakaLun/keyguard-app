@@ -10,7 +10,9 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Save
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.runtime.Composable
@@ -33,7 +35,6 @@ import com.artemchep.keyguard.feature.add.ToolbarContent
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.fileDropTarget
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.description
@@ -222,7 +223,9 @@ private fun LazyListScope.populateContent(
         )
     }
     item("ownership.section") {
-        Section()
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
     }
     if (content.note != null) {
         item("note") {
@@ -247,9 +250,8 @@ private fun LazyListScope.populateContent(
         )
     }
     item("variables.section") {
-        Section(
+        SmallTitle(
             text = stringResource(Res.string.environments_variables),
-            expressive = true,
         )
     }
     if (fileDrop != null) {

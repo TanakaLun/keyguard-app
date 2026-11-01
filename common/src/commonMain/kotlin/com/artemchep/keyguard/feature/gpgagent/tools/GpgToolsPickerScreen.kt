@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.gpgagent.keyserver.search.GpgKeyserverSearchRoute
 import com.artemchep.keyguard.feature.home.settings.gpg.GpgSettingsRoute
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationController
@@ -167,7 +167,7 @@ private fun GpgToolsPickerScreen(
             }
         }
         item("keyserver_section") {
-            Section(
+            SmallTitle(
                 text = stringResource(Res.string.gpg_keyserver_status_title),
             )
         }

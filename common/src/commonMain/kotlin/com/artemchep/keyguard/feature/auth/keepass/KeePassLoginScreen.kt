@@ -28,6 +28,7 @@ import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -59,7 +60,6 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
 import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -355,7 +355,9 @@ fun LoginContent(
             return@ScaffoldColumn
         }
 
-        Section()
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Spacer(
             modifier = Modifier

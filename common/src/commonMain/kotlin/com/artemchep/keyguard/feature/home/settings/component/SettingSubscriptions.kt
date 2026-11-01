@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
@@ -44,7 +45,6 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.usecase.GetProducts
 import com.artemchep.keyguard.common.usecase.GetSubscriptions
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
 import com.artemchep.keyguard.feature.onboarding.OnboardingCard
 import com.artemchep.keyguard.feature.onboarding.onboardingItemsPremium
@@ -159,7 +159,7 @@ private fun SettingSubscriptions(
                 )
             }
         }
-        Section(text = stringResource(Res.string.pref_item_premium_membership_section_subscriptions_title))
+        SmallTitle(text = stringResource(Res.string.pref_item_premium_membership_section_subscriptions_title))
         loadableSubscriptions.fold(
             ifLoading = {
                 SettingGroupLayout {
@@ -198,7 +198,7 @@ private fun SettingSubscriptions(
                 .combineAlpha(MediumEmphasisAlpha),
             fontSize = 12.sp,
         )
-        Section(text = stringResource(Res.string.pref_item_premium_membership_section_products_title))
+        SmallTitle(text = stringResource(Res.string.pref_item_premium_membership_section_products_title))
         loadableProducts.fold(
             ifLoading = {
                 SettingGroupLayout {

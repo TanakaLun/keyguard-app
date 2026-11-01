@@ -26,6 +26,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -45,7 +46,6 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
-import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.platform.util.isRelease
@@ -287,7 +287,7 @@ private fun LazyListScope.populateGpgToolsKeySection(
 
         GpgToolsOperation.ENCRYPT -> {
             item("recipient_section") {
-                Section(
+                SmallTitle(
                     text = stringResource(Res.string.gpg_tools_select_recipients),
                 )
             }
@@ -422,7 +422,7 @@ private fun LazyListScope.populateSigningKeySection(
     val optional = state.operation == GpgToolsOperation.ENCRYPT
     val selectedId = if (optional) state.selectedEncryptSigningKeyId else state.selectedPrivateKeyId
     item("signing_key_section") {
-        Section(
+        SmallTitle(
             text = stringResource(
                 if (optional) Res.string.gpg_tools_sign_encrypted_message
                 else Res.string.gpg_tools_select_signing_key,
