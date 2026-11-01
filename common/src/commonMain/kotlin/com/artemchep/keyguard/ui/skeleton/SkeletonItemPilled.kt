@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.shimmer.shimmer
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.KgShapes
@@ -28,11 +28,11 @@ fun SkeletonItemPilled(
 ) {
     val contentColor = LocalContentColor.current
         .combineAlpha(DisabledEmphasisAlpha)
-    FlatItemLayout(
+    BasicComponent(
         modifier = modifier
             .shimmer()
             .padding(top = 1.dp),
-        leading = {
+        startAction = {
             Box(
                 Modifier
                     .height(18.dp)

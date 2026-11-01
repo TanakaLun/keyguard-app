@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.RadioButton
@@ -36,7 +37,6 @@ import com.artemchep.keyguard.res.gpg_tools_select_recipients
 import com.artemchep.keyguard.res.gpg_tools_select_signing_key
 import com.artemchep.keyguard.res.gpg_tools_selection_done
 import com.artemchep.keyguard.res.gpg_tools_sign_none
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -151,20 +151,20 @@ private fun GpgToolsKeySelectionRow(
     onSelect: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    FlatItemLayout(
+    BasicComponent(
         modifier = if (multiple) {
             Modifier.toggleable(value = selected, role = Role.Checkbox, onValueChange = { onSelect() })
         } else {
             Modifier.selectable(selected = selected, role = Role.RadioButton, onClick = onSelect)
         },
-        leading = {
+        startAction = {
             if (multiple) {
                 Checkbox(state = ToggleableState(selected), onClick = null)
             } else {
                 RadioButton(selected = selected, onClick = null)
             }
         },
-        content = content,
         enabled = true,
+        content = content,
     )
 }

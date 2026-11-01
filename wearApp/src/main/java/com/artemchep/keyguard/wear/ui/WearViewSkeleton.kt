@@ -2,6 +2,7 @@ package com.artemchep.keyguard.wear.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,6 @@ import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.lazy.TransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.shimmer.shimmer
 
 /**
@@ -32,29 +32,33 @@ fun TransformingLazyColumnScope.wearViewLoadingSkeletonItems(
         item("skeleton.flat.$i") {
             val contentColor =
                 LocalContentColor.current.copy(alpha = DisabledEmphasisAlpha)
-            FlatItemLayout(
+            Column(
                 modifier = Modifier
                     .shimmer()
-                    .transformedHeight(this, transformationSpec),
-                backgroundColor = contentColor.copy(alpha = 0.08f),
-                content = {
-                    Box(
-                        Modifier
-                            .height(13.dp)
-                            .fillMaxWidth(0.15f)
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(contentColor.copy(alpha = 0.2f)),
-                    )
-                    Box(
-                        Modifier
-                            .padding(top = 4.dp)
-                            .height(18.dp)
-                            .fillMaxWidth(0.38f)
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(contentColor),
-                    )
-                },
-            )
+                    .transformedHeight(this, transformationSpec)
+                    .fillMaxWidth()
+                    .background(contentColor.copy(alpha = 0.08f))
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 12.dp,
+                    ),
+            ) {
+                Box(
+                    Modifier
+                        .height(13.dp)
+                        .fillMaxWidth(0.15f)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(contentColor.copy(alpha = 0.2f)),
+                )
+                Box(
+                    Modifier
+                        .padding(top = 4.dp)
+                        .height(18.dp)
+                        .fillMaxWidth(0.38f)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(contentColor),
+                )
+            }
         }
     }
     item("skeleton.trailing") {

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Share
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -51,7 +52,6 @@ import com.artemchep.keyguard.ui.Avatar
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.Placeholder
@@ -165,10 +165,10 @@ fun SendViewScreen(
                     item(i) {
                         val contentColor =
                             LocalContentColor.current.copy(alpha = DisabledEmphasisAlpha)
-                        FlatItemLayout(
+                        BasicComponent(
                             modifier = Modifier
-                                .shimmer(),
-                            backgroundColor = contentColor.copy(alpha = 0.08f),
+                                .shimmer()
+                                .background(contentColor.copy(alpha = 0.08f)),
                             content = {
                                 Box(
                                     Modifier

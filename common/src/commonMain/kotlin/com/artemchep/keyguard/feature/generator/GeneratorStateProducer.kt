@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Terminal
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Text
@@ -123,7 +124,6 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.PLACEHOLDER_EMAIL
 import com.artemchep.keyguard.ui.buildContextItems
 import com.artemchep.keyguard.ui.icons.ChevronIcon
@@ -2662,14 +2662,14 @@ private fun RememberStateFlowScope.flowOfGeneratorType(
                             val tipBody = translate(Res.string.pro_tip_generate_email_relay_title)
                             val tip = translate(Res.string.pro_tip, tipBody)
                             this += ContextItem.Custom {
-                                FlatItemLayout(
+                                BasicComponent(
                                     content = {
                                         Text(
                                             text = tip,
                                             style = MiuixTheme.textStyles.bodySmall,
                                         )
                                     },
-                                    trailing = {
+                                    endActions = {
                                         ChevronIcon()
                                     },
                                     onClick = {

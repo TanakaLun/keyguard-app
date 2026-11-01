@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -51,7 +52,6 @@ import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.OptionallyKeepScreenOnEffect
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -160,10 +160,10 @@ fun VaultViewScreenContent(
                     item(i) {
                         val contentColor =
                             LocalContentColor.current.copy(alpha = DisabledEmphasisAlpha)
-                        FlatItemLayout(
+                        BasicComponent(
                             modifier = Modifier
-                                .shimmer(),
-                            backgroundColor = contentColor.copy(alpha = 0.08f),
+                                .shimmer()
+                                .background(contentColor.copy(alpha = 0.08f)),
                             content = {
                                 Box(
                                     Modifier

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -23,7 +24,6 @@ import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.search.filter.component.FilterChipItemComposable
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
@@ -121,25 +121,14 @@ fun GpgKeyExpirationScreen(
 private fun GpgKeyExpirationComponent(
     component: GpgKeyExpirationState.Component,
 ) {
-    FlatItemLayout(
-        leading = {
+    BasicComponent(
+        title = component.title,
+        summary = component.text,
+        startAction = {
             Checkbox(
                 state = ToggleableState(component.selected),
                 onClick = null,
             )
-        },
-        content = {
-            Column {
-                Text(
-                    text = component.title,
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-                Text(
-                    text = component.text,
-                    style = MiuixTheme.textStyles.bodySmall,
-                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
-                )
-            }
         },
         onClick = component.onToggle,
     )

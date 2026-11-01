@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -303,10 +304,48 @@ fun FlatDropdownLayout(
     enabled: Boolean = dropdown != null || onClick != null || onLongClick != null,
 ) {
     var isContentDropdownExpanded by remember { mutableStateOf(false) }
-    FlatItemLayout(
-        modifier = modifier,
-        elevation = elevation,
-        backgroundColor = backgroundColor,
+    val handleClick: (() -> Unit)? = when {
+        onClick != null -> onClick
+        dropdown != null -> {
+            // lambda
+            {
+                isContentDropdownExpanded = !isContentDropdownExpanded
+            }
+        }
+
+        else -> null
+    }
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .then(
+                if (handleClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(
+                        onClick = handleClick ?: {},
+                        onLongClick = onLongClick,
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+        startAction = if (leading != null) {
+            // composable
+            {
+                Row {
+                    leading?.invoke(this)
+                }
+            }
+        } else {
+            null
+        },
+        endActions = trailing,
+        enabled = enabled,
         content = {
             content()
 
@@ -322,25 +361,19 @@ fun FlatDropdownLayout(
                 dropdown?.invoke(this)
             }
         },
-        actions = actions,
-        leading = leading,
-        trailing = trailing,
-        paddingValues = paddingValues,
-        contentPadding = contentPadding,
-        onClick = when {
-            onClick != null -> onClick
-            dropdown != null -> {
-                // lambda
-                {
-                    isContentDropdownExpanded = !isContentDropdownExpanded
-                }
-            }
-
-            else -> null
-        },
-        onLongClick = onLongClick,
-        enabled = enabled,
     )
+    actions.forEach { action ->
+        BasicComponent(
+            onClick = action.onClick,
+        ) {
+            Row {
+                FlatItemActionContent(
+                    action = action,
+                    compact = true,
+                )
+            }
+        }
+    }
 }
 
 interface DropdownScope : ColumnScope {
@@ -412,25 +445,65 @@ fun FlatItem(
     onLongClick: (() -> Unit)? = null,
     enabled: Boolean = onClick != null || onLongClick != null,
 ) {
-    FlatItemLayout(
-        modifier = modifier,
-        elevation = elevation,
-        backgroundColor = backgroundColor,
+    val updatedOnClick by rememberUpdatedState(onClick)
+    val updatedOnLongClick by rememberUpdatedState(onLongClick)
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .then(
+                if (onClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(
+                        onClick = { updatedOnClick?.invoke() },
+                        onLongClick = if (onLongClick != null) {
+                            // lambda
+                            {
+                                updatedOnLongClick?.invoke()
+                            }
+                        } else {
+                            null
+                        },
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+        startAction = if (leading != null) {
+            // composable
+            {
+                Row {
+                    leading?.invoke(this)
+                }
+            }
+        } else {
+            null
+        },
+        endActions = trailing,
+        enabled = enabled,
         content = {
             FlatItemTextContent(
                 title = title,
                 text = text,
             )
         },
-        actions = actions,
-        leading = leading,
-        trailing = trailing,
-        paddingValues = paddingValues,
-        contentPadding = contentPadding,
-        onClick = onClick,
-        onLongClick = onLongClick,
-        enabled = enabled,
     )
+    actions.forEachIndexed { _, action ->
+        BasicComponent(
+            onClick = action.onClick,
+        ) {
+            Row {
+                FlatItemActionContent(
+                    action = action,
+                    compact = true,
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -472,153 +545,6 @@ val DefaultEmphasisAlpha = 1f
 val HighEmphasisAlpha = 0.87f
 val MediumEmphasisAlpha = 0.6f
 val DisabledEmphasisAlpha = 0.38f
-
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class,
-)
-@Composable
-fun FlatItemLayout(
-    modifier: Modifier = Modifier,
-    paddingValues: PaddingValues = defaultPaddingValues,
-    contentPadding: PaddingValues = defaultContentPadding,
-    elevation: Dp = 0.dp,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = backgroundColor
-        .takeIf { it.isSpecified }
-        ?.let { contentColorFor(it) }
-        ?: LocalContentColor.current,
-    content: @Composable ColumnScope.() -> Unit,
-    actions: List<FlatItemAction> = emptyList(),
-    leading: (@Composable RowScope.() -> Unit)? = null,
-    trailing: (@Composable RowScope.() -> Unit)? = null,
-    onClick: (() -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null,
-    enabled: Boolean = onClick != null,
-) {
-    ContentColorColumn(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(paddingValues),
-        color = contentColor,
-    ) {
-        // Rows are plain: the surrounding card owns the shape and the spacing.
-        val shape = RectangleShape
-
-        val backgroundModifier = if (backgroundColor.isSpecified) {
-            Modifier.background(backgroundColor)
-        } else {
-            Modifier
-        }
-
-        val haptic by rememberUpdatedState(LocalHapticFeedback.current)
-        val updatedOnClick by rememberUpdatedState(onClick)
-        val updatedOnLongClick by rememberUpdatedState(onLongClick)
-
-        Row(
-            modifier = Modifier
-                .clip(shape)
-                .then(backgroundModifier)
-                .then(
-                    if ((onClick != null || onLongClick != null) && enabled) {
-                        Modifier
-                            .combinedClickable(
-                                onLongClick = if (onLongClick != null) {
-                                    // lambda
-                                    {
-                                        updatedOnLongClick?.invoke()
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    }
-                                } else {
-                                    null
-                                },
-                            ) {
-                                updatedOnClick?.invoke()
-                            }
-                            .rightClickable {
-                                updatedOnLongClick?.invoke()
-                            }
-                    } else {
-                        Modifier
-                    },
-                )
-                .minimumInteractiveComponentSize()
-                .padding(contentPadding),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            CompositionLocalProvider(
-                LocalContentColor provides LocalContentColor.current
-                    .let { color ->
-                        if (enabled) {
-                            color
-                        } else {
-                            color.combineAlpha(alpha = DisabledEmphasisAlpha)
-                        }
-                    },
-            ) {
-                if (leading != null) {
-                    CompositionLocalProvider(
-                        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
-                    ) {
-                        leading()
-                    }
-                    Spacer(Modifier.width(16.dp))
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                ) {
-                    content()
-                }
-                if (trailing != null) {
-                    Spacer(Modifier.width(16.dp))
-                    trailing()
-                }
-            }
-        }
-        actions.forEachIndexed { actionIndex, action ->
-            Spacer(modifier = Modifier.height(2.dp))
-            val updatedOnClick by rememberUpdatedState(action.onClick)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(shape)
-                    .then(backgroundModifier)
-                    .then(
-                        if (action.onClick != null) {
-                            Modifier
-                                .clickable {
-                                    updatedOnClick?.invoke()
-                                }
-                        } else {
-                            Modifier
-                        },
-                    )
-                    .minimumInteractiveComponentSize()
-                    .padding(contentPadding),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                FlatItemActionContent(
-                    action = action,
-                    compact = true,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ContentColorColumn(
-    modifier: Modifier = Modifier,
-    color: Color,
-    content: @Composable ColumnScope.() -> Unit,
-) = Column(modifier = modifier) {
-    CompositionLocalProvider(
-        LocalContentColor provides color,
-    ) {
-        content()
-    }
-}
 
 @Composable
 fun RowScope.FlatItemActionContent(

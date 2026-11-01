@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Icon
@@ -40,7 +41,6 @@ import com.artemchep.keyguard.ui.DialogPopup
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
@@ -240,15 +240,9 @@ private fun GpgUserIdHistory(history: List<GpgUserIdsState.Identity>) {
     var expanded by rememberSaveable {
         mutableStateOf(false)
     }
-    FlatItemLayout(
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(stringResource(Res.string.gpg_user_ids_history))
-                },
-            )
-        },
-        trailing = {
+    BasicComponent(
+        title = stringResource(Res.string.gpg_user_ids_history),
+        endActions = {
             DropdownIcon(
                 expanded = expanded,
             )

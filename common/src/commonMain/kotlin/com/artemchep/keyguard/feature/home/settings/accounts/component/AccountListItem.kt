@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Warning
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -28,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.auth.AccountViewRoute
@@ -42,7 +45,7 @@ import com.artemchep.keyguard.ui.AvatarBadgeIcon
 import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
-import com.artemchep.keyguard.ui.FlatItemLayout
+import com.artemchep.keyguard.ui.FlatItemActionContent
 import com.artemchep.keyguard.ui.FlatItemTextContent
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.icons.ChevronIcon
@@ -88,9 +91,28 @@ fun AccountListItemText(
             Color.Unspecified
         }
     }
-    FlatItemLayout(
-        backgroundColor = backgroundColor,
-        leading = {
+    val onClick = item.onClick
+    val onLongClick = item.onLongClick
+    BasicComponent(
+        modifier = Modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .then(
+                if (onClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(
+                        onClick = onClick ?: {},
+                        onLongClick = onLongClick,
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+        startAction = {
             val accent = rememberSecretAccentColor(
                 accentLight = item.accentLight,
                 accentDark = item.accentDark,
@@ -113,7 +135,6 @@ fun AccountListItemText(
                 },
             )
         },
-        actions = item.actions,
         content = {
             FlatItemTextContent(
                 title = {
@@ -141,7 +162,7 @@ fun AccountListItemText(
                     },
             )
         },
-        trailing = {
+        endActions = {
             if (item.error) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
@@ -180,9 +201,19 @@ fun AccountListItemText(
                 ChevronIcon()
             }
         },
-        onClick = item.onClick,
-        onLongClick = item.onLongClick,
     )
+    item.actions.forEach { action ->
+        BasicComponent(
+            onClick = action.onClick,
+        ) {
+            Row {
+                FlatItemActionContent(
+                    action = action,
+                    compact = true,
+                )
+            }
+        }
+    }
 }
 
 @Composable

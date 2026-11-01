@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Public
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -38,7 +39,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.KeyguardView
@@ -158,8 +158,8 @@ private fun PasskeysCredentialItem(
         }
 
         is PasskeysCredentialViewItem.RelyingParty -> {
-            FlatItemLayout(
-                leading = {
+            BasicComponent(
+                startAction = {
                     IconBox(item.icon)
                 },
                 content = {
@@ -190,7 +190,7 @@ private fun PasskeysCredentialItem(
                         },
                     )
                 },
-                trailing = {
+                endActions = {
                     PasskeysCredentialInfoButton(
                         url = item.infoUrlOrNull(),
                         onOpen = { url ->
@@ -257,8 +257,8 @@ private fun PasskeysCredentialTextItem(
     infoUrl: String? = null,
 ) {
     val navigationController by rememberUpdatedState(LocalNavigationController.current)
-    FlatItemLayout(
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -285,7 +285,7 @@ private fun PasskeysCredentialTextItem(
                 },
             )
         },
-        trailing = if (infoUrl != null) {
+        endActions = if (infoUrl != null) {
             {
                 PasskeysCredentialInfoButton(
                     url = infoUrl,

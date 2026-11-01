@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Info
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -52,7 +53,6 @@ import com.artemchep.keyguard.ui.AutofillButton
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.FlatTextField
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.PasswordStrengthBadge
@@ -232,31 +232,16 @@ private fun ConfirmationBooleanItem(
     modifier: Modifier = Modifier,
     item: ConfirmationState.Item.BooleanItem,
 ) {
-    FlatItemLayout(
+    BasicComponent(
         modifier = modifier,
-        leading = {
+        title = item.title,
+        summary = item.text,
+        startAction = {
             Checkbox(
                 state = ToggleableState(item.value),
                 onClick = null,
                 enabled = item.enabled,
             )
-        },
-        content = {
-            Column {
-                Text(
-                    text = item.title,
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-                if (item.text != null) {
-                    Text(
-                        text = item.text,
-                        style = MiuixTheme.textStyles.bodySmall,
-                        color = LocalContentColor.current
-                            .combineAlpha(MediumEmphasisAlpha),
-                        maxLines = item.textMaxLines,
-                    )
-                }
-            }
         },
         onClick = if (item.enabled) {
             {
@@ -476,9 +461,9 @@ private fun ConfirmationFileItem(
     modifier: Modifier = Modifier,
     item: ConfirmationState.Item.FileItem,
 ) {
-    FlatItemLayout(
+    BasicComponent(
         modifier = modifier,
-        leading = {
+        startAction = {
             val colorTarget = if (item.valid) {
                 LocalContentColor.current
             } else {
@@ -533,7 +518,7 @@ private fun ConfirmationFileItem(
                 )
             }
         },
-        trailing = {
+        endActions = {
             ExpandedIfNotEmptyForRow(item.onClear) { onClear ->
                 IconButton(
                     onClick = onClear,

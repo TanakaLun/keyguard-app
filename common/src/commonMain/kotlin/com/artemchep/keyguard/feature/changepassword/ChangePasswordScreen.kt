@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Save
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -31,7 +32,6 @@ import com.artemchep.keyguard.ui.AutofillButton
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.FabScope
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.PasswordFlatTextField
@@ -107,21 +107,20 @@ private fun LazyListScope.ChangePasswordContentSkeleton() {
         Spacer(Modifier.height(8.dp))
     }
     item("biometric.skeleton") {
-        FlatItemLayout(
-            leading = {
+        BasicComponent(
+            startAction = {
                 SkeletonCheckbox(
                     clickable = false,
                 )
             },
-            content = {
-                SkeletonText(
-                    modifier = Modifier
-                        .fillMaxWidth(0.3f),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-            },
             enabled = true,
-        )
+        ) {
+            SkeletonText(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f),
+                style = MiuixTheme.textStyles.bodyMedium,
+            )
+        }
     }
     item("biometric.disclaimer.spacer.skeleton") {
         Spacer(
@@ -205,20 +204,15 @@ private fun ChangePasswordNewPasswordItem(
 private fun ChangePasswordBiometricItem(
     biometric: ChangePasswordState.Biometric,
 ) {
-    FlatItemLayout(
-        leading = {
+    BasicComponent(
+        title = stringResource(Res.string.changepassword_biometric_auth_checkbox),
+        startAction = {
             Checkbox(
                 enabled = biometric.onChange != null,
                 state = ToggleableState(biometric.checked),
                 onClick = {
                     biometric.onChange?.invoke(!biometric.checked)
                 },
-            )
-        },
-        content = {
-            Text(
-                text = stringResource(Res.string.changepassword_biometric_auth_checkbox),
-                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = biometric.onChange?.partially1(!biometric.checked),

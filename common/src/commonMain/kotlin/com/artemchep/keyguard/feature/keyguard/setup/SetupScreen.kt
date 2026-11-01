@@ -55,7 +55,6 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.AutofillButton
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItemLayout
 import com.artemchep.keyguard.ui.KeyguardLoadingIndicator
 import com.artemchep.keyguard.ui.OtherScaffold
 import com.artemchep.keyguard.ui.PasswordFlatTextField
@@ -105,39 +104,35 @@ private fun SetupScreenSkeleton() {
                 .fillMaxWidth(),
         )
         Spacer(Modifier.height(unlockScreenActionPadding))
-        FlatItemLayout(
-            paddingValues = PaddingValues(0.dp),
-            leading = {
+        BasicComponent(
+            startAction = {
                 SkeletonCheckbox(
                     clickable = false,
                 )
             },
-            content = {
-                SkeletonText(
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-            },
             enabled = true,
-        )
+        ) {
+            SkeletonText(
+                modifier = Modifier
+                    .fillMaxWidth(0.4f),
+                style = MiuixTheme.textStyles.bodyMedium,
+            )
+        }
         Spacer(Modifier.height(unlockScreenActionPadding))
-        FlatItemLayout(
-            paddingValues = PaddingValues(0.dp),
-            leading = {
+        BasicComponent(
+            startAction = {
                 SkeletonCheckbox(
                     clickable = false,
                 )
             },
-            content = {
-                SkeletonText(
-                    modifier = Modifier
-                        .fillMaxWidth(0.3f),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-            },
             enabled = true,
-        )
+        ) {
+            SkeletonText(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f),
+                style = MiuixTheme.textStyles.bodyMedium,
+            )
+        }
         Spacer(Modifier.height(unlockScreenActionPadding))
         SkeletonButton(
             modifier = Modifier
