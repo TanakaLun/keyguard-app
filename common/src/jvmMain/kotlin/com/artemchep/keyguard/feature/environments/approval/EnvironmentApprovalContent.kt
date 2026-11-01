@@ -33,7 +33,6 @@ import com.artemchep.keyguard.common.service.environment.EnvironmentCapability
 import com.artemchep.keyguard.common.service.environment.EnvironmentCatalog
 import com.artemchep.keyguard.feature.agent.AgentApprovalDialog
 import com.artemchep.keyguard.feature.agent.rememberAgentApprovalCallerInfo
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.environments_approval_client
 import com.artemchep.keyguard.res.environments_approval_local_file_note

@@ -25,7 +25,6 @@ import com.artemchep.keyguard.common.service.cli.displayCommand
 import com.artemchep.keyguard.common.service.cli.displayWorkingDirectory
 import com.artemchep.keyguard.feature.agent.AgentApprovalDialog
 import com.artemchep.keyguard.feature.agent.rememberAgentApprovalCallerInfo
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.cli_approval_run_note
 import com.artemchep.keyguard.res.cli_approval_run_terminal_note

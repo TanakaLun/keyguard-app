@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.service.agent.AgentRequest
 import com.artemchep.keyguard.common.usecase.GetCiphers
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.cancel
 import com.artemchep.keyguard.res.ok
@@ -130,7 +129,11 @@ fun AgentApprovalContent(
         },
     ) {
         BasicComponent(
-            startAction = keyIcon,
+            startAction = {
+                Row {
+                    keyIcon(this)
+                }
+            },
             content = {
                 val cipherName = rememberCipherName(
                     cipherId = cipherId,
