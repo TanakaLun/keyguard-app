@@ -19,10 +19,14 @@
 - [x] Search field: Miuix `SearchBar` container
 - [x] List screens group their rows into `Card`s: accounts, sync, export,
       attachments, directory pages
+- [x] Rows are Miuix `BasicComponent`: `FlatItemSimpleExpressive`,
+      `FlatItemLayoutExpressive` and `FlatItemLayout` are deleted, long press goes
+      through `Modifier.combinedClickable`
 
 ## Remaining
 
-- [ ] Replace the legacy row primitives with `BasicComponent` based rows and delete
-      `FlatItemLayout`, `FlatItemLayoutExpressive`, `FlatDropdownSimpleExpressive`
-      (note: `FlatItemLayoutExpressive` carries `onLongClick`, which `BasicComponent`
-      does not expose — keep the long-press behaviour when migrating)
+- [ ] Replace `FlatDropdownSimpleExpressive` (row + context dropdown) with
+      `BasicComponent` + the Miuix dropdown menu
+- [ ] Delete the `FlatItemTextContent` / `FlatItemTextContent2` text helpers,
+      `Category` / `Section` shims and the `ShapeState` / `LocalExpressive`
+      leftovers
