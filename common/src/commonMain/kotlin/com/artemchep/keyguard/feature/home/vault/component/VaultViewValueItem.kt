@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -36,9 +38,11 @@ import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.model.Visibility
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.animatedConcealedText
 import com.artemchep.keyguard.ui.animation.animateContentHeight
@@ -78,11 +82,29 @@ fun VaultViewValueItem(
     )
 
     val updatedVisibilityConfig by rememberUpdatedState(visibilityConfig)
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        elevation = item.elevation,
-        shapeState = item.shapeState,
-        content = {
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    Box {
+        BasicComponent(
+            modifier = modifier,
+            startAction = if (item.leading != null) {
+                // composable
+                {
+                    Row {
+                        item.leading?.invoke(this)
+                    }
+                }
+            } else {
+                null
+            },
+            onClick = if (item.dropdown.isNotEmpty()) {
+                // lambda
+                {
+                    dropdownExpanded = true
+                }
+            } else {
+                null
+            },
+            content = {
             val shownValue = animatedConcealedText(
                 text = value,
                 concealed = !visibilityState.value.value || visibilityConfig.hidden,
@@ -172,9 +194,7 @@ fun VaultViewValueItem(
                 }
             }
         },
-        dropdown = item.dropdown,
-        leading = item.leading,
-        trailing = {
+        endActions = {
             if (visibilityConfig.concealed && !visibilityConfig.hidden) {
                 val visible = visibilityState.value.value
                 VisibilityToggle(
@@ -217,7 +237,20 @@ fun VaultViewValueItem(
 
             item.trailing?.invoke(this)
         },
-    )
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
+            }
+        }
+    }
 }
 
 /** The item and the field the value is read from, if any. */
