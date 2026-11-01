@@ -3,6 +3,9 @@
 package com.artemchep.keyguard.feature.urloverride
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +18,7 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Terminal
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -24,11 +28,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.AnnotatedString
@@ -40,7 +47,6 @@ import com.artemchep.keyguard.common.model.flatMap
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
-import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -50,9 +56,11 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DefaultFab
 import com.artemchep.keyguard.ui.DefaultSelection
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
 import com.artemchep.keyguard.ui.FlatItemTextContent
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.icons.IconBox
@@ -225,68 +233,106 @@ private fun UrlOverrideItem(
         selectableState.selected -> MiuixTheme.colorScheme.primaryContainer
         else -> Color.Unspecified
     }
-    FlatDropdownSimpleExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = item.shapeState,
-        leading = {
-            val accent = rememberSecretAccentColor(
-                accentLight = item.accentLight,
-                accentDark = item.accentDark,
-            )
-            AvatarBuilder(
-                icon = item.icon,
-                accent = accent,
-                active = item.active,
-                badge = {
-                    // Do nothing.
-                },
-            )
-        },
-        content = {
-            FlatItemTextContent(
-                title = {
-                    Text(item.title)
-                },
-                text = {
-                    Column {
-                        if (item.regex.isNotEmpty()) {
-                            MiniRow(
-                                modifier = Modifier
-                                    .padding(top = 4.dp),
-                                icon = Icons.Outlined.Search,
-                                text = item.regex,
-                            )
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val onLongClick = selectableState.onLongClick
+    val onClick: (() -> Unit)? = when {
+        selectableState.onClick != null -> selectableState.onClick
+        item.dropdown.isNotEmpty() -> {
+            // lambda
+            {
+                dropdownExpanded = true
+            }
+        }
+
+        else -> null
+    }
+    Box {
+        BasicComponent(
+            modifier = modifier
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
+                    },
+                )
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
+            startAction = {
+                val accent = rememberSecretAccentColor(
+                    accentLight = item.accentLight,
+                    accentDark = item.accentDark,
+                )
+                AvatarBuilder(
+                    icon = item.icon,
+                    accent = accent,
+                    active = item.active,
+                    badge = {
+                        // Do nothing.
+                    },
+                )
+            },
+            content = {
+                FlatItemTextContent(
+                    title = {
+                        Text(item.title)
+                    },
+                    text = {
+                        Column {
+                            if (item.regex.isNotEmpty()) {
+                                MiniRow(
+                                    modifier = Modifier
+                                        .padding(top = 4.dp),
+                                    icon = Icons.Outlined.Search,
+                                    text = item.regex,
+                                )
+                            }
+                            if (item.command.isNotEmpty()) {
+                                MiniRow(
+                                    modifier = Modifier
+                                        .padding(top = 4.dp),
+                                    icon = Icons.Outlined.Terminal,
+                                    text = item.command,
+                                )
+                            }
                         }
-                        if (item.command.isNotEmpty()) {
-                            MiniRow(
-                                modifier = Modifier
-                                    .padding(top = 4.dp),
-                                icon = Icons.Outlined.Terminal,
-                                text = item.command,
-                            )
-                        }
-                    }
-                },
-            )
-        },
-        trailing = {
-            ExpandedIfNotEmptyForRow(
-                selectableState.selected.takeIf { selectableState.selecting },
-            ) { selected ->
-                Checkbox(
-                    modifier = Modifier
-                        .padding(start = 16.dp),
-                    state = ToggleableState(selected),
-                    onClick = null,
+                    },
+                )
+            },
+            endActions = {
+                ExpandedIfNotEmptyForRow(
+                    selectableState.selected.takeIf { selectableState.selecting },
+                ) { selected ->
+                    Checkbox(
+                        modifier = Modifier
+                            .padding(start = 16.dp),
+                        state = ToggleableState(selected),
+                        onClick = null,
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            item.dropdown.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-        },
-        dropdown = item.dropdown,
-        onClick = selectableState.onClick,
-        onLongClick = selectableState.onLongClick,
-        enabled = true,
-    )
+        }
+    }
 }
 
 @Composable
