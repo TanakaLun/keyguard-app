@@ -262,7 +262,7 @@ private fun AppItem(
     BasicComponent(
         modifier = modifier,
         title = item.name.text,
-        summary = stringResource(item.text),
+        summary = item.text,
         startAction = {
             FaviconIcon(
                 modifier = Modifier
