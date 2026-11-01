@@ -146,10 +146,9 @@ fun VaultViewUriItem(
                             .combineAlpha(MediumEmphasisAlpha),
                     )
                 }
-            }
-            ExpandedIfNotEmpty(
-                item.warningTitle,
-            ) { warningTitle ->
+                ExpandedIfNotEmpty(
+                    item.warningTitle,
+                ) { warningTitle ->
                 val contentColor = MiuixTheme.colorScheme.warning
                 val backgroundColor = MiuixTheme.colorScheme.warningContainer
                     .combineAlpha(DisabledEmphasisAlpha)
@@ -184,9 +183,9 @@ fun VaultViewUriItem(
                         style = MiuixTheme.textStyles.labelMedium,
                     )
                 }
-            }
-        },
-        bottomAction = {
+                }
+            },
+            bottomAction = {
             var selectedDropdown by remember {
                 mutableStateOf<List<ContextItem>>(emptyList())
             }

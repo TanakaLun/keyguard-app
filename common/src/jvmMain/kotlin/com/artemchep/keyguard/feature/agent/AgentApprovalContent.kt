@@ -46,6 +46,7 @@ import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.rememberCountdownSeconds
 import com.artemchep.keyguard.ui.text.annotatedResource
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import kotlinx.coroutines.delay
 import kotlin.time.Instant

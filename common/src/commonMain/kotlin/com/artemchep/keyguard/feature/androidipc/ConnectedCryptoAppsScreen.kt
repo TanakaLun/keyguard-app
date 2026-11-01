@@ -41,6 +41,8 @@ import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.SimpleNote
 import com.artemchep.keyguard.ui.TableRowItem
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.icons.FaviconIcon
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemAvatar
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
