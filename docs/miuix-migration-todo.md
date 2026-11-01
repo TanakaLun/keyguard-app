@@ -22,11 +22,12 @@
 - [x] Rows are Miuix `BasicComponent`: `FlatItemSimpleExpressive`,
       `FlatItemLayoutExpressive` and `FlatItemLayout` are deleted, long press goes
       through `Modifier.combinedClickable`
+- [x] Context dropdowns are `BasicComponent` + `KeyguardDropdownMenu`:
+      `FlatDropdownSimpleExpressive` and `FlatDropdownLayoutExpressive` are deleted
+- [x] Text rows use Miuix text styles directly: `FlatItemTextContent` and
+      `FlatItemTextContent2` are deleted
 
 ## Remaining
 
-- [ ] Replace `FlatDropdownSimpleExpressive` (row + context dropdown) with
-      `BasicComponent` + the Miuix dropdown menu
-- [ ] Delete the `FlatItemTextContent` / `FlatItemTextContent2` text helpers,
-      `Category` / `Section` shims and the `ShapeState` / `LocalExpressive`
-      leftovers
+- [ ] Delete the `Category` / `Section` shims in favour of `SmallTitle` / `Card`
+- [ ] Delete the `ShapeState`, `getShapeState` and `LocalExpressive` leftovers
