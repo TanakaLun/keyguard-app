@@ -1,10 +1,13 @@
 package com.artemchep.keyguard.android.ipc
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,7 +36,6 @@ import com.artemchep.keyguard.common.service.agent.MAX_AGENT_CALLER_NAME_LENGTH
 import com.artemchep.keyguard.common.service.agent.sanitizedAgentDisplayValue
 import com.artemchep.keyguard.feature.agent.AgentApprovalButtons
 import com.artemchep.keyguard.feature.dialog.DialogContent
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.ipc_approval_approve
 import com.artemchep.keyguard.res.ipc_approval_deny
@@ -236,24 +238,31 @@ private fun AndroidIpcApprovalCandidate(
     val onSelect = {
         state.onSelect(candidate.id)
     }
-    FlatItemLayoutExpressive(
-        shapeState = shapeState,
-        leading = {
-            if (state.allowMultiple) {
-                Checkbox(
-                    checked = selected,
-                    onCheckedChange = {
-                        onSelect()
-                    },
-                )
-            } else {
-                RadioButton(
-                    selected = selected,
-                    onClick = onSelect,
-                )
-            }
-        },
-        content = {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onSelect)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (state.allowMultiple) {
+            Checkbox(
+                checked = selected,
+                onCheckedChange = {
+                    onSelect()
+                },
+            )
+        } else {
+            RadioButton(
+                selected = selected,
+                onClick = onSelect,
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .size(16.dp),
+        )
+        Column {
             Text(
                 text = candidate.name,
                 style = MaterialTheme.typography.bodyLarge,
@@ -266,12 +275,11 @@ private fun AndroidIpcApprovalCandidate(
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = FontFamily.Monospace,
                     color = LocalContentColor.current
-                        .combineAlpha(MediumEmphasisAlpha),
+                        .copy(alpha = 0.6f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-        },
-        onClick = onSelect,
-    )
+        }
+    }
 }

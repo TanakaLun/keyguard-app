@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Link
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +33,7 @@ import com.artemchep.keyguard.common.service.environment.EnvironmentCapability
 import com.artemchep.keyguard.common.service.environment.EnvironmentCatalog
 import com.artemchep.keyguard.feature.agent.AgentApprovalDialog
 import com.artemchep.keyguard.feature.agent.rememberAgentApprovalCallerInfo
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.environments_approval_client
 import com.artemchep.keyguard.res.environments_approval_local_file_note
@@ -178,8 +179,8 @@ private fun EnvironmentApprovalRequestItem(
     val accountName = state.accounts
         .firstOrNull { it.id == accountId }
         ?.name
-    FlatItemLayoutExpressive(
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(
                 imageVector = environmentCapabilityIcon(request.capability),
                 contentDescription = null,

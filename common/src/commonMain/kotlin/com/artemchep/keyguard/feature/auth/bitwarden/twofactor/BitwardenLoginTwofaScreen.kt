@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.Construction
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Refresh
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
@@ -53,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import arrow.core.partially1
 import arrow.core.right
 import com.artemchep.keyguard.common.model.getOrNull
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
@@ -409,19 +410,13 @@ private fun ColumnScope.LoginOtpScreenContentAuthenticator(
         },
     )
     Spacer(Modifier.height(8.dp))
-    FlatItemLayoutExpressive(
-        expressive = false,
-        leading = {
+    BasicComponent(
+        title = stringResource(Res.string.remember_me),
+        startAction = {
             Checkbox(
                 state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
                 onClick = null,
-            )
-        },
-        content = {
-            Text(
-                text = stringResource(Res.string.remember_me),
-                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),
@@ -485,9 +480,9 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
     AnimatedVisibility(
         visible = state.emailResend != null,
     ) {
-        FlatItemLayoutExpressive(
-            expressive = false,
-            leading = {
+        BasicComponent(
+            title = stringResource(Res.string.resend_verification_code),
+            startAction = {
                 Box {
                     Icon(Icons.Outlined.MailOutline, null)
                     Box(
@@ -505,28 +500,16 @@ private fun ColumnScope.LoginOtpScreenContentEmail(
                     }
                 }
             },
-            content = {
-                Text(
-                    text = stringResource(Res.string.resend_verification_code),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
-            },
             onClick = state.emailResend,
         )
     }
-    FlatItemLayoutExpressive(
-        expressive = false,
-        leading = {
+    BasicComponent(
+        title = stringResource(Res.string.remember_me),
+        startAction = {
             Checkbox(
                 state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
                 onClick = null,
-            )
-        },
-        content = {
-            Text(
-                text = stringResource(Res.string.remember_me),
-                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),
@@ -590,9 +573,9 @@ private fun ColumnScope.LoginOtpScreenContentEmailNewDevice(
     AnimatedVisibility(
         visible = state.emailResend != null,
     ) {
-        FlatItemLayoutExpressive(
-            expressive = false,
-            leading = {
+        BasicComponent(
+            title = stringResource(Res.string.resend_verification_code),
+            startAction = {
                 Box {
                     Icon(Icons.Outlined.MailOutline, null)
                     Box(
@@ -609,12 +592,6 @@ private fun ColumnScope.LoginOtpScreenContentEmailNewDevice(
                         )
                     }
                 }
-            },
-            content = {
-                Text(
-                    text = stringResource(Res.string.resend_verification_code),
-                    style = MiuixTheme.textStyles.bodyMedium,
-                )
             },
             onClick = state.emailResend,
         )
@@ -683,7 +660,7 @@ private fun ColumnScope.LoginOtpScreenContentYubiKey(
             )
         }
     }
-    FlatItemLayoutExpressive(
+    BasicComponent(
         content = {
             SimpleGridLayout {
                 YubiKeyUsbCard(
@@ -698,19 +675,13 @@ private fun ColumnScope.LoginOtpScreenContentYubiKey(
     Section(
         expressive = true,
     )
-    FlatItemLayoutExpressive(
-        expressive = false,
-        leading = {
+    BasicComponent(
+        title = stringResource(Res.string.remember_me),
+        startAction = {
             Checkbox(
                 state = ToggleableState(state.rememberMe.checked),
                 enabled = state.rememberMe.onChange != null,
                 onClick = null,
-            )
-        },
-        content = {
-            Text(
-                text = stringResource(Res.string.remember_me),
-                style = MiuixTheme.textStyles.bodyMedium,
             )
         },
         onClick = state.rememberMe.onChange?.partially1(!state.rememberMe.checked),

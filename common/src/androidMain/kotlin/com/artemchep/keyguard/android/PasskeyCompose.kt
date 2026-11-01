@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Warning
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -51,7 +53,7 @@ import com.artemchep.keyguard.common.model.MasterSession
 import com.artemchep.keyguard.common.usecase.AddPrivilegedApp
 import com.artemchep.keyguard.common.usecase.GetPrivilegedApps
 import com.artemchep.keyguard.di.resolveOrCancel
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.feature.loading.getErrorReadableMessage
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.res.*
@@ -266,19 +268,13 @@ fun CredentialError(
                             .height(24.dp),
                     )
                     if (advanced.action != null) {
-                        FlatItemLayoutExpressive(
+                        BasicComponent(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            contentColor = MiuixTheme.colorScheme.error,
-                            padding = PaddingValues(top = 3.dp, start = 0.dp, end = 0.dp),
-                            content = {
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    text = advanced.action.title,
-                                    style = MiuixTheme.textStyles.titleSmallEmphasized,
-                                )
-                            },
+                            title = advanced.action.title,
+                            titleColor = BasicComponentDefaults.titleColor(
+                                color = MiuixTheme.colorScheme.error,
+                            ),
                             onClick = advanced.action.onClick,
                         )
                         Spacer(

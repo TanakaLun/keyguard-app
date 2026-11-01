@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -43,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -70,7 +72,6 @@ import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.PromoView
 import com.artemchep.keyguard.feature.home.vault.component.AccountListItemTextIcon
 import com.artemchep.keyguard.feature.home.vault.component.AddAccountView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.SearchQualifierSuggestionPopup
 import com.artemchep.keyguard.feature.home.vault.component.SmartBadge
 import com.artemchep.keyguard.feature.home.vault.component.VaultItemSearchContextBadge
@@ -626,18 +627,17 @@ private fun QuickSearchResultRow(
         }
     // We explicitly do not support the expressive shape merging here,
     // because it looks ugly.
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier =
             Modifier
-                .fillMaxWidth(),
-        backgroundColor = backgroundColor,
-        padding =
-            PaddingValues(
-                start = 8.dp,
-                end = 8.dp,
-                top = 1.dp,
-                bottom = 2.dp, // in Android notifications the margin is 3 dp
-            ),
+                .fillMaxWidth()
+                .then(
+                    if (backgroundColor.isSpecified) {
+                        Modifier.background(backgroundColor)
+                    } else {
+                        Modifier
+                    },
+                ),
         content = {
             FlatItemTextContent(
                 title = {
@@ -685,7 +685,7 @@ private fun QuickSearchResultRow(
                 )
             }
         },
-        leading = {
+        startAction = {
             AccountListItemTextIcon(
                 modifier = Modifier,
                 item = item,

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.RemoveCircleOutline
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
@@ -44,7 +45,7 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -496,8 +497,10 @@ private fun GpgCheckboxRow(
 ) {
     val updatedChecked by rememberUpdatedState(checked)
     val updatedOnCheckedChanged by rememberUpdatedState(onCheckedChange)
-    FlatItemLayoutExpressive(
-        leading = {
+    BasicComponent(
+        title = title,
+        summary = text,
+        startAction = {
             Checkbox(
                 state = ToggleableState(checked),
                 enabled = enabled,
@@ -505,24 +508,6 @@ private fun GpgCheckboxRow(
                     updatedOnCheckedChanged(!updatedChecked)
                 },
             )
-        },
-        content = {
-            Text(
-                text = title,
-                style = MiuixTheme.textStyles.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (text != null) {
-                Text(
-                    text = text,
-                    style = MiuixTheme.textStyles.bodySmall,
-                    color = LocalContentColor.current
-                        .combineAlpha(MediumEmphasisAlpha),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
         },
         onClick = {
             updatedOnCheckedChanged(!updatedChecked)
@@ -538,8 +523,8 @@ private fun GpgSigningKeyRow(
     enabled: Boolean,
     onChoose: () -> Unit,
 ) {
-    FlatItemLayoutExpressive(
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(imageVector = Icons.Outlined.Key, contentDescription = null)
         },
         content = {
@@ -558,7 +543,7 @@ private fun GpgSigningKeyRow(
                 )
             }
         },
-        trailing = { ChevronIcon() },
+        endActions = { ChevronIcon() },
         onClick = onChoose.takeIf { enabled },
     )
 }
@@ -596,15 +581,14 @@ private fun GpgRecipientRow(
     onChoose: () -> Unit,
     onRemove: () -> Unit,
 ) {
-    FlatItemLayoutExpressive(
-        shapeState = shapeState,
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(imageVector = Icons.Outlined.Key, contentDescription = null)
         },
         content = {
             GpgToolsKeyIdentity(key = keyItem)
         },
-        trailing = {
+        endActions = {
             IconButton(enabled = enabled, onClick = onRemove) {
                 Icon(
                     imageVector = Icons.Outlined.RemoveCircleOutline,
@@ -623,8 +607,8 @@ private fun GpgFileRefRow(
     onSelect: () -> Unit,
     onClear: () -> Unit,
 ) {
-    FlatItemLayoutExpressive(
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(
                 imageVector = Icons.Outlined.Description,
                 contentDescription = null,
@@ -647,7 +631,7 @@ private fun GpgFileRefRow(
                 )
             }
         },
-        trailing = {
+        endActions = {
             TextButton(
     text = stringResource(
                         if (file == null) {
@@ -674,9 +658,8 @@ private fun GpgCustomPublicKeyRow(
     }
 
     Box {
-        FlatItemLayoutExpressive(
-            shapeState = shapeState,
-            leading = {
+        BasicComponent(
+            startAction = {
                 Icon(
                     imageVector = Icons.Outlined.Key,
                     contentDescription = null,

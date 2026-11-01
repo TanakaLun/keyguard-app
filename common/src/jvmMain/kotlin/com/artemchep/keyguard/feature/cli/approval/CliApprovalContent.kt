@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ import com.artemchep.keyguard.common.service.cli.displayCommand
 import com.artemchep.keyguard.common.service.cli.displayWorkingDirectory
 import com.artemchep.keyguard.feature.agent.AgentApprovalDialog
 import com.artemchep.keyguard.feature.agent.rememberAgentApprovalCallerInfo
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.cli_approval_run_note
 import com.artemchep.keyguard.res.cli_approval_run_terminal_note
@@ -132,8 +133,8 @@ private fun CliApprovalNote(
 private fun CliRunItem(
     operation: CliOperation.Run,
 ) {
-    FlatItemLayoutExpressive(
-        leading = {
+    BasicComponent(
+        startAction = {
             Icon(
                 imageVector = Icons.Outlined.Terminal,
                 contentDescription = null,

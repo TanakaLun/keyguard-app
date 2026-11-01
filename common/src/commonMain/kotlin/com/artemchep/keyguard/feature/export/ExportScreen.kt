@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.service.permission.PermissionState
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.model.FilterItem
 import com.artemchep.keyguard.feature.navigation.NavigationIcon

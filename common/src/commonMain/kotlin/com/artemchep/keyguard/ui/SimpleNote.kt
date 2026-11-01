@@ -1,19 +1,21 @@
 package com.artemchep.keyguard.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Warning
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.info
 import com.artemchep.keyguard.ui.theme.infoContainer
@@ -85,34 +87,39 @@ fun FlatSimpleNote(
         SimpleNote.Type.WARNING -> MiuixTheme.colorScheme.onWarningContainer
         SimpleNote.Type.ERROR -> MiuixTheme.colorScheme.onErrorContainer
     }
-    FlatItemLayoutExpressive(
-        modifier = modifier,
-        backgroundColor = surfaceColor
-            .combineAlpha(DisabledEmphasisAlpha),
-        contentColor = contentColor,
-        leading = if (icon) {
+    BasicComponent(
+        modifier = modifier
+            .background(
+                surfaceColor
+                    .combineAlpha(DisabledEmphasisAlpha),
+            ),
+        startAction = if (icon) {
             // composable
-            leading@{
-                if (leading != null) {
-                    leading.invoke(this)
-                    return@leading
+            {
+                Row {
+                    if (leading != null) {
+                        leading.invoke(this)
+                    } else {
+                        val imageVector = when (type) {
+                            SimpleNote.Type.OK -> Icons.Outlined.Check
+                            SimpleNote.Type.INFO -> Icons.Outlined.Info
+                            SimpleNote.Type.WARNING -> Icons.Outlined.Warning
+                            SimpleNote.Type.ERROR -> Icons.Outlined.ErrorOutline
+                        }
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = null,
+                            tint = tintColor,
+                        )
+                    }
                 }
-
-                val imageVector = when (type) {
-                    SimpleNote.Type.OK -> Icons.Outlined.Check
-                    SimpleNote.Type.INFO -> Icons.Outlined.Info
-                    SimpleNote.Type.WARNING -> Icons.Outlined.Warning
-                    SimpleNote.Type.ERROR -> Icons.Outlined.ErrorOutline
-                }
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = null,
-                    tint = tintColor,
-                )
             }
         } else {
             null
         },
+        endActions = trailing,
+        onClick = onClick,
+        enabled = enabled,
         content = {
             if (title != null) {
                 Text(
@@ -122,24 +129,16 @@ fun FlatSimpleNote(
                 )
             }
             if (text != null) {
-                val textColor = if (title != null) {
-                    LocalContentColor.current
-                        .combineAlpha(MediumEmphasisAlpha)
-                } else {
-                    LocalContentColor.current
-                }
                 Text(
                     text = text,
                     style = MiuixTheme.textStyles.bodySmall,
-                    color = textColor,
+                    color = contentColor
+                        .combineAlpha(MediumEmphasisAlpha),
                 )
             }
             if (content != null) {
                 content()
             }
         },
-        trailing = trailing,
-        onClick = onClick,
-        enabled = enabled,
     )
 }

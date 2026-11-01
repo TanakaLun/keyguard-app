@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Terminal
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -32,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.service.agent.AgentRequest
 import com.artemchep.keyguard.common.usecase.GetCiphers
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.cancel
 import com.artemchep.keyguard.res.ok
@@ -128,8 +129,8 @@ fun AgentApprovalContent(
             onDecision(true, "approval_dialog_confirm")
         },
     ) {
-        FlatItemLayoutExpressive(
-            leading = keyIcon,
+        BasicComponent(
+            startAction = keyIcon,
             content = {
                 val cipherName = rememberCipherName(
                     cipherId = cipherId,
@@ -158,7 +159,7 @@ fun AgentApprovalContent(
                     }
                 }
             },
-            trailing = {
+            endActions = {
                 DropdownIcon(
                     expanded = showKeyDetails,
                 )
