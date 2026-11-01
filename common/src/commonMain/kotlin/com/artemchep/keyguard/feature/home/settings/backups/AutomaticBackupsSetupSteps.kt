@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.feature.home.settings.backups
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
@@ -46,7 +48,7 @@ import com.artemchep.keyguard.common.service.backup.BackupStoreKind
 import com.artemchep.keyguard.feature.home.settings.KgSwitch
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.FlatSimpleNote
@@ -162,18 +164,22 @@ private fun BackupDestinationChoice(
     val backgroundColor = if (selected) {
         MiuixTheme.colorScheme.secondaryContainer
     } else Color.Unspecified
-    FlatItemLayoutExpressive(
-        rowModifier = Modifier.semantics {
-            this.selected = selected
-            role = Role.RadioButton
-        },
-        shapeState = shapeState,
-        backgroundColor = backgroundColor,
-        leading = { Icon(icon, contentDescription = null) },
-        content = {
-            Text(title, style = MiuixTheme.textStyles.titleMedium)
-        },
-        trailing = { RadioButton(selected = selected, onClick = null) },
+    BasicComponent(
+        modifier = Modifier
+            .semantics {
+                this.selected = selected
+                role = Role.RadioButton
+            }
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            ),
+        title = title,
+        startAction = { Icon(icon, contentDescription = null) },
+        endActions = { RadioButton(selected = selected, onClick = null) },
         onClick = onClick,
     )
 }

@@ -35,7 +35,7 @@ import com.artemchep.keyguard.common.service.backup.BackupRunProgressDetails
 import com.artemchep.keyguard.common.service.backup.BackupStatus
 import com.artemchep.keyguard.common.usecase.DateFormatter
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatSurfaceExpressive
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -151,8 +151,7 @@ private fun AutomaticBackupsStatusPanel(
             }
         }
 
-        FlatItemLayoutExpressive(
-            shapeState = ShapeState.CENTER,
+        BasicComponent(
             content = {
                 FlatItemTextContent(
                     title = {
@@ -192,7 +191,7 @@ private fun AutomaticBackupsStatusPanel(
                     }
                 }
             },
-            trailing = {
+            endActions = {
                 DropdownIcon(
                     expanded = configExpanded.value,
                 )
@@ -202,8 +201,7 @@ private fun AutomaticBackupsStatusPanel(
             },
         )
 
-        FlatItemLayoutExpressive(
-            shapeState = ShapeState.END,
+        BasicComponent(
             content = {
                 FlatItemTextContent(
                     title = {
@@ -227,7 +225,7 @@ private fun AutomaticBackupsStatusPanel(
                     }
                 }
             },
-            trailing = {
+            endActions = {
                 DropdownIcon(
                     expanded = statusExpanded.value,
                 )

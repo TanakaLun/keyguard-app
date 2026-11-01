@@ -28,7 +28,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -121,8 +121,10 @@ private fun SyncAccountItem(
     item: SyncState.Item,
 ) {
     Column {
-        FlatItemLayoutExpressive(
-            leading = {
+        BasicComponent(
+            title = item.email,
+            summary = item.host,
+            startAction = {
                 when (item.status) {
                     is SyncState.Item.Status.Ok,
                     is SyncState.Item.Status.Pending,
@@ -142,20 +144,6 @@ private fun SyncAccountItem(
                         )
                     }
                 }
-            },
-            content = {
-                FlatItemTextContent(
-                    title = {
-                        Text(
-                            text = item.email,
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = item.host,
-                        )
-                    },
-                )
             },
             onClick = item.onClick,
         )

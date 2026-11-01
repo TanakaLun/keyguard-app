@@ -7,6 +7,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,7 +51,6 @@ import com.artemchep.keyguard.feature.auth.AccountViewRoute
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.accounts.model.AccountItem
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.navigationNextEntryOrNull
@@ -194,10 +194,20 @@ fun SettingListAccountsItem(
                     Color.Unspecified
                 }
             }
-            FlatItemLayoutExpressive(
-                backgroundColor = backgroundColor,
-                shapeState = shapeState,
-                leading = {
+            BasicComponent(
+                modifier = Modifier
+                    .then(
+                        if (backgroundColor.isSpecified) {
+                            Modifier.background(backgroundColor)
+                        } else {
+                            Modifier
+                        },
+                    )
+                    .combinedClickable(
+                        onClick = accountItem.onClick ?: {},
+                        onLongClick = accountItem.onLongClick,
+                    ),
+                startAction = {
                     val accent = rememberSecretAccentColor(
                         accentLight = accountItem.accentLight,
                         accentDark = accountItem.accentDark,
@@ -220,7 +230,7 @@ fun SettingListAccountsItem(
                         },
                     )
                 },
-                trailing = {
+                endActions = {
                     if (accountItem.error) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
@@ -291,8 +301,6 @@ fun SettingListAccountsItem(
                             },
                     )
                 },
-                onClick = accountItem.onClick,
-                onLongClick = accountItem.onLongClick,
             )
         }
 
