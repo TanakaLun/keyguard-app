@@ -452,25 +452,13 @@ private fun ColumnScope.ExportContentOk(
                 .padding(horizontal = 12.dp)
                 .padding(bottom = 12.dp),
         ) {
-            FlatItemLayoutExpressive(
-                leading = {
+            BasicComponent(
+                title = stringResource(Res.string.exportaccount_include_attachments_title),
+                summary = attachments.size,
+                startAction = {
                     Icon(Icons.Outlined.KeyguardAttachment, null)
                 },
-                content = {
-                    FlatItemTextContent(
-                        title = {
-                            Text(
-                                text = stringResource(Res.string.exportaccount_include_attachments_title),
-                            )
-                        },
-                        text = {
-                            val size = attachments.size
-                                ?: return@FlatItemTextContent
-                            Text(size)
-                        },
-                    )
-                },
-                trailing = {
+                endActions = {
                     SwitchExpressive(
                         checked = attachments.enabled,
                         onCheckedChange = null,

@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.send.list
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -47,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -63,7 +66,6 @@ import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.home.vault.component.AddAccountView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.ui.theme.surfaceColorAtElevationSemi
@@ -569,10 +571,19 @@ fun VaultSendItemText(
 
         else -> Color.Unspecified
     }
-    FlatItemLayoutExpressive(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        shapeState = shapeState,
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .combinedClickable(
+                onClick = onClick ?: {},
+                onLongClick = onLongClick,
+            ),
         content = {
             FlatItemTextContent(
                 title = {
@@ -722,14 +733,14 @@ fun VaultSendItemText(
                 }
             }
         },
-        leading = {
+        startAction = {
             AccountListItemTextIcon(
                 send = item.source,
                 item = item,
                 expiredState = expiredState,
             )
         },
-        trailing = {
+        endActions = {
             Spacer(modifier = Modifier.width(8.dp))
 
             val showCheckbox = when {
@@ -760,8 +771,6 @@ fun VaultSendItemText(
                 }
             }
         },
-        onClick = onClick,
-        onLongClick = onLongClick,
     )
 }
 

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.SaveAlt
 import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.service.logging.LogLevel
 import com.artemchep.keyguard.feature.EmptyView
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import com.artemchep.keyguard.feature.home.vault.component.Section
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -234,9 +234,8 @@ private fun LogItem(
     modifier: Modifier,
     item: LogsItem.Value,
 ) {
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = item.shapeState,
         content = {
             Row {
                 val levelContainerColor = when (item.level) {

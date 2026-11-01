@@ -91,7 +91,6 @@ import com.artemchep.keyguard.feature.filepicker.FileDropTargetBox
 import com.artemchep.keyguard.feature.gpgkey.userids.GpgUserIdsDialog
 import com.artemchep.keyguard.feature.home.vault.component.CompactVaultItem
 import com.artemchep.keyguard.feature.home.vault.component.FlatDropdownSimpleExpressive
-import com.artemchep.keyguard.feature.home.vault.component.FlatItemLayoutExpressive
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.home.vault.component.FlatItemTextContent2
 import com.artemchep.keyguard.feature.home.vault.component.Section
@@ -861,11 +860,15 @@ private fun SshKeyField(
         containerPadding = defaultFlatItemPaddingValues(),
         fileDrop = item.fileDrop,
     ) {
-        FlatItemLayoutExpressive(
-            backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
-            leading = icon<RowScope>(Icons.Outlined.Terminal, Icons.Outlined.Key),
-            shapeState = shapeState,
-            padding = PaddingValues(0.dp),
+        BasicComponent(
+            modifier = Modifier
+                .background(MiuixTheme.colorScheme.surfaceVariant),
+            startAction = {
+                IconBox(
+                    main = Icons.Outlined.Terminal,
+                    secondary = Icons.Outlined.Key,
+                )
+            },
             content = {
                 val fingerprint = state.keyPair?.fingerprint
                 if (!fingerprint.isNullOrEmpty()) {
@@ -888,7 +891,7 @@ private fun SshKeyField(
                     )
                 }
             },
-            trailing = {
+            endActions = {
                 AutofillButton(
                     key = "sshKey",
                     sshKey = true,
@@ -940,15 +943,14 @@ private fun GpgKeyField(
                 ?.let { row -> Res.string.gpg_key_user_ids to row },
         )
         Column {
-            FlatItemLayoutExpressive(
-                backgroundColor = MiuixTheme.colorScheme.surfaceVariant,
-                leading = icon<RowScope>(Icons.Outlined.KeyguardGpgKey),
-                shapeState = if (supportingRows.isNotEmpty()) {
-                    shapeState and ShapeState.END.inv()
-                } else {
-                    shapeState
+            BasicComponent(
+                modifier = Modifier
+                    .background(MiuixTheme.colorScheme.surfaceVariant),
+                startAction = {
+                    IconBox(
+                        main = Icons.Outlined.KeyguardGpgKey,
+                    )
                 },
-                padding = PaddingValues(0.dp),
                 content = {
                     val fingerprint = state.gpgKey?.fingerprint
                     if (!fingerprint.isNullOrEmpty()) {
@@ -971,7 +973,7 @@ private fun GpgKeyField(
                         )
                     }
                 },
-                trailing = {
+                endActions = {
                     AutofillButton(
                         key = "gpgKey",
                         gpgKey = true,
@@ -1213,9 +1215,8 @@ private fun LinkField(
         return
     }
 
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        shapeState = shapeState,
         content = {
             FlatItemTextContent(
                 title = {
@@ -1234,7 +1235,7 @@ private fun LinkField(
                 },
             )
         },
-        trailing = {
+        endActions = {
             OptionsButton(
                 actions = item.options,
             )
@@ -1251,10 +1252,13 @@ private fun PasskeyField(
     shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
-    FlatItemLayoutExpressive(
+    BasicComponent(
         modifier = modifier,
-        leading = icon<RowScope>(Icons.Outlined.Key),
-        shapeState = shapeState,
+        startAction = {
+            IconBox(
+                main = Icons.Outlined.Key,
+            )
+        },
         content = {
             val passkey = state.passkey
             if (passkey != null) {
@@ -1291,7 +1295,7 @@ private fun PasskeyField(
                 )
             }
         },
-        trailing = {
+        endActions = {
             OptionsButton(
                 actions = item.options,
             )
@@ -1722,23 +1726,12 @@ private fun DateTimeField(
     Row(
         modifier = Modifier,
     ) {
-        FlatItemLayoutExpressive(
+        BasicComponent(
             modifier = Modifier
                 .weight(1.5f),
-            content = {
-                FlatItemTextContent2(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.date),
-                        )
-                    },
-                    text = {
-                        val text = state.date
-                        Text(text)
-                    },
-                )
-            },
-            leading = {
+            title = stringResource(Res.string.date),
+            summary = state.date,
+            startAction = {
                 Icon(
                     imageVector = Icons.Stub,
                     contentDescription = null,
@@ -1746,22 +1739,11 @@ private fun DateTimeField(
             },
             onClick = state.onSelectDate,
         )
-        FlatItemLayoutExpressive(
+        BasicComponent(
             modifier = Modifier
                 .weight(1f),
-            content = {
-                FlatItemTextContent2(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.time),
-                        )
-                    },
-                    text = {
-                        val text = state.time
-                        Text(text)
-                    },
-                )
-            },
+            title = stringResource(Res.string.time),
+            summary = state.time,
             onClick = state.onSelectTime,
         )
     }
