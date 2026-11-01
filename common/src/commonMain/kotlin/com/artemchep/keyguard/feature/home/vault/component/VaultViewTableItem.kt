@@ -22,6 +22,7 @@ import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.TableRowItem
 import com.artemchep.keyguard.ui.util.HorizontalDivider
+import com.artemchep.keyguard.ui.theme.titleSmall
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
