@@ -28,7 +28,14 @@
       `FlatItemTextContent2` are deleted
 - [x] Section headers are `SmallTitle`, dividers `HorizontalDivider`, spacers
       `Spacer(24.dp)`: the `Section` shim is deleted
+- [x] Row shape merging is gone: `ShapeState`, `getShapeState`,
+      `GroupableShapeItem` and the `transformShapes` / `mapShape` helpers are deleted
+- [x] The Material 3 expressive toggle is gone: `LocalExpressive`,
+      `GlobalExpressive`, `GetThemeExpressive` / `PutThemeExpressive` and the
+      `theme_m3_expressive` setting are deleted
 
 ## Remaining
 
-- [ ] Delete the `ShapeState`, `getShapeState` and `LocalExpressive` leftovers
+- Nothing on the row/section/expressive scope. Material 3 `Text`, `TextButton`,
+  `ButtonDefaults` and `TopAppBarDefaults` are still imported by some screens and
+  are migrated separately.
