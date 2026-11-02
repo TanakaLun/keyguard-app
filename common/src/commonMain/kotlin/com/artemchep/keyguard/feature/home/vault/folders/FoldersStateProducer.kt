@@ -42,7 +42,6 @@ import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.navigatePopSelf
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.provider.bitwarden.usecase.util.canDelete
 import com.artemchep.keyguard.provider.bitwarden.usecase.util.canEdit
 import com.artemchep.keyguard.res.*
@@ -706,7 +705,6 @@ suspend fun RememberStateFlowScope.foldersScreenStateProducer(
             }
             .toList()
         val itemsReShaped = items
-            .mapListShape()
             .toImmutableList()
         val current = treeWithCiphers.current
         val ciphers = current

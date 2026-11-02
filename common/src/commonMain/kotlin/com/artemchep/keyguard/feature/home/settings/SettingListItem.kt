@@ -46,11 +46,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.core.store.bitwarden.size
 import com.artemchep.keyguard.feature.auth.AccountViewRoute
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.accounts.model.AccountItem
 import com.artemchep.keyguard.feature.home.vault.component.rememberSecretAccentColor
 import com.artemchep.keyguard.feature.localization.textResource
@@ -164,21 +161,11 @@ fun SettingListAccountsItem(
         val data by item.state
 
         var hasItems = false
-        data.items.forEachIndexed { index, rawAccountItem ->
+        data.items.forEach { rawAccountItem ->
             val accountItem = rawAccountItem as? AccountItem.Item
-                ?: return@forEachIndexed
+                ?: return@forEach
             hasItems = true
 
-            val shapeConstraintsAnd = if (index != data.items.lastIndex) {
-                ShapeState.CENTER.inv()
-            } else {
-                ShapeState.END.inv()
-            }
-            val shapeState = getShapeState(
-                list = data.items,
-                index = index,
-                predicate = { el, _ -> el is AccountItem.Item },
-            ) and shapeConstraintsAnd
             val backgroundColor = when {
                 accountItem.isSelected -> MiuixTheme.colorScheme.primaryContainer
                 accountItem.isOpened -> MiuixTheme.colorScheme.selectedContainer

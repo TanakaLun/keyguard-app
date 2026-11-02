@@ -2,9 +2,7 @@ package com.artemchep.keyguard.feature.home.vault.organizations
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.Selection
 import com.artemchep.keyguard.ui.icons.AccentColors
@@ -30,15 +28,12 @@ data class OrganizationsState(
             val ciphers: Int,
             val selecting: Boolean,
             val selected: Boolean,
-            val shapeState: Int = ShapeState.ALL,
             val accentColors: AccentColors,
             val icon: ImageVector? = null,
             val onViewItemsClick: (() -> Unit)? = null,
             val actions: ImmutableList<ContextItem>,
             val onClick: (() -> Unit)?,
             val onLongClick: (() -> Unit)?,
-        ) : GroupableShapeItem<Item> {
-            override fun withShape(shape: Int) = copy(shapeState = shape)
-        }
+        )
     }
 }

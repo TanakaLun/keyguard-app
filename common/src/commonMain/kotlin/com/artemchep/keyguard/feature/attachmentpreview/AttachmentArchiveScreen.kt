@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -27,7 +27,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.ToastMessage
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.file.FileService
 import com.artemchep.keyguard.common.usecase.ShowMessage
 import com.artemchep.keyguard.common.usecase.WindowCoroutineScope
@@ -62,7 +61,7 @@ internal fun AttachmentArchiveContent(
     padding: PaddingValues,
     listState: LazyListState,
 ) {
-    ProvideScaffoldLocalValues(expressive = true) {
+    ProvideScaffoldLocalValues {
         LazyColumn(state = listState, contentPadding = padding) {
             if (content.breadcrumbs.isNotEmpty()) {
                 breadcrumbsItem(
@@ -83,14 +82,13 @@ internal fun AttachmentArchiveContent(
                     )
                 }
             }
-            itemsIndexed(
+            items(
                 items = content.items,
-                key = { _, item -> item.id },
-            ) { index, item ->
+                key = { item -> item.id },
+            ) { item ->
                 AttachmentArchiveItem(
                     item = item,
                     busy = busy,
-                    shapeState = getShapeState(content.items, index) { _, _ -> true },
                 )
             }
         }
@@ -101,7 +99,6 @@ internal fun AttachmentArchiveContent(
 private fun AttachmentArchiveItem(
     item: AttachmentArchiveItem,
     busy: Boolean,
-    shapeState: Int,
 ) {
     val onOpen = item.onOpen.takeUnless { busy }
     val onSave = item.onSave.takeUnless { busy }

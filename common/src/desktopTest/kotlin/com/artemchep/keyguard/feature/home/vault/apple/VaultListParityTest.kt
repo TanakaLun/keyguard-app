@@ -1122,12 +1122,11 @@ class VaultListParityTest {
             val untouched = afterRows.values.firstOrNull { row ->
                 row.kind == AppleVaultEntry.KIND_ITEM &&
                         row.id != editedId &&
-                        row.id != "secret-added" &&
-                        beforeRows[row.id]?.shapeState == row.shapeState
+                        row.id != "secret-added"
             }
             val witness = assertNotNull(
                 untouched,
-                "a shape-stable untouched row exists " +
+                "an untouched row exists " +
                         "(before=${beforeRows.keys}, after=${afterRows.keys})",
             )
             assertEquals(
@@ -1198,7 +1197,6 @@ class VaultListParityTest {
         assertEquals(item.text.orEmpty(), row.subtitle, "$ctx subtitle")
         assertEquals(item.source.id, row.secretId, "$ctx secretId")
         assertEquals(item.accountId, row.accountId, "$ctx accountId")
-        assertEquals(item.shapeState, row.shapeState, "$ctx shapeState")
 
         // (e) flags.
         assertFlag(ctx, "favourite", item.favourite, row.flags, AppleVaultRowContent.FLAG_FAVOURITE)

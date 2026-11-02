@@ -1,8 +1,6 @@
 package com.artemchep.keyguard.feature.environments.edit
 
 import androidx.compose.runtime.Immutable
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.add.AddStateOwnership
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.filepicker.FilePickerResult
@@ -69,10 +67,7 @@ data class EnvironmentEditState(
         val revealed: Boolean,
         val onRevealChange: ((Boolean) -> Unit)?,
         val actions: ImmutableList<ContextItem>,
-        val shapeState: Int = ShapeState.ALL,
-    ) : GroupableShapeItem<Variable> {
-        override fun withShape(shape: Int) = copy(shapeState = shape)
-    }
+    )
 
     enum class Type {
         Value,

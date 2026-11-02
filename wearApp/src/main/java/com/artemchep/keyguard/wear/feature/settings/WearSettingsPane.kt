@@ -11,9 +11,7 @@ import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.material3.SurfaceTransformation
 import androidx.wear.compose.material3.lazy.transformedHeight
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemArgs
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.home.settings.SettingPaneItem
 import com.artemchep.keyguard.feature.home.settings.SettingPaneState
@@ -83,18 +81,9 @@ fun WearSettingsPaneScaffold(
                     itemsIndexed(
                         items = list,
                         key = { _, model -> model.compositeKey },
-                    ) { index, model ->
-                        val shapeState = getShapeState(
-                            list,
-                            index,
-                            predicate = { item, _ ->
-                                item.groupKey == model.groupKey &&
-                                        item.itemKey != "divider"
-                            },
-                        )
+                    ) { _, model ->
                         CompositionLocalProvider(
                             LocalSettingItemArgs provides model.args,
-                            LocalSettingItemShape provides shapeState,
                             LocalWearSettingsTransformation provides SurfaceTransformation(transformationSpec),
                         ) {
                             Box(

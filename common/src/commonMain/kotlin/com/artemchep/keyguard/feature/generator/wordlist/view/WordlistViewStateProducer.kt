@@ -23,7 +23,6 @@ import com.artemchep.keyguard.feature.navigation.state.produceScreenState
 import com.artemchep.keyguard.feature.search.keyboard.searchQueryShortcuts
 import com.artemchep.keyguard.feature.search.search.IndexedModel
 import com.artemchep.keyguard.feature.search.search.mapSearch
-import com.artemchep.keyguard.feature.search.search.mapShape
 import com.artemchep.keyguard.feature.search.search.searchFilter
 import com.artemchep.keyguard.feature.search.search.searchQueryHandle
 import com.artemchep.keyguard.res.*
@@ -180,7 +179,6 @@ suspend fun RememberStateFlowScope.wordlistViewStateProducer(
             // search decor applied to it.
             item.copy(name = result.highlightedText)
         }
-        .mapShape()
     val contentFlow = itemsFlow
         .crashlyticsAttempt { e ->
             val msg = "Failed to get the wordlist primitive list!"

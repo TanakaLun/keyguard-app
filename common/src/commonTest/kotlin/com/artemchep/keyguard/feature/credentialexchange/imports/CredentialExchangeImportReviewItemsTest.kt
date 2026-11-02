@@ -2,7 +2,6 @@ package com.artemchep.keyguard.feature.credentialexchange.imports
 
 import com.artemchep.keyguard.common.model.AccountId
 import com.artemchep.keyguard.common.model.DSecret
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.create.CreateRequest
 import com.artemchep.keyguard.common.service.credentialexchange.CxfImportPlan
 import com.artemchep.keyguard.common.service.credentialexchange.cxfFido2Credential
@@ -23,7 +22,7 @@ import kotlin.time.Instant
  */
 class CredentialExchangeImportReviewItemsTest {
     @Test
-    fun `items are sorted by their resolved titles and reshaped`() {
+    fun `items are sorted by their resolved titles`() {
         val items = reviewItems(
             request(title = "Zulu", type = DSecret.Type.Login),
             request(title = "Alpha", type = DSecret.Type.Card),
@@ -31,10 +30,6 @@ class CredentialExchangeImportReviewItemsTest {
         )
 
         assertEquals(listOf("Alpha", "Middle", "Zulu"), items.map { it.title })
-        assertEquals(
-            listOf(ShapeState.START, ShapeState.CENTER, ShapeState.END),
-            items.map { it.shapeState },
-        )
     }
 
     @Test

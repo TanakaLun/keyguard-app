@@ -21,7 +21,6 @@ import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.search.search.IndexedModel
 import com.artemchep.keyguard.feature.search.search.SearchQueryHandle
 import com.artemchep.keyguard.feature.search.search.mapSearch
-import com.artemchep.keyguard.feature.search.search.mapShape
 import com.artemchep.keyguard.ui.icons.FaviconIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -121,7 +120,6 @@ internal fun <Model, Item : Any, ContentItem : Item, SectionItem : Item> Remembe
             }
             out to rev
         }
-        .mapShape()
 }
 
 @Composable

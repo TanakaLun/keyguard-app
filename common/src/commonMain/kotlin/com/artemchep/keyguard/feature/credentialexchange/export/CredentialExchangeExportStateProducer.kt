@@ -7,7 +7,6 @@ import com.artemchep.keyguard.common.model.DFolder
 import com.artemchep.keyguard.common.model.DProfile
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.credentialexchange.CxfAccountResult
 import com.artemchep.keyguard.common.service.credentialexchange.CxfExportService
 import com.artemchep.keyguard.common.service.credentialexchange.CxfExportSkipReason
@@ -372,15 +371,9 @@ private fun List<ProfileAccount>.toReviewStage(
         item.title
     }
     return CredentialExchangeExportState.Stage.Review(
-        items = items.mapIndexed { index, item ->
-            val shapeState = getShapeState(
-                list = items,
-                index = index,
-                predicate = { _, _ -> true },
-            )
+        items = items.map { item ->
             CredentialExchangeItem(
                 title = item.title,
-                shapeState = shapeState,
                 credentials = item.credentials
                     .map { it.toUiKind() }
                     .distinct(),

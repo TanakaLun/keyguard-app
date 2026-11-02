@@ -17,13 +17,10 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.home.settings.KgAction
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.SettingPaneComponents
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -49,16 +46,12 @@ internal fun LazyListScope.automaticBackupsDisabledContent(
             title = setupSectionTitle,
         )
         item("unsupported.unsupported") {
-            CompositionLocalProvider(
-                LocalSettingItemShape provides ShapeState.ALL,
-            ) {
-                components.KgAction(
-                    icon = Icons.Outlined.Info,
-                    title = stringResource(Res.string.pref_item_automatic_backups_unsupported_title),
-                    text = stringResource(Res.string.pref_item_automatic_backups_unsupported_text),
-                    enabled = false,
-                )
-            }
+            components.KgAction(
+                icon = Icons.Outlined.Info,
+                title = stringResource(Res.string.pref_item_automatic_backups_unsupported_title),
+                text = stringResource(Res.string.pref_item_automatic_backups_unsupported_text),
+                enabled = false,
+            )
         }
         return
     }

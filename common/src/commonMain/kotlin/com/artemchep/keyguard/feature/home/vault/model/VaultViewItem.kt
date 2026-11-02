@@ -10,10 +10,7 @@ import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import arrow.optics.optics
 import com.artemchep.keyguard.common.model.DSecret
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.TotpToken
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.app.parser.AppStoreListingInfo
 import com.artemchep.keyguard.common.service.passkey.PassKeyServiceInfo
 import com.artemchep.keyguard.common.usecase.CopyText
@@ -36,19 +33,14 @@ sealed interface VaultViewItem {
 
     val id: String
 
-    interface Groupable<T> : GroupableShapeItem<T>
-
     data class Card(
         override val id: String,
         val elevation: Dp,
-        val shapeState: Int = ShapeState.ALL,
         val data: DSecret.Card,
         val visibility: Visibility = Visibility(),
         val dropdown: ImmutableList<ContextItem> = persistentListOf(),
-    ) : VaultViewItem, Groupable<Card> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Identity(
@@ -85,7 +77,6 @@ sealed interface VaultViewItem {
     data class Action(
         override val id: String,
         val elevation: Dp = 0.dp,
-        val shapeState: Int = ShapeState.ALL,
         val title: String,
         val text: String? = null,
         val leading: (@Composable RowScope.() -> Unit)? = null,
@@ -96,26 +87,21 @@ sealed interface VaultViewItem {
          * to the item.
          */
         val onClick: (() -> Unit)? = null,
-    ) : VaultViewItem, Groupable<Action> {
+    ) : VaultViewItem {
         companion object;
 
         data class Badge(
             val text: String,
             val score: Float,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Link(
         override val id: String,
         val presentation: VaultItemPresentation?,
-        val shapeState: Int = ShapeState.ALL,
         val onClick: (() -> Unit)? = null,
-    ) : VaultViewItem, Groupable<Link> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Value(
@@ -125,7 +111,6 @@ sealed interface VaultViewItem {
         val value: String,
         val maxLines: Int = Int.MAX_VALUE,
         val visibility: Visibility = Visibility(),
-        val shapeState: Int = ShapeState.ALL,
         val monospace: Boolean = false,
         val colorize: Boolean = false,
         val leading: (@Composable RowScope.() -> Unit)? = null,
@@ -147,7 +132,7 @@ sealed interface VaultViewItem {
          * `null` for the own values of an item.
          */
         val reference: Reference? = null,
-    ) : VaultViewItem, Groupable<Value> {
+    ) : VaultViewItem {
         companion object;
 
         sealed interface Style {
@@ -167,47 +152,38 @@ sealed interface VaultViewItem {
             /** Opens the referenced item, `null` if it is not available. */
             val onClick: (() -> Unit)? = null,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Table(
         override val id: String,
         val elevation: Dp = 0.dp,
-        val shapeState: Int = ShapeState.ALL,
         val title: String? = null,
         val value: String? = null,
         val rows: List<Row>,
         val dropdown: List<ContextItem> = emptyList(),
-    ) : VaultViewItem, Groupable<Table> {
+    ) : VaultViewItem {
         companion object;
 
         data class Row(
             val title: String,
             val value: String,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Error(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val name: String,
         val message: String?,
         val blob: String? = null,
         val timestamp: String,
         val onRetry: (() -> Unit)? = null,
         val onCopyBlob: (() -> Unit)? = null,
-    ) : VaultViewItem, Groupable<Error> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Info(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val name: String,
         val message: String? = null,
     ) : VaultViewItem {
@@ -223,27 +199,21 @@ sealed interface VaultViewItem {
 
     data class Switch(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val title: String,
         val value: Boolean,
         val dropdown: List<ContextItem> = emptyList(),
-    ) : VaultViewItem, Groupable<Switch> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Passkey(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val value: String?,
         val source: DSecret.Login.Fido2Credentials,
         val onUse: (() -> Unit)? = null,
         val onClick: (() -> Unit)? = null,
-    ) : VaultViewItem, Groupable<Passkey> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Note(
@@ -308,45 +278,35 @@ sealed interface VaultViewItem {
 
     data class Folder(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val nodes: List<FolderNode>,
         val onClick: () -> Unit,
-    ) : VaultViewItem, Groupable<Folder> {
+    ) : VaultViewItem {
         companion object;
 
         data class FolderNode(
             val name: String,
             val onClick: () -> Unit,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Organization(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val title: String,
         val onClick: () -> Unit,
-    ) : VaultViewItem, Groupable<Organization> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Collection(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val title: String,
         val onClick: () -> Unit,
-    ) : VaultViewItem, Groupable<Collection> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Uri(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val title: AnnotatedString,
         val text: String? = null,
         val matchTypeTitle: String? = null,
@@ -360,7 +320,7 @@ sealed interface VaultViewItem {
         val overrides: List<Override> = emptyList(),
         val colorize: Boolean = false,
         val iconSource: VaultUriIcon? = null,
-    ) : VaultViewItem, Groupable<Uri> {
+    ) : VaultViewItem {
         companion object;
 
         data class Override(
@@ -379,20 +339,17 @@ sealed interface VaultViewItem {
             val state: Flow<Either<Throwable, AppStoreListingInfo?>>,
             val onClick: () -> Unit,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Totp(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val copy: CopyText,
         val title: String,
         val shortcut: KeyShortcut? = null,
         val elevation: Dp,
         val totp: TotpToken,
         val localStateFlow: StateFlow<LocalState>,
-    ) : VaultViewItem, Groupable<Totp> {
+    ) : VaultViewItem {
         companion object;
 
         @Immutable
@@ -400,41 +357,30 @@ sealed interface VaultViewItem {
             val codes: PersistentList<PersistentList<String>>,
             val dropdown: PersistentList<ContextItem>,
         )
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class InactiveTotp(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val chevron: Boolean,
         val onClick: (() -> Unit)?,
-    ) : VaultViewItem, Groupable<InactiveTotp> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class InactivePasskey(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val info: PassKeyServiceInfo,
         val onClick: () -> Unit,
-    ) : VaultViewItem, Groupable<InactivePasskey> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class ReusedPassword(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val count: Int,
         val onClick: () -> Unit,
-    ) : VaultViewItem, Groupable<ReusedPassword> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     data class Qr(
@@ -462,28 +408,9 @@ sealed interface VaultViewItem {
 
     data class Attachment(
         override val id: String,
-        val shapeState: Int = ShapeState.ALL,
         val item: AttachmentItem,
-    ) : VaultViewItem, Groupable<Attachment> {
+    ) : VaultViewItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
 }
-
-fun List<VaultViewItem>.transformShapes(): List<VaultViewItem> = this
-    .mapIndexed { index, item ->
-        when (item) {
-            is VaultViewItem.Groupable<*> -> {
-                val shapeState = getShapeState(
-                    list = this,
-                    index = index,
-                    predicate = { el, _ -> el is VaultViewItem.Groupable<*> },
-                )
-                item.withShape(shapeState) as VaultViewItem
-            }
-
-            else -> item
-        }
-    }

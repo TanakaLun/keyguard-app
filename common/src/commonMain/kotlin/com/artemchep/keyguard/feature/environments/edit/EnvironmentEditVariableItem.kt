@@ -60,7 +60,6 @@ internal fun EnvironmentVariableItem(
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = variable.name,
         value = variable.value,
-        shapeState = variable.shapeState,
         valueVisualTransformation = if (revealed) {
             VisualTransformation.None
         } else {
@@ -124,7 +123,6 @@ private fun EnvironmentReferenceVariableItem(
             ) {
                 updatedOnClick?.invoke()
             },
-        shapeState = variable.shapeState,
         isError = isError,
         isFocused = hasFocusState,
         isEmpty = isEmpty,

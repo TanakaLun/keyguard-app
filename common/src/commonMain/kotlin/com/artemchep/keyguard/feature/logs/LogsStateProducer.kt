@@ -21,7 +21,6 @@ import com.artemchep.keyguard.common.usecase.GetInMemoryLogsEnabled
 import com.artemchep.keyguard.common.usecase.PutInMemoryLogsEnabled
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import kotlinx.collections.immutable.toImmutableList
@@ -137,7 +136,6 @@ suspend fun RememberStateFlowScope.logsStateProducer(
                 }
                 .toPersistentList()
             val itemsReShaped = items
-                .mapListShape()
                 .toImmutableList()
             LogsState.Content(
                 items = itemsReShaped,

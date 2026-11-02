@@ -14,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.home.settings.LocalSettingItemArgs
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.vault.component.SearchTextField
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -78,7 +76,6 @@ fun SearchSettingsScreenContent(
         modifier = Modifier
             .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             CustomToolbar(
@@ -161,11 +158,7 @@ fun SearchSettingsScreenContent(
         ) {
             when (it) {
                 is SearchSettingsState.Item.Settings -> {
-                    CompositionLocalProvider(
-                        LocalSettingItemShape provides it.shapeState,
-                    ) {
-                        it.content()
-                    }
+                    it.content()
                 }
             }
         }

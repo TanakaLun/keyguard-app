@@ -1,8 +1,6 @@
 package com.artemchep.keyguard.feature.androidipc
 
 import androidx.compose.runtime.Immutable
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 
 @Immutable
 data class ConnectedCryptoAppsState(
@@ -19,8 +17,5 @@ data class ConnectedCryptoAppsState(
         val installed: Boolean,
         val signerMismatch: Boolean,
         val onRevoke: () -> Unit,
-        val shapeState: Int = ShapeState.ALL,
-    ) : GroupableShapeItem<App> {
-        override fun withShape(shape: Int) = copy(shapeState = shape)
-    }
+    )
 }

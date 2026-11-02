@@ -2,7 +2,6 @@ package com.artemchep.keyguard.feature.credentialexchange.imports
 
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.create.CreateRequest
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.credentialexchange.CxfImportPlan
 import com.artemchep.keyguard.feature.credentialexchange.CredentialExchangeItem
 import com.artemchep.keyguard.feature.credentialexchange.sortedCredentialExchangeItemsBy
@@ -36,18 +35,12 @@ internal fun CxfImportPlan.toUiItems(
     }.sortedCredentialExchangeItemsBy { indexedItem ->
         indexedItem.value.request.resolveTitle(untitledLabel)
     }
-    return items.mapIndexed { index, indexedItem ->
-        val shapeState = getShapeState(
-            list = items,
-            index = index,
-            predicate = { _, _ -> true },
-        )
+    return items.map { indexedItem ->
         val request = indexedItem.value.request
         CxfImportReviewItem(
             sourceIndex = indexedItem.index,
             item = CredentialExchangeItem(
                 title = request.resolveTitle(untitledLabel),
-                shapeState = shapeState,
                 credentials = request.toUiKinds(),
             ),
         )

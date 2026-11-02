@@ -3,12 +3,10 @@ package com.artemchep.keyguard.feature.equivalentdomains
 import androidx.compose.runtime.Composable
 import com.artemchep.keyguard.common.model.DEquivalentDomains
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.usecase.GetEquivalentDomains
 import com.artemchep.keyguard.feature.generator.emailrelay.EmailRelayListState
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -73,11 +71,8 @@ suspend fun RememberStateFlowScope.equivalentDomainsScreenStateProducer(
                     )
                 }
                 .toList()
-            val itemsReShaped = items
-                .mapListShape()
-                .toImmutableList()
             EquivalentDomainsState.Content(
-                items = itemsReShaped,
+                items = items.toImmutableList(),
             )
         }
     return contentFlow

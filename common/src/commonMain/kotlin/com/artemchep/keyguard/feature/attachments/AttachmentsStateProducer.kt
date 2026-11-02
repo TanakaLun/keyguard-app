@@ -60,7 +60,6 @@ import com.artemchep.keyguard.feature.navigation.Route
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.platform.recordException
@@ -582,7 +581,6 @@ suspend fun RememberStateFlowScope.attachmentsScreenStateProducer(
         .map {
             it.list
         }
-        .mapListShape()
 
     val state = combine(
         itemsFlow,

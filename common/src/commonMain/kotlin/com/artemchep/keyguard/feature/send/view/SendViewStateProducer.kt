@@ -52,7 +52,6 @@ import com.artemchep.keyguard.feature.favicon.FaviconUrl
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.model.VaultUriIcon
 import com.artemchep.keyguard.feature.home.vault.model.Visibility
-import com.artemchep.keyguard.feature.home.vault.model.transformShapes
 import com.artemchep.keyguard.feature.largetype.LargeTypeRoute
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.wrap
@@ -493,7 +492,7 @@ suspend fun RememberStateFlowScope.sendViewScreenStateProducer(
                         dateFormatter = dateFormatter,
                         account = accountOrNull,
                         send = secretOrNull,
-                    ).toList().transformShapes(),
+                    ).toList(),
                 )
             }
         }

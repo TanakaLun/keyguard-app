@@ -90,7 +90,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.auth.common.VisibilityState
 import com.artemchep.keyguard.feature.auth.common.VisibilityToggle
@@ -107,7 +106,6 @@ import com.artemchep.keyguard.ui.focus.bringIntoView
 import com.artemchep.keyguard.ui.focus.focusRequester2
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.KeyguardWebsite
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.infoContainer
 import com.artemchep.keyguard.ui.theme.monoFontFamily
@@ -158,8 +156,6 @@ fun UrlFlatTextField(
     label: String? = null,
     placeholder: String? = null,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     clearButton: Boolean = defaultClearButton(),
@@ -183,8 +179,6 @@ fun UrlFlatTextField(
             ?: stringResource(Res.string.url),
         placeholder = placeholder,
         value = value,
-        shapeState = shapeState,
-        expressive = expressive,
         keyboardOptions = keyboardOptions.copy(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Uri,
@@ -206,8 +200,6 @@ fun TagFlatTextField(
     label: String? = null,
     placeholder: String? = null,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     clearButton: Boolean = defaultClearButton(),
@@ -231,8 +223,6 @@ fun TagFlatTextField(
             ?: stringResource(Res.string.tag),
         placeholder = placeholder,
         value = value,
-        shapeState = shapeState,
-        expressive = expressive,
         keyboardOptions = keyboardOptions.copy(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Text,
@@ -256,8 +246,6 @@ fun EmailFlatTextField(
     label: String? = null,
     placeholder: String? = PLACEHOLDER_EMAIL,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     clearButton: Boolean = defaultClearButton(),
@@ -283,8 +271,6 @@ fun EmailFlatTextField(
             ?: stringResource(Res.string.email),
         placeholder = placeholder,
         value = value,
-        shapeState = shapeState,
-        expressive = expressive,
         keyboardOptions = keyboardOptions.copy(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Email,
@@ -308,8 +294,6 @@ fun PasswordFlatTextField(
     label: String? = null,
     placeholder: String? = null,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     clearButton: Boolean = defaultClearButton(),
@@ -335,8 +319,6 @@ fun PasswordFlatTextField(
             ?: stringResource(Res.string.password),
         placeholder = placeholder,
         value = value,
-        shapeState = shapeState,
-        expressive = expressive,
         keyboardOptions = keyboardOptions.copy(
             autoCorrectEnabled = false,
             keyboardType = keyboardOptions.keyboardType
@@ -362,8 +344,6 @@ fun ConcealedFlatTextField(
     label: String? = null,
     placeholder: String? = null,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
@@ -396,8 +376,6 @@ fun ConcealedFlatTextField(
         } else {
             passwordVisualTransformation
         },
-        shapeState = shapeState,
-        expressive = expressive,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         singleLine = singleLine,
@@ -427,8 +405,6 @@ fun FakeFlatTextField(
     onClick: (() -> Unit)?,
     onClear: (() -> Unit)?,
     textStyle: TextStyle = LocalTextStyle.current,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     leading: (@Composable RowScope.() -> Unit)? = null,
     trailing: (@Composable RowScope.() -> Unit)? = null,
     content: (@Composable ColumnScope.() -> Unit)? = null,
@@ -446,8 +422,6 @@ fun FakeFlatTextField(
             },
         isError = isError,
         isFocused = hasFocus,
-        shapeState = shapeState,
-        expressive = expressive,
     ) {
         Column(
             modifier = Modifier
@@ -650,8 +624,6 @@ fun FlatTextField(
     value: TextFieldModel,
     textStyle: TextStyle = LocalTextStyle.current,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
@@ -691,8 +663,6 @@ fun FlatTextField(
             },
         isError = isError,
         isFocused = hasFocus,
-        shapeState = shapeState,
-        expressive = expressive,
     ) {
         Column {
             Row(
@@ -1370,8 +1340,6 @@ fun BiFlatTextField(
     modifier: Modifier = Modifier,
     label: TextFieldModel,
     value: TextFieldModel,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     valueVisualTransformation: VisualTransformation = VisualTransformation.None,
     valueIncognito: Boolean = false,
     leading: (@Composable RowScope.() -> Unit)? = null,
@@ -1414,8 +1382,6 @@ fun BiFlatTextField(
         isError = isError,
         isFocused = hasFocusState,
         isEmpty = isEmpty,
-        shapeState = shapeState,
-        expressive = expressive,
         label = {
             BiFlatTextFieldLabel(
                 label = label,
@@ -1534,8 +1500,6 @@ fun BiFlatContainer(
     isError: State<Boolean>,
     isFocused: State<Boolean>,
     isEmpty: State<Boolean>,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     label: @Composable ColumnScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,
     leading: (@Composable RowScope.() -> Unit)? = null,
@@ -1545,8 +1509,6 @@ fun BiFlatContainer(
         modifier = modifier,
         isError = isError.value,
         isFocused = isFocused.value,
-        shapeState = shapeState,
-        expressive = expressive,
     ) {
         Row(
             modifier = contentModifier
@@ -1620,8 +1582,6 @@ private fun FlatTextFieldSurface(
     modifier: Modifier = Modifier,
     isError: Boolean,
     isFocused: Boolean,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     content: @Composable () -> Unit,
 ) {
     val borderColorTargetBaseColor = when {
@@ -1639,10 +1599,7 @@ private fun FlatTextFieldSurface(
         targetValue = borderColorTarget,
         animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
     )
-    val shape = surfaceShape(
-        shapeState = shapeState,
-        expressive = expressive,
-    )
+    val shape = surfaceShape()
     Surface(
         modifier = modifier
             .fillMaxWidth()

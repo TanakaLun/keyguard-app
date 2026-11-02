@@ -11,7 +11,6 @@ import com.artemchep.keyguard.common.io.nullable
 import com.artemchep.keyguard.common.model.CipherFilterContext
 import com.artemchep.keyguard.common.model.DFilter
 import com.artemchep.keyguard.common.model.DSecret
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.service.deeplink.DeeplinkService
 import com.artemchep.keyguard.common.service.filter.AddCipherFilter
@@ -424,16 +423,10 @@ internal fun wearVaultListScreenState(
                 it.list
             } else {
                 it.list
-                    .mapIndexed { index, item ->
+                    .map { item ->
                         when (item) {
                             is VaultItem2.Item -> {
-                                val shapeState = getShapeState(
-                                    list = it.list,
-                                    index = index,
-                                    predicate = { el, _ -> el is VaultItem2.Item },
-                                )
                                 item.copy(
-                                    shapeState = shapeState,
                                     token = item.token.takeIf { keepOtp },
                                     passwords = item.passwords.takeIf { keepPassword }
                                         ?: persistentListOf(),

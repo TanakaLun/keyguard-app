@@ -267,7 +267,6 @@ private fun ExportScreen(
     ScaffoldColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             if (tabletUi) {

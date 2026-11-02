@@ -64,7 +64,6 @@ import com.artemchep.keyguard.LocalAppMode
 import com.artemchep.keyguard.common.model.DSend
 import com.artemchep.keyguard.common.model.expired
 import com.artemchep.keyguard.common.model.expiredFlow
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
@@ -279,7 +278,6 @@ private fun SendScreenContent(
         modifier = modifier
             .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             if (tabletUi) {
@@ -448,17 +446,11 @@ private fun SendScreenContent(
                 itemsIndexed(
                     items = list,
                     key = { _, model -> model.id },
-                ) { index, model ->
-                    val shapeState = getShapeState(
-                        list = list,
-                        index = index,
-                        predicate = { el, _ -> el is SendItem.Item },
-                    )
+                ) { _, model ->
                     VaultSendItemText(
                         modifier = Modifier
                             .animateItem(),
                         item = model,
-                        shapeState = shapeState,
                     )
                 }
             }
@@ -518,12 +510,10 @@ private fun SendListSortButton(
 fun VaultSendItemText(
     modifier: Modifier = Modifier,
     item: SendItem,
-    shapeState: Int,
 ) = when (item) {
     is SendItem.Item -> VaultSendItemText(
         modifier = modifier,
         item = item,
-        shapeState = shapeState,
     )
 
     is SendItem.Section -> {
@@ -561,7 +551,6 @@ fun VaultSendItemText(
 fun VaultSendItemText(
     modifier: Modifier = Modifier,
     item: SendItem.Item,
-    shapeState: Int,
 ) {
     val localState by item.localStateFlow.collectAsState()
     val expiredState = remember(item.source.expirationDate) {

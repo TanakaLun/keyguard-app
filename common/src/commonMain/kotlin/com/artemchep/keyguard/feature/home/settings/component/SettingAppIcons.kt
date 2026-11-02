@@ -14,7 +14,6 @@ import com.artemchep.keyguard.common.usecase.GetAppIcons
 import com.artemchep.keyguard.common.usecase.PutAppIcons
 import com.artemchep.keyguard.common.usecase.WindowCoroutineScope
 import com.artemchep.keyguard.feature.home.settings.KgSwitch
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res

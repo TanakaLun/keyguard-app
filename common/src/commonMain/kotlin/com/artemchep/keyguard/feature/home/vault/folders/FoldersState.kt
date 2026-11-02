@@ -2,9 +2,7 @@ package com.artemchep.keyguard.feature.home.vault.folders
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.Selection
 import kotlinx.collections.immutable.ImmutableList
@@ -49,7 +47,6 @@ data class FoldersState(
             data class Folder(
                 override val key: String,
                 val title: String,
-                val shapeState: Int = ShapeState.ALL,
                 val text: String? = null,
                 val ciphers: Int,
                 val folders: Int,
@@ -63,9 +60,7 @@ data class FoldersState(
                 val actions: ImmutableList<ContextItem>,
                 val onClick: (() -> Unit)?,
                 val onLongClick: (() -> Unit)?,
-            ) : Item, GroupableShapeItem<Folder> {
-                override fun withShape(shape: Int) = copy(shapeState = shape)
-            }
+            ) : Item
         }
     }
 }

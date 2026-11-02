@@ -2,8 +2,6 @@ package com.artemchep.keyguard.feature.sshagent.history
 
 import androidx.compose.runtime.Immutable
 import arrow.optics.optics
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.SshUsageHistoryRequestType
 import com.artemchep.keyguard.common.model.SshUsageHistoryResponseType
 import kotlin.time.Instant
@@ -35,10 +33,7 @@ sealed interface SshAgentHistoryItem {
         val request: SshUsageHistoryRequestType,
         val response: SshUsageHistoryResponseType,
         val createdAt: Instant,
-        val shapeState: Int = ShapeState.ALL,
-    ) : SshAgentHistoryItem, GroupableShapeItem<Value> {
+    ) : SshAgentHistoryItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 }

@@ -14,7 +14,6 @@ import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.DWatchtowerAlert
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.firstOrNull
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.model.isWatchtowerEligible
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.usecase.DateFormatter
@@ -45,7 +44,6 @@ import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.feature.watchtower.DISMISS_NOTIFICATIONS_DELAY_MS
 import com.artemchep.keyguard.ui.selection.selectionHandle
 import kotlinx.collections.immutable.persistentListOf
@@ -431,10 +429,8 @@ suspend fun RememberStateFlowScope.watchtowerNewAlertsStateProducer(
                 out += item
             }
 
-            val itemsReShaped = out
-                .mapListShape()
+            out
                 .toImmutableList()
-            itemsReShaped
         }
 
     return itemsFlow

@@ -1,8 +1,6 @@
 package com.artemchep.keyguard.feature.home.vault.link.field
 
 import androidx.compose.runtime.Immutable
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.home.vault.link.CipherLinkPickerState
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemPresentation
@@ -35,13 +33,10 @@ data class CipherFieldPickerState(
         val text: String,
         /** Picks the field, `null` if it can not be referenced. */
         val onClick: (() -> Unit)?,
-        val shapeState: Int = ShapeState.ALL,
-    ) : GroupableShapeItem<Field> {
+    ) {
         enum class Kind {
             Password,
             Custom,
         }
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 }

@@ -3,8 +3,6 @@ package com.artemchep.keyguard.feature.logs
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import arrow.optics.optics
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.logging.LogLevel
 import kotlin.uuid.Uuid
 
@@ -30,10 +28,7 @@ sealed interface LogsItem {
         val text: AnnotatedString,
         val level: LogLevel,
         val time: String,
-        val shapeState: Int = ShapeState.ALL,
-    ) : LogsItem, GroupableShapeItem<Value> {
+    ) : LogsItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 }

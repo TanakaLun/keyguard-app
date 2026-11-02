@@ -54,9 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artemchep.keyguard.LocalAppMode
 import com.artemchep.keyguard.common.model.GetPasswordResult
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.generator.AutoResizeText
 import com.artemchep.keyguard.feature.generator.DecoratedSlider
 import com.artemchep.keyguard.feature.generator.FilterItem
@@ -303,14 +301,9 @@ fun ColumnScope.AutofillWindowContent(
     )
 
     val items = filter.items
-    items.forEachIndexed { index, item ->
+    items.forEach { item ->
         key(item.key) {
-            val shapeState = getShapeState(
-                list = items,
-                index = index,
-                predicate = { el, _ -> el is GroupableShapeItem<*> },
-            )
-            FilterItem(item, shapeState = shapeState)
+            FilterItem(item)
         }
     }
 }

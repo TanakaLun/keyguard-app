@@ -31,7 +31,6 @@ import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -52,9 +51,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.NavItemRef
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.home.settings.KgAction
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.home.vault.component.defaultFlatItemPaddingValues
 import com.artemchep.keyguard.feature.home.vault.component.surfaceShape
@@ -79,7 +76,6 @@ import com.artemchep.keyguard.ui.reorder.reorderableLazyListItem
 import com.artemchep.keyguard.ui.skeleton.skeletonItems
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
@@ -103,7 +99,6 @@ private fun NavigationItemsSettingsLoadingContent() {
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             NavigationItemsSettingsToolbar(
@@ -182,7 +177,6 @@ private fun NavigationItemsSettingsContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         floatingActionState = addFabStateState,
         floatingActionButton = {
@@ -219,50 +213,38 @@ private fun NavigationItemsSettingsContent(
             items = localItems,
             key = { _, item -> item.key },
             contentType = { _, _ -> "navigation_item" },
-        ) { index, item ->
+        ) { _, item ->
             val isDraggingItem = reorderState.isDragging(item.key)
             val itemModifier = if (isDraggingItem) {
                 Modifier
             } else {
                 Modifier.animateItem()
             }
-            val shapeState = getShapeState(
-                list = localItems,
-                index = index,
-                predicate = { _, _ -> true },
-            )
-            val itemShape = surfaceShape(
-                shapeState = shapeState,
-                expressive = LocalExpressive.current,
-            )
+            val itemShape = surfaceShape()
             val itemShapePadding = defaultFlatItemPaddingValues()
-            CompositionLocalProvider(
-                LocalSettingItemShape provides shapeState,
-            ) {
-                NavigationItemsSettingsItem(
-                    modifier = itemModifier
-                        .reorderableLazyListItem(
-                            reorderState = reorderState,
-                            itemKey = item.key,
-                            shape = itemShape,
-                            shapePadding = itemShapePadding,
-                        )
-                        .navigationItemsAccessibilityActions(
-                            item = item,
-                            moveUpLabel = moveUpLabel,
-                            moveDownLabel = moveDownLabel,
-                        ),
-                    dragHandleModifier = Modifier
-                        .navigationItemsDragHandle(
-                            itemKey = item.key,
-                            reorderState = reorderState,
-                            onDragStarted = {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                            },
-                        ),
-                    item = item,
-                )
-            }
+            NavigationItemsSettingsItem(
+                modifier = itemModifier
+                    .reorderableLazyListItem(
+                        reorderState = reorderState,
+                        itemKey = item.key,
+                        shape = itemShape,
+                        shapePadding = itemShapePadding,
+                    )
+                    .navigationItemsAccessibilityActions(
+                        item = item,
+                        moveUpLabel = moveUpLabel,
+                        moveDownLabel = moveDownLabel,
+                    ),
+                dragHandleModifier = Modifier
+                    .navigationItemsDragHandle(
+                        itemKey = item.key,
+                        reorderState = reorderState,
+                        onDragStarted = {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        },
+                    ),
+                item = item,
+            )
         }
 
         item("bottom_spacer") {

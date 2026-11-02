@@ -12,7 +12,6 @@ import arrow.core.partially1
 import com.artemchep.keyguard.common.io.launchIn
 import com.artemchep.keyguard.common.model.DGlobalUrlOverride
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.execute.ExecuteCommand
 import com.artemchep.keyguard.common.usecase.AddUrlOverride
 import com.artemchep.keyguard.common.usecase.GetUrlOverrides
@@ -35,7 +34,6 @@ import com.artemchep.keyguard.feature.navigation.registerRouteResultReceiver
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -292,7 +290,7 @@ suspend fun RememberStateFlowScope.urlOverrideListStateProducer(
         }
     val itemsFlow = itemsRawFlow
         .map { list ->
-            val items = list
+            list
                 .map {
                     val dropdown = buildContextItems {
                         section {
@@ -382,9 +380,7 @@ suspend fun RememberStateFlowScope.urlOverrideListStateProducer(
                         selectableState = selectableStateFlow,
                     )
                 }
-                items
-                    .mapListShape()
-                    .toPersistentList()
+                .toPersistentList()
         }
         .crashlyticsAttempt { e ->
             val msg = "Failed to get the URL override list!"

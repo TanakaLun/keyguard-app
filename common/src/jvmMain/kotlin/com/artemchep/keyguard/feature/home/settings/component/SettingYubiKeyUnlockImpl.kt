@@ -30,7 +30,6 @@ import com.artemchep.keyguard.common.util.flow.EventFlow
 import com.artemchep.keyguard.feature.confirmation.ConfirmationResult
 import com.artemchep.keyguard.feature.confirmation.ConfirmationRoute
 import com.artemchep.keyguard.feature.home.settings.KgSwitch
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.loading.getErrorReadableMessage
 import com.artemchep.keyguard.feature.localization.TextHolder

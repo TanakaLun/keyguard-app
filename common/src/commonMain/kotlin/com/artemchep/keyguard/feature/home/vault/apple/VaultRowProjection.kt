@@ -124,7 +124,7 @@ internal fun VaultItem2.Item.toAppleRowContent(
         orgAccentLightArgb = rich.organizationAccentArgbLight ?: 0,
         orgAccentDarkArgb = rich.organizationAccentArgbDark ?: 0,
         badges = badges,
-        shapeState = shapeState,
+        shapeState = 0,
     )
 }
 
@@ -211,7 +211,6 @@ internal fun appleRowContentRev(
     .mixRevValue(trimmedItem.passwords.size.toLong())
     .mixRevValue(trimmedItem.passkeys.size.toLong())
     .mixRevValue(trimmedItem.attachments2.size.toLong())
-    .mixRevValue(trimmedItem.shapeState.toLong())
     .let { if (selectionFlags != 0) it.mixRevValue(selectionFlags.toLong()) else it }
 
 // Local FNV-1a fold; plain hash math (the canonical fingerprint mixers in

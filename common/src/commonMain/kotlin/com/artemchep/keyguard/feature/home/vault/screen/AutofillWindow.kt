@@ -107,9 +107,7 @@ fun RecentsButtonRaw(
         Column(
             modifier = Modifier,
         ) {
-            ProvideScaffoldLocalValues(
-                expressive = true,
-            ) {
+            ProvideScaffoldLocalValues {
                 RecentsWindow(
                     contentPadding = contentPadding,
                     onComplete = { cipher ->
@@ -170,10 +168,9 @@ fun ColumnScope.RecentsWindowSkeleton(
         modifier = Modifier
             .height(16.dp),
     )
-    skeletonItemsPlacer { _, shapeState ->
+    skeletonItemsPlacer { _ ->
         SkeletonItem(
             avatar = SkeletonItemAvatar.LARGE,
-            shapeState = shapeState,
         )
     }
 }

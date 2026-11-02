@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import arrow.core.partially1
 import com.artemchep.keyguard.common.model.DGeneratorWordlist
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.usecase.AddWordlist
 import com.artemchep.keyguard.common.usecase.EditWordlist
 import com.artemchep.keyguard.common.usecase.GetWordlists
@@ -30,7 +29,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -201,7 +199,7 @@ suspend fun RememberStateFlowScope.wordlistListStateProducer(
         }
     val itemsFlow = itemsRawFlow
         .map { list ->
-            val items = list
+            list
                 .map {
                     val icon = VaultItemIcon.TextIcon.short(it.name)
 
@@ -261,10 +259,7 @@ suspend fun RememberStateFlowScope.wordlistListStateProducer(
                     )
                 }
                 .toList()
-            val itemsReShaped = items
-                .mapListShape()
                 .toImmutableList()
-            itemsReShaped
         }
         .crashlyticsAttempt { e ->
             val msg = "Failed to get the wordlist list!"

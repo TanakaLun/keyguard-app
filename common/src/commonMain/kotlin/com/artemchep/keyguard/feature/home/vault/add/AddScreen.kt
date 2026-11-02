@@ -38,7 +38,6 @@ import com.artemchep.keyguard.feature.add.AddScreenScope
 import com.artemchep.keyguard.feature.add.AnyField
 import com.artemchep.keyguard.feature.add.ToolbarContent
 import com.artemchep.keyguard.feature.add.ToolbarContentItemErrSkeleton
-import com.artemchep.keyguard.feature.add.getAnyFieldShapeState
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.fileDropTarget
@@ -127,7 +126,6 @@ private fun AddScreenContent(
                 },
             )
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -289,7 +287,7 @@ private fun LazyListScope.populateItemsContent(
 
     val items = state.items
     val fileDrag = state.fileDrag
-    items.forEachIndexed { index, item ->
+    items.forEach { item ->
         if (
             fileDragActive &&
             fileDrag != null &&
@@ -303,15 +301,10 @@ private fun LazyListScope.populateItemsContent(
         }
         item(item.id) {
             with(addScreenScope) {
-                val shapeState = getAnyFieldShapeState(
-                    list = items,
-                    index = index,
-                )
                 AnyField(
                     modifier = Modifier
                         .animateItem(),
                     item = item,
-                    shapeState = shapeState,
                 )
             }
         }

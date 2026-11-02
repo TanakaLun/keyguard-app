@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.platform.leIme
 import com.artemchep.keyguard.platform.leSystemBars
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 
 @Composable
 fun OtherScaffold(
@@ -56,9 +55,7 @@ fun OtherScaffold(
                     .widthIn(max = 280.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ProvideScaffoldLocalValues(
-                    expressive = true,
-                ) {
+                ProvideScaffoldLocalValues {
                     content()
                 }
             }

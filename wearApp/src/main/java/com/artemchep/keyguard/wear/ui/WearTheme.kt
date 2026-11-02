@@ -5,7 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.wear.compose.material3.ColorScheme
@@ -13,10 +12,7 @@ import androidx.wear.compose.material3.LocalContentColor
 import androidx.wear.compose.material3.LocalTextStyle
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.dynamicColorScheme
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.plainDarkColorScheme
-import com.artemchep.keyguard.ui.theme.rememberThemeConfigState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -24,11 +20,6 @@ fun WearKeyguardTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    // Lead the theme from the settings. Currently, we do not care to
-    // offer the full customization options, and it's fairly tedious to
-    // implement -- Wear OS generally has no light theme.
-    val theme by rememberThemeConfigState()
-
     val wearColorScheme = remember(context) {
         dynamicColorScheme(context)
     } ?: MaterialTheme.colorScheme
@@ -42,14 +33,8 @@ fun WearKeyguardTheme(
         }
         MaterialExpressiveTheme(
             colorScheme = globalColorScheme,
-        ) {
-            CompositionLocalProvider(
-                GlobalExpressive provides theme.expressive,
-                LocalExpressive provides theme.expressive,
-            ) {
-                content()
-            }
-        }
+            content = content,
+        )
     }
 }
 

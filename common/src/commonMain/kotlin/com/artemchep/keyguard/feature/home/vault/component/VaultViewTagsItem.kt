@@ -55,9 +55,7 @@ private fun TagItem(
     tag: String,
     onClick: () -> Unit,
 ) {
-    val backgroundColor = rememberFlatSurfaceExpressiveColor(
-        expressive = true,
-    )
+    val backgroundColor = rememberFlatSurfaceExpressiveColor()
     val updatedOnClick by rememberUpdatedState(onClick)
     Row(
         modifier = modifier

@@ -59,7 +59,6 @@ private fun AutomaticBackupsSettingsLoadingContent() {
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -126,7 +125,6 @@ private fun AutomaticBackupsSettingsContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         floatingActionState = rememberUpdatedState(fabState),
         floatingActionButton = {

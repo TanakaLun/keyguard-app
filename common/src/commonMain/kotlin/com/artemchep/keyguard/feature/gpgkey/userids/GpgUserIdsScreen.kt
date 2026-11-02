@@ -77,9 +77,7 @@ fun GpgUserIdsDialog(state: GpgUserIdsState?) {
     ) {
         // The dialog is hosted by the item editor; render it with
         // the same local values as a navigation dialog.
-        ProvideScaffoldLocalValues(
-            expressive = false,
-        ) {
+        ProvideScaffoldLocalValues {
             GpgUserIdsScreen(currentState)
         }
     }

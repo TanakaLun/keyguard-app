@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.ZeroCornerSize
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,6 @@ import com.artemchep.keyguard.ui.surface.ReportSurfaceColor
 import com.artemchep.keyguard.ui.surface.splitLow
 import com.artemchep.keyguard.ui.surface.surfaceElevationColor
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
 import com.artemchep.keyguard.ui.theme.horizontalPaddingHalf
 import com.artemchep.keyguard.ui.theme.KgShapes
 
@@ -122,22 +120,11 @@ fun TwoPaneScreen(
                     ProvideSurfaceColor(detailSurfaceColor) {
                         ReportSurfaceColor()
 
-                        val isCompact = kotlin.run {
-                            val curWidth = if (this@TwoPaneScaffold.tabletUi) {
-                                this@TwoPaneScaffold.maxWidth - this@TwoPaneScaffold.masterPaneWidth
-                            } else this@TwoPaneScaffold.maxWidth
-                            curWidth <= 340.dp
-                        }
-                        val expressive = GlobalExpressive.current && !isCompact
-                        CompositionLocalProvider(
-                            GlobalExpressive provides expressive,
-                        ) {
-                            content(
-                                scope,
-                                contentModifier,
-                                detailIsVisible,
-                            )
-                        }
+                        content(
+                            scope,
+                            contentModifier,
+                            detailIsVisible,
+                        )
                     }
                 }
             }

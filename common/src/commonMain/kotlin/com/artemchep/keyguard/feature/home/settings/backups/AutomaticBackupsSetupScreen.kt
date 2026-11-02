@@ -79,7 +79,6 @@ internal fun AutomaticBackupsSetupContent(state: AutomaticBackupsSetupState?) {
     val listState = remember(step) { LazyListState() }
     ScaffoldLazyColumn(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         listState = listState,
         topBar = {
@@ -261,9 +260,8 @@ private fun BackupSetupHeader(step: BackupSetupStep) {
 private fun AutomaticBackupsSetupPreview(
     data: BackupSetupData? = AutomaticBackupsPreviewData.setup(),
     dark: Boolean = false,
-    expressive: Boolean = true,
 ) {
-    AutomaticBackupsPreview(dark = dark, expressive = expressive) {
+    AutomaticBackupsPreview(dark = dark) {
         AutomaticBackupsSetupContent(data?.let { automaticBackupsSetupPreviewState(it) })
     }
 }
@@ -376,7 +374,7 @@ internal fun BackupSetupReviewWidePreview() {
 @Preview(name = "Destination — compact standard", group = "Backup setup", widthDp = 360, heightDp = 640)
 @Composable
 internal fun BackupSetupCompactStandardPreview() {
-    AutomaticBackupsSetupPreview(expressive = false)
+    AutomaticBackupsSetupPreview()
 }
 
 @Preview(

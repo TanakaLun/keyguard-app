@@ -25,7 +25,6 @@ import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -42,11 +41,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.backup.BackupStoreConfig
 import com.artemchep.keyguard.common.service.backup.BackupStoreKind
 import com.artemchep.keyguard.feature.home.settings.KgSwitch
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.res.Res
@@ -133,21 +130,18 @@ private fun BackupDestinationChoices(
             title = stringResource(Res.string.pref_item_automatic_backups_local_folder_title),
             icon = Icons.Outlined.Folder,
             selected = store is BackupStoreConfig.Local,
-            shapeState = ShapeState.START,
             onClick = { onStoreKindChange(BackupStoreKind.Local) },
         )
         BackupDestinationChoice(
             title = stringResource(Res.string.pref_item_automatic_backups_webdav_server_title),
             icon = Icons.Outlined.Cloud,
             selected = store is BackupStoreConfig.WebDav,
-            shapeState = ShapeState.CENTER,
             onClick = { onStoreKindChange(BackupStoreKind.WebDav) },
         )
         BackupDestinationChoice(
             title = stringResource(Res.string.pref_item_automatic_backups_s3_title),
             icon = Icons.Outlined.Inventory2,
             selected = store is BackupStoreConfig.S3,
-            shapeState = ShapeState.END,
             onClick = { onStoreKindChange(BackupStoreKind.S3) },
         )
     }
@@ -158,7 +152,6 @@ private fun BackupDestinationChoice(
     title: String,
     icon: ImageVector,
     selected: Boolean,
-    shapeState: Int,
     onClick: () -> Unit,
 ) {
     val backgroundColor = if (selected) {
@@ -196,7 +189,6 @@ internal fun BackupSetupProtection(state: AutomaticBackupsSetupState) {
                 .padding(horizontal = Dimens.fieldHorizontalPadding),
             value = state.password,
             label = stringResource(Res.string.pref_item_automatic_backups_password_optional_label),
-            shapeState = if (hasPassword) ShapeState.START else ShapeState.ALL,
             clearButton = false,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
@@ -207,7 +199,6 @@ internal fun BackupSetupProtection(state: AutomaticBackupsSetupState) {
                     .padding(horizontal = Dimens.fieldHorizontalPadding),
                 value = state.confirmationPassword,
                 label = stringResource(Res.string.pref_item_automatic_backups_wizard_confirm_password_label),
-                shapeState = ShapeState.END,
                 clearButton = false,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -228,21 +219,17 @@ internal fun BackupSetupProtection(state: AutomaticBackupsSetupState) {
 internal fun BackupSetupContents(state: AutomaticBackupsSetupState) {
     val components = LocalSettingPaneComponents.current
     Column {
-        CompositionLocalProvider(LocalSettingItemShape provides ShapeState.START) {
-            components.KgSwitch(
-                icon = Icons.Outlined.Attachment,
-                title = stringResource(Res.string.pref_item_automatic_backups_include_attachments_title),
-                checked = state.data.config.includeAttachments,
-                onCheckedChange = state.onIncludeAttachmentsChange,
-            )
-        }
-        CompositionLocalProvider(LocalSettingItemShape provides ShapeState.END) {
-            AutomaticBackupsRetentionRow(
-                maxSnapshots = state.data.config.retention.maxSnapshots,
-                onRetentionChange = state.onRetentionChange,
-                components = components,
-            )
-        }
+        components.KgSwitch(
+            icon = Icons.Outlined.Attachment,
+            title = stringResource(Res.string.pref_item_automatic_backups_include_attachments_title),
+            checked = state.data.config.includeAttachments,
+            onCheckedChange = state.onIncludeAttachmentsChange,
+        )
+        AutomaticBackupsRetentionRow(
+            maxSnapshots = state.data.config.retention.maxSnapshots,
+            onRetentionChange = state.onRetentionChange,
+            components = components,
+        )
     }
 }
 

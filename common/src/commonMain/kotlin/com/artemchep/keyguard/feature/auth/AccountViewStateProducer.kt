@@ -87,7 +87,6 @@ import com.artemchep.keyguard.feature.home.vault.folders.FoldersRoute
 import com.artemchep.keyguard.feature.home.vault.folders.FoldersRouteFactory
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.model.Visibility
-import com.artemchep.keyguard.feature.home.vault.model.transformShapes
 import com.artemchep.keyguard.feature.home.vault.organizations.OrganizationsRoute
 import com.artemchep.keyguard.feature.home.vault.organizations.OrganizationsRouteFactory
 import com.artemchep.keyguard.feature.home.vault.util.emitWithSection
@@ -485,7 +484,7 @@ suspend fun RememberStateFlowScope.accountStateProducer(
         profileFlow.prepare(),
         countersFlow.prepare(),
     ) { meta, account, profile, counters ->
-        val items = buildItemsFlow(
+        buildItemsFlow(
             accountId = accountId,
             scope = this,
             confirmationRouteFactory = confirmationRouteFactory,
@@ -507,8 +506,6 @@ suspend fun RememberStateFlowScope.accountStateProducer(
             dateFormatter = dateFormatter,
             getGravatarUrl = getGravatarUrl,
         ).toList()
-        items
-            .transformShapes()
     }
     val actionsFlow = combine(
         accountFlow,

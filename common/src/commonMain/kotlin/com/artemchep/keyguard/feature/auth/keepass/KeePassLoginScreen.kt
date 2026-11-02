@@ -55,7 +55,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
@@ -200,7 +199,6 @@ fun LoginContent(
     ScaffoldColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -433,13 +431,9 @@ fun LoginContent(
                 .height(8.dp),
         )
 
-        val passwordFieldShapeState = if (keyFileState.file != null) {
-            ShapeState.START
-        } else ShapeState.ALL
         PasswordFlatTextField(
             modifier = Modifier
                 .padding(horizontal = Dimens.fieldHorizontalPadding),
-            shapeState = passwordFieldShapeState,
             testTag = "field:password",
             value = passwordState,
             keyboardOptions = KeyboardOptions(
@@ -455,7 +449,6 @@ fun LoginContent(
                     .padding(
                         top = 2.dp,
                     ),
-                shapeState = ShapeState.END,
             ) {
                 Row(
                     modifier = Modifier

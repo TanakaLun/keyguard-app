@@ -14,7 +14,6 @@ import com.artemchep.keyguard.feature.confirmation.createConfirmationDialogInten
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.connected_crypto_apps_revoke_message
 import com.artemchep.keyguard.res.connected_crypto_apps_revoke_title
@@ -106,7 +105,7 @@ suspend fun RememberStateFlowScope.connectedCryptoAppsStateProducer(
                     promptRevoke(app)
                 },
             )
-        }.mapListShape()
+        }
         ConnectedCryptoAppsState(
             apps = stateApps,
         ).let { state ->

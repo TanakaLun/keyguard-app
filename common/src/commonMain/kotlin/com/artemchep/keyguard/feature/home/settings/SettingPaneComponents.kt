@@ -41,7 +41,6 @@ import com.artemchep.keyguard.ui.SwitchExpressive
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import top.yukonga.miuix.kmp.basic.Badge
 import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.BasicComponent

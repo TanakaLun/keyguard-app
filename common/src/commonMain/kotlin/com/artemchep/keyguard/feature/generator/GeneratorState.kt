@@ -8,7 +8,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.artemchep.keyguard.common.model.GetPasswordResult
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.feature.auth.common.IntFieldModel
 import com.artemchep.keyguard.feature.auth.common.SwitchFieldModel
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
@@ -81,9 +80,7 @@ data class GeneratorState(
                 val icon: ImageVector? = null,
                 val model: SwitchFieldModel,
                 val counter: IntFieldModel? = null,
-            ) : Item, GroupableShapeItem<Switch> {
-                override fun withShape(shape: Int) = this
-            }
+            ) : Item
 
             @Immutable
             data class Text(
@@ -91,9 +88,7 @@ data class GeneratorState(
                 val title: String,
                 val icon: ImageVector? = null,
                 val model: TextFieldModel,
-            ) : Item, GroupableShapeItem<Text> {
-                override fun withShape(shape: Int) = this
-            }
+            ) : Item
 
             @Immutable
             data class Enum(
@@ -101,8 +96,7 @@ data class GeneratorState(
                 val title: String,
                 val icon: ImageVector? = null,
                 val model: Model,
-            ) : Item, GroupableShapeItem<Enum> {
-                override fun withShape(shape: Int) = this
+            ) : Item {
 
                 @Immutable
                 data class Model(

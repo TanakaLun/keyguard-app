@@ -31,7 +31,6 @@ import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
 import com.artemchep.keyguard.feature.search.keyboard.searchQueryShortcuts
 import com.artemchep.keyguard.feature.search.search.debounceSearch
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.feature.search.search.searchFilter
 import com.artemchep.keyguard.feature.search.search.searchQueryHandle
 import com.artemchep.keyguard.res.*
@@ -116,7 +115,6 @@ fun produceGpgKeyserverSearchState(
                                     gpgKeyMetadataResolver = gpgKeyMetadataResolver,
                                 )
                             }
-                            .mapListShape()
                             .toImmutableList(),
                     )
                 }

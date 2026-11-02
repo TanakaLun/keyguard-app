@@ -12,7 +12,6 @@ import com.artemchep.keyguard.common.usecase.GetNavAnimationVariants
 import com.artemchep.keyguard.common.usecase.PutNavAnimation
 import com.artemchep.keyguard.common.usecase.WindowCoroutineScope
 import com.artemchep.keyguard.feature.home.settings.KgPicker
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.localization.wrap

@@ -95,7 +95,6 @@ private fun CredentialExchangeImportScreenSkeleton(
     ScaffoldColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             CredentialExchangeImportToolbar(
@@ -134,7 +133,6 @@ private fun CredentialExchangeImportScreenContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             CredentialExchangeImportToolbar(

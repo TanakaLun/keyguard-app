@@ -15,7 +15,6 @@ import com.artemchep.keyguard.feature.environments.EnvironmentResolver
 import com.artemchep.keyguard.feature.environments.EnvironmentValueSource
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemPresentation
 import com.artemchep.keyguard.feature.localization.wrap
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.copy_value
 import com.artemchep.keyguard.res.environments_unset
@@ -152,7 +151,6 @@ internal fun createVariableStates(
                 ),
             )
         }
-        .mapListShape()
         .toPersistentList()
 }
 

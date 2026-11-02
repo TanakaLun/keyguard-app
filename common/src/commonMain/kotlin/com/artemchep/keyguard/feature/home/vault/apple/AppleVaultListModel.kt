@@ -68,7 +68,7 @@ data class AppleVaultRowContent(
     val orgAccentDarkArgb: Int,
     /** Inline password / passkey / attachment badges, in render order. */
     val badges: List<AppleVaultRowBadge>,
-    /** The `ShapeState` grouping bits (START / END / ALL / CENTER) of the row card. */
+    /** Reserved for the row card's grouping bits; unused and always 0. */
     val shapeState: Int,
 ) {
     companion object {

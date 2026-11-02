@@ -1,7 +1,5 @@
 package com.artemchep.keyguard.feature.home.settings.backups
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
@@ -23,7 +21,6 @@ import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.FlatItemAction
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.danger
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
@@ -66,19 +63,12 @@ internal fun LazyListScope.AutomaticBackupsEnabledContent(
     }
 
     item("management.header") {
-        if (LocalExpressive.current) {
-            Spacer(
-                modifier = Modifier
-                    .height(24.dp),
-            )
-        } else {
-            HorizontalDivider(
-                modifier = Modifier
-                    .padding(
-                        vertical = 8.dp,
-                    ),
-            )
-        }
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    vertical = 8.dp,
+                ),
+        )
     }
 
     item("management.turn_off") {

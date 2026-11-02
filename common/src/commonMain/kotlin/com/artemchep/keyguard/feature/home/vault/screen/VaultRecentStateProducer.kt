@@ -7,7 +7,6 @@ import com.artemchep.keyguard.common.model.CipherOpenedHistoryMode
 import com.artemchep.keyguard.common.model.DOrganization
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.usecase.CipherToolbox
 import com.artemchep.keyguard.common.usecase.ClearVaultSession
@@ -360,16 +359,4 @@ private suspend fun RememberStateFlowScope.createRecentItems(
             )
         }
     return items
-        .mapIndexed { index, item ->
-            val shapeState = getShapeState(
-                list = items,
-                index = index,
-                predicate = { el, offset ->
-                    true
-                },
-            )
-            item.copy(
-                shapeState = shapeState,
-            )
-        }
 }

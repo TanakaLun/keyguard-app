@@ -29,9 +29,7 @@ import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.platform.lifecycle.LePlatformLifecycleProvider
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.ic_keyguard
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
 import com.artemchep.keyguard.ui.theme.KeyguardTheme
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.scope.UnboundKoinScope
 import org.koin.core.scope.Scope
@@ -85,7 +83,6 @@ internal fun <T : Any> ApplicationScope.AgentRequestWindow(
                 )
                 CompositionLocalProvider(
                     LocalAuthScreen provides scr,
-                    LocalExpressive provides GlobalExpressive.current,
                 ) {
                     KeyguardPopupScaffold {
                         AgentUnlockWindow(

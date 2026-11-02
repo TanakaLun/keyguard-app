@@ -19,7 +19,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.PLACEHOLDER_URL_WEBDAV_COLLECTION
 import com.artemchep.keyguard.PLACEHOLDER_URL_WEBDAV_KEEPASS_DATABASE
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.UsernameVariation
 import com.artemchep.keyguard.common.model.icon
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
@@ -97,7 +96,6 @@ private fun WebDavSettingsContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         floatingActionState = rememberUpdatedState(
             FabState(
@@ -146,7 +144,6 @@ private fun WebDavSettingsContent(
                     .padding(horizontal = Dimens.fieldHorizontalPadding),
                 label = stringResource(Res.string.webdav_settings_url_title),
                 value = url,
-                shapeState = ShapeState.ALL,
                 clearButton = true,
                 trailing = {
                     IconButton(
@@ -189,7 +186,6 @@ private fun WebDavSettingsContent(
                 },
                 label = stringResource(Res.string.username),
                 value = username,
-                shapeState = ShapeState.START,
                 singleLine = true,
                 clearButton = true,
             )
@@ -210,7 +206,6 @@ private fun WebDavSettingsContent(
                 modifier = Modifier
                     .padding(horizontal = Dimens.fieldHorizontalPadding),
                 value = password,
-                shapeState = ShapeState.END,
                 clearButton = true,
             )
         }

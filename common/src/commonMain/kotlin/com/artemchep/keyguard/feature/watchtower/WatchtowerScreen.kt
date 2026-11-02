@@ -197,9 +197,7 @@ fun WatchtowerScreen(
             )
         },
     ) { modifier, tabletUi ->
-        ProvideScaffoldLocalValues(
-            expressive = true,
-        ) {
+        ProvideScaffoldLocalValues {
             WatchtowerScreen2(
                 modifier = modifier,
                 state = state,

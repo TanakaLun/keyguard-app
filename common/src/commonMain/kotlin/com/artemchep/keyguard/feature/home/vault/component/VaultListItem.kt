@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.CreditCard
@@ -83,7 +82,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import arrow.core.partially1
 import com.artemchep.keyguard.common.model.DSecret
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fileName
 import com.artemchep.keyguard.common.model.fileSize
 import com.artemchep.keyguard.feature.EmptyView
@@ -122,7 +120,6 @@ import com.artemchep.keyguard.ui.rightClickable
 import com.artemchep.keyguard.ui.surface.LocalSurfaceElevation
 import com.artemchep.keyguard.ui.surface.surfaceNextGroupColorToElevationColor
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.isDark
 import com.artemchep.keyguard.ui.theme.selectedContainer
@@ -308,7 +305,6 @@ fun ColumnScope.VaultItemTextContent(
 fun CompactVaultItem(
     modifier: Modifier = Modifier,
     item: VaultItemPresentation,
-    shapeState: Int = ShapeState.ALL,
     padding: PaddingValues? = null,
     trailing: (@Composable RowScope.() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
@@ -820,8 +816,6 @@ private enum class Try {
     NONE,
 }
 
-val expressiveInnerCornerSize = CornerSize(4.dp)
-
 @Composable
 fun defaultFlatItemPaddingValues() = PaddingValues(
     start = Dimens.contentPadding,
@@ -834,9 +828,8 @@ fun defaultFlatItemPaddingValues() = PaddingValues(
 fun rememberFlatSurfaceExpressiveColor(
     elevation: Dp = 0.dp,
     backgroundColor: Color = Color.Unspecified,
-    expressive: Boolean = LocalExpressive.current,
 ): Color {
-    val color = if (backgroundColor.isSpecified || !expressive) {
+    val color = if (backgroundColor.isSpecified) {
         val bg = backgroundColor.takeIf { it.isSpecified }
             ?: Color.Transparent
         val fg = MiuixTheme.colorScheme.surfaceColorAtElevationSemi(elevation)
@@ -857,8 +850,6 @@ fun FlatSurfaceExpressive(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
     backgroundColor: Color = Color.Unspecified,
-    shapeState: Int = ShapeState.ALL,
-    expressive: Boolean = LocalExpressive.current,
     padding: PaddingValues? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -866,7 +857,6 @@ fun FlatSurfaceExpressive(
         val color = rememberFlatSurfaceExpressiveColor(
             elevation = elevation,
             backgroundColor = backgroundColor,
-            expressive = expressive,
         )
         Modifier
             .drawBehind {
@@ -874,10 +864,7 @@ fun FlatSurfaceExpressive(
             }
     }
 
-    val shape: Shape = surfaceShape(
-        shapeState = shapeState,
-        expressive = expressive,
-    )
+    val shape: Shape = surfaceShape()
     val horizontalPadding: Dp = Dimens.contentPadding
     Box(
         modifier = modifier
@@ -911,40 +898,7 @@ fun rememberSecretAccentColor(
     return accent.combineAlpha(alpha = color.alpha)
 }
 
-@Composable
-fun surfaceShape(shapeState: Int, expressive: Boolean): Shape {
-    val shape: Shape
-    if (expressive) {
-        val shapeSrc = KgShapes.large
-        shape = when (shapeState) {
-            ShapeState.START -> shapeSrc
-                .copy(
-                    bottomStart = expressiveInnerCornerSize,
-                    bottomEnd = expressiveInnerCornerSize,
-                )
-
-            ShapeState.CENTER -> shapeSrc
-                .copy(
-                    topStart = expressiveInnerCornerSize,
-                    topEnd = expressiveInnerCornerSize,
-                    bottomStart = expressiveInnerCornerSize,
-                    bottomEnd = expressiveInnerCornerSize,
-                )
-
-            ShapeState.END -> shapeSrc
-                .copy(
-                    topStart = expressiveInnerCornerSize,
-                    topEnd = expressiveInnerCornerSize,
-                )
-
-            ShapeState.ALL -> shapeSrc
-            else -> shapeSrc
-        }
-    } else {
-        shape = KgShapes.large
-    }
-    return shape
-}
+fun surfaceShape(): Shape = KgShapes.large
 
 @Composable
 fun surfaceColorAtElevation(color: Color, elevation: Dp): Color {

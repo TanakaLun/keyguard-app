@@ -54,7 +54,6 @@ import com.artemchep.keyguard.ui.MutableFabScope
 import com.artemchep.keyguard.ui.ProvideScaffoldLocalValues
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 
@@ -95,16 +94,13 @@ fun WearScaffoldColumn(
     title: String,
     floatingActionState: State<FabState?> = rememberUpdatedState(newValue = null),
     floatingActionButton: @Composable FabScope.() -> Unit = {},
-    expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val expandedState = remember {
         mutableStateOf(true)
     }
-    ProvideScaffoldLocalValues(
-        expressive = expressive,
-    ) {
+    ProvideScaffoldLocalValues {
         AppScaffold() {
 
             Column(
@@ -217,7 +213,6 @@ fun WearScaffoldScreen(
     floatingActionState: State<FabState?> = rememberUpdatedState(newValue = null),
     floatingActionButton: @Composable EdgeButtonScope.() -> Unit = {},
     transformationSpec: TransformationSpec = rememberTransformationSpec(),
-    expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     contentPadding: PaddingValues = rememberResponsiveColumnPadding(
         first = ColumnItemType.ListHeader,
@@ -260,7 +255,6 @@ fun WearScaffoldScreen(
         floatingActionState = floatingActionState,
         floatingActionButton = floatingActionButton,
         transformationSpec = transformationSpec,
-        expressive = expressive,
         containerColor = containerColor,
         contentPadding = contentPadding,
         content = content,
@@ -319,7 +313,6 @@ fun WearScaffoldScreen(
     floatingActionState: State<FabState?> = rememberUpdatedState(newValue = null),
     floatingActionButton: @Composable EdgeButtonScope.() -> Unit = {},
     transformationSpec: TransformationSpec = rememberTransformationSpec(),
-    expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     contentPadding: PaddingValues = rememberResponsiveColumnPadding(
         first = ColumnItemType.ListHeader,
@@ -328,9 +321,7 @@ fun WearScaffoldScreen(
     content: TransformingLazyColumnScope.(TransformationSpec) -> Unit,
 ) {
     val listState = rememberTransformingLazyColumnState()
-    ProvideScaffoldLocalValues(
-        expressive = expressive,
-    ) {
+    ProvideScaffoldLocalValues {
         val expandedState = remember {
             mutableStateOf(true)
         }

@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.license.model.License
 import com.artemchep.keyguard.feature.EmptySearchView
 import top.yukonga.miuix.kmp.basic.BasicComponent
@@ -51,7 +50,6 @@ fun LicenseScreen() {
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -72,15 +70,9 @@ fun LicenseScreen() {
                     }
                 }
 
-                itemsIndexed(list) { index, item ->
-                    val shapeState = getShapeState(
-                        list = list,
-                        index = index,
-                        predicate = { _, _ -> true },
-                    )
+                itemsIndexed(list) { _, item ->
                     LicenseItem(
                         item = item,
-                        shapeState = shapeState,
                     )
                 }
             }
@@ -109,7 +101,6 @@ fun licenseDependency(item: License): String =
 private fun LicenseItem(
     modifier: Modifier = Modifier,
     item: License,
-    shapeState: Int,
 ) {
     val model = item.toLicenseItemModel()
     val navigationController by rememberUpdatedState(LocalNavigationController.current)

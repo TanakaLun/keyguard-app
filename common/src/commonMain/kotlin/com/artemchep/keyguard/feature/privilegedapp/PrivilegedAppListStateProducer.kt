@@ -20,7 +20,6 @@ import com.artemchep.keyguard.feature.home.vault.model.short
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -234,11 +233,9 @@ fun producePrivilegedAppListState(
             val userItems = list
                 .filter { it.source == DPrivilegedApp.Source.USER }
                 .toItems()
-                .mapListShape()
             val communityItems = list
                 .filter { it.source == DPrivilegedApp.Source.APP }
                 .toItems()
-                .mapListShape()
             sequence {
                 if (userItems.isNotEmpty()) {
                     val sectionItem = PrivilegedAppListState.Item.Section(

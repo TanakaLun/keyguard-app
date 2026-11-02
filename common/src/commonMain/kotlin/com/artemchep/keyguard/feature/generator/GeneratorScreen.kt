@@ -92,12 +92,9 @@ import androidx.compose.ui.unit.sp
 import arrow.core.partially1
 import com.artemchep.keyguard.LocalAppMode
 import com.artemchep.keyguard.common.model.GetPasswordResult
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.auth.common.IntFieldModel
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryItem
 import com.artemchep.keyguard.feature.generator.history.GeneratorHistoryState
@@ -253,7 +250,6 @@ private fun GeneratorPaneDetail(
     ScaffoldColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
     ) {
         loadableState.fold(
@@ -314,7 +310,6 @@ private fun GeneratorPaneMaster(
     ScaffoldColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             if (tabletUi) {
@@ -551,13 +546,9 @@ private fun ColumnScope.GeneratorPaneMasterContent(
                 return@repeat
             }
             key(item.id) {
-                val shapeMaskOr = if (isLast) {
-                    ShapeState.END
-                } else ShapeState.CENTER
                 GeneratorHistoryItem(
                     modifier = Modifier,
                     item = item,
-                    shapeMaskOr = shapeMaskOr,
                 )
             }
         }
@@ -894,19 +885,13 @@ private fun ColumnScope.GeneratorFilterItems(
                         .padding(bottom = 24.dp),
                     filterLength = it,
                     interactionSource = sliderInteractionSource,
-                    shapeState = ShapeState.ALL,
                 )
             }
 
             val items = filter.items
-            items.forEachIndexed { index, item ->
+            items.forEachIndexed { _, item ->
                 key(item.key) {
-                    val shapeState = getShapeState(
-                        list = items,
-                        index = index,
-                        predicate = { el, _ -> el is GroupableShapeItem<*> },
-                    )
-                    FilterItem(item, shapeState = shapeState)
+                    FilterItem(item)
                 }
             }
         }
@@ -916,18 +901,16 @@ private fun ColumnScope.GeneratorFilterItems(
 @Composable
 fun FilterItem(
     item: GeneratorState.Filter.Item,
-    shapeState: Int = ShapeState.ALL,
 ) = when (item) {
-    is GeneratorState.Filter.Item.Switch -> FilterSwitchItem(item, shapeState)
-    is GeneratorState.Filter.Item.Text -> FilterTextItem(item, shapeState)
-    is GeneratorState.Filter.Item.Enum -> FilterEnumItem(item, shapeState)
+    is GeneratorState.Filter.Item.Switch -> FilterSwitchItem(item)
+    is GeneratorState.Filter.Item.Text -> FilterTextItem(item)
+    is GeneratorState.Filter.Item.Enum -> FilterEnumItem(item)
     is GeneratorState.Filter.Item.Section -> FilterSectionItem(item)
 }
 
 @Composable
 private fun FilterSwitchItem(
     item: GeneratorState.Filter.Item.Switch,
-    shapeState: Int,
 ) {
     BoxWithConstraints {
         val horizontal = maxWidth >= 296.dp
@@ -936,7 +919,6 @@ private fun FilterSwitchItem(
         if (horizontal) {
             FilterSwitchItemMainContent(
                 item = updatedItemState.value,
-                shapeState = shapeState,
                 trailing = {
                     ExpandedIfNotEmptyForRow(
                         valueOrNull = item.counter,
@@ -958,7 +940,6 @@ private fun FilterSwitchItem(
         } else {
             FilterSwitchItemMainContent(
                 item = updatedItemState.value,
-                shapeState = shapeState,
                 footer = {
                     ExpandedIfNotEmpty(
                         modifier = Modifier
@@ -983,7 +964,6 @@ private fun FilterSwitchItem(
 @Composable
 private fun FilterSwitchItemMainContent(
     item: GeneratorState.Filter.Item.Switch,
-    shapeState: Int,
     trailing: (@Composable RowScope.() -> Unit)? = null,
     footer: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
@@ -1144,7 +1124,6 @@ private fun FilterSwitchItemCounterButton(
 @Composable
 private fun FilterTextItem(
     item: GeneratorState.Filter.Item.Text,
-    shapeState: Int,
 ) {
     FlatTextField(
         modifier = Modifier
@@ -1155,8 +1134,6 @@ private fun FilterTextItem(
         } else {
             null
         },
-        expressive = true,
-        shapeState = shapeState,
         label = item.title,
         value = item.model,
         textStyle = LocalTextStyle.current.copy(
@@ -1168,7 +1145,6 @@ private fun FilterTextItem(
 @Composable
 private fun FilterEnumItem(
     item: GeneratorState.Filter.Item.Enum,
-    shapeState: Int,
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
     val onClick: (() -> Unit)? = when {
@@ -1281,11 +1257,9 @@ fun DecoratedSlider(
     filterLength: GeneratorState.Filter.Length,
     interactionSource: MutableInteractionSource,
     modifier: Modifier = Modifier,
-    shapeState: Int = ShapeState.ALL,
 ) {
     FlatSurfaceExpressive(
         modifier = modifier,
-        shapeState = shapeState,
     ) {
         Column(
             modifier = Modifier

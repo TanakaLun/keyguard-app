@@ -8,8 +8,6 @@ import androidx.compose.runtime.Immutable
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.DWatchtowerAlert
 import com.artemchep.keyguard.common.model.DWatchtowerAlertType
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.home.vault.model.VaultItem2
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemIcon
 import com.artemchep.keyguard.feature.localization.TextHolder
@@ -36,14 +34,7 @@ data class WatchtowerNewAlertsState(
             val alert: DWatchtowerAlert,
             val date: String,
             val read: Boolean,
-        ) : Item, GroupableShapeItem<Alert> {
-            override fun withShape(shape: Int): Alert {
-                val cipherItem = item.copy(
-                    shapeState = shape,
-                )
-                return copy(item = cipherItem)
-            }
-        }
+        ) : Item
 
         @Immutable
         data class Section(

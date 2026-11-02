@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 import com.artemchep.keyguard.common.usecase.GetPurchased
 import com.artemchep.keyguard.feature.auth.bitwarden.BitwardenLoginRouteFactory
@@ -104,7 +103,6 @@ data class SettingsItem(
     val text: TextHolder,
     val icon: ImageVector? = null,
     val iconShape: RoundedPolygon? = null,
-    val shapeState: Int = 0,
     val leading: (@Composable RowScope.() -> Unit)? = null,
     val trailing: (@Composable RowScope.() -> Unit)? = null,
     val footer: (@Composable ColumnScope.() -> Unit)? = null,
@@ -278,31 +276,12 @@ fun rememberSettingsItems(
                     }
                 }
             }
-        val items = listOf<SettingsItem2>(
+        listOf<SettingsItem2>(
             SettingsAccountsItem(
                 id = "accounts",
                 state = accountsState,
             ),
         ) + routeSettingsItems
-        items
-            .mapIndexed { index, item ->
-                when (item) {
-                    is SettingsItem -> {
-                        val shapeState = getShapeState(
-                            list = items,
-                            index = index,
-                            predicate = { el, offset ->
-                                el is SettingsItem
-                            },
-                        )
-                        item.copy(
-                            shapeState = shapeState,
-                        )
-                    }
-
-                    else -> item
-                }
-            }
     }
     return items
 }
@@ -364,7 +343,6 @@ private fun SettingListScreenContent(
         modifier = Modifier
             .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(

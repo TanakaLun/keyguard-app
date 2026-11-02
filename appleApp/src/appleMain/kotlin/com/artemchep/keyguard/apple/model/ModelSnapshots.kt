@@ -195,7 +195,7 @@ internal suspend fun buildVaultItemSnapshots(
                     switchValue = false,
                     actions = item.dropdown.toActionSnapshots(item.id),
                     avatarUrl = usernameAvatarUrl.takeIf { item.id == "login.username" },
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     isVisible = isVisible,
                     revealActionId = revealActionId,
                     revealLocked = revealLocked,
@@ -217,7 +217,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = local.dropdown.toActionSnapshots(item.id),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                 )
             }
 
@@ -232,7 +232,7 @@ internal suspend fun buildVaultItemSnapshots(
                 launchUrl = item.text,
                 switchValue = false,
                 actions = item.dropdown.toActionSnapshots(item.id),
-                shapeState = item.shapeState,
+                shapeState = 0,
                 uriIcon = item.iconSource.toUriIconSnapshot(uriAppIcons),
             )
 
@@ -321,7 +321,7 @@ internal suspend fun buildVaultItemSnapshots(
                 launchUrl = null,
                 switchValue = item.value,
                 actions = item.dropdown.toActionSnapshots(item.id),
-                shapeState = item.shapeState,
+                shapeState = 0,
             )
 
             is VaultViewItem.Link -> {
@@ -344,7 +344,7 @@ internal suspend fun buildVaultItemSnapshots(
                     } else {
                         emptyList()
                     },
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = actionId.takeIf { item.onClick != null },
                 )
             }
@@ -366,7 +366,7 @@ internal suspend fun buildVaultItemSnapshots(
                     } else {
                         emptyList()
                     },
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                 )
             }
 
@@ -421,7 +421,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = item.dropdown.toActionSnapshots(item.id),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     // Falls back to the credit-card type, like the Compose item.
                     cardBrand = card.brand ?: card.creditCardType?.name,
                     // Withhold the formatted (plaintext) number while gated + concealed;
@@ -471,7 +471,7 @@ internal suspend fun buildVaultItemSnapshots(
                         item.count,
                     ),
                     registerAction(item.id, item.onClick, Res.string.open_action),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     severity = VaultAlertSeverity.ERROR,
                 )
             }
@@ -482,7 +482,7 @@ internal suspend fun buildVaultItemSnapshots(
                     textResource(Res.string.twofa_available, leContext),
                     null,
                     registerAction(item.id, item.onClick, Res.string.open_action),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     severity = VaultAlertSeverity.WARNING,
                 )
             }
@@ -493,7 +493,7 @@ internal suspend fun buildVaultItemSnapshots(
                     textResource(Res.string.passkey_available, leContext),
                     null,
                     registerAction(item.id, item.onClick, Res.string.open_action),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     severity = VaultAlertSeverity.INFO,
                 )
             }
@@ -515,7 +515,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = useActions,
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = clickActionId,
                 )
             }
@@ -526,7 +526,7 @@ internal suspend fun buildVaultItemSnapshots(
                     item.name,
                     item.message,
                     registerAction(item.id, item.onRetry, Res.string.retry),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                 )
             }
 
@@ -577,7 +577,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = nodes,
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = clickActionId,
                 )
             }
@@ -595,7 +595,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = emptyList(),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = clickActionId,
                 )
             }
@@ -613,7 +613,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = null,
                     switchValue = false,
                     actions = emptyList(),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = clickActionId,
                 )
             }
@@ -708,7 +708,7 @@ internal suspend fun buildVaultItemSnapshots(
                     launchUrl = (status as? AttachmentItem.Status.Downloaded)?.localUrl,
                     switchValue = false,
                     actions = att.actionsState.value.toActionSnapshots(item.id),
-                    shapeState = item.shapeState,
+                    shapeState = 0,
                     clickActionId = clickActionId,
                     attachment = attachmentSnap,
                 )
@@ -981,7 +981,7 @@ data class VaultItemSnapshot(
     val markdown: Boolean = false,
     // VALUE only: the username row's Gravatar; null when the preference is off.
     val avatarUrl: String? = null,
-    /** A ShapeState bitmask (START/END/CENTER/ALL) from the producer's transformShapes(); -1 = not grouped. */
+    /** Reserved for the row's grouping bits; unused and always 0. */
     val shapeState: Int = -1,
     /** The row's own tap action; null when the row itself is not tappable. */
     val clickActionId: String? = null,

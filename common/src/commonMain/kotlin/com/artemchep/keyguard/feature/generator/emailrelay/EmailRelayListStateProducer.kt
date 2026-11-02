@@ -40,7 +40,6 @@ import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
 import com.artemchep.keyguard.feature.navigation.state.translate
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -315,7 +314,7 @@ suspend fun RememberStateFlowScope.emailRelayListStateProducer(
         }
     val itemsFlow = itemsRawFlow
         .map { list ->
-            val items = list
+            list
                 .map {
                     val relay = emailRelays
                         .firstOrNull { r -> r.type == it.type }
@@ -403,10 +402,7 @@ suspend fun RememberStateFlowScope.emailRelayListStateProducer(
                     )
                 }
                 .toList()
-            val itemsReShaped = items
-                .mapListShape()
                 .toImmutableList()
-            itemsReShaped
         }
         .crashlyticsAttempt { e ->
             val msg = "Failed to get the email relay list!"

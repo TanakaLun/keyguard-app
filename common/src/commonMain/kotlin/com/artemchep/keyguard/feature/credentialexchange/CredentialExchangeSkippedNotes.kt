@@ -155,9 +155,8 @@ private fun CredentialExchangeSkippedRow(
 
 /**
  * One item behind an expanded note. Deliberately plain text rather than a
- * [CredentialExchangeItemRow]: that row's `shapeState` is computed against the
- * flat top-level list, so reusing it in a nested sub-list would group the
- * rounded corners wrong, and this block has always been plain text.
+ * [CredentialExchangeItemRow], because that row is a styled vault item row and
+ * this block has always been plain text.
  */
 @Composable
 private fun CredentialExchangeSkippedTitleRow(

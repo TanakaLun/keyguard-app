@@ -23,7 +23,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.copy
 import com.artemchep.keyguard.res.environments_mount_disable
@@ -106,7 +105,6 @@ suspend fun RememberStateFlowScope.environmentMountsStateProducer(
                     onDisable = disableEnvironmentMount,
                 )
             }
-            .mapListShape()
             .toPersistentList()
         val agentFailed = items.isNotEmpty() &&
                 agentStatus == AgentStatus.Failed

@@ -22,7 +22,6 @@ import com.artemchep.keyguard.PLACEHOLDER_S3_KEEPASS_KEY
 import com.artemchep.keyguard.PLACEHOLDER_S3_PREFIX
 import com.artemchep.keyguard.PLACEHOLDER_S3_REGION
 import com.artemchep.keyguard.PLACEHOLDER_URL_S3_ENDPOINT
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.permission.PermissionState
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
@@ -91,7 +90,6 @@ private fun S3SettingsContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         floatingActionState = rememberUpdatedState(
             FabState(
@@ -144,7 +142,6 @@ private fun LazyListScope.s3EndpointItems(
                 hint = PLACEHOLDER_URL_S3_ENDPOINT,
                 error = state.error.textIfOwnedBy(S3FormError.EndpointInvalid),
             ),
-            shapeState = ShapeState.ALL,
             clearButton = true,
         )
     }
@@ -165,7 +162,6 @@ private fun LazyListScope.s3LocationItems(
             value = state.region.toTextFieldModel(
                 hint = PLACEHOLDER_S3_REGION,
             ),
-            shapeState = ShapeState.START,
             singleLine = true,
             clearButton = true,
         )
@@ -180,7 +176,6 @@ private fun LazyListScope.s3LocationItems(
                 hint = PLACEHOLDER_S3_BUCKET,
                 error = state.error.textIfOwnedBy(S3FormError.BucketRequired, S3FormError.BucketInvalid),
             ),
-            shapeState = ShapeState.CENTER,
             singleLine = true,
             clearButton = true,
         )
@@ -213,7 +208,6 @@ private fun LazyListScope.s3PathItem(
                     S3FormError.KeyExtensionRequired,
                 ),
             ),
-            shapeState = ShapeState.END,
             singleLine = true,
             clearButton = true,
             trailing = {
@@ -251,7 +245,6 @@ private fun LazyListScope.s3AccessKeyItems(
             value = state.accessKeyId.toTextFieldModel(
                 error = state.error.textIfOwnedBy(S3FormError.AccessKeyIdRequired, S3FormError.AccessKeyIdInvalid),
             ),
-            shapeState = ShapeState.START,
             singleLine = true,
             clearButton = true,
         )
@@ -265,7 +258,6 @@ private fun LazyListScope.s3AccessKeyItems(
             value = state.secretAccessKey.toTextFieldModel(
                 error = state.error.textIfOwnedBy(S3FormError.SecretAccessKeyRequired),
             ),
-            shapeState = ShapeState.END,
             clearButton = true,
         )
     }

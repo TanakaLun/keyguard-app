@@ -80,9 +80,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.GetPasswordResult
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.UsernameVariationIcon
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.model.titleH
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.auth.common.VisibilityState
@@ -202,100 +200,16 @@ fun LazyListScope.AddScreenItems(
     }
 }
 
-fun getAnyFieldShapeState(
-    list: List<AddStateItem>,
-    index: Int,
-): Int {
-    val item = list[index]
-    val predicate = when (item) {
-        is AddStateItem.Title<*> -> ::getAnyFieldShapeStateTitlePredicate
-        is AddStateItem.Username<*>,
-        is AddStateItem.Password<*>,
-            -> ::getAnyFieldShapeStateUsernamePasswordPredicate
-        is AddStateItem.Totp<*> -> ::getAnyFieldShapeStateTotpPredicate
-        is AddStateItem.Text<*> -> ::getAnyFieldShapeStateTextPredicate
-        is AddStateItem.Passkey<*> -> ::getAnyFieldShapeStatePasskeyPredicate
-        is AddStateItem.Attachment<*> -> ::getAnyFieldShapeStateAttachmentPredicate
-        is AddStateItem.Url<*> -> ::getAnyFieldShapeStateUrlPredicate
-        is AddStateItem.Link<*> -> ::getAnyFieldShapeStateLinkPredicate
-        is AddStateItem.Field<*> -> ::getAnyFieldShapeStateFieldPredicate
-        is AddStateItem.Tag<*> -> ::getAnyFieldShapeStateTagPredicate
-        else -> ::getAnyFieldShapeStateOtherPredicate
-    }
-    return getShapeState(
-        list = list,
-        index = index,
-        predicate = predicate,
-    )
-}
-
-private fun getAnyFieldShapeStateTitlePredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Title<*>
-
-private fun getAnyFieldShapeStateUsernamePasswordPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Username<*> || item is AddStateItem.Password<*>
-
-private fun getAnyFieldShapeStateTotpPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Totp<*>
-
-private fun getAnyFieldShapeStateTextPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Text<*>
-
-private fun getAnyFieldShapeStatePasskeyPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Passkey<*>
-
-private fun getAnyFieldShapeStateAttachmentPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Attachment<*>
-
-private fun getAnyFieldShapeStateUrlPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Url<*>
-
-private fun getAnyFieldShapeStateLinkPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Link<*>
-
-private fun getAnyFieldShapeStateFieldPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Field<*>
-
-private fun getAnyFieldShapeStateTagPredicate(
-    item: AddStateItem,
-    index: Int,
-) = item is AddStateItem.Tag<*>
-
-private fun getAnyFieldShapeStateOtherPredicate(
-    item: AddStateItem,
-    index: Int,
-) = false
-
 context(addScope: AddScreenScope)
 @Composable
 fun AnyField(
     modifier: Modifier = Modifier,
     item: AddStateItem,
-    shapeState: Int,
 ) = when (item) {
     is AddStateItem.Title<*> -> {
         TitleTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -303,7 +217,6 @@ fun AnyField(
         UsernameTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -311,7 +224,6 @@ fun AnyField(
         PasswordTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -319,7 +231,6 @@ fun AnyField(
         TotpTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -327,7 +238,6 @@ fun AnyField(
         UrlTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -335,7 +245,6 @@ fun AnyField(
         LinkField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -343,7 +252,6 @@ fun AnyField(
         AttachmentTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -351,7 +259,6 @@ fun AnyField(
         PasskeyField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -359,7 +266,6 @@ fun AnyField(
         NoteTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -367,7 +273,6 @@ fun AnyField(
         SshKeyField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -375,7 +280,6 @@ fun AnyField(
         GpgKeyField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -383,7 +287,6 @@ fun AnyField(
         TextTextField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -391,7 +294,6 @@ fun AnyField(
         DateMonthYearField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -399,7 +301,6 @@ fun AnyField(
         DateTimeField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -407,7 +308,6 @@ fun AnyField(
         SwitchField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -429,7 +329,6 @@ fun AnyField(
         FieldField(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -437,7 +336,6 @@ fun AnyField(
         FieldTag(
             modifier = modifier,
             item = item,
-            shapeState = shapeState,
         )
     }
 
@@ -503,7 +401,6 @@ context(addScope: AddScreenScope)
 private fun TitleTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Title<*>,
-    shapeState: Int,
 ) {
     val field by item.state.flow.collectAsState()
 
@@ -523,7 +420,6 @@ private fun TitleTextField(
         fieldModifier = Modifier
             .focusRequester2(focusRequester),
         label = stringResource(Res.string.generic_name),
-        shapeState = shapeState,
         singleLine = true,
         value = field,
         keyboardOptions = KeyboardOptions(
@@ -540,7 +436,6 @@ context(addScope: AddScreenScope)
 private fun UsernameTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Username<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     val field = state.value
@@ -548,7 +443,6 @@ private fun UsernameTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = stringResource(Res.string.username),
-        shapeState = shapeState,
         value = field,
         leading = {
             Crossfade(
@@ -607,7 +501,6 @@ context(addScope: AddScreenScope)
 private fun PasswordTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Password<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val field by item.state.flow.collectAsState()
     PasswordFlatTextField(
@@ -615,7 +508,6 @@ private fun PasswordTextField(
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         value = field,
         label = item.label,
-        shapeState = shapeState,
         leading = {
             IconBox(
                 main = Icons.Outlined.Password,
@@ -675,7 +567,6 @@ context(addScope: AddScreenScope)
 private fun TotpTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Totp<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val state by item.state.flow.collectAsState()
     val field = state.value
@@ -683,7 +574,6 @@ private fun TotpTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = stringResource(Res.string.one_time_password_authenticator_key),
-        shapeState = shapeState,
         value = field,
         textStyle = LocalTextStyle.current.copy(
             fontFamily = monoFontFamily,
@@ -723,7 +613,6 @@ context(addScope: AddScreenScope)
 private fun NoteTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Note<*>,
-    shapeState: Int,
 ) = Column(
     modifier = modifier,
 ) {
@@ -741,7 +630,6 @@ private fun NoteTextField(
         modifier = Modifier
             .padding(horizontal = Dimens.horizontalPadding),
         label = stringResource(Res.string.note),
-        shapeState = shapeState,
         value = field,
         content = if (markdown) {
             // composable
@@ -851,7 +739,6 @@ context(addScope: AddScreenScope)
 private fun SshKeyField(
     modifier: Modifier = Modifier,
     item: AddStateItem.SshKey<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     FileDropField(
@@ -920,7 +807,6 @@ context(addScope: AddScreenScope)
 private fun GpgKeyField(
     modifier: Modifier = Modifier,
     item: AddStateItem.GpgKey<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     GpgUserIdsDialog(state.userIds)
@@ -1048,7 +934,6 @@ context(addScope: AddScreenScope)
 private fun UrlTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Url<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     val field = state.text
@@ -1056,7 +941,6 @@ private fun UrlTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = stringResource(Res.string.uri),
-        shapeState = shapeState,
         value = field,
         leading = {
             IconBox(
@@ -1097,7 +981,6 @@ context(addScope: AddScreenScope)
 private fun AttachmentTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Attachment<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     FileDropField(
@@ -1108,7 +991,6 @@ private fun AttachmentTextField(
         FlatTextField(
             modifier = Modifier,
             label = stringResource(Res.string.file),
-            shapeState = shapeState,
             placeholder = stringResource(Res.string.file_name_placeholder),
             value = state.name,
             keyboardOptions = KeyboardOptions(
@@ -1183,7 +1065,6 @@ context(addScope: AddScreenScope)
 private fun LinkField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Link<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     val presentation = state.presentation
@@ -1191,7 +1072,6 @@ private fun LinkField(
         CompactVaultItem(
             modifier = modifier,
             item = presentation,
-            shapeState = shapeState,
             trailing = {
                 OptionsButton(
                     actions = item.options,
@@ -1232,7 +1112,6 @@ context(addScope: AddScreenScope)
 private fun PasskeyField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Passkey<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     BasicComponent(
@@ -1291,7 +1170,6 @@ context(addScope: AddScreenScope)
 private fun TextTextField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Text<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val state by item.state.flow.collectAsState()
     val field = state.value
@@ -1299,7 +1177,6 @@ private fun TextTextField(
         modifier = Modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         leading = item.leading,
-        shapeState = shapeState,
         label = state.label,
         value = field,
         singleLine = state.singleLine,
@@ -1328,7 +1205,6 @@ context(addScope: AddScreenScope)
 private fun FieldTag(
     modifier: Modifier = Modifier,
     item: AddStateItem.Tag<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val state by item.state.flow.collectAsState()
     val actions = remember(
@@ -1347,7 +1223,6 @@ private fun FieldTag(
             FieldTextTag(
                 state = s,
                 actions = actions,
-                shapeState = shapeState,
             )
         }
     }
@@ -1359,12 +1234,10 @@ private fun FieldTextTag(
     modifier: Modifier = Modifier,
     state: AddStateItem.Tag.State.Text,
     actions: ImmutableList<ContextItem>,
-    shapeState: Int,
 ) {
     TagFlatTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
-        shapeState = shapeState,
         value = state.text,
         trailing = {
             OptionsButton(
@@ -1380,7 +1253,6 @@ context(addScope: AddScreenScope)
 private fun FieldField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Field<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val state by item.state.flow.collectAsState()
     val actions = remember(
@@ -1399,7 +1271,6 @@ private fun FieldField(
             FieldTextField(
                 state = s,
                 actions = actions,
-                shapeState = shapeState,
             )
         }
 
@@ -1407,7 +1278,6 @@ private fun FieldField(
             FieldSwitchField(
                 state = s,
                 actions = actions,
-                shapeState = shapeState,
             )
         }
 
@@ -1415,7 +1285,6 @@ private fun FieldField(
             FieldLinkedIdField(
                 state = s,
                 actions = actions,
-                shapeState = shapeState,
             )
         }
     }
@@ -1427,7 +1296,6 @@ private fun FieldTextField(
     modifier: Modifier = Modifier,
     state: AddStateItem.Field.State.Text,
     actions: ImmutableList<ContextItem>,
-    shapeState: Int,
 ) {
     val visibilityState = remember(state.hidden) {
         VisibilityState(
@@ -1438,7 +1306,6 @@ private fun FieldTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = state.label,
-        shapeState = shapeState,
         value = state.text,
         valueVisualTransformation = if (visibilityState.isVisible || !state.hidden) {
             VisualTransformation.None
@@ -1477,12 +1344,10 @@ private fun FieldSwitchField(
     modifier: Modifier = Modifier,
     state: AddStateItem.Field.State.Switch,
     actions: ImmutableList<ContextItem>,
-    shapeState: Int,
 ) {
     FlatTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
-        shapeState = shapeState,
         value = state.label,
         trailing = {
             Checkbox(
@@ -1506,7 +1371,6 @@ private fun FieldLinkedIdField(
     modifier: Modifier = Modifier,
     state: AddStateItem.Field.State.LinkedId,
     actions: ImmutableList<ContextItem>,
-    shapeState: Int,
 ) {
     val label = state.label
     val labelBuffer = rememberFieldBuffer(
@@ -1562,7 +1426,6 @@ private fun FieldLinkedIdField(
             ) {
                 dropdownShownState.value = true
             },
-        shapeState = shapeState,
         isError = isError,
         isFocused = hasFocusState,
         isEmpty = isEmpty,
@@ -1626,7 +1489,6 @@ context(addScope: AddScreenScope)
 private fun SwitchField(
     modifier: Modifier = Modifier,
     item: AddStateItem.Switch<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     val onClick: () -> Unit = remember(item.state.flow) {
@@ -1656,7 +1518,6 @@ context(addScope: AddScreenScope)
 private fun DateMonthYearField(
     modifier: Modifier = Modifier,
     item: AddStateItem.DateMonthYear<*>,
-    shapeState: Int,
 ) {
     val state by item.state.flow.collectAsState()
     val isEmpty = state.month.text.isEmpty() &&
@@ -1702,7 +1563,6 @@ context(addScope: AddScreenScope)
 private fun DateTimeField(
     modifier: Modifier = Modifier,
     item: AddStateItem.DateTime<*>,
-    shapeState: Int,
 ) = Column(modifier = modifier) {
     val state by item.state.flow.collectAsState()
     Row(

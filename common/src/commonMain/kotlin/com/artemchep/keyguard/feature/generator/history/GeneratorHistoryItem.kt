@@ -2,8 +2,6 @@ package com.artemchep.keyguard.feature.generator.history
 
 import androidx.compose.runtime.Immutable
 import arrow.optics.optics
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.attachments.SelectableItemState
 import com.artemchep.keyguard.ui.ContextItem
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -35,14 +33,13 @@ sealed interface GeneratorHistoryItem {
         val text: String,
         val type: Type?,
         val createdDate: Instant,
-        val shapeState: Int = ShapeState.ALL,
         /**
          * List of the callable actions appended
          * to the item.
          */
         val dropdown: PersistentList<ContextItem>,
         val selectableState: StateFlow<SelectableItemState>,
-    ) : GeneratorHistoryItem, GroupableShapeItem<Value> {
+    ) : GeneratorHistoryItem {
         companion object;
 
         enum class Type {
@@ -53,7 +50,5 @@ sealed interface GeneratorHistoryItem {
             SSH_KEY,
             GPG_KEY,
         }
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 }

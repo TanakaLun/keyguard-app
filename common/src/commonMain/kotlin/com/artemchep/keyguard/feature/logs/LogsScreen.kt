@@ -92,7 +92,6 @@ private fun LogsScreenSkeleton(
     ScaffoldLazyColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -122,7 +121,6 @@ private fun LogsScreenContent(
     ScaffoldLazyColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(

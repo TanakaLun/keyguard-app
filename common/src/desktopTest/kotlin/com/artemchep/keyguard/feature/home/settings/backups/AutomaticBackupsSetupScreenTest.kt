@@ -48,7 +48,7 @@ class AutomaticBackupsSetupScreenTest {
         val variants = listOf(
             Variant("phone", 390, 844),
             Variant("desktop-dark", 1024, 800, dark = true),
-            Variant("compact-standard", 360, 640, expressive = false),
+            Variant("compact-standard", 360, 640),
             Variant("rtl-large-text", 390, 844, fontScale = 1.6f, rtl = true),
         )
         SwingUtilities.invokeAndWait {
@@ -96,7 +96,7 @@ class AutomaticBackupsSetupScreenTest {
             fontScale = variant.fontScale,
             rtl = variant.rtl,
             content = {
-                AutomaticBackupsPreview(dark = variant.dark, expressive = variant.expressive) {
+                AutomaticBackupsPreview(dark = variant.dark) {
                     AutomaticBackupsSetupContent(automaticBackupsSetupPreviewState(data))
                 }
             },
@@ -212,7 +212,6 @@ class AutomaticBackupsSetupScreenTest {
         val width: Int,
         val height: Int,
         val dark: Boolean = false,
-        val expressive: Boolean = true,
         val fontScale: Float = 1f,
         val rtl: Boolean = false,
     )

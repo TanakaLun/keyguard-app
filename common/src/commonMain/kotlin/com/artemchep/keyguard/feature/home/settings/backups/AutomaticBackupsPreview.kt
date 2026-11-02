@@ -21,8 +21,6 @@ import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.pref_item_automatic_backups_wizard_password_mismatch_error
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.plainDarkColorScheme
 import com.artemchep.keyguard.ui.theme.plainLightColorScheme
 import kotlinx.coroutines.flow.emptyFlow
@@ -39,7 +37,6 @@ import androidx.compose.material3.MaterialTheme
 @Composable
 internal fun AutomaticBackupsPreview(
     dark: Boolean = false,
-    expressive: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val scheme = if (dark) plainDarkColorScheme() else plainLightColorScheme()
@@ -54,8 +51,6 @@ internal fun AutomaticBackupsPreview(
         ) {
             CompositionLocalProvider(
                 LocalInspectionMode provides true,
-                GlobalExpressive provides expressive,
-                LocalExpressive provides expressive,
                 LocalSurfaceColor provides scheme.surface,
             ) {
                 Surface(content = content)

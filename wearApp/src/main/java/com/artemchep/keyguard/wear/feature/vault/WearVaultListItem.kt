@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -146,7 +145,6 @@ fun Section(
     modifier: Modifier = Modifier,
     text: String? = null,
     caps: Boolean = true,
-    expressive: Boolean = false,
 ) {
     if (text != null) {
         Text(
@@ -162,11 +160,6 @@ fun Section(
             fontWeight = FontWeight.Medium,
             color = LocalContentColor.current
                 .combineAlpha(MediumEmphasisAlpha),
-        )
-    } else if (expressive) {
-        Spacer(
-            modifier = Modifier
-                .height(24.dp),
         )
     } else {
         HorizontalDivider(

@@ -5,7 +5,6 @@ import com.artemchep.keyguard.common.model.DFolder
 import com.artemchep.keyguard.common.model.DProfile
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.credentialexchange.CxfAccountResult
 import com.artemchep.keyguard.common.service.credentialexchange.CxfExportService
 import com.artemchep.keyguard.common.service.credentialexchange.CxfExportSkipReason
@@ -376,10 +375,6 @@ class CredentialExchangeExportStateProducerTest {
             Step.Review(accounts).render(CompleteRecorder()).stage(),
         )
         assertEquals(listOf("Alpha", "Middle", "Zulu"), review.items.map { it.title })
-        assertEquals(
-            listOf(ShapeState.START, ShapeState.CENTER, ShapeState.END),
-            review.items.map { it.shapeState },
-        )
     }
 
     @Test

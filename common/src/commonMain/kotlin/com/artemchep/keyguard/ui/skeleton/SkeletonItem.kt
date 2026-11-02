@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.ui.Avatar
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
@@ -34,7 +33,6 @@ enum class SkeletonItemAvatar {
 @Composable
 fun SkeletonItem(
     avatar: SkeletonItemAvatar = SkeletonItemAvatar.NONE,
-    shapeState: Int = ShapeState.ALL,
     titleWidthFraction: Float = defaultTitleWidth,
     textWidthFraction: Float? = defaultTextWidth,
 ) {
@@ -89,29 +87,21 @@ fun LazyListScope.skeletonItems(
     count: Int = 3,
 ) = skeletonItemsPlacer(
     count = count,
-) { index, shapeState ->
+) { index ->
     item("skeleton.$index") {
         SkeletonItem(
             avatar = avatar,
             titleWidthFraction = titleWidthFraction,
             textWidthFraction = textWidthFraction,
-            shapeState = shapeState,
         )
     }
 }
 
 inline fun skeletonItemsPlacer(
     count: Int = 3,
-    place: (Int, Int) -> Unit,
+    place: (Int) -> Unit,
 ) {
     for (i in 1..count) {
-        val shapeState = if (count > 1) {
-            when (i) {
-                1 -> ShapeState.START
-                count -> ShapeState.END
-                else -> ShapeState.CENTER
-            }
-        } else ShapeState.ALL
-        place(i, shapeState)
+        place(i)
     }
 }

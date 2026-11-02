@@ -45,8 +45,6 @@ import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.lazy.TransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.permission.PermissionState
 import com.artemchep.keyguard.feature.auth.bitwarden.BitwardenLoginEvent
 import com.artemchep.keyguard.feature.auth.bitwarden.BitwardenLoginRoute
@@ -402,19 +400,10 @@ private fun TransformingLazyColumnScope.WearBitwardenLoginItems(
     items: List<LoginStateItem>,
     transformationSpec: TransformationSpec,
 ) {
-    items.forEachIndexed { index, loginItem ->
+    items.forEach { loginItem ->
         item("custom_env.${loginItem.id}") {
-            val shapeState = getShapeState(
-                list = items,
-                index = index,
-                predicate = { el, _ ->
-                    el is LoginStateItem.Url ||
-                            el is LoginStateItem.HttpHeader
-                },
-            )
             WearBitwardenLoginItem(
                 loginItem = loginItem,
-                shapeState = shapeState,
                 transformationSpec = transformationSpec,
             )
         }
@@ -424,18 +413,15 @@ private fun TransformingLazyColumnScope.WearBitwardenLoginItems(
 @Composable
 private fun TransformingLazyColumnItemScope.WearBitwardenLoginItem(
     loginItem: LoginStateItem,
-    shapeState: Int,
     transformationSpec: TransformationSpec,
 ) = when (loginItem) {
     is LoginStateItem.Url -> WearBitwardenLoginItemUrl(
         item = loginItem,
-        shapeState = shapeState,
         transformationSpec = transformationSpec,
     )
 
     is LoginStateItem.HttpHeader -> WearBitwardenLoginItemField(
         item = loginItem,
-        shapeState = shapeState,
         transformationSpec = transformationSpec,
     )
 
@@ -465,7 +451,6 @@ private fun TransformingLazyColumnItemScope.WearBitwardenLoginItem(
 @Composable
 private fun TransformingLazyColumnItemScope.WearBitwardenLoginItemUrl(
     item: LoginStateItem.Url,
-    shapeState: Int,
     transformationSpec: TransformationSpec,
 ) {
     val field by item.state.flow.collectAsState()
@@ -482,7 +467,6 @@ private fun TransformingLazyColumnItemScope.WearBitwardenLoginItemUrl(
 @Composable
 private fun TransformingLazyColumnItemScope.WearBitwardenLoginItemField(
     item: LoginStateItem.HttpHeader,
-    shapeState: Int,
     transformationSpec: TransformationSpec,
 ) {
     val field by item.state.flow.collectAsState()

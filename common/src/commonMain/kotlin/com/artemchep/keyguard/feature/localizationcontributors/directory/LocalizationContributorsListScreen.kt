@@ -122,7 +122,6 @@ fun LocalizationContributorsListScreen(
         modifier = Modifier
             .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             CustomToolbar(

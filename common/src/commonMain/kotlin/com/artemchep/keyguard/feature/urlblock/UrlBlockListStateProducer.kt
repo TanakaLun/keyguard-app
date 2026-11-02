@@ -35,7 +35,6 @@ import com.artemchep.keyguard.feature.navigation.registerRouteResultReceiver
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -339,7 +338,7 @@ suspend fun RememberStateFlowScope.urlBlockListStateProducer(
         }
     val itemsFlow = itemsRawFlow
         .map { list ->
-            val items = list
+            list
                 .map {
                     val dropdown = buildContextItems {
                         section {
@@ -429,8 +428,6 @@ suspend fun RememberStateFlowScope.urlBlockListStateProducer(
                         selectableState = selectableStateFlow,
                     )
                 }
-            items
-                .mapListShape()
                 .toPersistentList()
         }
         .crashlyticsAttempt { e ->

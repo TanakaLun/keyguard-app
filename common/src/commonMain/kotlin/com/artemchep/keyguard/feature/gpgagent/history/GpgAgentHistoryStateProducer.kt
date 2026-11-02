@@ -10,7 +10,6 @@ import com.artemchep.keyguard.common.model.GpgUsageHistoryMode
 import com.artemchep.keyguard.common.model.GpgUsageHistoryRequestType
 import com.artemchep.keyguard.common.model.GpgUsageHistoryResponseType
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.usecase.DateFormatter
 import com.artemchep.keyguard.common.usecase.GetCiphers
 import com.artemchep.keyguard.common.usecase.GetGpgUsageHistory
@@ -24,7 +23,6 @@ import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -190,7 +188,6 @@ suspend fun RememberStateFlowScope.gpgAgentHistoryStateProducer(
         }
 
         out
-            .mapListShape()
             .toImmutableList()
     }
 

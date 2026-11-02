@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.EmptySearchView
 import com.artemchep.keyguard.feature.attachments.compose.ItemAttachment
@@ -121,7 +120,6 @@ fun AttachmentsScreen(
     ScaffoldLazyColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             if (tabletUi) {
@@ -178,7 +176,6 @@ fun AttachmentsScreen(
                                 ItemAttachment(
                                     modifier = Modifier,
                                     item = value.item,
-                                    shapeState = ShapeState.ALL,
                                 )
                             }
                         }

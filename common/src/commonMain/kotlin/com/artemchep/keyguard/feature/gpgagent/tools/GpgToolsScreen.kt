@@ -41,9 +41,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
 import com.artemchep.keyguard.feature.localization.textResource
@@ -121,7 +119,6 @@ private fun GpgToolsOperationScreen(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -225,7 +222,6 @@ private fun LazyListScope.populateGpgToolsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Dimens.fieldHorizontalPadding),
-                shapeState = if (showTextSignature) ShapeState.START else ShapeState.ALL,
                 label = stringResource(state.inputLabel()),
                 value = state.inputText,
                 maxLines = 14,
@@ -239,7 +235,6 @@ private fun LazyListScope.populateGpgToolsContent(
                         .fillMaxWidth()
                         .padding(top = 3.dp)
                         .padding(horizontal = Dimens.fieldHorizontalPadding),
-                    shapeState = ShapeState.END,
                     label = stringResource(Res.string.gpg_tools_signature_label),
                     value = state.detachedSignatureText,
                     maxLines = 8,
@@ -295,10 +290,9 @@ private fun LazyListScope.populateGpgToolsKeySection(
             itemsIndexed(
                 items = recipients,
                 key = { _, item -> item.id },
-            ) { index, key ->
+            ) { _, key ->
                 GpgRecipientRow(
                     keyItem = key,
-                    shapeState = getShapeState(recipients, index) { _, _ -> true },
                     enabled = !state.busy,
                     onChoose = state.onChooseRecipients,
                     onRemove = {
@@ -456,9 +450,8 @@ private fun LazyListScope.populateCustomPublicKeySection(
     itemsIndexed(
         items = customPublicKeys,
         key = { _, item -> item.id },
-    ) { index, key ->
+    ) { _, key ->
         GpgCustomPublicKeyRow(
-            shapeState = getShapeState(customPublicKeys, index) { _, _ -> true },
             onRemove = {
                 state.onRemovePublicKey(key.id)
             },
@@ -571,7 +564,6 @@ private fun GpgAddKeyButton(
 @Composable
 private fun GpgRecipientRow(
     keyItem: GpgToolsState.KeyItem,
-    shapeState: Int,
     enabled: Boolean,
     onChoose: () -> Unit,
     onRemove: () -> Unit,
@@ -645,7 +637,6 @@ private fun GpgFileRefRow(
 
 @Composable
 private fun GpgCustomPublicKeyRow(
-    shapeState: Int,
     onRemove: () -> Unit,
 ) {
     var menuExpanded by remember {

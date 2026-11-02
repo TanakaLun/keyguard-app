@@ -21,7 +21,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.feature.dialog.Dialog
 import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.res.Res
@@ -128,7 +127,6 @@ private fun TagItem(
     TagFlatTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
-        shapeState = ShapeState.ALL,
         value = item.field,
         trailing = {
             IconButton(

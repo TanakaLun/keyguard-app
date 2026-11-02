@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.util.flow.foldAsList
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.localization.textResource
@@ -307,10 +305,6 @@ object Setting {
     const val KEEP_SCREEN_ON = "keep_screen_on"
 }
 
-val LocalSettingItemShape = staticCompositionLocalOf<Int> {
-    ShapeState.ALL
-}
-
 val LocalSettingItemArgs = staticCompositionLocalOf<Any?> {
     null
 }
@@ -544,7 +538,6 @@ fun SettingPaneContent2(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(

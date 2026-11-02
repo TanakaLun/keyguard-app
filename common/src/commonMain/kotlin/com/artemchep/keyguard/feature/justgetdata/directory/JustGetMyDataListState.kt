@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import arrow.core.Either
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.justgetmydata.JustGetMyDataServiceInfo
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
 import com.artemchep.keyguard.feature.justdeleteme.directory.JustDeleteMeServiceListState
@@ -49,14 +47,11 @@ data class JustGetMyDataListState(
         data class Content(
             override val key: String,
             val icon: @Composable () -> Unit,
-            val shapeState: Int = ShapeState.ALL,
             val name: AnnotatedString,
             val data: JustGetMyDataServiceInfo,
             val onClick: (() -> Unit)? = null,
-        ) : Item, GroupableShapeItem<Content> {
+        ) : Item {
             override val contentType: String get() = "just_get_my_data_content"
-
-            override fun withShape(shape: Int) = copy(shapeState = shape)
         }
     }
 }

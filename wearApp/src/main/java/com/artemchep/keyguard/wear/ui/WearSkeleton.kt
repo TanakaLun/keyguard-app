@@ -20,7 +20,7 @@ fun TransformingLazyColumnScope.skeletonItems(
     count: Int = 3,
 ) = skeletonItemsPlacer(
     count = count,
-) { index, _ ->
+) { index ->
     item("skeleton.$index") {
         WearSkeletonItem(
             modifier = Modifier

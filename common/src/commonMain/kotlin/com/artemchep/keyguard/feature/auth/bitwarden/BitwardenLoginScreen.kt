@@ -46,9 +46,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.auth.bitwarden.sso.BitwardenSsoRoute
 import com.artemchep.keyguard.feature.auth.bitwarden.twofactor.BitwardenLoginTwofaRouteFactory
 import com.artemchep.keyguard.feature.navigation.LocalNavigationController
@@ -226,7 +224,6 @@ fun LoginScaffold(
     ScaffoldColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -349,7 +346,6 @@ fun ColumnScope.LoginContent(
         fieldModifier = Modifier
             .contentType(ContentType.EmailAddress),
         value = loginState.email,
-        shapeState = ShapeState.START,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,
         ),
@@ -365,7 +361,6 @@ fun ColumnScope.LoginContent(
         fieldModifier = Modifier
             .contentType(ContentType.Password),
         value = loginState.password,
-        shapeState = ShapeState.END,
         keyboardOptions = KeyboardOptions(
             imeAction = when {
                 !passwordIsLastField -> ImeAction.Next
@@ -504,20 +499,11 @@ private fun LoginItems(
             modifier = Modifier
                 .height(16.dp),
         )
-        items.forEachIndexed { index, item ->
+        items.forEachIndexed { _, item ->
             key(item.id) {
-                val shapeState = getShapeState(
-                    list = items,
-                    index = index,
-                    predicate = { el, _ ->
-                        el is LoginStateItem.Url ||
-                                el is LoginStateItem.HttpHeader
-                    },
-                )
                 LoginItem(
                     modifier = Modifier,
                     item = item,
-                    shapeState = shapeState,
                 )
             }
         }
@@ -528,13 +514,11 @@ private fun LoginItems(
 private fun LoginItem(
     modifier: Modifier = Modifier,
     item: LoginStateItem,
-    shapeState: Int,
 ) = when (item) {
-    is LoginStateItem.Url -> LoginItemUrl(modifier = modifier, item = item, shapeState = shapeState)
+    is LoginStateItem.Url -> LoginItemUrl(modifier = modifier, item = item)
     is LoginStateItem.HttpHeader -> LoginItemField(
         modifier = modifier,
         item = item,
-        shapeState = shapeState,
     )
 
     is LoginStateItem.Section -> LoginItemSection(modifier = modifier, item = item)
@@ -546,7 +530,6 @@ private fun LoginItem(
 private fun LoginItemUrl(
     modifier: Modifier = Modifier,
     item: LoginStateItem.Url,
-    shapeState: Int,
 ) {
     val field by item.state.flow.collectAsState()
     UrlFlatTextField(
@@ -558,7 +541,6 @@ private fun LoginItemUrl(
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         value = field.text,
         label = field.label,
-        shapeState = shapeState,
     )
 }
 
@@ -566,7 +548,6 @@ private fun LoginItemUrl(
 private fun LoginItemField(
     modifier: Modifier = Modifier,
     item: LoginStateItem.HttpHeader,
-    shapeState: Int,
 ) {
     val field by item.state.flow.collectAsState()
     val localState by remember(item.state.flow) {
@@ -584,7 +565,6 @@ private fun LoginItemField(
             .padding(horizontal = Dimens.fieldHorizontalPadding),
         label = field.label,
         value = field.text,
-        shapeState = shapeState,
         trailing = {
             OptionsButton(
                 actions = localState.orEmpty(),

@@ -140,7 +140,6 @@ internal fun <State, Filter, Content, Item, ContentItem> ServiceDirectoryListSca
         modifier = Modifier
             .pullRefresh(pullRefreshState, enabled = false)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             CustomToolbar(

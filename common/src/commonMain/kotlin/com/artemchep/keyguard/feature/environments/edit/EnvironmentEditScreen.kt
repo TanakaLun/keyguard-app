@@ -27,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.feature.add.AddStateOwnership
@@ -89,7 +88,6 @@ private fun EnvironmentEditScreen(
                 },
             )
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             EnvironmentEditToolbar(
@@ -246,7 +244,6 @@ private fun LazyListScope.populateContent(
                 .padding(horizontal = Dimens.fieldHorizontalPadding),
             label = stringResource(Res.string.description),
             value = content.description,
-            shapeState = ShapeState.END,
         )
     }
     item("variables.section") {
@@ -310,7 +307,6 @@ private fun EnvironmentNameItem(
         focusRequester = focusRequester,
         label = stringResource(Res.string.environments_name),
         value = name,
-        shapeState = ShapeState.START,
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,

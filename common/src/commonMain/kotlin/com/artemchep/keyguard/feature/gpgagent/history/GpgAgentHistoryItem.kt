@@ -4,8 +4,6 @@ import androidx.compose.runtime.Immutable
 import arrow.optics.optics
 import com.artemchep.keyguard.common.model.GpgUsageHistoryRequestType
 import com.artemchep.keyguard.common.model.GpgUsageHistoryResponseType
-import com.artemchep.keyguard.common.model.GroupableShapeItem
-import com.artemchep.keyguard.common.model.ShapeState
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
@@ -35,10 +33,7 @@ sealed interface GpgAgentHistoryItem {
         val request: GpgUsageHistoryRequestType,
         val response: GpgUsageHistoryResponseType,
         val createdAt: Instant,
-        val shapeState: Int = ShapeState.ALL,
-    ) : GpgAgentHistoryItem, GroupableShapeItem<Value> {
+    ) : GpgAgentHistoryItem {
         companion object;
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 }

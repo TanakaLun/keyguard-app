@@ -22,7 +22,6 @@ import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.navigatePopSelf
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.cipher_field_picker_duplicate
 import com.artemchep.keyguard.res.field_type_boolean
@@ -166,8 +165,7 @@ suspend fun RememberStateFlowScope.cipherFieldPickerStateProducer(
                         field.toPickerField(strings) {
                             onPick(cipherId, field.reference, cipherName)
                         }
-                    }
-                    .mapListShape(),
+                    },
             )
         } else {
             val items = filterCipherLinkPickerTargets(

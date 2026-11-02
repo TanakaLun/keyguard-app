@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.service.backup.BackupConfig
 import com.artemchep.keyguard.common.service.backup.BackupRunProgress
 import com.artemchep.keyguard.common.service.backup.BackupRunProgressDetails
@@ -94,9 +93,7 @@ private fun AutomaticBackupsStatusPanel(
     Column(
         modifier = modifier,
     ) {
-        FlatSurfaceExpressive(
-            shapeState = ShapeState.START,
-        ) {
+        FlatSurfaceExpressive {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

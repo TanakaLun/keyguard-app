@@ -90,7 +90,6 @@ private fun GeneratorPaneMaster(
     ScaffoldLazyColumn(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
@@ -165,7 +164,6 @@ private fun LazyListScope.populateGeneratorPaneMasterContent(
 fun GeneratorHistoryItem(
     modifier: Modifier,
     item: GeneratorHistoryItem,
-    shapeMaskOr: Int = 0,
 ) = when (item) {
     is GeneratorHistoryItem.Section -> GeneratorHistoryItem(
         modifier = modifier,
@@ -175,7 +173,6 @@ fun GeneratorHistoryItem(
     is GeneratorHistoryItem.Value -> GeneratorHistoryItem(
         modifier = modifier,
         item = item,
-        shapeMaskOr = shapeMaskOr,
     )
 }
 
@@ -196,7 +193,6 @@ private fun GeneratorHistoryItem(
 private fun GeneratorHistoryItem(
     modifier: Modifier,
     item: GeneratorHistoryItem.Value,
-    shapeMaskOr: Int,
 ) {
     val selectableState by item.selectableState.collectAsState()
     val backgroundColor = when {

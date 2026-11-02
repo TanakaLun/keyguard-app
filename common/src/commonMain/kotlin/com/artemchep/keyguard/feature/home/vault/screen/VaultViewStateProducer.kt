@@ -229,7 +229,6 @@ import com.artemchep.keyguard.feature.home.vault.link.resolveCipherRelations
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.feature.home.vault.model.VaultUriIcon
 import com.artemchep.keyguard.feature.home.vault.model.Visibility
-import com.artemchep.keyguard.feature.home.vault.model.transformShapes
 import com.artemchep.keyguard.feature.home.vault.search.sort.PasswordSort
 import com.artemchep.keyguard.feature.home.vault.util.cipherArchiveAction
 import com.artemchep.keyguard.feature.home.vault.util.cipherChangeGpgKeyExpiryAction
@@ -1719,7 +1718,7 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
                         gpgKeyserverState = gpgKeyserverState,
                         verify = verify,
                         elevatedAccessGranted = fff,
-                    ).toList().transformShapes(),
+                    ).toList(),
                 )
             }
         }

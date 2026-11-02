@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.VaultState
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.service.flavor.FlavorConfig
@@ -185,7 +184,6 @@ fun ColumnScope.SetupContent(
             .focusRequester(focusRequester),
         fieldModifier = Modifier
             .contentType(ContentType.NewPassword),
-        shapeState = ShapeState.START,
         testTag = "field:password",
         label = stringResource(Res.string.setup_field_app_password_label),
         value = setupState.password,

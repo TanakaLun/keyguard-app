@@ -7,9 +7,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
 import arrow.optics.optics
 import com.artemchep.keyguard.common.model.DSecret
-import com.artemchep.keyguard.common.model.GroupableShapeItem
 import com.artemchep.keyguard.common.model.PasswordStrength
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.TotpToken
 import com.artemchep.keyguard.common.usecase.CopyText
 import com.artemchep.keyguard.feature.attachments.SelectableItemState
@@ -76,15 +74,13 @@ sealed interface VaultItem2 {
     data class Button(
         override val id: String,
         val title: String,
-        val shapeState: Int = ShapeState.ALL,
         val leading: (@Composable () -> Unit)? = null,
         val onClick: (() -> Unit)? = null,
-    ) : VaultItem2, GroupableShapeItem<Button> {
+    ) : VaultItem2 {
         companion object;
 
         override val contentType: String get() = "button"
 
-        override fun withShape(shape: Int) = copy(shapeState = shape)
     }
 
     @Immutable
@@ -142,16 +138,12 @@ sealed interface VaultItem2 {
         val searchContextBadge: SearchContextBadge? = null,
         override val favourite: Boolean,
         override val attachments: Boolean,
-        val shapeState: Int = ShapeState.ALL,
-        //
         val action: Action,
         val localStateSource: LocalStateSource,
-    ) : VaultItem2, GroupableShapeItem<Item>, VaultItemPresentation {
+    ) : VaultItem2, VaultItemPresentation {
         companion object;
 
         override val contentType: String get() = "item"
-
-        override fun withShape(shape: Int) = copy(shapeState = shape)
 
         @Immutable
         data class LocalState(

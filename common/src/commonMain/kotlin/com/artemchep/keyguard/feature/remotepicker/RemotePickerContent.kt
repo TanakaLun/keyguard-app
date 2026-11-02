@@ -25,9 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.ShapeState
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.ErrorView
 import com.artemchep.keyguard.feature.auth.common.TextFieldModel
@@ -77,7 +75,6 @@ internal fun RemotePickerContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         floatingActionState = rememberUpdatedState(fabState),
         floatingActionButton = {
@@ -191,7 +188,6 @@ private fun LazyListScope.remotePickerFileName(
                 error = error,
                 onChange = fileNameState::value::set,
             ),
-            shapeState = ShapeState.ALL,
             singleLine = true,
             clearButton = true,
         )
@@ -254,7 +250,6 @@ private fun LazyListScope.remotePickerDirectoryItems(
         val item = items[index]
         RemotePickerItem(
             item = item,
-            shapeState = getShapeState(items, index) { _, _ -> true },
         )
     }
 }
@@ -262,7 +257,6 @@ private fun LazyListScope.remotePickerDirectoryItems(
 @Composable
 private fun RemotePickerItem(
     item: RemotePickerState.Item,
-    shapeState: Int,
 ) {
     val enabled = item.onClick != null
     BasicComponent(

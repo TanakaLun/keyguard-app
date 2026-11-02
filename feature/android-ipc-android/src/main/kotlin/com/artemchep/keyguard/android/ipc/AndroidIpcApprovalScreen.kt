@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -29,8 +28,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.artemchep.keyguard.common.model.ShapeState
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.agent.MAX_AGENT_CALLER_APP_BUNDLE_PATH_LENGTH
 import com.artemchep.keyguard.common.service.agent.MAX_AGENT_CALLER_NAME_LENGTH
 import com.artemchep.keyguard.common.service.agent.sanitizedAgentDisplayValue
@@ -49,8 +46,6 @@ import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 
@@ -101,17 +96,10 @@ private fun AndroidIpcApprovalReadyScreen(
             )
         },
         content = {
-            // The activity hosts the screen outside of a scaffold, so the
-            // expressive flag has to be provided manually. Otherwise the
-            // key items would end up with no background at all.
-            CompositionLocalProvider(
-                LocalExpressive provides GlobalExpressive.current,
-            ) {
-                Column {
-                    AndroidIpcApprovalHeader(state)
-                    Spacer(Modifier.height(12.dp))
-                    AndroidIpcApprovalCandidates(state)
-                }
+            Column {
+                AndroidIpcApprovalHeader(state)
+                Spacer(Modifier.height(12.dp))
+                AndroidIpcApprovalCandidates(state)
             }
         },
         fill = true,
@@ -196,15 +184,10 @@ private fun AndroidIpcApprovalCandidates(
     Column(
         modifier = modifier,
     ) {
-        state.candidates.forEachIndexed { index, candidate ->
-            val shapeState = getShapeState(
-                list = state.candidates,
-                index = index,
-            ) { _, _ -> true }
+        state.candidates.forEach { candidate ->
             AndroidIpcApprovalCandidate(
                 state = state,
                 candidate = candidate,
-                shapeState = shapeState,
             )
         }
         if (state.candidates.isEmpty()) {
@@ -232,7 +215,6 @@ private fun AndroidIpcApprovalCandidates(
 private fun AndroidIpcApprovalCandidate(
     state: AndroidIpcApprovalState.Ready,
     candidate: AndroidIpcApprovalCoordinator.Candidate,
-    shapeState: Int = ShapeState.ALL,
 ) {
     val selected = candidate.id in state.selectedKeyIds
     val onSelect = {

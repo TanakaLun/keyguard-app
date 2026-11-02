@@ -139,9 +139,7 @@ import com.artemchep.keyguard.ui.LocalComposeWindow
 import com.artemchep.keyguard.ui.WindowScreenshotProtectionEffect
 import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
 import com.artemchep.keyguard.ui.theme.KeyguardTheme
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.util.foundation.crypto.ensurePlatformCryptoReady
 import com.artemchep.keyguard.util.windowspasskeys.WindowsPasskeys
@@ -879,7 +877,6 @@ internal fun ApplicationScope.KeyguardPopupScaffold(
     ) {
         CompositionLocalProvider(
             LocalSurfaceColor provides containerColor,
-            LocalExpressive provides GlobalExpressive.current,
         ) {
             Navigation(
                 exitApplication = ::exitApplication,

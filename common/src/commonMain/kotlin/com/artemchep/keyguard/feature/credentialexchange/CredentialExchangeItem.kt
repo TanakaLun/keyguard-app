@@ -15,7 +15,6 @@ import com.artemchep.keyguard.feature.home.vault.search.sort.AlphabeticalSort
 @Immutable
 data class CredentialExchangeItem(
     val title: String,
-    val shapeState: Int,
     val credentials: List<Kind>,
 ) {
     /**

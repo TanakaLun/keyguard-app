@@ -9,7 +9,6 @@ import com.artemchep.keyguard.common.model.DCollection
 import com.artemchep.keyguard.common.model.DOrganization
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.Loadable
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.usecase.GetCanWrite
 import com.artemchep.keyguard.common.usecase.GetCiphers
 import com.artemchep.keyguard.common.usecase.GetCollections
@@ -27,7 +26,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
-import com.artemchep.keyguard.feature.search.search.mapListShape
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.ui.FlatItemAction
@@ -296,7 +294,6 @@ suspend fun RememberStateFlowScope.organizationsScreenStateProducer(
             }
             .toList()
         val itemsReShaped = items
-            .mapListShape()
             .toImmutableList()
         OrganizationsState.Content(
             items = itemsReShaped,

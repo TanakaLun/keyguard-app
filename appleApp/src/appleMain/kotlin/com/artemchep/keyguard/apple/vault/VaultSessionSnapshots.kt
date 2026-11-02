@@ -105,7 +105,7 @@ data class VaultRowSnapshot(
     val orgAccentDarkArgb: Int,
     /** Inline password / passkey / attachment badges, in render order. */
     val badges: List<VaultRowBadgeSnapshot>,
-    /** The `ShapeState` grouping bits of the row card. */
+    /** Reserved for the row card's grouping bits; unused and always 0. */
     val shapeState: Int,
 ) {
     companion object {

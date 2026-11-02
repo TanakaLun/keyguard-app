@@ -60,7 +60,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.platform.leDisplayCutout
@@ -75,9 +74,7 @@ import com.artemchep.keyguard.ui.selection.SelectionBar
 import com.artemchep.keyguard.ui.surface.LocalSurfaceColor
 import com.artemchep.keyguard.ui.theme.Dimen
 import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.theme.GlobalExpressive
 import com.artemchep.keyguard.ui.theme.LocalDimens
-import com.artemchep.keyguard.ui.theme.LocalExpressive
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.ImmutableList
@@ -107,7 +104,6 @@ fun ScaffoldLazyColumn(
     floatingActionButton: @Composable FabScope.() -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     pullRefreshState: PullRefreshState? = null,
-    expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     provideContentUserScrollEnabled: () -> Boolean = { true },
     contentColor: Color = LocalContentColor.current,
@@ -129,9 +125,7 @@ fun ScaffoldLazyColumn(
     }
     val translationYAnimatedState = animateFloatStateOneWayAsState(translationYState)
 
-    ProvideScaffoldLocalValues(
-        expressive = expressive,
-    ) {
+    ProvideScaffoldLocalValues {
         Scaffold(
             modifier = modifier,
             topBar = topBar,
@@ -201,7 +195,6 @@ fun ScaffoldColumn(
     floatingActionState: State<FabState?> = rememberUpdatedState(newValue = null),
     floatingActionButton: @Composable FabScope.() -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    expressive: Boolean = LocalExpressive.current,
     containerColor: Color = LocalSurfaceColor.current,
     provideContentUserScrollEnabled: () -> Boolean = { true },
     contentColor: Color = LocalContentColor.current,
@@ -213,9 +206,7 @@ fun ScaffoldColumn(
     columnScrollState: ScrollState = rememberScrollState(),
     columnContent: @Composable ColumnScope.() -> Unit,
 ) {
-    ProvideScaffoldLocalValues(
-        expressive = expressive,
-    ) {
+    ProvideScaffoldLocalValues {
         Scaffold(
             modifier = modifier,
             topBar = topBar,
@@ -278,40 +269,18 @@ fun ScaffoldColumn(
 
 @Composable
 fun ProvideScaffoldLocalValues(
-    expressive: Boolean,
     content: @Composable () -> Unit,
 ) {
-    val expressive = expressive && GlobalExpressive.current
-    val dimens = calculateDimens(
-        expressive = expressive,
-    )
-    CompositionLocalProvider(
-        LocalDimens provides dimens,
-        LocalExpressive provides expressive,
-        content = content,
-    )
-}
-
-@Composable
-private fun calculateDimens(
-    expressive: Boolean = LocalExpressive.current,
-): Dimen {
-    val dimens = remember(expressive) {
-        val surfaceHorizontalPadding: Dp
-        val contentHorizontalPadding: Dp
-        if (expressive) {
-            surfaceHorizontalPadding = 16.dp
-            contentHorizontalPadding = 24.dp
-        } else {
-            surfaceHorizontalPadding = 8.dp
-            contentHorizontalPadding = 16.dp
-        }
+    val dimens = remember {
         Dimen.normal().copy(
-            contentPadding = surfaceHorizontalPadding,
-            textHorizontalPadding = contentHorizontalPadding,
+            contentPadding = 16.dp,
+            textHorizontalPadding = 24.dp,
         )
     }
-    return dimens
+    CompositionLocalProvider(
+        LocalDimens provides dimens,
+        content = content,
+    )
 }
 
 @Composable

@@ -15,7 +15,6 @@ import com.artemchep.keyguard.common.model.CipherFilterContext
 import com.artemchep.keyguard.common.model.DFilter
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.EquivalentDomainsBuilderFactory
-import com.artemchep.keyguard.common.model.getShapeState
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.service.deeplink.DeeplinkService
 import com.artemchep.keyguard.common.service.filter.AddCipherFilter
@@ -1300,16 +1299,10 @@ internal fun pruneVaultListItemPresentation(
         return list
     }
 
-    return list.mapIndexed { index, item ->
+    return list.map { item ->
         when (item) {
             is VaultItem2.Item -> {
-                val shapeState = getShapeState(
-                    list = list,
-                    index = index,
-                    predicate = { element, _ -> element is VaultItem2.Item },
-                )
                 item.copy(
-                    shapeState = shapeState,
                     token = item.token.takeIf { keepOtp },
                     passwords = item.passwords.takeIf { keepPassword }
                         ?: persistentListOf(),

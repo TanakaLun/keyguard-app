@@ -18,7 +18,6 @@ import com.artemchep.keyguard.common.usecase.GetClipboardAutoRefreshVariants
 import com.artemchep.keyguard.common.usecase.PutClipboardAutoRefresh
 import com.artemchep.keyguard.common.usecase.WindowCoroutineScope
 import com.artemchep.keyguard.feature.home.settings.KgPicker
-import com.artemchep.keyguard.feature.home.settings.LocalSettingItemShape
 import com.artemchep.keyguard.feature.home.settings.LocalSettingPaneComponents
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.textResource
