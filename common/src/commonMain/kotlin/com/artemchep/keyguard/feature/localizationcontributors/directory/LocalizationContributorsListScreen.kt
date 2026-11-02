@@ -43,7 +43,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DefaultProgressBar
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.focus.FocusRequester2

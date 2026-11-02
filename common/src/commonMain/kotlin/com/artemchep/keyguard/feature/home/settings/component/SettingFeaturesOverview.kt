@@ -17,7 +17,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.onboarding.OnboardingRouteFactory
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.icon
 import kotlinx.coroutines.flow.flowOf

@@ -3,18 +3,23 @@ package com.artemchep.keyguard.feature.justgetdata.directory
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -30,7 +35,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.tfa.directory.FlatLaunchBrowserItem
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldColumn
 import com.artemchep.keyguard.ui.icons.ChevronIcon
@@ -46,6 +50,7 @@ import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.titleSmall
 
 @Composable
@@ -190,31 +195,39 @@ fun ColumnScope.Content(
 
     val updatedEmail by rememberUpdatedState(args.model.email)
     if (updatedEmail != null) {
-        FlatItem(
-            elevation = 1.dp,
-            leading = {
-                IconBox(Icons.Outlined.Email)
-            },
-            title = {
-                Text(
-                    text = stringResource(Res.string.justdeleteme_send_email_title),
-                )
-            },
-            trailing = {
-                ChevronIcon()
-            },
-            onClick = {
-                // Open the email, if it's available.
-                updatedEmail?.let {
-                    val intent = NavigationIntent.NavigateToEmail(
-                        it,
-                        subject = args.model.emailSubject,
-                        body = args.model.emailBody,
-                    )
-                    navigationController.queue(intent)
+        BasicComponent(
+            modifier = Modifier
+                .combinedClickable(
+                    onClick = {
+                        // Open the email, if it's available.
+                        updatedEmail?.let {
+                            val intent = NavigationIntent.NavigateToEmail(
+                                it,
+                                subject = args.model.emailSubject,
+                                body = args.model.emailBody,
+                            )
+                            navigationController.queue(intent)
+                        }
+                    },
+                ),
+            startAction = {
+                Row {
+                    IconBox(Icons.Outlined.Email)
                 }
             },
+            endActions = {
+                ChevronIcon()
+            },
             enabled = updatedEmail != null,
+            content = {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
+                    Text(
+                        text = stringResource(Res.string.justdeleteme_send_email_title),
+                    )
+                }
+            },
         )
     }
 

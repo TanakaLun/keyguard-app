@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FactCheck
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -23,7 +26,6 @@ import com.artemchep.keyguard.common.usecase.NumberFormatter
 import com.artemchep.keyguard.feature.dialog.Dialog
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.FlatSimpleNote
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.SimpleNote
@@ -36,6 +38,8 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelSmall
 
@@ -107,21 +111,29 @@ fun PasswordLeakScreen(
 
 @Composable
 private fun ColumnScope.ContentSkeleton() {
-    FlatItem(
-        title = {
-            SkeletonText(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f),
-            )
+    BasicComponent(
+        content = {
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                SkeletonText(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f),
+                )
+            }
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                    .copy(
+                        color = LocalContentColor.current
+                            .combineAlpha(MediumEmphasisAlpha),
+                    ),
+            ) {
+                SkeletonText(
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f),
+                )
+            }
         },
-        text = {
-            SkeletonText(
-                modifier = Modifier
-                    .fillMaxWidth(0.6f),
-            )
-        },
-        enabled = true,
-        elevation = 1.dp,
     )
 }
 

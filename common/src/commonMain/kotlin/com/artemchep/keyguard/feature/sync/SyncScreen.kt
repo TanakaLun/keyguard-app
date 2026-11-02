@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.sync
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,12 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import top.yukonga.miuix.kmp.basic.BadgedBox
 import top.yukonga.miuix.kmp.basic.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +39,6 @@ import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.Ah
 import com.artemchep.keyguard.ui.AhContainer
 import com.artemchep.keyguard.ui.AnimatedCounterBadge
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
@@ -50,6 +52,7 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import com.artemchep.keyguard.ui.util.HorizontalDivider
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodySmall
 import com.artemchep.keyguard.ui.theme.labelMedium
 
@@ -187,23 +190,37 @@ private fun SyncAccountItem(
         item.items.forEach { action ->
             when (action) {
                 is FlatItemAction -> {
-                    FlatItem(
-                        leading = {
-                            Icon(
-                                Icons.Outlined.KeyguardCipher,
-                                null,
-                            )
+                    BasicComponent(
+                        modifier = Modifier
+                            .then(
+                                if (action.onClick != null) {
+                                    Modifier.combinedClickable(
+                                        onClick = action.onClick ?: {},
+                                    )
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                        startAction = {
+                            Row {
+                                Icon(
+                                    Icons.Outlined.KeyguardCipher,
+                                    null,
+                                )
+                            }
                         },
-                        trailing = {
+                        endActions = {
                             ChevronIcon()
                         },
-                        title = {
-                            Text(
-                                text = textResource(action.title),
-                            )
+                        content = {
+                            CompositionLocalProvider(
+                                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                            ) {
+                                Text(
+                                    text = textResource(action.title),
+                                )
+                            }
                         },
-                        elevation = 1.dp,
-                        onClick = action.onClick,
                     )
                 }
 

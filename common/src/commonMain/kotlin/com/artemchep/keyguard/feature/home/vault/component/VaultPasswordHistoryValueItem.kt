@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.isSpecified
 import com.artemchep.keyguard.feature.home.vault.model.VaultPasswordHistoryItem
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
-import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha

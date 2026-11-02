@@ -1,12 +1,14 @@
 package com.artemchep.keyguard.feature.tfa.directory
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.FlowRowScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,11 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -36,7 +41,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldColumn
 import com.artemchep.keyguard.ui.icons.ChevronIcon
@@ -53,6 +57,8 @@ import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
+import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.labelSmall
 import com.artemchep.keyguard.ui.theme.titleSmall
 
@@ -297,37 +303,57 @@ fun FlatLaunchBrowserItem(
 ) {
     val updatedUrl by rememberUpdatedState(url)
     val updatedNavigationController by rememberUpdatedState(LocalNavigationController.current)
-    FlatItem(
-        modifier = modifier,
-        leading = icon<RowScope>(Icons.AutoMirrored.Outlined.OpenInNew),
-        title = {
-            Text(
-                text = title,
-                maxLines = 3,
-            )
-        },
-        text = if (updatedUrl != null) {
-            // composable
-            {
-                Text(
-                    text = updatedUrl.orEmpty(),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (updatedUrl != null) {
+                    Modifier.combinedClickable(
+                        onClick = {
+                            // Open the website, if it's available.
+                            updatedUrl?.let {
+                                val intent = NavigationIntent.NavigateToBrowser(it)
+                                updatedNavigationController.queue(intent)
+                            }
+                        },
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+        startAction = {
+            Row {
+                icon<RowScope>(Icons.AutoMirrored.Outlined.OpenInNew)
+                    .invoke(this)
             }
-        } else {
-            null
         },
-        trailing = {
+        endActions = {
             ChevronIcon()
         },
-        onClick = {
-            // Open the website, if it's available.
-            updatedUrl?.let {
-                val intent = NavigationIntent.NavigateToBrowser(it)
-                updatedNavigationController.queue(intent)
+        enabled = updatedUrl != null,
+        content = {
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                Text(
+                    text = title,
+                    maxLines = 3,
+                )
+            }
+            if (updatedUrl != null) {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyMedium
+                        .copy(
+                            color = LocalContentColor.current
+                                .combineAlpha(MediumEmphasisAlpha),
+                        ),
+                ) {
+                    Text(
+                        text = updatedUrl.orEmpty(),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
         },
-        enabled = updatedUrl != null,
     )
 }

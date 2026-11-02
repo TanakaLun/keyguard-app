@@ -1,6 +1,8 @@
 package com.artemchep.keyguard.feature.datepicker
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -12,16 +14,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material3.LocalTextStyle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.dialog.Dialog
@@ -29,7 +35,6 @@ import com.artemchep.keyguard.feature.navigation.RouteResultTransmitter
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.selectedContainer
@@ -37,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlinx.collections.immutable.ImmutableList
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import com.artemchep.keyguard.ui.theme.KgShapes
+import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.displayMedium
 import com.artemchep.keyguard.ui.theme.displaySmall
 
@@ -185,26 +191,38 @@ private fun MonthPickerItem(
     } else {
         Color.Unspecified
     }
-    FlatItem(
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        title = {
-            Row {
-                Text(text = item.title)
+    BasicComponent(
+        modifier = modifier
+            .then(
+                if (backgroundColor.isSpecified) {
+                    Modifier.background(backgroundColor)
+                } else {
+                    Modifier
+                },
+            )
+            .combinedClickable(
+                onClick = item.onClick,
+            ),
+        content = {
+            CompositionLocalProvider(
+                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+            ) {
+                Row {
+                    Text(text = item.title)
 
-                val index = item.index
-                if (!index.isNullOrEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .alignByBaseline(),
-                        text = index,
-                        color = LocalContentColor.current
-                            .combineAlpha(DisabledEmphasisAlpha),
-                    )
+                    val index = item.index
+                    if (!index.isNullOrEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .alignByBaseline(),
+                            text = index,
+                            color = LocalContentColor.current
+                                .combineAlpha(DisabledEmphasisAlpha),
+                        )
+                    }
                 }
             }
         },
-        onClick = item.onClick,
     )
 }

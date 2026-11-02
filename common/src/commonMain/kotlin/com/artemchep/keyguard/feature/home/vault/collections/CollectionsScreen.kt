@@ -45,7 +45,6 @@ import com.artemchep.keyguard.ui.DefaultSelection
 import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.FabState
-import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn

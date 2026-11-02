@@ -56,7 +56,6 @@ import com.artemchep.keyguard.ui.Avatar
 import com.artemchep.keyguard.ui.AvatarBuilder
 import com.artemchep.keyguard.ui.DefaultProgressBar
 import com.artemchep.keyguard.ui.DefaultSelection
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.RequestLazyListScrollOnRevision
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn

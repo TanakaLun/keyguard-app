@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.barcodetype
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material3.LocalTextStyle
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import androidx.compose.runtime.Composable
@@ -42,8 +44,9 @@ import com.artemchep.keyguard.feature.dialog.Dialog
 import com.artemchep.keyguard.feature.dialog.DialogContentScope
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
-import com.artemchep.keyguard.ui.FlatDropdown
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.KeepScreenOnEffect
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.icons.icon
 import org.jetbrains.compose.resources.stringResource
@@ -149,29 +152,51 @@ internal fun DialogContentScope.BarcodeTypeBody(
 
 @Composable
 private fun BarcodeTypeDropdown(format: BarcodeTypeState.Format?) {
-    FlatDropdown(
-        content = {
-            CompositionLocalProvider(
-                LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
-            ) {
-                val selectedTitle = format?.format.orEmpty()
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = selectedTitle,
-                        style = MiuixTheme.textStyles.titleMedium,
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .width(8.dp),
-                    )
-                    DropdownIcon()
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    Box {
+        BasicComponent(
+            onClick = if (format?.options.isNullOrEmpty()) {
+                null
+            } else {
+                // lambda
+                {
+                    dropdownExpanded = true
                 }
+            },
+            content = {
+                CompositionLocalProvider(
+                    LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
+                ) {
+                    val selectedTitle = format?.format.orEmpty()
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = selectedTitle,
+                            style = MiuixTheme.textStyles.titleMedium,
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .width(8.dp),
+                        )
+                        DropdownIcon()
+                    }
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            format?.options.orEmpty().forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
+                )
             }
-        },
-        dropdown = format?.options.orEmpty(),
-    )
+        }
+    }
 }
 
 @Composable

@@ -22,7 +22,6 @@ import com.artemchep.keyguard.platform.Platform
 import com.artemchep.keyguard.platform.util.hasWatch
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
-import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.format
 import com.artemchep.keyguard.ui.icons.icon

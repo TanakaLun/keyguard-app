@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.gpgkey.userids
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,10 +39,11 @@ import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.gpg_user_ids_empty
 import com.artemchep.keyguard.res.gpg_user_ids_history
 import com.artemchep.keyguard.ui.DialogPopup
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
-import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.FlatItemAction
 import com.artemchep.keyguard.ui.FlatTextField
+import com.artemchep.keyguard.ui.KeyguardDropdownMenu
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ProvideScaffoldLocalValues
 import com.artemchep.keyguard.ui.icons.DropdownIcon
@@ -286,21 +288,42 @@ private fun GpgUserIdItem(identity: GpgUserIdsState.Identity) {
         )
     }
     // Clicking a row with actions opens them in a dropdown.
-    FlatDropdown(
-        content = {
-            Text(
-                identity.value,
-                style = MiuixTheme.textStyles.bodyLarge,
-            )
-            identity.status?.let { status ->
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    Box {
+        BasicComponent(
+            onClick = if (actions.isEmpty()) {
+                null
+            } else {
+                // lambda
+                {
+                    dropdownExpanded = true
+                }
+            },
+            content = {
                 Text(
-                    status,
-                    style = MiuixTheme.textStyles.bodyMedium,
-                    color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                    identity.value,
+                    style = MiuixTheme.textStyles.bodyLarge,
+                )
+                identity.status?.let { status ->
+                    Text(
+                        status,
+                        style = MiuixTheme.textStyles.bodyMedium,
+                        color = LocalContentColor.current.combineAlpha(MediumEmphasisAlpha),
+                    )
+                }
+            },
+        )
+        KeyguardDropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = {
+                dropdownExpanded = false
+            },
+        ) {
+            actions.forEach { action ->
+                DropdownMenuItemFlat(
+                    action = action,
                 )
             }
-        },
-        dropdown = actions,
-        enabled = true,
-    )
+        }
+    }
 }

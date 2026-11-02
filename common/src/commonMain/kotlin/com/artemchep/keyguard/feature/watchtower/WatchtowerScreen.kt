@@ -97,7 +97,6 @@ import com.artemchep.keyguard.ui.AnimatedTotalCounterBadge
 import com.artemchep.keyguard.ui.DefaultEmphasisAlpha
 import com.artemchep.keyguard.ui.DisabledEmphasisAlpha
 import com.artemchep.keyguard.ui.ExpandedIfNotEmpty
-import com.artemchep.keyguard.ui.FlatItem
 import com.artemchep.keyguard.ui.GridLayout
 import com.artemchep.keyguard.ui.OptionsButton
 import com.artemchep.keyguard.ui.ProvideScaffoldLocalValues

@@ -29,7 +29,6 @@ import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
-import com.artemchep.keyguard.ui.FlatDropdown
 import com.artemchep.keyguard.ui.MediumEmphasisAlpha
 import com.artemchep.keyguard.ui.ScaffoldLazyColumn
 import com.artemchep.keyguard.ui.skeleton.SkeletonItemPilled
