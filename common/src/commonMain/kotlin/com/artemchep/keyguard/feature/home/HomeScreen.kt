@@ -369,7 +369,7 @@ fun HomeScreenContent(
                             onSelect = { index ->
                                 if (routes.getOrNull(index) != null) {
                                     scope.launch {
-                                        pagerState.animateToPage(index)
+                                        pagerState.animateScrollToPage(index)
                                     }
                                 }
                             },
