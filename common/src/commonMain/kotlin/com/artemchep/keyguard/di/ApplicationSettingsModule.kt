@@ -95,7 +95,6 @@ import com.artemchep.keyguard.common.usecase.GetSshAgentFilter
 import com.artemchep.keyguard.common.usecase.GetSshAgentStatus
 import com.artemchep.keyguard.common.usecase.GetSubscriptions
 import com.artemchep.keyguard.common.usecase.GetTheme
-import com.artemchep.keyguard.common.usecase.GetThemeExpressive
 import com.artemchep.keyguard.common.usecase.GetThemeUseAmoledDark
 import com.artemchep.keyguard.common.usecase.GetThemeVariants
 import com.artemchep.keyguard.common.usecase.GetTwoFa
@@ -149,7 +148,6 @@ import com.artemchep.keyguard.common.usecase.PutSshAgentApprovalWindow
 import com.artemchep.keyguard.common.usecase.PutSshAgentDisplayKeyNames
 import com.artemchep.keyguard.common.usecase.PutSshAgentFilter
 import com.artemchep.keyguard.common.usecase.PutTheme
-import com.artemchep.keyguard.common.usecase.PutThemeExpressive
 import com.artemchep.keyguard.common.usecase.PutThemeUseAmoledDark
 import com.artemchep.keyguard.common.usecase.PutUseExternalBrowser
 import com.artemchep.keyguard.common.usecase.PutWebDavTransactions
@@ -225,7 +223,6 @@ import com.artemchep.keyguard.common.usecase.impl.GetSshAgentFilterImpl
 import com.artemchep.keyguard.common.usecase.impl.GetSshAgentImpl
 import com.artemchep.keyguard.common.usecase.impl.GetSshAgentStatusImpl
 import com.artemchep.keyguard.common.usecase.impl.GetSubscriptionsImpl
-import com.artemchep.keyguard.common.usecase.impl.GetThemeExpressiveImpl
 import com.artemchep.keyguard.common.usecase.impl.GetThemeImpl
 import com.artemchep.keyguard.common.usecase.impl.GetThemeUseAmoledDarkImpl
 import com.artemchep.keyguard.common.usecase.impl.GetThemeVariantsImpl
@@ -280,7 +277,6 @@ import com.artemchep.keyguard.common.usecase.impl.PutSshAgentApprovalWindowImpl
 import com.artemchep.keyguard.common.usecase.impl.PutSshAgentDisplayKeyNamesImpl
 import com.artemchep.keyguard.common.usecase.impl.PutSshAgentFilterImpl
 import com.artemchep.keyguard.common.usecase.impl.PutSshAgentImpl
-import com.artemchep.keyguard.common.usecase.impl.PutThemeExpressiveImpl
 import com.artemchep.keyguard.common.usecase.impl.PutThemeImpl
 import com.artemchep.keyguard.common.usecase.impl.PutThemeUseAmoledDarkImpl
 import com.artemchep.keyguard.common.usecase.impl.PutUserExternalBrowserImpl
@@ -345,8 +341,6 @@ internal class ApplicationSettingsModule {
         single<PutThemeImpl>() bind PutTheme::class
 
         single<PutThemeUseAmoledDarkImpl>() bind PutThemeUseAmoledDark::class
-
-        single<PutThemeExpressiveImpl>() bind PutThemeExpressive::class
 
         single<PutColorsImpl>() bind PutColors::class
 
@@ -471,8 +465,6 @@ internal class ApplicationSettingsModule {
         single<GetThemeImpl>() bind GetTheme::class
 
         single<GetThemeUseAmoledDarkImpl>() bind GetThemeUseAmoledDark::class
-
-        single<GetThemeExpressiveImpl>() bind GetThemeExpressive::class
 
         single<GetColorsImpl>() bind GetColors::class
 

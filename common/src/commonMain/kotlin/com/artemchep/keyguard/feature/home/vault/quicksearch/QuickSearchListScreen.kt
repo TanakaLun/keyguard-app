@@ -629,8 +629,7 @@ private fun QuickSearchResultRow(
             selected -> MiuixTheme.colorScheme.selectedContainer
             else -> Color.Unspecified
         }
-    // We explicitly do not support the expressive shape merging here,
-    // because it looks ugly.
+    // Rows are plain: the surrounding card owns the shape and the spacing.
     BasicComponent(
         modifier =
             Modifier

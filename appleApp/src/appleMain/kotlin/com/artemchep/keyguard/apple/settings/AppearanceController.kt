@@ -22,7 +22,6 @@ import com.artemchep.keyguard.common.usecase.GetNavAnimation
 import com.artemchep.keyguard.common.usecase.GetNavAnimationVariants
 import com.artemchep.keyguard.common.usecase.GetNavLabel
 import com.artemchep.keyguard.common.usecase.GetTheme
-import com.artemchep.keyguard.common.usecase.GetThemeExpressive
 import com.artemchep.keyguard.common.usecase.GetThemeUseAmoledDark
 import com.artemchep.keyguard.common.usecase.GetThemeVariants
 import com.artemchep.keyguard.common.usecase.GetUseExternalBrowser
@@ -40,7 +39,6 @@ import com.artemchep.keyguard.common.usecase.PutMinimizeOnCopy
 import com.artemchep.keyguard.common.usecase.PutNavAnimation
 import com.artemchep.keyguard.common.usecase.PutNavLabel
 import com.artemchep.keyguard.common.usecase.PutTheme
-import com.artemchep.keyguard.common.usecase.PutThemeExpressive
 import com.artemchep.keyguard.common.usecase.PutThemeUseAmoledDark
 import com.artemchep.keyguard.common.usecase.PutUseExternalBrowser
 import com.artemchep.keyguard.common.usecase.PutWebDavTransactions
@@ -66,8 +64,6 @@ internal class AppearanceController(
     private val putTheme: PutTheme by lazy { ctx.koin.get() }
     private val getThemeUseAmoledDark: GetThemeUseAmoledDark by lazy { ctx.koin.get() }
     private val putThemeUseAmoledDark: PutThemeUseAmoledDark by lazy { ctx.koin.get() }
-    private val getThemeExpressive: GetThemeExpressive by lazy { ctx.koin.get() }
-    private val putThemeExpressive: PutThemeExpressive by lazy { ctx.koin.get() }
     private val getColors: GetColors by lazy { ctx.koin.get() }
     private val getColorsVariants: GetColorsVariants by lazy { ctx.koin.get() }
     private val putColors: PutColors by lazy { ctx.koin.get() }
@@ -113,7 +109,6 @@ internal class AppearanceController(
         val leContext = ctx.koin.get<LeContext>()
         val togglesA = combine(
             getThemeUseAmoledDark(),
-            getThemeExpressive(),
             getMarkdown(),
             getNavLabel(),
         ) { values -> values.toList() }
@@ -159,9 +154,8 @@ internal class AppearanceController(
                 AppearanceSettingsSnapshot(
                     loaded = true,
                     amoledDark = tA[0],
-                    expressive = tA[1],
-                    markdown = tA[2],
-                    navLabel = tA[3],
+                    markdown = tA[1],
+                    navLabel = tA[2],
                     useExternalBrowser = tB[0],
                     minimizeOnCopy = tB[1],
                     closeToTray = tB[2],
@@ -223,7 +217,6 @@ internal class AppearanceController(
             ?: textResource(Res.string.follow_system_settings, leContext)
 
     fun setAmoledDark(value: Boolean) { putThemeUseAmoledDark(value).launchIn(ctx.scope) }
-    fun setExpressive(value: Boolean) { putThemeExpressive(value).launchIn(ctx.scope) }
     fun setMarkdown(value: Boolean) { putMarkdown(value).launchIn(ctx.scope) }
     fun setNavLabel(value: Boolean) { putNavLabel(value).launchIn(ctx.scope) }
     fun setUseExternalBrowser(value: Boolean) { putUseExternalBrowser(value).launchIn(ctx.scope) }

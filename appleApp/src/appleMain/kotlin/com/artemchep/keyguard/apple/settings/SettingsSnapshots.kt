@@ -91,7 +91,6 @@ data class ChangePasswordSnapshot(
 data class AppearanceSettingsSnapshot(
     val loaded: Boolean = false,
     val amoledDark: Boolean = false,
-    val expressive: Boolean = false,
     val markdown: Boolean = false,
     val navLabel: Boolean = false,
     val useExternalBrowser: Boolean = false,
