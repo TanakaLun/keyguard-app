@@ -33,6 +33,8 @@
 - [x] The Material 3 expressive toggle is gone: `LocalExpressive`,
       `GlobalExpressive`, `GetThemeExpressive` / `PutThemeExpressive` and the
       `theme_m3_expressive` setting are deleted
+- [x] The last row wrappers are gone: `FlatItem`, `FlatDropdown` and
+      `FlatDropdownLayout` are deleted; every row is `BasicComponent`
 
 ## Remaining
 
