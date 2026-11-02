@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ShortText
@@ -28,6 +30,7 @@ import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
@@ -246,24 +249,47 @@ private fun OnboardingContainer(
     modifier: Modifier = Modifier,
     items: List<OnboardingItem>,
 ) {
-    BasicComponent(
-        modifier = modifier,
-        content = {
-            SimpleGridLayout(
-            ) {
-                items.forEach { item ->
-                    OnboardingCard(
-                        modifier = Modifier,
-                        title = stringResource(item.title),
-                        text = stringResource(item.text),
-                        premium = item.premium,
+    Card(
+        modifier = modifier
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
+    ) {
+        items.forEach { item ->
+            BasicComponent(
+                title = stringResource(item.title),
+                summary = stringResource(item.text),
+                startAction = {
+                    Icon(
                         imageVector = item.icon,
+                        contentDescription = null,
                     )
-                }
-            }
-        },
-        enabled = true,
-    )
+                },
+                endActions = if (item.premium) {
+                    // composable
+                    {
+                        Icon(
+                            modifier = Modifier
+                                .size(12.dp),
+                            imageVector = Icons.Outlined.KeyguardPremium,
+                            contentDescription = null,
+                            tint = MiuixTheme.colorScheme.primary,
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .width(8.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.feat_keyguard_premium_label),
+                            color = MiuixTheme.colorScheme.primary,
+                            style = MiuixTheme.textStyles.labelSmall,
+                        )
+                    }
+                } else {
+                    null
+                },
+            )
+        }
+    }
 }
 
 @Composable

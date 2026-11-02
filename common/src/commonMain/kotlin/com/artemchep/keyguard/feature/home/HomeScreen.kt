@@ -55,9 +55,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -207,8 +210,38 @@ fun HomeScreenContent(
         routes = routes,
     )
 
+    // Tabs are pages of a Miuix pager, exactly like the Miuix example: switching
+    // a tab never pushes a route, it animates the pager. Pushed screens render
+    // on top of the pager, so the navigation bar slides away with them.
+    val selectedIndex = routes
+        .indexOfFirst { it.isSelected(backStack) }
+        .coerceAtLeast(0)
+    val pagerState = rememberPagerState(
+        initialPage = selectedIndex,
+        pageCount = { routes.size },
+    )
+    val scope = rememberCoroutineScope()
+    val controller = LocalNavigationController.current
+    LaunchedEffect(selectedIndex, pagerState) {
+        if (pagerState.currentPage != selectedIndex &&
+            !pagerState.isScrollInProgress
+        ) {
+            pagerState.scrollToPage(selectedIndex)
+        }
+    }
+    LaunchedEffect(pagerState, routes) {
+        snapshotFlow { pagerState.settledPage }
+            .collect { page ->
+                val item = routes.getOrNull(page)
+                    ?: return@collect
+                if (!item.isSelected(backStack)) {
+                    navigateOnClick(controller, item)
+                }
+            }
+    }
+
     // The navigation bar belongs to the home shell: it is the scaffold bottom
-    // bar and stays there only while the tab stack is at its root.
+    // bar and stays there while the pager (the tab roots) is visible.
     val showNavigation = navBarVisible && backStack.size <= 1
 
     ResponsiveLayout {
@@ -332,7 +365,14 @@ fun HomeScreenContent(
                             routes = routes,
                             maxWidth = maxWidth,
                             navLabelState = navLabelState,
-                            backStack = backStack,
+                            selectedIndex = pagerState.currentPage,
+                            onSelect = { index ->
+                                if (routes.getOrNull(index) != null) {
+                                    scope.launch {
+                                        pagerState.animateToPage(index)
+                                    }
+                                }
+                            },
                         )
                     }
                 },
@@ -347,12 +387,34 @@ fun HomeScreenContent(
                 CompositionLocalProvider(
                     LocalNavigationNodeVisualStack provides persistentListOf(),
                 ) {
-                    NavigationNode(
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(contentPadding),
-                        entries = backStack,
-                    )
+                    ) {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            userScrollEnabled = backStack.size <= 1,
+                        ) { page ->
+                            val item = routes.getOrNull(page)
+                            if (item != null) {
+                                key(item.key) {
+                                    NavigationNode(
+                                        id = "tab:${item.key}",
+                                        route = item.route,
+                                    )
+                                }
+                            }
+                        }
+                        NavigationNode(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            entries = backStack,
+                            offset = 1,
+                        )
+                    }
                 }
             }
         }
@@ -536,19 +598,16 @@ private fun BannerStatusBadgeContent(
 @Composable
 private fun RowScope.BottomNavigationControllerItem(
     modifier: Modifier = Modifier,
-    backStack: ImmutableList<NavigationEntry>,
+    selected: Boolean,
+    onClick: () -> Unit,
     item: HomeNavigationItem,
     count: Int?,
     label: String,
 ) {
-    val controller = LocalNavigationController.current
-    val selected = item.isSelected(backStack)
     NavigationBarItem(
         modifier = modifier,
         selected = selected,
-        onClick = {
-            navigateOnClick(controller, item)
-        },
+        onClick = onClick,
         icon = if (selected) item.iconSelected else item.icon,
         label = label,
         badge = {
@@ -559,17 +618,14 @@ private fun RowScope.BottomNavigationControllerItem(
 
 @Composable
 private fun RowScope.BottomNavigationOverflowItem(
-    backStack: ImmutableList<NavigationEntry>,
+    selected: Boolean,
+    selectedKey: String?,
     items: List<HomeNavigationItem>,
     label: String,
+    onItemClick: (HomeNavigationItem) -> Unit,
 ) {
-    val updatedController by rememberUpdatedState(LocalNavigationController.current)
-
     var menuExpanded by remember {
         mutableStateOf(false)
-    }
-    val selected = items.any { item ->
-        item.isSelected(backStack)
     }
     val count = rememberOverflowCount(items)
     Box {
@@ -590,10 +646,10 @@ private fun RowScope.BottomNavigationOverflowItem(
                 menuExpanded = false
             },
             items = items,
-            backStack = backStack,
+            selectedKey = selectedKey,
             onItemClick = { item ->
                 menuExpanded = false
-                navigateOnClick(updatedController, item)
+                onItemClick(item)
             },
         )
     }
@@ -604,7 +660,7 @@ private fun HomeNavigationOverflowMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     items: List<HomeNavigationItem>,
-    backStack: ImmutableList<NavigationEntry>,
+    selectedKey: String?,
     onItemClick: (HomeNavigationItem) -> Unit,
 ) {
     KeyguardDropdownMenu(
@@ -612,10 +668,10 @@ private fun HomeNavigationOverflowMenu(
         onDismissRequest = onDismissRequest,
     ) {
         val updatedOnClick by rememberUpdatedState(onItemClick)
-        val actions = remember(items, backStack) {
+        val actions = remember(items, selectedKey) {
             items
                 .map { item ->
-                    val selected = item.isSelected(backStack)
+                    val selected = item.key == selectedKey
                     FlatItemAction(
                         id = item.key,
                         icon = if (selected) item.iconSelected else item.icon,
@@ -731,7 +787,8 @@ private fun HomeNavigationBar(
     routes: ImmutableList<HomeNavigationItem>,
     maxWidth: Dp,
     navLabelState: State<Boolean>,
-    backStack: ImmutableList<NavigationEntry>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
 ) {
                         Column(
                             modifier = Modifier
@@ -781,10 +838,16 @@ private fun HomeNavigationBar(
                                 routesSplit.visible.forEach { r ->
                                     key(r.key) {
                                         val counterState = r.counterFlow.collectAsState(null)
+                                        val index = routes.indexOf(r)
                                         BottomNavigationControllerItem(
                                             modifier = Modifier
                                                 .homeNavigationTestTag(r.testTag),
-                                            backStack = backStack,
+                                            selected = index == selectedIndex,
+                                            onClick = {
+                                                if (index >= 0) {
+                                                    onSelect(index)
+                                                }
+                                            },
                                             item = r,
                                             count = counterState.value,
                                             label = if (navLabelState.value) {
@@ -797,12 +860,21 @@ private fun HomeNavigationBar(
                                 }
                                 if (routesSplit.overflow.isNotEmpty()) {
                                     BottomNavigationOverflowItem(
-                                        backStack = backStack,
+                                        selected = routesSplit.overflow.any { item ->
+                                            routes.indexOf(item) == selectedIndex
+                                        },
+                                        selectedKey = routes.getOrNull(selectedIndex)?.key,
                                         items = routesSplit.overflow,
                                         label = if (navLabelState.value) {
                                             stringResource(Res.string.options)
                                         } else {
                                             ""
+                                        },
+                                        onItemClick = { item ->
+                                            val index = routes.indexOf(item)
+                                            if (index >= 0) {
+                                                onSelect(index)
+                                            }
                                         },
                                     )
                                 }

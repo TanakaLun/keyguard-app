@@ -815,7 +815,6 @@ private fun CardPwnedPassword(
             PoweredByHaveibeenpwned(
                 modifier = Modifier
                     .fillMaxWidth(),
-                fill = true,
             )
         },
     )
@@ -942,7 +941,6 @@ private fun CardVulnerableAccounts(
             PoweredByHaveibeenpwned(
                 modifier = Modifier
                     .fillMaxWidth(),
-                fill = true,
             )
         },
     )
@@ -989,7 +987,6 @@ private fun CardCompromisedAccount(
             PoweredByHaveibeenpwned(
                 modifier = Modifier
                     .fillMaxWidth(),
-                fill = true,
             )
         },
     )
@@ -1016,7 +1013,6 @@ private fun CardInactiveTwoFactorAuth(
             PoweredBy2factorauth(
                 modifier = Modifier
                     .fillMaxWidth(),
-                fill = true,
             )
         },
     )
@@ -1043,7 +1039,6 @@ private fun CardInactivePasskey(
             PoweredByPasskeys(
                 modifier = Modifier
                     .fillMaxWidth(),
-                fill = true,
             )
         },
     )
