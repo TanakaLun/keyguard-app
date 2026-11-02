@@ -258,11 +258,16 @@ private fun OnboardingContainer(
             BasicComponent(
                 title = stringResource(item.title),
                 summary = stringResource(item.text),
-                startAction = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = null,
-                    )
+                startAction = if (item.icon != null) {
+                    // composable
+                    {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = null,
+                        )
+                    }
+                } else {
+                    null
                 },
                 endActions = if (item.premium) {
                     // composable
