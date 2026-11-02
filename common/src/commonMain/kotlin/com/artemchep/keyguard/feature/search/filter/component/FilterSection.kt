@@ -43,29 +43,30 @@ fun FilterSectionComposable(
                     Modifier
                 },
             ),
-        endActions = {
-            if (!expandable) {
-                return@endActions
+        endActions = if (expandable) {
+            // composable
+            {
+                val targetRotationX =
+                    if (expanded) {
+                        0f
+                    } else {
+                        180f
+                    }
+                val rotationX by animateFloatAsState(targetRotationX)
+                Icon(
+                    modifier = Modifier
+                        .graphicsLayer(
+                            rotationX = rotationX,
+                            rotationZ = -90f,
+                        ),
+                    tint = LocalContentColor.current
+                        .combineAlpha(MediumEmphasisAlpha),
+                    imageVector = Icons.Outlined.ChevronRight,
+                    contentDescription = null,
+                )
             }
-
-            val targetRotationX =
-                if (expanded) {
-                    0f
-                } else {
-                    180f
-                }
-            val rotationX by animateFloatAsState(targetRotationX)
-            Icon(
-                modifier = Modifier
-                    .graphicsLayer(
-                        rotationX = rotationX,
-                        rotationZ = -90f,
-                    ),
-                tint = LocalContentColor.current
-                    .combineAlpha(MediumEmphasisAlpha),
-                imageVector = Icons.Outlined.ChevronRight,
-                contentDescription = null,
-            )
+        } else {
+            null
         },
         insideMargin = PaddingValues(
             horizontal = 8.dp,
