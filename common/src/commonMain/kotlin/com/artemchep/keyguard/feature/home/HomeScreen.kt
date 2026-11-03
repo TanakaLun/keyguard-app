@@ -56,8 +56,11 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -101,6 +104,7 @@ import com.artemchep.keyguard.feature.navigation.NavigationEntry
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.NavigationNode
 import com.artemchep.keyguard.feature.navigation.NavigationRouter
+import com.artemchep.keyguard.feature.navigation.Route
 import com.artemchep.keyguard.feature.sync.SyncRoute
 import com.artemchep.keyguard.platform.LocalLeContext
 import com.artemchep.keyguard.platform.leDisplayCutout
@@ -188,13 +192,37 @@ fun HomeScreen(
     }
     NavigationRouter(
         id = ROUTE_NAME,
-        initial = defaultRoute,
+        initial = HomeShellRoute,
     ) { backStack ->
         HomeScreenContent(
             backStack = backStack,
             routes = navRoutes,
             navBarVisible = navBarVisible,
+            initialRoute = defaultRoute,
         )
+    }
+}
+
+@Immutable
+private class HomeShellState(
+    val pagerState: PagerState,
+    val routes: ImmutableList<HomeNavigationItem>,
+    val navBarVisible: Boolean,
+    val onSelect: (Int) -> Unit,
+)
+
+private val LocalHomeShellState = staticCompositionLocalOf<HomeShellState> {
+    error("No home shell state provided")
+}
+
+/**
+ * The base page of the home stack: the tab pager and the navigation bar.
+ * Everything pushed from a tab becomes a page above this route.
+ */
+object HomeShellRoute : Route {
+    @Composable
+    override fun Content() {
+        HomeShell()
     }
 }
 
@@ -204,45 +232,56 @@ fun HomeScreenContent(
     backStack: PersistentList<NavigationEntry>,
     routes: ImmutableList<HomeNavigationItem>,
     navBarVisible: Boolean = true,
+    initialRoute: Route? = null,
 ) {
-    HomeNavigationDynamicRootEffect(
-        backStack = backStack,
-        routes = routes,
-    )
-
-    // Tabs are pages of a Miuix pager, exactly like the Miuix example: switching
-    // a tab never pushes a route, it animates the pager. Pushed screens render
-    // on top of the pager, so the navigation bar slides away with them.
-    val selectedIndex = routes
-        .indexOfFirst { it.isSelected(backStack) }
-        .coerceAtLeast(0)
+    // The home shell (the tab pager + the navigation bar) is the base page of
+    // the home stack, exactly like `Route.Main` in the Miuix example. Pushed
+    // screens are pages above it, so the whole shell — navigation bar included —
+    // slides away with the page transition.
+    val initialIndex = remember(initialRoute, routes) {
+        routes
+            .indexOfFirst { item ->
+                item.route.descriptor == initialRoute?.descriptor
+            }
+            .coerceAtLeast(0)
+    }
     val pagerState = rememberPagerState(
-        initialPage = selectedIndex,
+        initialPage = initialIndex,
         pageCount = { routes.size },
     )
     val scope = rememberCoroutineScope()
-    val controller = LocalNavigationController.current
-    LaunchedEffect(selectedIndex, pagerState) {
-        if (pagerState.currentPage != selectedIndex &&
-            !pagerState.isScrollInProgress
-        ) {
-            pagerState.scrollToPage(selectedIndex)
-        }
-    }
-    LaunchedEffect(pagerState, routes) {
-        snapshotFlow { pagerState.settledPage }
-            .collect { page ->
-                val item = routes.getOrNull(page)
-                    ?: return@collect
-                if (!item.isSelected(backStack)) {
-                    navigateOnClick(controller, item)
+    val shellState = remember(pagerState, routes, navBarVisible) {
+        HomeShellState(
+            pagerState = pagerState,
+            routes = routes,
+            navBarVisible = navBarVisible,
+            onSelect = { index ->
+                if (routes.getOrNull(index) != null) {
+                    scope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
                 }
-            }
+            },
+        )
     }
+    CompositionLocalProvider(
+        LocalHomeShellState provides shellState,
+    ) {
+        NavigationNode(
+            modifier = Modifier
+                .fillMaxSize(),
+            entries = backStack,
+        )
+    }
+}
 
-    // The navigation bar belongs to the home shell: it is the scaffold bottom
-    // bar and stays there while the pager (the tab roots) is visible.
-    val showNavigation = navBarVisible && backStack.size <= 1
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun HomeShell() {
+    val shellState = LocalHomeShellState.current
+    val routes = shellState.routes
+    val pagerState = shellState.pagerState
+    val showNavigation = shellState.navBarVisible
 
     ResponsiveLayout {
         val maxWidth = maxWidth
@@ -366,13 +405,7 @@ fun HomeScreenContent(
                             maxWidth = maxWidth,
                             navLabelState = navLabelState,
                             selectedIndex = pagerState.currentPage,
-                            onSelect = { index ->
-                                if (routes.getOrNull(index) != null) {
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                }
-                            },
+                            onSelect = shellState.onSelect,
                         )
                     }
                 },
@@ -396,7 +429,6 @@ fun HomeScreenContent(
                             state = pagerState,
                             modifier = Modifier
                                 .fillMaxSize(),
-                            userScrollEnabled = backStack.size <= 1,
                         ) { page ->
                             val item = routes.getOrNull(page)
                             if (item != null) {
@@ -408,63 +440,10 @@ fun HomeScreenContent(
                                 }
                             }
                         }
-                        NavigationNode(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            entries = backStack,
-                            offset = 1,
-                        )
                     }
                 }
             }
         }
-    }
-}
-
-/**
- * Keeps the selected home navigation stack aligned with dynamically resolved
- * items by refreshing its root route when the item still matches the stack but
- * now resolves to a different route get.
- *
- * TL/DR: When a selected home tab now points to a different screen, replace
- * the stale root screen with the current one.
- */
-@Composable
-private fun HomeNavigationDynamicRootEffect(
-    backStack: ImmutableList<NavigationEntry>,
-    routes: ImmutableList<HomeNavigationItem>,
-) {
-    val controller = LocalNavigationController.current
-    LaunchedEffect(
-        backStack,
-        routes,
-    ) {
-        val rootRoute = backStack.firstOrNull()?.route
-            ?: return@LaunchedEffect
-        val item = routes.firstOrNull { item ->
-            item.isSelected(backStack) &&
-                    rootRoute.descriptor != item.route.descriptor
-        } ?: return@LaunchedEffect
-
-        val intent = NavigationIntent.Manual { factory ->
-            val navStack = getStack(
-                id = item.stackId,
-            )
-            val rootEntry = navStack.entries.firstOrNull()
-                ?: return@Manual navStack
-            val shouldRefreshRoot =
-                item.isSelected(navStack.entries) &&
-                        rootEntry.route.descriptor != item.route.descriptor
-            if (!shouldRefreshRoot) {
-                return@Manual navStack
-            }
-
-            val refreshedRootEntry = factory(rootEntry.id, item.route)
-            navStack.copy(
-                entries = navStack.entries.set(0, refreshedRootEntry),
-            )
-        }
-        controller.queue(intent)
     }
 }
 
@@ -740,33 +719,6 @@ private fun NavigationIcon(
             Icon(vector, null)
         }
     }
-}
-
-private fun navigateOnClick(
-    controller: NavigationController,
-    item: HomeNavigationItem,
-) {
-    val intent = NavigationIntent.Manual { factory ->
-        val navStack = getStack(
-            id = item.stackId,
-        )
-        val rootRoute = navStack.entries.firstOrNull()?.route
-        // Dynamic home items can reuse a stack id while their resolved route
-        // changes, so restore the stack only when its root still represents
-        // the clicked item.
-        val navEntries = if (
-            rootRoute != null &&
-            item.isSelected(navStack.entries) &&
-            rootRoute.descriptor == item.route.descriptor
-        ) {
-            navStack.entries
-        } else {
-            val entry = factory(ROUTE_NAME, item.route)
-            persistentListOf(entry)
-        }
-        navStack.copy(entries = navEntries)
-    }
-    controller.queue(intent)
 }
 
 private fun navigateSyncStatus(
