@@ -501,7 +501,7 @@ private fun NavigationIntentScope.exec(
 
     is NavigationIntent.PopById -> run {
         val newEntries = backStack.entries.popById(intent.id, intent.exclusive)
-            ?: return@run null
+            ?: backStack.entries
         backStack.copy(entries = newEntries)
     }
 
@@ -509,7 +509,7 @@ private fun NavigationIntentScope.exec(
         val newEntries = backStack.entries.popUntil(
             predicate = { intent.predicate(it.route) },
             exclusive = intent.exclusive,
-        ) ?: return@run null
+        ) ?: backStack.entries
         backStack.copy(entries = newEntries)
     }
 

@@ -418,12 +418,7 @@ private fun SettingListScreenContent(
                                 backgroundColor = backgroundColor,
                                 item = item,
                                 onClick = {
-                                    val intent = NavigationIntent.Composite(
-                                        listOf(
-                                            NavigationIntent.PopUntil { it === SettingsRoute },
-                                            NavigationIntent.NavigateToRoute(item.route),
-                                        ),
-                                    )
+                                    val intent = NavigationIntent.NavigateToRoute(item.route)
                                     q.queue(intent)
                                 },
                             )
