@@ -1,99 +1,72 @@
 package com.artemchep.keyguard.ui.selection
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ViewList
-import androidx.compose.material.icons.outlined.Clear
-import top.yukonga.miuix.kmp.basic.Button
+import androidx.compose.material.icons.outlined.Close
+import top.yukonga.miuix.kmp.basic.FloatingToolbar
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.platform.leNavigationBars
-import com.artemchep.keyguard.ui.icons.IconBox
-import com.artemchep.keyguard.ui.surface.LocalBackgroundManager
-import com.artemchep.keyguard.ui.theme.Dimens
-import com.artemchep.keyguard.ui.util.HorizontalDivider
-import top.yukonga.miuix.kmp.theme.MiuixTheme
-import com.artemchep.keyguard.ui.theme.titleMedium
 
+/**
+ * The long-press selection bar, as a standard Miuix [FloatingToolbar]: a close
+ * action, the selection title, and the per-selection actions.
+ */
 @Composable
 fun SelectionBar(
     title: (@Composable RowScope.() -> Unit)? = null,
     trailing: (@Composable RowScope.() -> Unit)? = null,
     onClear: (() -> Unit)?,
 ) {
-    Column(
+    val navBarInsets = WindowInsets.leNavigationBars
+        .only(WindowInsetsSides.Bottom)
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(LocalBackgroundManager.current.colorHighest),
+            .windowInsetsPadding(navBarInsets)
+            .padding(bottom = 8.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        val navBarInsets = WindowInsets.leNavigationBars
-            .only(WindowInsetsSides.Bottom)
-        Row(
-            modifier = Modifier
-                .heightIn(min = 56.dp)
-                .windowInsetsPadding(navBarInsets),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        FloatingToolbar {
             IconButton(
                 enabled = onClear != null,
                 onClick = {
                     onClear?.invoke()
                 },
             ) {
-                // TODO: Consider using Icons.Outlined.Deselect
                 Icon(
-                    Icons.Outlined.Clear,
+                    Icons.Outlined.Close,
                     null,
                 )
             }
-            Row(
-                modifier = Modifier
-                    .weight(1f),
-            ) {
-                Button(
-                    onClick = { /*TODO*/ },
+            if (title != null) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    IconBox(
-                        main = Icons.AutoMirrored.Outlined.ViewList,
-                        secondary = null, // Icons.Outlined.PanoramaFishEye,
-                    )
-                    if (title != null) {
-                        Spacer(
-                            modifier = Modifier
-                                .width(Dimens.buttonIconPadding),
-                        )
-                        title.invoke(this)
-                    }
-                }
-                val textStyle = MiuixTheme.textStyles.titleMedium
-                CompositionLocalProvider(
-                    LocalTextStyle provides textStyle,
-                ) {
+                    title()
                 }
             }
-            Spacer(
-                modifier = Modifier
-                    .width(16.dp),
-            )
-            trailing?.invoke(this)
+            if (trailing != null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    trailing()
+                }
+            }
         }
-        HorizontalDivider()
     }
 }

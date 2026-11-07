@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.ui.DropdownMinWidth
 import com.artemchep.keyguard.ui.ExpandedIfNotEmptyForRow
 import com.artemchep.keyguard.ui.KeyguardDropdownMenu
+import com.artemchep.keyguard.ui.DropdownScope
 import com.artemchep.keyguard.ui.theme.badgeContainer
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
@@ -39,7 +40,7 @@ fun <T> DropdownButton(
     items: List<T>,
     onClear: (() -> Unit)?,
     onSave: (() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable DropdownScope.() -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     SideEffect {

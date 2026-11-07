@@ -327,10 +327,11 @@ class MutableFabScope(
 
 @Composable
 fun FabScope.DefaultFab(
-    color: Color = MiuixTheme.colorScheme.primaryContainer,
-    contentColor: Color = LocalContentColor.current,
+    color: Color = MiuixTheme.colorScheme.primary,
+    contentColor: Color = MiuixTheme.colorScheme.onPrimary,
     icon: @Composable () -> Unit,
-    text: @Composable () -> Unit,
+    @Suppress("UNUSED_PARAMETER")
+    text: @Composable () -> Unit = {},
 ) {
     val latestFabState = state.value
     val latestOnClick by rememberUpdatedState(latestFabState?.onClick)
@@ -381,17 +382,7 @@ fun FabScope.DefaultFab(
             },
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
-                if (expanded.value && enabled) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        icon()
-                        Spacer(Modifier.width(8.dp))
-                        text()
-                    }
-                } else {
-                    icon()
-                }
+                icon()
             }
         }
     }

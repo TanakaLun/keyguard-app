@@ -1,6 +1,5 @@
 package com.artemchep.keyguard.feature.search.sort
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.runtime.Composable
@@ -9,11 +8,13 @@ import androidx.compose.ui.Modifier
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.search.EmptyItem
 import com.artemchep.keyguard.feature.search.component.DropdownButton
-import com.artemchep.keyguard.feature.search.sort.component.SortItemComposable
-import com.artemchep.keyguard.feature.search.sort.component.SortSectionComposable
 import com.artemchep.keyguard.feature.search.sort.model.SortItemModel
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
+import com.artemchep.keyguard.ui.ContextItem
+import com.artemchep.keyguard.ui.DropdownMenuItemFlat
+import com.artemchep.keyguard.ui.DropdownScope
+import com.artemchep.keyguard.ui.FlatItemAction
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -36,47 +37,35 @@ fun SortButton(
 }
 
 @Composable
-private fun ColumnScope.SortItems(
+private fun DropdownScope.SortItems(
     items: List<SortItemModel>,
 ) {
     if (items.isEmpty()) {
         EmptyItem(
             text = stringResource(Res.string.sort_empty_label),
         )
+        return
     }
 
     items.forEach { item ->
         key(item.id) {
             when (item) {
-                is SortItemModel.Item -> SortItemItem(item)
-                is SortItemModel.Section -> SortItemSection(item)
+                is SortItemModel.Item -> DropdownMenuItemFlat(
+                    action = FlatItemAction(
+                        id = item.id,
+                        icon = item.icon,
+                        title = item.title,
+                        selected = item.checked,
+                        onClick = item.onClick,
+                    ),
+                )
+
+                is SortItemModel.Section -> DropdownMenuItemFlat(
+                    action = ContextItem.Section(
+                        title = item.text?.let { textResource(it) },
+                    ),
+                )
             }
         }
     }
-}
-
-@Composable
-private fun SortItemItem(
-    item: SortItemModel.Item,
-    modifier: Modifier = Modifier,
-) {
-    SortItemComposable(
-        modifier = modifier,
-        checked = item.checked,
-        icon = item.icon,
-        title = textResource(item.title),
-        onClick = item.onClick,
-    )
-}
-
-@Composable
-private fun SortItemSection(
-    item: SortItemModel.Section,
-    modifier: Modifier = Modifier,
-) {
-    val text = item.text?.let { textResource(it) }
-    SortSectionComposable(
-        modifier = modifier,
-        text = text,
-    )
 }
