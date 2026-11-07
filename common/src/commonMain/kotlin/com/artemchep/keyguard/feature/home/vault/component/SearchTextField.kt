@@ -1,6 +1,7 @@
 package com.artemchep.keyguard.feature.home.vault.component
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -160,14 +161,14 @@ fun SearchTextField(
                     Modifier
                         .weight(1f)
                         // Height should be the size of
-                        // the Material 3 top bar.
+                        // the Miuix top bar.
                         .height(64.dp)
                         .padding(
                             horizontal = Dimens.contentPadding,
                             vertical = 8.dp,
-                        ).searchTextFieldBackground(
-                            isEmptyState = isEmptyState,
-                            isFocusedState = isFocusedState,
+                        )
+                        .background(
+                            color = MiuixTheme.colorScheme.surfaceContainerHigh,
                             shape = CircleShape,
                         ),
                 verticalAlignment = Alignment.CenterVertically,
@@ -358,51 +359,3 @@ internal fun String.toTextFieldValue(cursor: Int = length): TextFieldValue =
         text = this,
         selection = TextRange(cursor),
     )
-
-private fun Modifier.searchTextFieldBackground(
-    isEmptyState: State<Boolean>,
-    isFocusedState: State<Boolean>,
-    shape: Shape,
-): Modifier =
-    composed {
-        val isHighlightedState =
-            remember(isEmptyState, isFocusedState) {
-                derivedStateOf {
-                    !isEmptyState.value ||
-                        isFocusedState.value
-                }
-            }
-
-        val colorAlphaTarget: Float
-        val colorRgbTarget: Color
-
-        val backgroundColor = MiuixTheme.colorScheme.background
-        val luminance = backgroundColor.luminance()
-        if (luminance > 0.5f) { // light background
-            colorAlphaTarget = 0.07f
-            colorRgbTarget = Color.Black
-        } else if (luminance > 0f) { // dark background
-            colorAlphaTarget = 0.22f
-            colorRgbTarget = Color.Black
-        } else { // black background
-            colorAlphaTarget = 0.14f
-            colorRgbTarget = Color.Gray
-        }
-
-        val colorTarget =
-            colorRgbTarget
-                .combineAlpha(colorAlphaTarget)
-        val colorState =
-            animateColorAsState(
-                targetValue = if (isHighlightedState.value) colorTarget else colorTarget.combineAlpha(0f),
-                animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
-                label = "SearchFieldBackground",
-            )
-
-        this
-            .clip(shape)
-            .drawBehind {
-                val color = colorState.value
-                drawRect(color)
-            }
-    }
