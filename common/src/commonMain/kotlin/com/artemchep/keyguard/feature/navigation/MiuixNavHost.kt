@@ -142,32 +142,16 @@ internal fun MiuixNavHost(
         return
     }
 
-    // A root screen has nothing to animate, so it renders directly. This also
-    // keeps the tab roots free of the navigation runtime.
-    if (fullscreenCount == 1) {
-        val entry = visualEntries[0]
-        val stacks = stacksById[entry.id]
-        Box(modifier) {
-            CompositionLocalProvider(
-                LocalNavigationNodeLogicalStack provides (stacks?.logical ?: baseLogicalStack),
-                LocalNavigationNodeVisualStack provides (stacks?.visual ?: baseVisualStack),
-                LocalNavigationNodeFinishing provides parentFinishing,
-            ) {
-                NavigationRoute(
-                    entry = entry,
-                )
-            }
-        }
-        return
-    }
-
     // The navigation style is the Miuix one, matching the example. The old
     // keyguard animation preference no longer switches the transition.
     val transition: NavTransition = NavTransitions.MiuixDefault
-    val swipeDismiss = if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
-        NavSwipeDirection.RightToLeft
-    } else {
-        NavSwipeDirection.LeftToRight
+    val swipeDismiss = when {
+        // The root page of a stack has nothing below it: a back-swipe would
+        // close the whole stack, so it stays off, like the tab roots in the
+        // Miuix example.
+        fullscreenCount <= 1 -> NavSwipeDirection.None
+        LocalLayoutDirection.current == LayoutDirection.Rtl -> NavSwipeDirection.RightToLeft
+        else -> NavSwipeDirection.LeftToRight
     }
     // Visual effects follow the Miuix example: the entering page is clipped to
     // the device corner, dimmed while it moves over the page below, and the

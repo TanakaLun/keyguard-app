@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
@@ -107,7 +106,6 @@ fun PoweredByLabel(
             withLink(
                 LinkAnnotation.Clickable(
                     tag = domain,
-                    styles = TextLinkStyles(),
                     linkInteractionListener = {
                         val intent = NavigationIntent.NavigateToBrowser(
                             url = updatedUrl,
