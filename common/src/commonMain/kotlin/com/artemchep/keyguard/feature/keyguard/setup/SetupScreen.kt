@@ -49,7 +49,6 @@ import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 import com.artemchep.keyguard.feature.biometric.BiometricPromptEffect
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.artemchep.keyguard.feature.keyguard.unlock.unlockScreenActionPadding
 import com.artemchep.keyguard.feature.keyguard.unlock.unlockScreenTitlePadding
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.Res
@@ -96,18 +95,22 @@ fun SetupScreen(
 
 @Composable
 private fun SetupScreenSkeleton() {
-    OtherScaffold {
+    OtherScaffold(
+        maxWidth = null,
+        horizontalPadding = 0.dp,
+    ) {
         SetupScreenCreateVaultTitle()
         Spacer(Modifier.height(unlockScreenTitlePadding))
         SkeletonTextField(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
         )
-        Spacer(Modifier.height(unlockScreenActionPadding))
+        Spacer(Modifier.height(12.dp))
         Card(
             modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 12.dp),
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
         ) {
             BasicComponent(
                 startAction = {
@@ -138,10 +141,11 @@ private fun SetupScreenSkeleton() {
                 )
             }
         }
-        Spacer(Modifier.height(unlockScreenActionPadding))
+        Spacer(Modifier.height(24.dp))
         SkeletonButton(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
         )
     }
 }
@@ -152,7 +156,10 @@ fun SetupScreen(
 ) {
     BiometricPromptEffect(setupState.sideEffects.showBiometricPromptFlow)
 
-    OtherScaffold {
+    OtherScaffold(
+        maxWidth = null,
+        horizontalPadding = 0.dp,
+    ) {
         SetupContent(
             setupState = setupState,
         )
@@ -187,6 +194,8 @@ fun ColumnScope.SetupContent(
         }
     PasswordFlatTextField(
         modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
             .focusRequester(focusRequester),
         fieldModifier = Modifier
             .contentType(ContentType.NewPassword),
@@ -210,16 +219,12 @@ fun ColumnScope.SetupContent(
         },
     )
     val biometric = setupState.biometric
-    if (biometric != null) {
-        Spacer(Modifier.height(8.dp))
-    } else {
-        Spacer(Modifier.height(3.dp))
-    }
+    Spacer(Modifier.height(12.dp))
     val updatedCrashlytics by rememberUpdatedState(setupState.crashlytics)
     Card(
         modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .padding(bottom = 12.dp),
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
     ) {
         if (biometric != null) {
             val updatedBiometric by rememberUpdatedState(biometric)
@@ -258,7 +263,8 @@ fun ColumnScope.SetupContent(
     Button(
         modifier = Modifier
             .testTag("btn:go")
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
         enabled = setupState.onCreateVault != null,
         onClick = {
             onCreateButtonClick?.invoke()
@@ -316,7 +322,8 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
     Spacer(Modifier.height(unlockScreenTitlePadding))
     Text(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
         text = stringResource(Res.string.setup_header_text),
         style = MiuixTheme.textStyles.bodyLarge,
     )
@@ -325,6 +332,9 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
     if (config.isFreeAsBeer) {
         Spacer(Modifier.height(8.dp))
         Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
             text = stringResource(Res.string.setup_free_text),
             style = MiuixTheme.textStyles.bodyMedium,
             color = LocalContentColor.current

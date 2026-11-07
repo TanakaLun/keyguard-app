@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.platform.leIme
 import com.artemchep.keyguard.platform.leSystemBars
@@ -29,6 +30,8 @@ import com.artemchep.keyguard.ui.theme.Dimens
 @Composable
 fun OtherScaffold(
     modifier: Modifier = Modifier,
+    maxWidth: Dp? = 280.dp,
+    horizontalPadding: Dp = Dimens.horizontalPadding,
     actions: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -50,9 +53,15 @@ fun OtherScaffold(
                     .windowInsetsPadding(insets)
                     .padding(
                         vertical = Dimens.verticalPadding,
-                        horizontal = Dimens.horizontalPadding,
+                        horizontal = horizontalPadding,
                     )
-                    .widthIn(max = 280.dp),
+                    .then(
+                        if (maxWidth != null) {
+                            Modifier.widthIn(max = maxWidth)
+                        } else {
+                            Modifier.fillMaxWidth()
+                        },
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 ProvideScaffoldLocalValues {
