@@ -1,0 +1,123 @@
+name: build-apk-release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ci-release
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 21 (JetBrains)
+        uses: actions/setup-java@v4
+        with:
+          distribution: jetbrains
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-37.1 build-tools;37.0.0 ndk;27.0.12077973'
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup_rust
+        with:
+          targets: aarch64-linux-android
+          cache-key: android
+
+      - name: Write local google-services placeholder
+        run: |
+          cat > androidApp/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "keyguard-local",
+              "storage_bucket": "keyguard-local.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.artemchep.keyguard"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": []
+                  }
+                }
+              },
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000001",
+                  "android_client_info": {
+                    "package_name": "com.artemchep.keyguard.debug"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": []
+                  }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+          ls -la androidApp/google-services.json
+
+      - name: Write throwaway release signing
+        run: |
+          keytool -genkeypair \
+            -keystore androidApp/keyguard-release.keystore \
+            -storetype PKCS12 \
+            -alias keyguard \
+            -storepass keyguard123 \
+            -keypass keyguard123 \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 3650 \
+            -dname "CN=Keyguard CI, O=Keyguard, C=US"
+          cat > androidApp/keyguard-release.properties <<'PROPS'
+          key_alias=keyguard
+          password_store=keyguard123
+          password_key=keyguard123
+          PROPS
+          ls -la androidApp/keyguard-release.keystore androidApp/keyguard-release.properties
+
+      - name: Build release APK (arm64-v8a only)
+        run: |
+          ./gradlew :androidApp:assembleNoneRelease \
+            --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8" \
+            -Pkotlin.compiler.execution.strategy=daemon \
+            -Pkeyguard.androidAbis=arm64-v8a \
+            --no-daemon
+          ls -la androidApp/build/outputs/apk/none/release/
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: keyguard-none-release
+          path: androidApp/build/outputs/apk/none/release/*.apk
+          if-no-files-found: error
