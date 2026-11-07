@@ -262,7 +262,10 @@ fun UnlockDialog(
 
 @Composable
 private fun UnlockScreenSkeleton() {
-    OtherScaffold {
+    OtherScaffold(
+        maxWidth = null,
+        horizontalPadding = 0.dp,
+    ) {
         UnlockScreenContainer(
             top = {
                 UnlockScreenTheVaultIsLockedTitle()
@@ -270,13 +273,15 @@ private fun UnlockScreenSkeleton() {
             center = {
                 SkeletonTextField(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                 )
             },
             bottom = {
                 SkeletonButton(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                 )
             },
         )
@@ -294,6 +299,8 @@ private fun UnlockScreen(
     YubiKeyPromptEffect(unlockState.sideEffects.showYubiKeyPromptFlow)
     com.artemchep.keyguard.feature.fido2.Fido2PromptEffect(unlockState.sideEffects.showFido2PromptFlow)
     OtherScaffold(
+        maxWidth = null,
+        horizontalPadding = 0.dp,
         actions = {
             OptionsButton(actions = unlockState.actions)
         },
@@ -309,6 +316,8 @@ private fun UnlockScreen(
                 ) { info ->
                     Text(
                         modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
                             .padding(top = 16.dp),
                         textAlign = TextAlign.Center,
                         text = textResource(info),
@@ -320,7 +329,9 @@ private fun UnlockScreen(
             },
             center = {
                 UnlockPasswordField(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                     unlockState = unlockState,
                     focusRequester = focusRequester,
                 )
@@ -328,10 +339,14 @@ private fun UnlockScreen(
             bottom = {
                 UnlockCtaButton(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                     unlockState = unlockState,
                 )
                 ExpandedHardwareUnlockIfExists(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                     unlockState = unlockState,
                 )
             },
@@ -474,9 +489,11 @@ private fun UnlockCtaButton(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ExpandedHardwareUnlockIfExists(
+    modifier: Modifier = Modifier,
     unlockState: UnlockState,
 ) {
     ExpandedIfNotEmpty(
+        modifier = modifier,
         valueOrNull = Unit.takeIf {
             unlockState.biometric != null || unlockState.yubiKey != null || unlockState.fido2 != null
         },

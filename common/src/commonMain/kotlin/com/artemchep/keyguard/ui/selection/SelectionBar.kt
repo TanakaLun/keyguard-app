@@ -3,6 +3,7 @@ package com.artemchep.keyguard.ui.selection
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,31 +41,44 @@ fun SelectionBar(
         contentAlignment = Alignment.Center,
     ) {
         FloatingToolbar {
-            IconButton(
-                enabled = onClear != null,
-                onClick = {
-                    onClear?.invoke()
-                },
+            Row(
+                modifier = Modifier
+                    .padding(
+                        horizontal = 6.dp,
+                        vertical = 2.dp,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    Icons.Outlined.Close,
-                    null,
-                )
-            }
-            if (title != null) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                IconButton(
+                    enabled = onClear != null,
+                    onClick = {
+                        onClear?.invoke()
+                    },
                 ) {
-                    title()
+                    Icon(
+                        Icons.Outlined.Close,
+                        null,
+                    )
                 }
-            }
-            if (trailing != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    trailing()
+                if (title != null) {
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        title()
+                    }
+                }
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f),
+                )
+                if (trailing != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        trailing()
+                    }
                 }
             }
         }
