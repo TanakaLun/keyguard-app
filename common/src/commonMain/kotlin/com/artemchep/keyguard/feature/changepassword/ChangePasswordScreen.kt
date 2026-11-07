@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Save
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import top.yukonga.miuix.kmp.basic.Icon
@@ -204,19 +205,24 @@ private fun ChangePasswordNewPasswordItem(
 private fun ChangePasswordBiometricItem(
     biometric: ChangePasswordState.Biometric,
 ) {
-    BasicComponent(
-        title = stringResource(Res.string.changepassword_biometric_auth_checkbox),
-        startAction = {
-            Checkbox(
-                enabled = biometric.onChange != null,
-                state = ToggleableState(biometric.checked),
-                onClick = {
-                    biometric.onChange?.invoke(!biometric.checked)
-                },
-            )
-        },
-        onClick = biometric.onChange?.partially1(!biometric.checked),
-    )
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 12.dp),
+    ) {
+        BasicComponent(
+            title = stringResource(Res.string.changepassword_biometric_auth_checkbox),
+            startAction = {
+                Checkbox(
+                    enabled = biometric.onChange != null,
+                    state = ToggleableState(biometric.checked),
+                    onClick = {
+                        biometric.onChange?.invoke(!biometric.checked)
+                    },
+                )
+            },
+            onClick = biometric.onChange?.partially1(!biometric.checked),
+        )
+    }
 }
 
 @Composable

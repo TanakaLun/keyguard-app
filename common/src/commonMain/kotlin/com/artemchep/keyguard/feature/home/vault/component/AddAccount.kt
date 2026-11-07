@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
@@ -51,38 +52,43 @@ fun AddAccountView(
         )
         Spacer(
             modifier = Modifier
-                .height(24.dp),
+                .height(12.dp),
         )
 
         val updatedOnClick by rememberUpdatedState(onClick)
         val entries = remember {
             AccountType.entries
         }
-        entries.forEach { type ->
-            BasicComponent(
-                title = type.fullName,
-                summary = stringResource(type.descriptionRes),
-                startAction = {
-                    Icon(
-                        imageVector = type.iconImageVector,
-                        contentDescription = null,
-                    )
-                },
-                endActions = {
-                    if (type.beta) {
-                        BetaBadge()
-                        Spacer(
-                            modifier = Modifier
-                                .width(16.dp),
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 12.dp),
+        ) {
+            entries.forEach { type ->
+                BasicComponent(
+                    title = type.fullName,
+                    summary = stringResource(type.descriptionRes),
+                    startAction = {
+                        Icon(
+                            imageVector = type.iconImageVector,
+                            contentDescription = null,
                         )
-                    }
-                    ChevronIcon()
-                },
-                onClick = {
-                    updatedOnClick?.invoke(type)
-                },
-                enabled = updatedOnClick != null,
-            )
+                    },
+                    endActions = {
+                        if (type.beta) {
+                            BetaBadge()
+                            Spacer(
+                                modifier = Modifier
+                                    .width(16.dp),
+                            )
+                        }
+                        ChevronIcon()
+                    },
+                    onClick = {
+                        updatedOnClick?.invoke(type)
+                    },
+                    enabled = updatedOnClick != null,
+                )
+            }
         }
         Spacer(
             modifier = Modifier

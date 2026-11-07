@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Lock
 import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
 import androidx.compose.material3.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -103,34 +104,39 @@ private fun SetupScreenSkeleton() {
                 .fillMaxWidth(),
         )
         Spacer(Modifier.height(unlockScreenActionPadding))
-        BasicComponent(
-            startAction = {
-                SkeletonCheckbox(
-                    clickable = false,
-                )
-            },
-            enabled = true,
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 12.dp),
         ) {
-            SkeletonText(
-                modifier = Modifier
-                    .fillMaxWidth(0.4f),
-                style = MiuixTheme.textStyles.bodyMedium,
-            )
-        }
-        Spacer(Modifier.height(unlockScreenActionPadding))
-        BasicComponent(
-            startAction = {
-                SkeletonCheckbox(
-                    clickable = false,
+            BasicComponent(
+                startAction = {
+                    SkeletonCheckbox(
+                        clickable = false,
+                    )
+                },
+                enabled = true,
+            ) {
+                SkeletonText(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f),
+                    style = MiuixTheme.textStyles.bodyMedium,
                 )
-            },
-            enabled = true,
-        ) {
-            SkeletonText(
-                modifier = Modifier
-                    .fillMaxWidth(0.3f),
-                style = MiuixTheme.textStyles.bodyMedium,
-            )
+            }
+            BasicComponent(
+                startAction = {
+                    SkeletonCheckbox(
+                        clickable = false,
+                    )
+                },
+                enabled = true,
+            ) {
+                SkeletonText(
+                    modifier = Modifier
+                        .fillMaxWidth(0.3f),
+                    style = MiuixTheme.textStyles.bodyMedium,
+                )
+            }
         }
         Spacer(Modifier.height(unlockScreenActionPadding))
         SkeletonButton(
@@ -203,41 +209,50 @@ fun ColumnScope.SetupContent(
             )
         },
     )
-    if (setupState.biometric != null) {
+    val biometric = setupState.biometric
+    if (biometric != null) {
+        Spacer(Modifier.height(8.dp))
+    } else {
         Spacer(Modifier.height(3.dp))
-
-        val updatedBiometric by rememberUpdatedState(setupState.biometric)
+    }
+    val updatedCrashlytics by rememberUpdatedState(setupState.crashlytics)
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp),
+    ) {
+        if (biometric != null) {
+            val updatedBiometric by rememberUpdatedState(biometric)
+            BasicComponent(
+                title = stringResource(Res.string.setup_checkbox_biometric_auth),
+                startAction = {
+                    Checkbox(
+                        state = ToggleableState(biometric.checked),
+                        onClick = null,
+                    )
+                },
+                onClick = {
+                    val newValue = !updatedBiometric.checked
+                    updatedBiometric.onChange?.invoke(newValue)
+                },
+                enabled = updatedBiometric.onChange != null,
+            )
+        }
         BasicComponent(
-            title = stringResource(Res.string.setup_checkbox_biometric_auth),
+            title = stringResource(Res.string.setup_button_send_crash_reports),
             startAction = {
                 Checkbox(
-                    state = ToggleableState(setupState.biometric.checked),
+                    state = ToggleableState(setupState.crashlytics.checked),
                     onClick = null,
                 )
             },
             onClick = {
-                val newValue = !updatedBiometric.checked
-                updatedBiometric.onChange?.invoke(newValue)
+                val newValue = !updatedCrashlytics.checked
+                updatedCrashlytics.onChange?.invoke(newValue)
             },
-            enabled = updatedBiometric.onChange != null,
+            enabled = updatedCrashlytics.onChange != null,
         )
     }
-    Spacer(Modifier.height(3.dp))
-    val updatedCrashlytics by rememberUpdatedState(setupState.crashlytics)
-    BasicComponent(
-        title = stringResource(Res.string.setup_button_send_crash_reports),
-        startAction = {
-            Checkbox(
-                state = ToggleableState(setupState.crashlytics.checked),
-                onClick = null,
-            )
-        },
-        onClick = {
-            val newValue = !updatedCrashlytics.checked
-            updatedCrashlytics.onChange?.invoke(newValue)
-        },
-        enabled = updatedCrashlytics.onChange != null,
-    )
     Spacer(Modifier.height(24.dp))
     val onCreateButtonClick by rememberUpdatedState(setupState.onCreateVault)
     Button(
