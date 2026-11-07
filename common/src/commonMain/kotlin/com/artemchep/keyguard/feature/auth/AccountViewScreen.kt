@@ -87,6 +87,29 @@ fun AccountViewScreen(
     state: AccountViewState,
 ) {
     val scrollBehavior = ToolbarBehavior.behavior()
+    val sourceItems = AccountViewState.content.data.items.getOrNull(state).orEmpty()
+    // Group rows into Miuix cards: a SmallTitle per section and one card
+    // per run of rows, exactly like the vault item screen.
+    val groups = remember(sourceItems) {
+        val result = mutableListOf<AccountViewGroup>()
+        var card: MutableList<VaultViewItemModel>? = null
+        sourceItems.forEach { model ->
+            if (model is VaultViewItemModel.Section) {
+                card = null
+                result.add(AccountViewGroup.Section(model))
+            } else {
+                val current = card
+                if (current == null) {
+                    val next = mutableListOf(model)
+                    card = next
+                    result.add(AccountViewGroup.Card(next))
+                } else {
+                    current.add(model)
+                }
+            }
+        }
+        result
+    }
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -142,29 +165,6 @@ fun AccountViewScreen(
             )
         },
     ) {
-        val items = AccountViewState.content.data.items.getOrNull(state).orEmpty()
-        // Group rows into Miuix cards: a SmallTitle per section and one card
-        // per run of rows, exactly like the vault item screen.
-        val groups = remember(items) {
-            val result = mutableListOf<AccountViewGroup>()
-            var card: MutableList<VaultViewItemModel>? = null
-            items.forEach { model ->
-                if (model is VaultViewItemModel.Section) {
-                    card = null
-                    result.add(AccountViewGroup.Section(model))
-                } else {
-                    val current = card
-                    if (current == null) {
-                        val next = mutableListOf(model)
-                        card = next
-                        result.add(AccountViewGroup.Card(next))
-                    } else {
-                        current.add(model)
-                    }
-                }
-            }
-            result
-        }
         items(
             items = groups,
             key = { group -> group.id },
