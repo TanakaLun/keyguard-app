@@ -19,7 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Launch
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.AccountId
 import com.artemchep.keyguard.feature.EmptyView
 import com.artemchep.keyguard.feature.home.vault.component.VaultViewItem
+import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem as VaultViewItemModel
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -139,12 +143,72 @@ fun AccountViewScreen(
         },
     ) {
         val items = AccountViewState.content.data.items.getOrNull(state).orEmpty()
-        items(
-            items,
-            key = { it.id },
-        ) {
-            VaultViewItem(item = it)
+        // Group rows into Miuix cards: a SmallTitle per section and one card
+        // per run of rows, exactly like the vault item screen.
+        val groups = remember(items) {
+            val result = mutableListOf<AccountViewGroup>()
+            var card: MutableList<VaultViewItemModel>? = null
+            items.forEach { model ->
+                if (model is VaultViewItemModel.Section) {
+                    card = null
+                    result.add(AccountViewGroup.Section(model))
+                } else {
+                    val current = card
+                    if (current == null) {
+                        val next = mutableListOf(model)
+                        card = next
+                        result.add(AccountViewGroup.Card(next))
+                    } else {
+                        current.add(model)
+                    }
+                }
+            }
+            result
         }
+        items(
+            items = groups,
+            key = { group -> group.id },
+        ) { group ->
+            when (group) {
+                is AccountViewGroup.Section -> {
+                    val text = group.item.text
+                    if (text != null) {
+                        SmallTitle(
+                            text = text,
+                        )
+                    }
+                }
+
+                is AccountViewGroup.Card -> Card(
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 12.dp),
+                ) {
+                    group.items.forEach { model ->
+                        VaultViewItem(
+                            modifier = Modifier,
+                            item = model,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private sealed interface AccountViewGroup {
+    val id: String
+
+    data class Section(
+        val item: VaultViewItemModel.Section,
+    ) : AccountViewGroup {
+        override val id: String get() = "section:${item.id}"
+    }
+
+    data class Card(
+        val items: List<VaultViewItemModel>,
+    ) : AccountViewGroup {
+        override val id: String get() = "card:${items.first().id}"
     }
 }
 
