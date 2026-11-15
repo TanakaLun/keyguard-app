@@ -48,6 +48,7 @@ import com.artemchep.keyguard.ui.icons.KeyguardCipher
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.bodyMedium
 import com.artemchep.keyguard.ui.theme.combineAlpha
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 import com.artemchep.keyguard.ui.theme.onWarningContainer
 import com.artemchep.keyguard.ui.theme.verticalPaddingHalf
 import com.artemchep.keyguard.ui.theme.warningContainer
@@ -310,7 +311,7 @@ private fun ExportNote(
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = text,
         style = MiuixTheme.textStyles.bodyMedium,
-        color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+        color = MiuixTheme.colorScheme.onSurfaceVariant,
     )
 }
 

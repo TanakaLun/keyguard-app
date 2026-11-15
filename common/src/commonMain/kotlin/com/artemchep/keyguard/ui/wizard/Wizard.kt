@@ -47,6 +47,7 @@ import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.headlineMedium
 import com.artemchep.keyguard.ui.theme.labelLarge
+import com.artemchep.keyguard.ui.theme.onSurfaceVariant
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
 import com.artemchep.keyguard.ui.toolbar.util.ToolbarBehavior
 import org.jetbrains.compose.resources.stringResource
@@ -257,7 +258,7 @@ fun WizardHeader(
             Text(
                 text = detail,
                 style = MiuixTheme.textStyles.bodyLarge,
-                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                color = MiuixTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
