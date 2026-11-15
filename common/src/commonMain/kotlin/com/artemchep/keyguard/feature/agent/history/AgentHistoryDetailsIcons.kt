@@ -13,7 +13,8 @@ import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material.icons.outlined.Terminal
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import androidx.compose.runtime.Composableimport androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.artemchep.keyguard.ui.icons.KeyguardDecrypt
 import com.artemchep.keyguard.ui.icons.KeyguardFileSign
