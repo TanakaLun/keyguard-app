@@ -15,6 +15,8 @@ import com.artemchep.keyguard.feature.environments.EnvironmentDefinition
 import com.artemchep.keyguard.feature.environments.EnvironmentFormat
 import com.artemchep.keyguard.feature.environments.EnvironmentPayload
 import com.artemchep.keyguard.provider.bitwarden.crypto.BitwardenEnvironmentFieldCodec
+import com.artemchep.keyguard.provider.bitwarden.crypto.BitwardenPasskeyFieldCodec
+import com.artemchep.keyguard.provider.bitwarden.crypto.BitwardenTransportFields
 
 suspend fun BitwardenCipher.toDomain(
     getPasswordStrength: GetPasswordStrength,
@@ -81,13 +83,16 @@ suspend fun BitwardenCipher.toDomain(
     )
 }
 
-private fun BitwardenCipher.domainType(): DSecret.Type = when (type) {
-    BitwardenCipher.Type.Login -> DSecret.Type.Login
-    BitwardenCipher.Type.SecureNote -> if (gpgKey != null) {
+private fun BitwardenCipher.domainType(): DSecret.Type =
+    if (type == BitwardenCipher.Type.SecureNote && gpgKey != null) {
         DSecret.Type.GpgKey
     } else {
-        DSecret.Type.SecureNote
+        type.toDomain()
     }
+
+fun BitwardenCipher.Type.toDomain(): DSecret.Type = when (this) {
+    BitwardenCipher.Type.Login -> DSecret.Type.Login
+    BitwardenCipher.Type.SecureNote -> DSecret.Type.SecureNote
     BitwardenCipher.Type.Card -> DSecret.Type.Card
     BitwardenCipher.Type.Identity -> DSecret.Type.Identity
     BitwardenCipher.Type.SshKey -> DSecret.Type.SshKey
@@ -114,6 +119,47 @@ fun EnvironmentPayload.toTransportFields(): List<DSecret.Field> =
     BitwardenEnvironmentFieldCodec.encode(BitwardenCipher.Environment.of(this))
         .map(BitwardenCipher.Field::toDomain)
 
+/** Keyguard's own data of the item, as it travels in custom fields. */
+internal fun DSecret.toTransportPayload() = BitwardenTransportFields.Payload(
+    customIcon = customIcon,
+    environment = environment?.let(BitwardenCipher.Environment::of),
+    gpgKey = gpgKey?.let(BitwardenCipher.GpgKey::of),
+    bookmarks = sshKey?.bookmarks.orEmpty().map { bookmark ->
+        BitwardenCipher.SshKey.Bookmark(name = bookmark.name, url = bookmark.url)
+    },
+    certificate = sshKey?.certificate,
+    passkeys = login?.fido2Credentials
+        .orEmpty()
+        .map { credential ->
+            BitwardenPasskeyFieldCodec.Secrets(
+                credentialId = credential.credentialId,
+                prfSecret = credential.prfSecret,
+                prfSecretWithoutUv = credential.prfSecretWithoutUv,
+            )
+        },
+    links = links.map(DSecret.Link::remoteCipherId),
+)
+
+internal fun BitwardenCipher.GpgKey.Companion.of(
+    gpgKey: DSecret.GpgKey,
+) = BitwardenCipher.GpgKey(
+    privateKeyArmored = gpgKey.privateKeyArmored,
+    publicKeyArmored = gpgKey.publicKeyArmored,
+    fingerprint = gpgKey.fingerprint,
+    metadata = gpgKey.metadata,
+)
+
+internal fun DSecret.Type.toBitwardenTypeOrNull(): BitwardenCipher.Type? = when (this) {
+    DSecret.Type.Login -> BitwardenCipher.Type.Login
+    DSecret.Type.SecureNote -> BitwardenCipher.Type.SecureNote
+    DSecret.Type.Card -> BitwardenCipher.Type.Card
+    DSecret.Type.Identity -> BitwardenCipher.Type.Identity
+    DSecret.Type.SshKey -> BitwardenCipher.Type.SshKey
+    DSecret.Type.GpgKey -> BitwardenCipher.Type.GpgKey
+    DSecret.Type.Environment -> BitwardenCipher.Type.Environment
+    DSecret.Type.None -> null
+}
+
 fun BitwardenCipher.Login.Uri.toDomain() = DSecret.Uri(
     uri = uri.orEmpty(),
     match = match?.toDomain(),
@@ -130,6 +176,7 @@ fun BitwardenCipher.IgnoreAlertType.toDomain() = when (this) {
     BitwardenCipher.IgnoreAlertType.PWNED_WEBSITE -> DWatchtowerAlertType.PWNED_WEBSITE
     BitwardenCipher.IgnoreAlertType.UNSECURE_WEBSITE -> DWatchtowerAlertType.UNSECURE_WEBSITE
     BitwardenCipher.IgnoreAlertType.TWO_FA_WEBSITE -> DWatchtowerAlertType.TWO_FA_WEBSITE
+    BitwardenCipher.IgnoreAlertType.TWO_FA_UNUSABLE -> DWatchtowerAlertType.TWO_FA_UNUSABLE
     BitwardenCipher.IgnoreAlertType.PASSKEY_WEBSITE -> DWatchtowerAlertType.PASSKEY_WEBSITE
     BitwardenCipher.IgnoreAlertType.DUPLICATE -> DWatchtowerAlertType.DUPLICATE
     BitwardenCipher.IgnoreAlertType.DUPLICATE_URIS -> DWatchtowerAlertType.DUPLICATE_URIS
@@ -137,6 +184,7 @@ fun BitwardenCipher.IgnoreAlertType.toDomain() = when (this) {
     BitwardenCipher.IgnoreAlertType.INCOMPLETE -> DWatchtowerAlertType.INCOMPLETE
     BitwardenCipher.IgnoreAlertType.EXPIRING -> DWatchtowerAlertType.EXPIRING
     BitwardenCipher.IgnoreAlertType.WEAK_SSH_KEY -> DWatchtowerAlertType.WEAK_SSH_KEY
+    BitwardenCipher.IgnoreAlertType.SSH_CERTIFICATE_UNUSABLE -> DWatchtowerAlertType.SSH_CERTIFICATE_UNUSABLE
     BitwardenCipher.IgnoreAlertType.GPG_KEY_UNUSABLE -> DWatchtowerAlertType.GPG_KEY_UNUSABLE
     BitwardenCipher.IgnoreAlertType.WEAK_GPG_KEY -> DWatchtowerAlertType.WEAK_GPG_KEY
     BitwardenCipher.IgnoreAlertType.GPG_KEY_PUBLISHING -> DWatchtowerAlertType.GPG_KEY_PUBLISHING
@@ -197,6 +245,51 @@ fun BitwardenCipher.Field.LinkedId.toDomain() = when (this) {
     BitwardenCipher.Field.LinkedId.Identity_FullName -> DSecret.Field.LinkedId.Identity_FullName
 }
 
+/** The inverse of [BitwardenCipher.Field.toDomain]. */
+internal fun DSecret.Field.toBitwardenField() = BitwardenCipher.Field(
+    name = name,
+    value = value,
+    linkedId = linkedId?.let(BitwardenCipher.Field.LinkedId::of),
+    type = when (type) {
+        DSecret.Field.Type.Text -> BitwardenCipher.Field.Type.Text
+        DSecret.Field.Type.Hidden -> BitwardenCipher.Field.Type.Hidden
+        DSecret.Field.Type.Boolean -> BitwardenCipher.Field.Type.Boolean
+        DSecret.Field.Type.Linked -> BitwardenCipher.Field.Type.Linked
+    },
+)
+
+internal fun BitwardenCipher.Field.LinkedId.Companion.of(
+    linkedId: DSecret.Field.LinkedId,
+) = when (linkedId) {
+    DSecret.Field.LinkedId.Login_Username -> BitwardenCipher.Field.LinkedId.Login_Username
+    DSecret.Field.LinkedId.Login_Password -> BitwardenCipher.Field.LinkedId.Login_Password
+    DSecret.Field.LinkedId.Card_CardholderName -> BitwardenCipher.Field.LinkedId.Card_CardholderName
+    DSecret.Field.LinkedId.Card_ExpMonth -> BitwardenCipher.Field.LinkedId.Card_ExpMonth
+    DSecret.Field.LinkedId.Card_ExpYear -> BitwardenCipher.Field.LinkedId.Card_ExpYear
+    DSecret.Field.LinkedId.Card_Code -> BitwardenCipher.Field.LinkedId.Card_Code
+    DSecret.Field.LinkedId.Card_Brand -> BitwardenCipher.Field.LinkedId.Card_Brand
+    DSecret.Field.LinkedId.Card_Number -> BitwardenCipher.Field.LinkedId.Card_Number
+    DSecret.Field.LinkedId.Identity_Title -> BitwardenCipher.Field.LinkedId.Identity_Title
+    DSecret.Field.LinkedId.Identity_MiddleName -> BitwardenCipher.Field.LinkedId.Identity_MiddleName
+    DSecret.Field.LinkedId.Identity_Address1 -> BitwardenCipher.Field.LinkedId.Identity_Address1
+    DSecret.Field.LinkedId.Identity_Address2 -> BitwardenCipher.Field.LinkedId.Identity_Address2
+    DSecret.Field.LinkedId.Identity_Address3 -> BitwardenCipher.Field.LinkedId.Identity_Address3
+    DSecret.Field.LinkedId.Identity_City -> BitwardenCipher.Field.LinkedId.Identity_City
+    DSecret.Field.LinkedId.Identity_State -> BitwardenCipher.Field.LinkedId.Identity_State
+    DSecret.Field.LinkedId.Identity_PostalCode -> BitwardenCipher.Field.LinkedId.Identity_PostalCode
+    DSecret.Field.LinkedId.Identity_Country -> BitwardenCipher.Field.LinkedId.Identity_Country
+    DSecret.Field.LinkedId.Identity_Company -> BitwardenCipher.Field.LinkedId.Identity_Company
+    DSecret.Field.LinkedId.Identity_Email -> BitwardenCipher.Field.LinkedId.Identity_Email
+    DSecret.Field.LinkedId.Identity_Phone -> BitwardenCipher.Field.LinkedId.Identity_Phone
+    DSecret.Field.LinkedId.Identity_Ssn -> BitwardenCipher.Field.LinkedId.Identity_Ssn
+    DSecret.Field.LinkedId.Identity_Username -> BitwardenCipher.Field.LinkedId.Identity_Username
+    DSecret.Field.LinkedId.Identity_PassportNumber -> BitwardenCipher.Field.LinkedId.Identity_PassportNumber
+    DSecret.Field.LinkedId.Identity_LicenseNumber -> BitwardenCipher.Field.LinkedId.Identity_LicenseNumber
+    DSecret.Field.LinkedId.Identity_FirstName -> BitwardenCipher.Field.LinkedId.Identity_FirstName
+    DSecret.Field.LinkedId.Identity_LastName -> BitwardenCipher.Field.LinkedId.Identity_LastName
+    DSecret.Field.LinkedId.Identity_FullName -> BitwardenCipher.Field.LinkedId.Identity_FullName
+}
+
 fun BitwardenCipher.Attachment.Remote.toDomain(
     remoteCipherId: String,
 ) = DSecret.Attachment.Remote(
@@ -218,14 +311,10 @@ fun BitwardenCipher.Attachment.Local.toDomain() = DSecret.Attachment.Local(
 
 suspend fun BitwardenCipher.Login.toDomain(
     getPasswordStrength: GetPasswordStrength,
-) = DSecret.Login(
-    username = username,
-    password = password,
-    passwordStrength = passwordStrength?.toDomain() ?: password?.let {
-        getPasswordStrength(it).attempt().bind().getOrNull()
-    },
-    passwordRevisionDate = passwordRevisionDate,
-    totp = totp
+): DSecret.Login {
+    val totpRaw = totp
+        ?.takeIf { it.isNotBlank() }
+    val totp = totpRaw
         ?.let { raw ->
             TotpToken
                 .parse(raw)
@@ -236,12 +325,25 @@ suspend fun BitwardenCipher.Login.toDomain(
                     )
                 }
                 .getOrNull()
+        }
+    return DSecret.Login(
+        username = username,
+        password = password,
+        passwordStrength = passwordStrength?.toDomain() ?: password?.let {
+            getPasswordStrength(it).attempt().bind().getOrNull()
         },
-    fido2Credentials = fido2Credentials
-        .map { credentials ->
-            credentials.toDomain()
-        },
-)
+        passwordRevisionDate = passwordRevisionDate,
+        totp = totp,
+        // Keep the value we can not parse, so that editing
+        // the item does not remove it.
+        totpUnsupported = totpRaw
+            .takeIf { totp == null },
+        fido2Credentials = fido2Credentials
+            .map { credentials ->
+                credentials.toDomain()
+            },
+    )
+}
 
 fun BitwardenCipher.Login.Fido2Credentials.toDomain() = kotlin.run {
     val counter = counter
@@ -264,6 +366,8 @@ fun BitwardenCipher.Login.Fido2Credentials.toDomain() = kotlin.run {
         userDisplayName = userDisplayName,
         discoverable = discoverable,
         creationDate = creationDate,
+        prfSecret = prfSecret,
+        prfSecretWithoutUv = prfSecretWithoutUv,
     )
 }
 
@@ -315,6 +419,14 @@ fun BitwardenCipher.SshKey.toDomain() = DSecret.SshKey(
     privateKey = privateKey.oh(),
     publicKey = publicKey.oh(),
     fingerprint = fingerprint.oh(),
+    certificate = certificate.oh(),
+    bookmarks = bookmarks
+        .map { bookmark ->
+            DSecret.SshKey.Bookmark(
+                name = bookmark.name,
+                url = bookmark.url,
+            )
+        },
 )
 
 fun BitwardenCipher.GpgKey.toDomain() = DSecret.GpgKey(

@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.apple.gpgagent
 
+import com.artemchep.keyguard.apple.lists.AgentHistoryDetailsSnapshot
 import com.artemchep.keyguard.apple.model.SettingOptionSnapshot
 import com.artemchep.keyguard.apple.model.VaultFilterItemSnapshot
 
@@ -41,13 +42,26 @@ data class GpgAgentSettingsSnapshot(
     val enabled: Boolean,
     val approvalWindowTitle: String,
     val approvalWindowOptions: List<SettingOptionSnapshot>,
+    val approvalTimeoutTitle: String,
+    val approvalTimeoutOptions: List<SettingOptionSnapshot>,
     val approvalCachePolicyTitle: String,
     val approvalCachePolicyOptions: List<SettingOptionSnapshot>,
     val displayKeyNames: Boolean,
     val filterActive: Boolean,
 ) {
     companion object {
-        val empty = GpgAgentSettingsSnapshot(false, false, "", emptyList(), "", emptyList(), false, false)
+        val empty = GpgAgentSettingsSnapshot(
+            loaded = false,
+            enabled = false,
+            approvalWindowTitle = "",
+            approvalWindowOptions = emptyList(),
+            approvalTimeoutTitle = "",
+            approvalTimeoutOptions = emptyList(),
+            approvalCachePolicyTitle = "",
+            approvalCachePolicyOptions = emptyList(),
+            displayKeyNames = false,
+            filterActive = false,
+        )
     }
 }
 
@@ -64,6 +78,8 @@ data class GpgAgentHistoryItemSnapshot(
     val responseText: String,
     val request: String?,
     val response: String?,
+    /** The details sheet of a VALUE row. */
+    val details: AgentHistoryDetailsSnapshot? = null,
 )
 
 data class GpgAgentHistorySnapshot(

@@ -21,6 +21,7 @@ import com.artemchep.keyguard.common.model.AutofillTarget
 import com.artemchep.keyguard.common.model.BiometricStatus
 import com.artemchep.keyguard.common.model.DSecret
 import com.artemchep.keyguard.common.model.EquivalentDomainsBuilderFactory
+import com.artemchep.keyguard.common.model.Premium
 import com.artemchep.keyguard.common.model.Product
 import com.artemchep.keyguard.common.model.RichResult
 import com.artemchep.keyguard.common.model.Subscription
@@ -37,6 +38,9 @@ import com.artemchep.keyguard.common.service.backup.SelectableBackupObjectStoreF
 import com.artemchep.keyguard.common.service.backup.S3BackupObjectStoreFactory
 import com.artemchep.keyguard.common.service.backup.WebDavBackupObjectStoreFactory
 import com.artemchep.keyguard.common.service.biometrics.BiometricKeyRepository
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.SshBookmarksConfigSyncer
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.SshBookmarksConfigStore
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.impl.SshBookmarksConfigStoreImpl
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.service.connectivity.ConnectivityService
 import com.artemchep.keyguard.common.service.database.exposed.ExposedDatabaseManager
@@ -88,6 +92,7 @@ import com.artemchep.keyguard.common.usecase.WatchtowerSyncer
 import com.artemchep.keyguard.util.yubikey.NativeYubiKeyClient
 import com.artemchep.keyguard.common.usecase.YubiKeyUnlockAvailability
 import com.artemchep.keyguard.common.usecase.impl.GetLocaleImpl
+import com.artemchep.keyguard.common.usecase.impl.GetPurchasedImpl
 import com.artemchep.keyguard.common.usecase.impl.PutLocaleImpl
 import com.artemchep.keyguard.common.worker.WorkerRegistry
 import com.artemchep.keyguard.common.worker.Wrker
@@ -126,7 +131,9 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.single
 
 class BiometricStatusUseCaseImpl(
     private val promptHost: BiometricPromptHost,
@@ -164,10 +171,6 @@ class GetSuggestionsImpl : GetSuggestions<Any?> {
         val msg = "Autofill suggestions are not supported on desktop."
         ioRaise(RuntimeException(msg))
     }
-}
-
-class GetPurchasedImpl : GetPurchased {
-    override fun invoke(): Flow<Boolean> = flowOf(true)
 }
 
 class CleanUpAttachmentImpl : CleanUpAttachment {
@@ -262,15 +265,27 @@ class PlatformApplicationModule {
         includes(WindowsPasskeyModule().module)
         single { PlatformLinkInfoExtractorRegistry(emptyList()) }
         single { PlatformLogSinkRegistry(listOf(get<LogRepositoryKotlin>())) }
-        single { WorkerRegistry(listOf(get<BackupSchedulerWorker>(), get<WatchtowerSyncer>())) }
+        single {
+            WorkerRegistry(
+                listOf(
+                    get<BackupSchedulerWorker>(),
+                    get<WatchtowerSyncer>(),
+                    get<SshBookmarksConfigSyncer>(),
+                ),
+            )
+        }
+        single<SshBookmarksConfigSyncer>()
         single {
             ClearDataHookRegistry(
                 when (CurrentPlatform) {
                     is Platform.Desktop.Windows -> listOf(get<WindowsPasskeyService>())
                     else -> emptyList()
-                },
+                } + get<SshBookmarksConfigStoreImpl>(),
             )
         }
+        single<SshBookmarksConfigStoreImpl> {
+            SshBookmarksConfigStoreImpl.ofPlatform(CurrentPlatform)
+        } bind SshBookmarksConfigStore::class
         single {
             val dataDirectory: DataDirectory = get()
             PlatformTemporaryArtifactRootRegistry(
@@ -371,7 +386,18 @@ class PlatformApplicationModule {
             )
         }
         single<GetPurchased> {
-            GetPurchasedImpl()
+            GetPurchasedImpl(
+                config = get(),
+                // Desktop has no store; licenses are bought on the website.
+                storePurchased = emptyFlow(),
+                getLicensePremium = get(),
+                getDebugPremium = get(),
+                getCachePremium = get(),
+                putCachePremium = get(),
+                windowCoroutineScope = get(),
+                // Desktop builds unlock premium features without a license.
+                withoutPurchase = Premium.INCLUDED,
+            )
         }
 
         single<CleanUpAttachment> {

@@ -206,6 +206,7 @@ class DFilterCipherPresenceTest {
     fun `non-indexable primitives return null`() = runTest {
         assertNull(DFilter.ByPasswordValue(value = "x").existsIn(presence))
         assertNull(DFilter.ByWeakSshKeys.existsIn(presence))
+        assertNull(DFilter.ByUnusableSshCertificates.existsIn(presence))
         assertNull(DFilter.ByUnusableGpgKeys.existsIn(presence))
         assertNull(DFilter.ByWeakGpgKeys.existsIn(presence))
         assertNull(DFilter.ByGpgKeyPublishing.existsIn(presence))
@@ -216,6 +217,7 @@ class DFilterCipherPresenceTest {
         assertNull(DFilter.ByExpiring.existsIn(presence))
         assertNull(DFilter.ByUnsecureWebsites.existsIn(presence))
         assertNull(DFilter.ByTfaWebsites.existsIn(presence))
+        assertNull(DFilter.ByUnusableTfa.existsIn(presence))
         assertNull(DFilter.ByPasskeyWebsites.existsIn(presence))
         assertNull(DFilter.ByDuplicateWebsites.existsIn(presence))
         assertNull(DFilter.ByBroadWebsites.existsIn(presence))

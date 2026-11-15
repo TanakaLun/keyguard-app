@@ -20,6 +20,11 @@ server. To set it up, see
 | `keyguard help [<COMMAND>]` | Prints the help of a command, the same as `--help` |
 | `keyguard mcp` | Runs the environment management MCP server over stdio |
 | `keyguard run` | Runs a command with the variables of an environment |
+| `keyguard agents setup` | Reviews SSH or GPG client configuration and asks before applying |
+| `keyguard agents plan` | Prints a read-only JSON configuration plan |
+| `keyguard agents apply` | Reads a reviewed JSON plan from stdin and applies it if files are unchanged |
+| `keyguard agents undo <ssh\|gpg>` | Previews removal; `--review` asks before applying, `--apply` applies immediately |
+| `keyguard agents verify` | Queries the specified agent through an installed client |
 
 - `-h`, `--help` prints help for any command.
 - `-V`, `--version` works on `keyguard` alone.
@@ -52,7 +57,8 @@ command and its arguments.
 - On Windows, names that differ only in case are rejected. A variable,
   including its name, holds at most 32,767 characters.
 - While Keyguard asks for approval, `keyguard` prints "waiting for approval in
-  Keyguard…". It gives up after 90 seconds. Ctrl+C cancels the request.
+  Keyguard…". It waits until the prompt is answered or times out. Ctrl+C
+  cancels the request.
 
 ## MCP server
 
@@ -88,6 +94,21 @@ stopped. Open Keyguard and check the MCP configuration."
 - No tool returns values, referenced items or file contents.
 - `append_variables` can't create or overwrite a reference.
 - There are no tools to delete, export or run commands.
+
+## Request log
+
+Keyguard logs each request with its caller, environment and result, such as
+**Success**, **Denied** or **Vault locked**.
+
+| Requests | Log |
+| --- | --- |
+| `keyguard run`, with the command and its folder | **Settings > Developer > Command line > Request log** |
+| MCP tools, with the client's name | **Settings > Developer > Environments > MCP > Request log** |
+| Reads of local .env files, with the path | **Settings > Developer > Environments > Request log** |
+
+- To see the requests for one environment, open it and select
+  **View request log**.
+- Requests made while the vault is locked appear after you unlock.
 
 ## Environment variables
 

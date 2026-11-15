@@ -2,7 +2,7 @@
 
 use anyhow::Result;
 use ssh_agent_lib::proto::extension::SessionBind;
-use ssh_agent_lib::proto::SignRequest;
+use ssh_agent_lib::proto::{PublicCredential, SignRequest};
 use ssh_encoding::Decode;
 use ssh_key::public::KeyData;
 use ssh_key::sha2::{Digest, Sha256};
@@ -204,8 +204,6 @@ pub(super) enum SessionBindError {
     InvalidSignatureEncoding,
     #[error("session ID must not be empty")]
     EmptySessionId,
-    #[error("invalid forwarding flag {0}; expected 0 or 1")]
-    InvalidForwardingFlag(u8),
     #[error("session binding contains {0} trailing bytes")]
     TrailingData(usize),
     #[error("host-key signature verification failed")]
@@ -301,11 +299,8 @@ pub(super) fn parse_session_binding(
         })?;
     input = &input[1..];
 
-    let is_forwarding = match forwarding_flag {
-        0 => false,
-        1 => true,
-        other => return Err(SessionBindError::InvalidForwardingFlag(other)),
-    };
+    // RFC 4251 section 5 requires every nonzero boolean to be read as true.
+    let is_forwarding = forwarding_flag != 0;
 
     if !input.is_empty() {
         return Err(SessionBindError::TrailingData(input.len()));
@@ -484,7 +479,17 @@ fn validate_bound_userauth_request(
         .map_err(|_| SessionBindError::InvalidBoundUserauth("invalid public-key algorithm"))?;
     let public_key_blob =
         read_ssh_string(&mut input, "userauth public key", MAX_HOST_KEY_BLOB_LEN)?;
-    validate_userauth_key(algorithm, public_key_blob, &request.pubkey)?;
+    validate_userauth_key(algorithm, public_key_blob, request.credential.key_data())?;
+    // A request for a certificate signs in with exactly that certificate, not
+    // with the plain key or another certificate over the same key.
+    if let PublicCredential::Cert(certificate) = &request.credential {
+        let certificate_blob = certificate
+            .to_bytes()
+            .map_err(|_| SessionBindError::InvalidBoundUserauth("invalid certificate"))?;
+        if public_key_blob != certificate_blob.as_slice() {
+            return Err(SessionBindError::SigningKeyMismatch);
+        }
+    }
 
     match method {
         PUBLICKEY_METHOD => {

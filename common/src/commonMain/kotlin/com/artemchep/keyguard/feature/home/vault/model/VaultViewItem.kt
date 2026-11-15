@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.feature.home.vault.model
 
+import com.artemchep.keyguard.feature.dragout.model.DragOutSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
@@ -320,6 +321,7 @@ sealed interface VaultViewItem {
         val overrides: List<Override> = emptyList(),
         val colorize: Boolean = false,
         val iconSource: VaultUriIcon? = null,
+        val drag: DragOutSource? = null,
     ) : VaultViewItem {
         companion object;
 
@@ -409,6 +411,7 @@ sealed interface VaultViewItem {
     data class Attachment(
         override val id: String,
         val item: AttachmentItem,
+        val drag: DragOutSource? = null,
     ) : VaultViewItem {
         companion object;
     }

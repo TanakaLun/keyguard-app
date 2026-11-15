@@ -53,6 +53,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.feature.attachments.SelectableItemState
 import com.artemchep.keyguard.feature.attachments.model.AttachmentItem
+import com.artemchep.keyguard.feature.dragout.compose.dragOutArea
+import com.artemchep.keyguard.feature.dragout.compose.dragOutHandle
+import com.artemchep.keyguard.feature.dragout.model.DragOutSource
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountSI
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.*
@@ -82,12 +85,21 @@ import com.artemchep.keyguard.ui.theme.labelSmall
 fun ItemAttachment(
     modifier: Modifier,
     item: AttachmentItem,
+    drag: DragOutSource? = null,
 ) {
     val downloadStatusState = item.statusState.collectAsState()
     val selectableState = item.selectableState.collectAsState()
     val actionsState = item.actionsState.collectAsState()
     ItemAttachmentLayout(
         modifier = modifier,
+        contentModifier = Modifier.dragOutArea(
+            source = drag,
+            enabled = !selectableState.value.selecting,
+        ),
+        iconModifier = Modifier.dragOutHandle(
+            source = drag,
+            enabled = !selectableState.value.selecting,
+        ),
         name = item.name,
         size = item.size,
         dropdown = actionsState.value,
@@ -97,6 +109,11 @@ fun ItemAttachment(
         },
         selectableState = selectableState,
         content = {
+            val dragPreparing = drag?.preparing?.collectAsState()?.value == true
+            if (dragPreparing) {
+                Text(stringResource(Res.string.attachment_drag_preparing), style = MiuixTheme.textStyles.footnote1)
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
             ExpandedIfNotEmpty(
                 // If the download progress does not exist then
                 // do not show the visuals.
@@ -289,6 +306,8 @@ fun ItemAttachment(
 @Composable
 private fun ItemAttachmentLayout(
     modifier: Modifier,
+    iconModifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     name: String,
     size: String? = null,
     dropdown: List<ContextItem>,

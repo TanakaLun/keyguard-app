@@ -30,14 +30,11 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Instant
-import androidx.compose.material3.MaterialTheme
 
 /** A service-free host shared by IDE previews and Desktop render checks. */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun AutomaticBackupsPreview(
     dark: Boolean = false,
-    content: @Composable () -> Unit,
 ) {
     val scheme = if (dark) plainDarkColorScheme() else plainLightColorScheme()
     MaterialExpressiveTheme(colorScheme = scheme) {
@@ -129,6 +126,7 @@ internal object AutomaticBackupsPreviewData {
         onSetupClick = {},
         onRetentionChange = {},
         onRunNow = {},
+        onImport = {},
         onDisableClick = {},
     )
 

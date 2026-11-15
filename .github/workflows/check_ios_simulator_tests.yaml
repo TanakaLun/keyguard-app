@@ -61,6 +61,7 @@ on:
       - '.github/actions/setup_rust/**'
       - '.github/workflows/check_ios_simulator_tests.yaml'
       - 'xcode/scripts/prepare-sqlcipher-tests.sh'
+      - 'scripts/run_mtls_tests.py'
       - '**/xcshareddata/swiftpm/Package.resolved'
   pull_request:
     branches:
@@ -112,6 +113,7 @@ on:
       - '.github/actions/setup_rust/**'
       - '.github/workflows/check_ios_simulator_tests.yaml'
       - 'xcode/scripts/prepare-sqlcipher-tests.sh'
+      - 'scripts/run_mtls_tests.py'
       - '**/xcshareddata/swiftpm/Package.resolved'
 
 permissions:
@@ -162,7 +164,7 @@ jobs:
         run: bash xcode/scripts/prepare-sqlcipher-tests.sh
       - name: "Run iOS simulator tests"
         run: >-
-          ./gradlew --continue
+          python3 scripts/run_mtls_tests.py -- ./gradlew --continue
           -PsqlCipherXcframeworkDir="$PWD/build/sqlcipher-tests/SQLCipher.xcframework"
           :common:iosSimulatorArm64SqlCipherTest
           :common:iosSimulatorArm64Test
@@ -170,10 +172,12 @@ jobs:
           :standard:presentation:iosSimulatorArm64Test
           :appleApp:iosSimulatorArm64Test
           :util:crypto:iosSimulatorArm64Test
+          :util:csv:iosSimulatorArm64Test
           :util:dns:iosSimulatorArm64Test
           :util:ffi:iosSimulatorArm64Test
           :util:io:iosSimulatorArm64Test
           :util:foundation:iosSimulatorArm64Test
+          :util:gzip:iosSimulatorArm64Test
           :util:kdbx:iosSimulatorArm64Test
           :util:messagepack:iosSimulatorArm64Test
           :util:planeta:iosSimulatorArm64Test
@@ -184,6 +188,7 @@ jobs:
           :util:xml:iosSimulatorArm64Test
           :util:zip:iosSimulatorArm64Test
           :util:zxcvbn:iosSimulatorArm64Test
+          :util:age:iosSimulatorArm64Test
       - name: "Upload test reports"
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()

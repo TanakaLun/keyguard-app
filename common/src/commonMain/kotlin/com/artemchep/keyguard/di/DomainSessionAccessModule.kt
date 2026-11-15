@@ -1,16 +1,20 @@
 package com.artemchep.keyguard.di
 
+import com.artemchep.keyguard.common.service.session.AccountIconServerSessionAccess
 import com.artemchep.keyguard.common.service.session.AccountSessionAccess
 import com.artemchep.keyguard.common.service.session.AppWorkerSessionAccess
 import com.artemchep.keyguard.common.service.session.AppWorkerSessionDependencies
+import com.artemchep.keyguard.common.service.session.BitwardenAttachmentSessionAccess
 import com.artemchep.keyguard.common.service.session.AttachmentSessionAccess
 import com.artemchep.keyguard.common.service.session.BackupConfigSessionAccess
 import com.artemchep.keyguard.common.service.session.BackupRunnerSessionAccess
+import com.artemchep.keyguard.common.service.session.CliAgentSessionAccess
 import com.artemchep.keyguard.common.service.session.GpgAgentSessionAccess
 import com.artemchep.keyguard.common.service.session.GpgAgentSessionDependencies
 import com.artemchep.keyguard.common.service.session.PendingUsageHistorySessionAccess
 import com.artemchep.keyguard.common.service.session.SshAgentSessionAccess
 import com.artemchep.keyguard.common.service.session.SshAgentSessionDependencies
+import com.artemchep.keyguard.common.service.session.SshBookmarksSessionAccess
 import com.artemchep.keyguard.common.service.session.VaultLicenseSessionAccess
 import com.artemchep.keyguard.common.service.session.WatchtowerSessionAccess
 import com.artemchep.keyguard.common.service.session.WatchtowerSessionWorkers
@@ -26,7 +30,9 @@ import com.artemchep.keyguard.common.usecase.impl.WatchtowerIncomplete
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerNotifications
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerPasswordPwned
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerPasswordStrength
+import com.artemchep.keyguard.common.usecase.impl.WatchtowerSshCertificateUnusable
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerSshKeyStrength
+import com.artemchep.keyguard.common.usecase.impl.WatchtowerTwoFaUnusable
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerUnsecureWebsite
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerWeakGpgKey
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerWebsitePwned
@@ -45,6 +51,7 @@ class DomainSessionAccessModule {
                         sshAgentPublicKeySyncer = get(),
                         gpgPublicKeySyncer = get(),
                         gpgKeyserverRefreshWorker = get(),
+                        agentHistoryRetentionWorker = get(),
                         licenseSyncer = get(),
                     )
                 }
@@ -56,8 +63,14 @@ class DomainSessionAccessModule {
         single<AccountSessionAccess> {
             AccountSessionAccess { key -> key.session.resolve { get() } }
         }
+        single<AccountIconServerSessionAccess> {
+            AccountIconServerSessionAccess { key -> key.session.resolve { get() } }
+        }
         single<VaultLicenseSessionAccess> {
             VaultLicenseSessionAccess { key -> key.session.resolve { get() } }
+        }
+        single<BitwardenAttachmentSessionAccess> {
+            BitwardenAttachmentSessionAccess { key -> key.session.resolve { get() } }
         }
         single<AttachmentSessionAccess> {
             AttachmentSessionAccess { key -> key.session.resolve { get() } }
@@ -79,6 +92,9 @@ class DomainSessionAccessModule {
                 }
             }
         }
+        single<SshBookmarksSessionAccess> {
+            SshBookmarksSessionAccess { key -> key.session.resolve { get() } }
+        }
         single<GpgAgentSessionAccess> {
             GpgAgentSessionAccess { key ->
                 key.session.resolve {
@@ -90,6 +106,9 @@ class DomainSessionAccessModule {
                     )
                 }
             }
+        }
+        single<CliAgentSessionAccess> {
+            CliAgentSessionAccess { key -> key.session.resolve { get() } }
         }
         single<WatchtowerSessionAccess> {
             WatchtowerSessionAccess { key ->
@@ -107,6 +126,8 @@ class DomainSessionAccessModule {
                             get<WatchtowerBroadUris>(),
                             get<WatchtowerPasswordStrength>(),
                             get<WatchtowerSshKeyStrength>(),
+                            get<WatchtowerSshCertificateUnusable>(),
+                            get<WatchtowerTwoFaUnusable>(),
                             get<WatchtowerGpgKeyUnusable>(),
                             get<WatchtowerWeakGpgKey>(),
                             get<WatchtowerGpgKeyPublishing>(),

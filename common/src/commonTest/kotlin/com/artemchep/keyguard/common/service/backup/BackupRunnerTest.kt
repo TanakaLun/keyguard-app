@@ -44,6 +44,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.io.Buffer
 import kotlinx.io.Sink
+import kotlinx.io.Source
 import kotlinx.io.readByteArray
 
 class BackupRunnerTest {
@@ -120,6 +121,33 @@ class BackupRunnerTest {
         assertEquals(1, repository.blobWrites)
         assertEquals(0, requireNotNull(second.stats).newBlobCount)
         assertEquals(1, second.stats.reusedBlobCount)
+    }
+
+    @Test
+    fun `plain size is the size of the written payload, not the remote size`() = runTest {
+        val repository = MemoryBackupRepository()
+        // A Bitwarden attachment reports the size of the encrypted file,
+        // while the download writes the 7 decrypted bytes of "payload".
+        val runner = runner(
+            repository = repository,
+            downloadTask = CountingDownloadTask(),
+            exportVaultDataService = StaticExportVaultDataService(
+                ciphers = listOf(testCipher(attachmentSize = 64L)),
+            ),
+        )
+        val config = config()
+
+        runner.run(config)
+        // The second run reuses the blob and keeps the measured size.
+        runner.run(config)
+
+        val index = repository.index
+        assertEquals(7L, index.attachments.values.single().plainSize)
+        assertEquals(7L, index.blobs.values.single().plainSize)
+        assertEquals(2, repository.snapshots.size)
+        repository.snapshots.values.forEach { manifest ->
+            assertEquals(7L, manifest.attachments.single().plainSize)
+        }
     }
 
     @Test
@@ -1021,6 +1049,35 @@ class BackupRunnerTest {
         )
     }
 
+    @Test
+    fun `run reports a legacy password repository as upgradeable`() = runTest {
+        val result = runner(MemoryBackupRepository(), CountingDownloadTask()).run(config())
+
+        assertEquals(BackupRepositoryEncryption.ZipAes, result.repositoryEncryption)
+        val status = result.toStatus(Instant.DISTANT_PAST, Instant.DISTANT_PAST)
+        assertEquals(BackupRepositoryEncryption.ZipAes, status.repositoryEncryption)
+    }
+
+    @Test
+    fun `run reports an unencrypted repository`() = runTest {
+        val result = runner(MemoryBackupRepository(), CountingDownloadTask())
+            .run(config().copy(password = null))
+
+        assertEquals(BackupRepositoryEncryption.None, result.repositoryEncryption)
+    }
+
+    @Test
+    fun `run reports an age repository after the upgrade`() = runTest {
+        val repository = MemoryBackupRepository()
+        val runner = runner(repository, CountingDownloadTask())
+
+        runner.upgradeEncryption(config())
+        val result = runner.run(config())
+
+        assertEquals(1, repository.upgradeCalls)
+        assertEquals(BackupRepositoryEncryption.Age, result.repositoryEncryption)
+    }
+
     private fun runner(
         repository: BackupRepository,
         downloadTask: CountingDownloadTask,
@@ -1176,7 +1233,7 @@ private class StaticExportVaultDataService(
     ): String = "{}"
 }
 
-private object FakeDownloadAttachmentMetadata : DownloadAttachmentMetadata {
+internal object FakeDownloadAttachmentMetadata : DownloadAttachmentMetadata {
     override fun invoke(
         request: DownloadAttachmentRequest,
     ): IO<DownloadAttachmentRequestData> = {
@@ -1193,7 +1250,7 @@ private object FakeDownloadAttachmentMetadata : DownloadAttachmentMetadata {
     }
 }
 
-private class CountingDownloadTask(
+internal class CountingDownloadTask(
     private val loadingEvents: List<DownloadProgress.Loading> = emptyList(),
     private val failure: Throwable? = null,
     private val failureOnCall: Int = 1,
@@ -1269,7 +1326,7 @@ private fun indexBlob(
     lastValidatedAt = lastValidatedAt,
 )
 
-private class MemoryBackupRepository : BackupRepository {
+internal class MemoryBackupRepository : BackupRepository {
     val blobs = mutableSetOf<String>()
     val snapshots = mutableMapOf<String, BackupSnapshotManifest>()
     val indexes = mutableListOf<BackupIndex>()
@@ -1293,22 +1350,44 @@ private class MemoryBackupRepository : BackupRepository {
     val blobValidationCalls = mutableListOf<String>()
     val blobValidationResults = mutableMapOf<String, BackupBlobValidationResult>()
 
+    var age = false
+    var upgradePending = false
+    var upgradeCalls = 0
+
+    override suspend fun upgradeEncryption(
+        store: BackupObjectStore,
+        password: Password,
+    ) {
+        upgradeCalls += 1
+        age = true
+        upgradePending = false
+    }
+
     override suspend fun getOrCreateMetadata(
         store: BackupObjectStore,
         password: Password?,
         nowProvider: () -> Instant,
         repoIdProvider: () -> String,
     ): BackupRepositoryMetadata {
+        if (upgradePending) throw BackupEncryptionUpgradePendingException()
         val now = nowProvider()
         val repoId = repoIdProvider()
-        return BackupRepositoryMetadata(
+        val metadata = BackupRepositoryMetadata(
             repoId = repoId,
             createdAt = now,
+            crypto = backupRepositoryCrypto(password),
         )
+        return if (age) metadata.withAgeEncryption(BackupSecretKey("index-key")) else metadata
     }
+
+    override suspend fun readMetadata(
+        store: BackupObjectStore,
+        password: Password?,
+    ): BackupRepositoryMetadata? = error("The runner never only reads the metadata.")
 
     override suspend fun readIndexes(
         store: BackupObjectStore,
+        metadata: BackupRepositoryMetadata,
         password: Password?,
     ): List<BackupIndex> {
         failReadIndexes?.let { throw it }
@@ -1322,6 +1401,7 @@ private class MemoryBackupRepository : BackupRepository {
 
     override suspend fun writeIndex(
         store: BackupObjectStore,
+        metadata: BackupRepositoryMetadata,
         password: Password?,
         index: BackupIndex,
     ) {
@@ -1392,6 +1472,20 @@ private class MemoryBackupRepository : BackupRepository {
     ): BackupSnapshotManifest? = snapshots[snapshotId]
         ?.takeIf { snapshotId !in unreadableSnapshotIds }
 
+    override suspend fun <T> readSnapshot(
+        store: BackupObjectStore,
+        objectPassword: Password?,
+        snapshotPath: String,
+        readVault: suspend (BackupSnapshotManifest, Source) -> T,
+    ): T? = error("The runner never reads a snapshot's vault.")
+
+    override suspend fun <T> readBlob(
+        store: BackupObjectStore,
+        objectPassword: Password?,
+        blobPath: String,
+        read: suspend (Source) -> T,
+    ): T? = error("The runner never reads a blob.")
+
     override suspend fun deleteSnapshot(
         store: BackupObjectStore,
         snapshotId: String,
@@ -1411,7 +1505,7 @@ private class MemoryBackupRepository : BackupRepository {
     }
 }
 
-private object FixedDateFormatter : DateFormatter {
+internal object FixedDateFormatter : DateFormatter {
     override fun formatDateTimeMachine(
         instant: Instant,
     ): String = "20260101T000000"
@@ -1441,11 +1535,12 @@ private object FixedDateFormatter : DateFormatter {
     ): String = time.toString()
 }
 
-private fun testCipher(
+internal fun testCipher(
     id: String = "local-cipher-1",
     remoteCipherId: String = "remote-cipher-1",
     attachmentId: String = "attachment-1",
     attachmentKeyBase64: String = "key-1",
+    attachmentSize: Long = 7L,
 ) = createSecret(
     id = id,
     name = "Cipher",
@@ -1465,7 +1560,7 @@ private fun testCipher(
             remoteCipherId = remoteCipherId,
             fileName = "file.txt",
             keyBase64 = attachmentKeyBase64,
-            size = 7L,
+            size = attachmentSize,
         ),
     ),
     revisionDate = Instant.fromEpochMilliseconds(1L),
@@ -1563,3 +1658,17 @@ private class IncrementingCryptoGenerator(
 
     override fun random(range: IntRange): Int = randomRoll.coerceIn(range)
 }
+
+/** A runner over [repository] with the fakes of [BackupRunnerTest]. */
+internal fun testBackupRunner(
+    repository: BackupRepository,
+) = BackupRunner(
+    exportVaultDataService = FakeExportVaultDataService,
+    backupRepository = repository,
+    backupObjectStoreFactory = FakeBackupObjectStoreFactory,
+    cryptoGenerator = IncrementingCryptoGenerator(),
+    base64Service = Base64ServiceImpl(),
+    dateFormatter = FixedDateFormatter,
+    downloadSourceLoader = CountingDownloadTask().asSourceLoader(),
+    downloadAttachmentMetadata = FakeDownloadAttachmentMetadata,
+)

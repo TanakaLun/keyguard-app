@@ -30,12 +30,19 @@ fun rememberSettingsCliItems(
                 list = persistentListOf(
                     SettingPaneItem.Item(Setting.CLI),
                     SettingPaneItem.Item(Setting.CLI_APPROVAL_WINDOW),
+                    SettingPaneItem.Item(Setting.CLI_APPROVAL_TIMEOUT),
                 ),
             ),
             SettingPaneItem.Group(
                 key = "cli.setup",
                 list = persistentListOf(
                     SettingPaneItem.Item(Setting.CLI_SETUP),
+                ),
+            ),
+            SettingPaneItem.Group(
+                key = "cli.history",
+                list = persistentListOf(
+                    SettingPaneItem.Item(Setting.CLI_HISTORY),
                 ),
             ),
         )

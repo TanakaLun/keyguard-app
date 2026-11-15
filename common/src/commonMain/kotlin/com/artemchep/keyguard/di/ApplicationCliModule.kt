@@ -5,12 +5,14 @@ import com.artemchep.keyguard.common.service.cli.CliRuntimeHost
 import com.artemchep.keyguard.common.service.cli.CliService
 import com.artemchep.keyguard.common.service.cli.CliServiceImpl
 import com.artemchep.keyguard.common.service.cli.agent.CliAgentHost
+import com.artemchep.keyguard.common.service.cli.agent.CliAgentUsageRecorder
 import com.artemchep.keyguard.common.service.environment.EnvironmentRunCliCommand
 import com.artemchep.keyguard.common.service.settings.SettingsReadRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import org.koin.dsl.binds
 import org.koin.dsl.module
 import org.koin.dsl.onClose
@@ -23,10 +25,12 @@ class ApplicationCliModule {
     val module = module {
         single { CliApplicationScope() } onClose { it?.scope?.cancel() }
         single {
+            val settings = get<SettingsReadRepository>()
             CliServiceImpl(
                 getVaultSession = get(), cryptoGenerator = get(), storeFactory = get(),
                 scope = get<CliApplicationScope>().scope,
-                approvalCacheConfig = get<SettingsReadRepository>().getCliApprovalCacheConfig(),
+                approvalCacheConfig = settings.getCliApprovalCacheConfig(),
+                approvalTimeout = { settings.getCliApprovalTimeout().first() },
             )
         } binds arrayOf(CliService::class, CliRuntimeHost::class)
         single { EnvironmentRunCliCommand(cli = get(), vault = get(), repository = get(), access = get()) }
@@ -40,9 +44,15 @@ class ApplicationCliModule {
             )
         }
         single {
+            CliAgentUsageRecorder(
+                getVaultSession = get(), sessionAccess = get(), queue = get(), json = get(), logRepository = get(),
+            )
+        }
+        single {
             CliAgentHost(
                 cli = get(), mcp = get(), mounts = get(), commands = get(),
                 environments = { directoryAccess -> environmentBrokerHandler(directoryAccess) },
+                recorder = get(),
             )
         }
     }

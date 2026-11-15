@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import top.yukonga.miuix.kmp.basic.Checkbox
@@ -45,9 +46,11 @@ import com.artemchep.keyguard.common.model.create.CreateRequest
 import com.artemchep.keyguard.common.model.create.address1
 import com.artemchep.keyguard.common.model.create.address2
 import com.artemchep.keyguard.common.model.create.address3
+import com.artemchep.keyguard.common.model.create.bookmarks
 import com.artemchep.keyguard.common.model.create.brand
 import com.artemchep.keyguard.common.model.create.card
 import com.artemchep.keyguard.common.model.create.cardholderName
+import com.artemchep.keyguard.common.model.create.certificate
 import com.artemchep.keyguard.common.model.create.city
 import com.artemchep.keyguard.common.model.create.code
 import com.artemchep.keyguard.common.model.create.company
@@ -102,15 +105,22 @@ import com.artemchep.keyguard.common.service.crypto.GpgUserIdReplacementService
 import com.artemchep.keyguard.common.service.crypto.GpgUserIdReplacementServiceUnsupported
 import com.artemchep.keyguard.common.service.crypto.GpgUserIdRevocationService
 import com.artemchep.keyguard.common.service.crypto.GpgUserIdRevocationServiceUnsupported
+import com.artemchep.keyguard.common.service.crypto.SSH_CERTIFICATE_FILE_SUFFIX
+import com.artemchep.keyguard.common.service.crypto.SshCertificateParser
 import com.artemchep.keyguard.common.service.crypto.SshKeyImportError
 import com.artemchep.keyguard.common.service.crypto.SshKeyImportRequest
 import com.artemchep.keyguard.common.service.crypto.SshKeyImportResult
 import com.artemchep.keyguard.common.service.crypto.SshKeyImportService
+import com.artemchep.keyguard.common.service.crypto.isSshCertificateFile
 import com.artemchep.keyguard.common.service.crypto.parsePrimaryKeyInfo
+import com.artemchep.keyguard.common.service.crypto.problemAt
 import com.artemchep.keyguard.common.service.crypto.toGpgRevocationKeyCandidates
 import com.artemchep.keyguard.common.service.googleauthenticator.OtpMigrationService
 import com.artemchep.keyguard.common.service.gpgagent.isCanonical
 import com.artemchep.keyguard.common.service.logging.LogRepository
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.SSH_BOOKMARK_FIELD_NAME
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.normalizeSshBookmarkValue
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.parseSshBookmark
 import com.artemchep.keyguard.common.service.text.TextService
 import com.artemchep.keyguard.common.service.text.readFromFileAsBytes
 import com.artemchep.keyguard.common.usecase.AddCipher
@@ -176,6 +186,7 @@ import com.artemchep.keyguard.feature.home.vault.link.cipherLinkTargetsByRemoteI
 import com.artemchep.keyguard.feature.home.vault.model.VaultItemPresentation
 import com.artemchep.keyguard.feature.home.vault.screen.VaultViewRoute
 import com.artemchep.keyguard.feature.home.vault.screen.toVaultItemPresentation
+import com.artemchep.keyguard.feature.home.vault.util.formatSshCertificateProblem
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.NavigationIntent
@@ -184,6 +195,9 @@ import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
+import com.artemchep.keyguard.feature.tags.TagsFieldModel
+import com.artemchep.keyguard.feature.tags.tagUsage
+import com.artemchep.keyguard.feature.tags.tagsFieldFlow
 import com.artemchep.keyguard.platform.LeSerializable
 import com.artemchep.keyguard.platform.leParseUri
 import com.artemchep.keyguard.platform.parcelize.LeParcelable
@@ -219,6 +233,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -258,6 +273,7 @@ fun produceAddScreenState(
         textService = get(),
         dateFormatter = get(),
         sshKeyImportService = get(),
+        sshCertificateParser = get(),
         gpgKeyImportService = getOrNull() ?: GpgKeyImportServiceUnsupported,
         gpgKeyEditorImportReconciler = get(),
         gpgPublicKeyParser = getOrNull() ?: GpgPublicKeyParserUnsupported,
@@ -302,6 +318,7 @@ fun produceAddScreenState(
     textService: TextService,
     dateFormatter: DateFormatter,
     sshKeyImportService: SshKeyImportService,
+    sshCertificateParser: SshCertificateParser,
     gpgKeyImportService: GpgKeyImportService,
     gpgKeyEditorImportReconciler: GpgKeyEditorImportReconciler,
     gpgPublicKeyParser: GpgPublicKeyParser,
@@ -348,6 +365,7 @@ fun produceAddScreenState(
         textService = textService,
         dateFormatter = dateFormatter,
         sshKeyImportService = sshKeyImportService,
+        sshCertificateParser = sshCertificateParser,
         gpgKeyImportService = gpgKeyImportService,
         gpgKeyEditorImportReconciler = gpgKeyEditorImportReconciler,
         gpgPublicKeyParser = gpgPublicKeyParser,
@@ -382,6 +400,7 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
     textService: TextService,
     dateFormatter: DateFormatter,
     sshKeyImportService: SshKeyImportService,
+    sshCertificateParser: SshCertificateParser,
     gpgKeyImportService: GpgKeyImportService,
     gpgKeyEditorImportReconciler: GpgKeyEditorImportReconciler,
     gpgPublicKeyParser: GpgPublicKeyParser,
@@ -476,6 +495,8 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
         args = args,
         textService = textService,
         sshKeyImportService = sshKeyImportService,
+        sshCertificateParser = sshCertificateParser,
+        dateFormatter = dateFormatter,
         showMessage = showMessage,
         filePickerIntentSink = filePickerEvents,
         confirmationRouteFactory = confirmationRouteFactory,
@@ -588,6 +609,40 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
         },
     )
 
+    // The bookmarks of an SSH key get a section
+    // of their own, like the URIs of a login.
+    val sshBookmarksFlow = foo3(
+        logRepository = logRepository,
+        scope = "ssh_bookmark",
+        initial = args.initialValue?.sshKey?.bookmarks.orEmpty(),
+        initialType = { "ssh_bookmark" },
+        confirmationRouteFactory = confirmationRouteFactory,
+        factories = listOf(
+            AddStateItemSshBookmarkFactory(),
+        ),
+        afterList = {
+            val header = AddStateItem.Section(
+                id = "ssh_bookmark.section",
+                text = translate(Res.string.ssh_bookmarks),
+            )
+            add(0, header)
+        },
+        extra = {
+            typeBasedAddItem(
+                translator = this@addCipherStateProducer,
+                scope = "ssh_bookmark",
+                typesFlow = flowOf(
+                    listOf(
+                        Foo2Type(
+                            type = "ssh_bookmark",
+                            name = translate(Res.string.ssh_bookmark),
+                        ),
+                    ),
+                ),
+            )
+        },
+    )
+
     val attachmentsFileDragFlow = MutableStateFlow<AddState.FileDrag?>(null)
     val attachmentsFactories = kotlin.run {
         val attachmentFactory = SkeletonAttachmentItemFactory()
@@ -672,9 +727,11 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
                 attachmentsFileDragFlow.value = AddState.FileDrag(
                     anchorItemId = "attachment.add",
                     text = translate(Res.string.additem_attachments_drop_here),
-                    onFileDrop = { info ->
+                    onFilesDrop = { infos ->
                         screenScope.launch {
-                            addAttachmentFile(info, accountType)
+                            infos.forEach { info ->
+                                addAttachmentFile(info, accountType)
+                            }
                         }
                     },
                 )
@@ -719,7 +776,10 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
 
                 DSecret.Type.GpgKey -> flowOf(noteHolder.items + gpgKeyHolder.items)
 
-                DSecret.Type.SshKey -> flowOf(sshKeyHolder.items)
+                DSecret.Type.SshKey -> sshBookmarksFlow
+                    .map { sshBookmarks ->
+                        sshKeyHolder.items + sshBookmarks
+                    }
                 DSecret.Type.None, DSecret.Type.Environment -> flowOf(emptyList())
             }
         }
@@ -967,40 +1027,35 @@ suspend fun RememberStateFlowScope.addCipherStateProducer(
         },
     )
 
-    val tagsFactories = kotlin.run {
-        val plainTextFactory = AddStateItemTagTextFactory()
+    val tagsItem = AddStateItem.Tags<CreateRequest>(
+        id = "tag",
+        state = LocalStateItem(
+            flow = tagsFieldFlow(
+                key = "tag",
+                initial = args.initialValue?.tags.orEmpty(),
+                catalogFlow = getCiphers()
+                    .map(::tagUsage)
+                    .distinctUntilChanged()
+                    .flowOn(Dispatchers.Default),
+            )
+                .persistingStateIn(
+                    scope = screenScope,
+                    started = SharingStarted.WhileSubscribed(1000L),
+                    initialValue = TagsFieldModel.empty,
+                ),
+            populator = { field ->
+                copy(tags = field.value.toPersistentList())
+            },
+        ),
+    )
+    val tagsFlow = flowOf(
         listOf(
-            plainTextFactory,
-        )
-    }
-    val tagsFlow = foo3(
-        logRepository = logRepository,
-        scope = "tag",
-        initial = args.initialValue?.tags.orEmpty(),
-        initialType = { tag -> "tag.text" },
-        confirmationRouteFactory = confirmationRouteFactory,
-        factories = tagsFactories,
-        afterList = {
-            val header = AddStateItem.Section(
+            AddStateItem.Section(
                 id = "tag.section",
                 text = translate(Res.string.tags),
-            )
-            add(0, header)
-        },
-        extra = {
-            typeBasedAddItem(
-                translator = this@addCipherStateProducer,
-                scope = "tag",
-                typesFlow = flowOf(
-                    listOf(
-                        Foo2Type(
-                            type = "tag.text",
-                            name = translate(Res.string.tag),
-                        ),
-                    ),
-                ),
-            )
-        },
+            ),
+            tagsItem,
+        ),
     )
 
     val titleItem = AddStateItem.Title<CreateRequest>(
@@ -1465,6 +1520,110 @@ class AddStateItemUriFactory(
     }
 }
 
+/**
+ * A bookmark of an SSH key, edited like a URI. Keeps the name
+ * of its field; a new one gets [SSH_BOOKMARK_FIELD_NAME].
+ */
+class AddStateItemSshBookmarkFactory : Foo2Factory<AddStateItem.Url<*>, DSecret.SshKey.Bookmark> {
+    override val type: String = "ssh_bookmark"
+
+    override fun RememberStateFlowScope.release(key: String) {
+        clearPersistedFlow("$key.value")
+    }
+
+    override fun RememberStateFlowScope.add(
+        key: String,
+        initial: DSecret.SshKey.Bookmark?,
+    ): AddStateItem.Url<CreateRequest> {
+        val valueHandle = textFieldHandle(
+            key = "$key.value",
+            initial = initial?.url.orEmpty(),
+        )
+        val labelFlow = ioEffect {
+            translate(Res.string.ssh_bookmark)
+        }.asFlow()
+        val placeholderFlow = ioEffect {
+            translate(Res.string.ssh_bookmark_placeholder)
+        }.asFlow()
+        val stateFlow = combine(
+            valueHandle.sink,
+            labelFlow,
+            placeholderFlow,
+        ) { cell, label, placeholder ->
+            val text = TextFieldModel(
+                text = cell.text,
+                textRevision = cell.revision,
+                vl = createSshBookmarkWarning(cell.text),
+                onChange = valueHandle::onChange,
+                onSetText = valueHandle::setText,
+            )
+            AddStateItem.Url.State(
+                text = text,
+                label = label,
+                placeholder = placeholder,
+            )
+        }
+            .persistingStateIn(
+                scope = screenScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = AddStateItem.Url.State(
+                    text = TextFieldModel.empty,
+                ),
+            )
+        return AddStateItem.Url<CreateRequest>(
+            id = key,
+            leading = {
+                IconBox(
+                    main = Icons.Outlined.Terminal,
+                )
+            },
+            state = LocalStateItem(
+                flow = stateFlow,
+                populator = { state ->
+                    val bookmark = createSshBookmark(
+                        text = state.text.text,
+                        initial = initial,
+                    ) ?: return@LocalStateItem this
+                    CreateRequest.sshKey.bookmarks.modify(this) { bookmarks ->
+                        bookmarks.add(bookmark)
+                    }
+                },
+            ),
+        )
+    }
+}
+
+/** A warning if the [text] is not a bookmark that the SSH configuration can hold. */
+private suspend fun TranslatorScope.createSshBookmarkWarning(
+    text: String,
+): TextFieldModel.Vl? {
+    val value = normalizeSshBookmarkValue(text)
+    if (value.isEmpty() || parseSshBookmark(value) != null) {
+        return null
+    }
+    return TextFieldModel.Vl(
+        type = TextFieldModel.Vl.Type.WARNING,
+        text = translate(Res.string.ssh_bookmark_invalid),
+    )
+}
+
+/** The bookmark, or `null` if the [text] is blank. */
+private fun createSshBookmark(
+    text: String,
+    initial: DSecret.SshKey.Bookmark?,
+): DSecret.SshKey.Bookmark? {
+    val url = normalizeSshBookmarkValue(text)
+    if (url.isEmpty()) {
+        return null
+    }
+    return DSecret.SshKey.Bookmark(
+        name = initial?.name
+            ?.takeIf { it.isNotBlank() }
+            ?: SSH_BOOKMARK_FIELD_NAME,
+        url = url,
+    )
+}
+
 internal fun createUriWithPreservedSignatures(
     uri: String,
     match: DSecret.Uri.MatchType?,
@@ -1612,6 +1771,8 @@ class AddStateItemPasskeyFactory(
         val userDisplayName: String? = null,
         val discoverable: Boolean,
         val creationDate: Instant,
+        val prfSecret: String? = null,
+        val prfSecretWithoutUv: String? = null,
     )
 
     private fun PasskeyData.toDomainOrNull(): DSecret.Login.Fido2Credentials? {
@@ -1629,6 +1790,8 @@ class AddStateItemPasskeyFactory(
             userDisplayName = userDisplayName,
             discoverable = discoverable,
             creationDate = creationDate,
+            prfSecret = prfSecret,
+            prfSecretWithoutUv = prfSecretWithoutUv,
         )
     }
 
@@ -1667,6 +1830,8 @@ class AddStateItemPasskeyFactory(
                     userDisplayName = it.userDisplayName,
                     discoverable = it.discoverable,
                     creationDate = it.creationDate,
+                    prfSecret = it.prfSecret,
+                    prfSecretWithoutUv = it.prfSecretWithoutUv,
                 )
             }
             PasskeyHolder(data = data)
@@ -1699,79 +1864,6 @@ class AddStateItemPasskeyFactory(
                     copy(fido2Credentials = newFido2Credentials)
                 },
             ),
-        )
-    }
-}
-
-abstract class AddStateItemTagFactory : Foo2Factory<AddStateItem.Tag<*>, String> {
-    fun foo(
-        key: String,
-        flow: StateFlow<AddStateItem.Tag.State>,
-    ) = AddStateItem.Tag<CreateRequest>(
-        id = key,
-        state = LocalStateItem(
-            flow = flow,
-            populator = { state ->
-                val tag = when (state) {
-                    is AddStateItem.Tag.State.Text -> {
-                        state.text.text
-                    }
-                }
-                val newTags = tags.add(tag)
-                copy(tags = newTags)
-            },
-        ),
-    )
-}
-
-class AddStateItemTagTextFactory(
-) : AddStateItemTagFactory() {
-    override val type: String = "tag.text"
-
-    override fun RememberStateFlowScope.release(key: String) {
-        clearPersistedFlow("$key.text")
-    }
-
-    override fun RememberStateFlowScope.add(
-        key: String,
-        initial: String?,
-    ): AddStateItem.Tag<CreateRequest> {
-        val textHandle = textFieldHandle(
-            key = "$key.text",
-            initial = initial.orEmpty(),
-        )
-        val textHintFlow = ioEffect {
-            translate(Res.string.tag_value)
-        }.asFlow()
-        val textFlow = combine(
-            textHandle.sink,
-            textHintFlow,
-        ) { textCell, textHint ->
-            TextFieldModel(
-                text = textCell.text,
-                textRevision = textCell.revision,
-                hint = textHint,
-                onChange = textHandle::onChange,
-                onSetText = textHandle::setText,
-            )
-        }
-
-        val stateFlow = textFlow
-            .map { textField ->
-                AddStateItem.Tag.State.Text(
-                    text = textField,
-                )
-            }
-            .persistingStateIn(
-                scope = screenScope,
-                started = SharingStarted.WhileSubscribed(1000L),
-                initialValue = AddStateItem.Tag.State.Text(
-                    text = TextFieldModel.empty,
-                ),
-            )
-        return foo(
-            key = key,
-            flow = stateFlow,
         )
     }
 }
@@ -2775,35 +2867,29 @@ private suspend fun RememberStateFlowScope.produceLoginState(
     val totpState = kotlin.run {
         val handle = textFieldHandle(
             key = "totp",
-            initial = args.initialValue?.login?.totp?.raw.orEmpty(),
+            initial = args.initialValue?.login?.totpRaw.orEmpty(),
         )
+        val unsupportedText = translate(Res.string.item_totp_unsupported_text)
         val totpFlow = handle.sink
             .map { it.text }
             .debounce(80L)
-            .map { raw ->
-                val token = if (raw.isBlank()) {
-                    null
-                } else {
-                    TotpToken.parse(raw).getOrNull()
-                }
-                token
-            }
+            .map(TotpFieldParse::of)
             .onStart {
-                val initialState = null
+                val initialState = TotpFieldParse(raw = null)
                 emit(initialState)
             }
         val flow = combine(
-            handle.sink
-                .map { cell ->
-                    TextFieldModel(
-                        text = cell.text,
-                        textRevision = cell.revision,
-                        onChange = handle::onChange,
-                        onSetText = handle::setText,
-                    )
-                },
+            handle.sink,
             totpFlow,
-        ) { value, totp ->
+        ) { cell, totpParse ->
+            val value = TextFieldModel(
+                text = cell.text,
+                textRevision = cell.revision,
+                error = unsupportedText.takeIf { totpParse.isUnsupported(cell.text) },
+                onChange = handle::onChange,
+                onSetText = handle::setText,
+            )
+            val totp = totpParse.token
             AddStateItem.Totp.State(
                 value = value,
                 copyText = copyText,
@@ -2845,7 +2931,7 @@ private suspend fun RememberStateFlowScope.produceLoginState(
         prefix = prefix,
         key = "totp",
         args = args,
-        getSuggestion = { it.login?.totp?.raw },
+        getSuggestion = { it.login?.totpRaw },
         selectedFlow = totp.state.flow.map { it.value.text },
         concealed = true,
         onClick = {
@@ -3784,11 +3870,19 @@ private suspend fun RememberStateFlowScope.produceSshKeyState(
     args: AddRoute.Args,
     textService: TextService,
     sshKeyImportService: SshKeyImportService,
+    sshCertificateParser: SshCertificateParser,
+    dateFormatter: DateFormatter,
     showMessage: ShowMessage,
     filePickerIntentSink: EventFlow<FilePickerIntent<*>>,
     confirmationRouteFactory: ConfirmationRouteFactory,
 ): TmpSshKey {
     val prefix = "sshKey"
+
+    // Importing a -cert.pub file through the key fills the certificate.
+    val certificateHandle = textFieldHandle(
+        key = "$prefix.certificate",
+        initial = args.initialValue?.sshKey?.certificate.orEmpty(),
+    )
 
     val sshKey = kotlin.run {
         val id = "$prefix.sshKey"
@@ -3895,6 +3989,14 @@ private suspend fun RememberStateFlowScope.produceSshKeyState(
                     showMessage.copy(msg)
                     sink.value = keyPair.toDecor()
                 },
+                onCertificate = { certificate ->
+                    val msg = ToastMessage(
+                        type = ToastMessage.Type.SUCCESS,
+                        title = translate(Res.string.ssh_certificate_import_success_title),
+                    )
+                    showMessage.copy(msg)
+                    certificateHandle.setText(certificate)
+                },
                 onNeedsPassphrase = { result, fileName, content ->
                     onImportKeyWithPassphrase(
                         result = result,
@@ -3950,12 +4052,14 @@ private suspend fun RememberStateFlowScope.produceSshKeyState(
                     ),
                 ),
             populator = { state ->
-                val sshKey = CreateRequest.SshKey(
-                    privateKey = state.keyPair?.privateKey,
-                    publicKey = state.keyPair?.publicKey,
-                    fingerprint = state.keyPair?.fingerprint,
-                )
-                CreateRequest.sshKey.set(this, sshKey)
+                // The certificate has a field of its own.
+                CreateRequest.sshKey.modify(this) { sshKey ->
+                    sshKey.copy(
+                        privateKey = state.keyPair?.privateKey,
+                        publicKey = state.keyPair?.publicKey,
+                        fingerprint = state.keyPair?.fingerprint,
+                    )
+                }
             },
         )
         AddStateItem.SshKey(
@@ -3969,6 +4073,75 @@ private suspend fun RememberStateFlowScope.produceSshKeyState(
                 },
             ),
             state = stateItem,
+        )
+    }
+    val certificate = kotlin.run {
+        val label = translate(Res.string.ssh_certificate)
+        val publicKeyFlow = sshKey.state.flow
+            .map { it.keyPair?.publicKey }
+            .distinctUntilChanged()
+        val vlFlow = combine(
+            certificateHandle.sink
+                .map { it.text }
+                .debounce(80L)
+                .distinctUntilChanged(),
+            publicKeyFlow,
+        ) { text, publicKey ->
+            if (text.isBlank()) return@combine null
+            val problem = sshCertificateParser.parse(
+                certificate = text,
+                publicKey = publicKey,
+            ).problemAt(
+                epochSeconds = Clock.System.now().epochSeconds,
+                // The key may be added after its certificate.
+                hasPublicKey = !publicKey.isNullOrBlank(),
+            )
+                ?: return@combine null
+            TextFieldModel.Vl(
+                type = TextFieldModel.Vl.Type.WARNING,
+                text = formatSshCertificateProblem(
+                    problem = problem,
+                    dateFormatter = dateFormatter,
+                ),
+            )
+        }
+            .flowOn(Dispatchers.Default)
+            .onStart { emit(null) }
+        val stateFlow = combine(
+            certificateHandle.sink,
+            vlFlow,
+        ) { cell, vl ->
+            AddStateItem.Text.State(
+                value = TextFieldModel(
+                    text = cell.text,
+                    textRevision = cell.revision,
+                    vl = vl,
+                    onChange = certificateHandle::onChange,
+                    onSetText = certificateHandle::setText,
+                ),
+                label = label,
+            )
+        }
+            .persistingStateIn(
+                scope = screenScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = AddStateItem.Text.State(
+                    value = TextFieldModel.empty,
+                    label = label,
+                ),
+            )
+        AddStateItem.Text<CreateRequest>(
+            id = certificateHandle.id,
+            note = translate(Res.string.ssh_certificate_note, SSH_CERTIFICATE_FILE_SUFFIX),
+            state = LocalStateItem<AddStateItem.Text.State, CreateRequest>(
+                flow = stateFlow,
+                populator = { state ->
+                    val certificate = state.value.text
+                        .trim()
+                        .takeIf { it.isNotEmpty() }
+                    CreateRequest.sshKey.certificate.set(this, certificate)
+                },
+            ),
         )
     }
 //    val sshKeySuggestions = createItem2(
@@ -3985,6 +4158,7 @@ private suspend fun RememberStateFlowScope.produceSshKeyState(
         sshKey = sshKey,
         items = listOfNotNull<AddStateItem>(
             sshKey,
+            certificate,
 //            sshKeySuggestions,
         ),
     )
@@ -4645,7 +4819,13 @@ internal suspend fun handleSshKeyFileImport(
     onNeedsPassphrase: suspend (SshKeyImportResult.NeedsPassphrase, String?, ByteArray) -> Unit,
     onImportError: suspend (SshKeyImportError) -> Unit,
     onReadError: suspend () -> Unit,
+    onCertificate: suspend (String) -> Unit,
 ) = withKeyFileBytes(info, readBytes, onReadError) { content ->
+    if (isSshCertificateFile(content)) {
+        // A certificate is public, so its text needs no clearing.
+        onCertificate(content.decodeToString().trim())
+        return@withKeyFileBytes
+    }
     when (
         val result = importSshKey(
             SshKeyImportRequest(
@@ -4846,4 +5026,26 @@ private suspend fun RememberStateFlowScope.createItem2(
             flow = flow,
         ),
     )
+}
+
+private data class TotpFieldParse(
+    val raw: String?,
+    val token: TotpToken? = null,
+) {
+    companion object {
+        fun of(raw: String) = TotpFieldParse(
+            raw = raw,
+            token = raw
+                .takeIf { it.isNotBlank() }
+                ?.let { TotpToken.parse(it).getOrNull() },
+        )
+    }
+
+    /**
+     * Only reports the [text] that was parsed, so a pending
+     * edit does not flash the error.
+     */
+    fun isUnsupported(text: String) = token == null &&
+            !raw.isNullOrBlank() &&
+            raw == text
 }

@@ -425,6 +425,8 @@ private fun TransformingLazyColumnItemScope.WearBitwardenLoginItem(
         transformationSpec = transformationSpec,
     )
 
+    is LoginStateItem.MutualTls -> Unit
+
     is LoginStateItem.Section -> WearSectionHeader(
         modifier = Modifier
             .fillMaxWidth()

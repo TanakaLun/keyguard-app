@@ -44,6 +44,7 @@ import com.artemchep.keyguard.common.model.Loadable
 import com.artemchep.keyguard.common.model.fold
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
+import com.artemchep.keyguard.feature.filepicker.FilePickerResult
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.platform.util.isRelease
@@ -94,9 +95,11 @@ import com.artemchep.keyguard.ui.theme.bodySmall
 @Composable
 fun GpgToolsOperationScreen(
     operation: GpgToolsOperation,
+    inputFile: FilePickerResult?,
 ) {
     val loadableState = produceGpgToolsState(
         operation = operation,
+        inputFile = inputFile,
     )
     GpgToolsOperationScreen(
         operation = operation,

@@ -40,7 +40,7 @@ import com.artemchep.keyguard.feature.add.ToolbarContent
 import com.artemchep.keyguard.feature.add.ToolbarContentItemErrSkeleton
 import com.artemchep.keyguard.feature.filepicker.FileDropOverlay
 import com.artemchep.keyguard.feature.filepicker.FilePickerEffect
-import com.artemchep.keyguard.feature.filepicker.fileDropTarget
+import com.artemchep.keyguard.feature.filepicker.filesDropTarget
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.res.Res
@@ -116,13 +116,13 @@ private fun AddScreenContent(
     }
     ScaffoldLazyColumn(
         modifier = Modifier
-            .fileDropTarget(
+            .filesDropTarget(
                 enabled = fileDrag != null,
                 onDragActiveChange = { isActive ->
                     fileDragActive = isActive
                 },
-                onFileDrop = { file ->
-                    fileDragState.value?.onFileDrop?.invoke(file)
+                onFilesDrop = { files ->
+                    fileDragState.value?.onFilesDrop?.invoke(files)
                 },
             )
             .nestedScroll(scrollBehavior.nestedScrollConnection),

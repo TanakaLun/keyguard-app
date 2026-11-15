@@ -7,6 +7,8 @@ import com.artemchep.keyguard.common.model.address2
 import com.artemchep.keyguard.common.model.address3
 import com.artemchep.keyguard.common.model.attachments
 import com.artemchep.keyguard.common.model.card
+import com.artemchep.keyguard.common.model.bookmarks
+import com.artemchep.keyguard.common.model.certificate
 import com.artemchep.keyguard.common.model.city
 import com.artemchep.keyguard.common.model.company
 import com.artemchep.keyguard.common.model.country
@@ -38,6 +40,7 @@ import com.artemchep.keyguard.common.model.state
 import com.artemchep.keyguard.common.model.tags
 import com.artemchep.keyguard.common.model.title
 import com.artemchep.keyguard.common.model.totp
+import com.artemchep.keyguard.common.model.totpUnsupported
 import com.artemchep.keyguard.common.model.type
 import com.artemchep.keyguard.common.model.uris
 import com.artemchep.keyguard.common.model.username
@@ -101,6 +104,7 @@ class CipherMergeImpl : CipherMerge {
                     Node.Leaf(DSecret.Login.username),
                     Node.Leaf(DSecret.Login.password),
                     Node.Leaf(DSecret.Login.totp),
+                    Node.Leaf(DSecret.Login.totpUnsupported),
                     Node.Leaf(
                         lens = DSecret.Login.fido2Credentials,
                         strategy = PickPasskeyStrategy(),
@@ -140,6 +144,11 @@ class CipherMergeImpl : CipherMerge {
                     Node.Leaf(DSecret.SshKey.privateKey),
                     Node.Leaf(DSecret.SshKey.publicKey),
                     Node.Leaf(DSecret.SshKey.fingerprint),
+                    Node.Leaf(DSecret.SshKey.certificate),
+                    Node.Leaf(
+                        lens = DSecret.SshKey.bookmarks,
+                        strategy = PickSshBookmarkStrategy(),
+                    ),
                 ),
             ),
             // GPG public, private, fingerprint, and metadata fields describe
@@ -234,6 +243,14 @@ class CipherMergeImpl : CipherMerge {
                 .flatten()
                 .map(DSecret.Link::remoteCipherId),
         ).map(DSecret::Link)
+    }
+
+    private class PickSshBookmarkStrategy : PickStrategy<List<DSecret.SshKey.Bookmark>> {
+        override fun pick(
+            list: List<List<DSecret.SshKey.Bookmark>>,
+        ): List<DSecret.SshKey.Bookmark> = list
+            .flatten()
+            .distinctBy { it.url.trim() }
     }
 
     private class PickTagStrategy : PickStrategy<List<String>> {

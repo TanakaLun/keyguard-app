@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.feature.navigation
 
+import com.artemchep.keyguard.common.model.CliAgentUsageHistoryClient
 import com.artemchep.keyguard.common.model.DFilter
 import com.artemchep.keyguard.common.model.DSendFilter
 import kotlinx.serialization.SerialName
@@ -10,6 +11,10 @@ sealed interface RouteDescriptor {
     @Serializable
     @SerialName("environments")
     data object Environments : RouteDescriptor
+
+    @Serializable
+    @SerialName("account.client_certificate")
+    data class AccountClientCertificate(val accountId: String) : RouteDescriptor
 
     /** Creates an environment, or edits the one with the [environmentId]. */
     @Serializable
@@ -74,6 +79,17 @@ sealed interface RouteDescriptor {
         val cipherId: String? = null,
     ) : RouteDescriptor
 
+    /**
+     * The CLI agent's request log, of one environment or (`null`) of
+     * the requests of one [client].
+     */
+    @Serializable
+    @SerialName("cliagent.history")
+    data class CliAgentHistory(
+        val client: CliAgentUsageHistoryClient? = null,
+        val cipherId: String? = null,
+    ) : RouteDescriptor
+
     // Intentionally carries no password, attempt, or result data.
     @Serializable
     @SerialName("vault.cipher.password_memory")
@@ -120,7 +136,14 @@ sealed interface RouteDescriptor {
     data class Folders(
         val filter: DFilter? = null,
         val empty: Boolean = false,
-    ) : RouteDescriptor
+        val parent: Parent? = null,
+    ) : RouteDescriptor {
+        @Serializable
+        data class Parent(
+            val accountId: String,
+            val folderId: String,
+        )
+    }
 
     @Serializable
     @SerialName("vault.duplicates")
@@ -133,6 +156,14 @@ sealed interface RouteDescriptor {
     data class Export(
         val title: String? = null,
         val filter: DFilter? = null,
+    ) : RouteDescriptor
+
+    /** Imports items from another password manager into the account. */
+    @Serializable
+    @SerialName("vault.import")
+    data class Import(
+        val accountId: String,
+        val configuredBackup: Boolean = false,
     ) : RouteDescriptor
 
     @Serializable

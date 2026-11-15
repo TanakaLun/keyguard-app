@@ -1,5 +1,9 @@
 package com.artemchep.keyguard.apple
 
+import com.artemchep.keyguard.apple.account.AccountClientCertificateSession
+import com.artemchep.keyguard.apple.icon.IconImageBridge
+import com.artemchep.keyguard.util.io.toNSData
+import platform.Foundation.NSData
 import com.artemchep.keyguard.apple.core.sessionKoin
 import com.artemchep.keyguard.feature.localization.textResource
 import com.artemchep.keyguard.platform.LeContext
@@ -38,6 +42,7 @@ import com.artemchep.keyguard.apple.core.KeyguardCancellable
 import com.artemchep.keyguard.apple.core.KeyguardScenePhase
 import com.artemchep.keyguard.apple.core.KeyguardVaultStatus
 import com.artemchep.keyguard.apple.core.NavigationStackController
+import com.artemchep.keyguard.apple.core.RemoteSettingsSheets
 import com.artemchep.keyguard.apple.core.ScreenEntrySnapshot
 import com.artemchep.keyguard.apple.core.ListNavigationOrigin
 import com.artemchep.keyguard.apple.dialog.AccountPickerSnapshot
@@ -77,6 +82,7 @@ import com.artemchep.keyguard.apple.environments.resolveEnvironmentRequest
 import com.artemchep.keyguard.common.service.environment.EnvironmentAccess
 import com.artemchep.keyguard.apple.gpgtools.GpgToolsSession
 import com.artemchep.keyguard.apple.lists.AutofillController
+import com.artemchep.keyguard.apple.lists.CliAgentHistorySession
 import com.artemchep.keyguard.apple.lists.AutofillCredentialSnapshot
 import com.artemchep.keyguard.apple.lists.AutofillSuggestionSnapshot
 import com.artemchep.keyguard.apple.lists.PasskeyAssertionSnapshot
@@ -138,6 +144,7 @@ import com.artemchep.keyguard.apple.vault.CollectionsController
 import com.artemchep.keyguard.apple.vault.DownloadsController
 import com.artemchep.keyguard.apple.vault.EquivalentDomainsController
 import com.artemchep.keyguard.apple.vault.ExportController
+import com.artemchep.keyguard.apple.vault.ImportController
 import com.artemchep.keyguard.apple.vault.FoldersController
 import com.artemchep.keyguard.apple.vault.QuickCopyController
 import com.artemchep.keyguard.apple.vault.OrganizationsController
@@ -220,6 +227,15 @@ class KeyguardCore(runtime: KeyguardRuntime) {
     suspend fun closeAutofillSession() = appLifecycleController.closeAutofillSession()
 
     fun syncVault() = appLifecycleController.syncVault()
+
+    private val iconImageBridge by lazy { IconImageBridge(context.koin.get()) }
+
+    /**
+     * Downloads the image of an `iconKey` from a snapshot. Returns `nil` if the icon
+     * settings do not allow it or there is nothing to load; throws if the download fails.
+     */
+    @Throws(Exception::class)
+    suspend fun loadIcon(key: String): NSData? = iconImageBridge.load(key)?.toNSData()
 
     private val quickCopyController by lazy { QuickCopyController(context) }
 
@@ -398,6 +414,8 @@ class KeyguardCore(runtime: KeyguardRuntime) {
 
     fun setGpgAgentApprovalWindow(optionId: String) = gpgAgentController.setGpgAgentApprovalWindow(optionId)
 
+    fun setGpgAgentApprovalTimeout(optionId: String) = gpgAgentController.setGpgAgentApprovalTimeout(optionId)
+
     fun setGpgAgentApprovalCachePolicy(optionId: String) = gpgAgentController.setGpgAgentApprovalCachePolicy(optionId)
 
     fun setGpgAgentDisplayKeyNames(value: Boolean) = gpgAgentController.setGpgAgentDisplayKeyNames(value)
@@ -471,7 +489,7 @@ class KeyguardCore(runtime: KeyguardRuntime) {
     /**
      * [recordId] is a [PasskeyIdentitySnapshot.recordId]; the system supplies [clientDataHash]. Null while locked, or
      * when the credential is gone or does not match [expectedRpId] / [expectedCredentialId]. Invalid requests and
-     * signing errors throw.
+     * signing errors throw. [prfFirst] and [prfSecond] are the PRF inputs for this passkey, if the request has any.
      */
     @Throws(Exception::class)
     suspend fun assertPasskey(
@@ -482,6 +500,8 @@ class KeyguardCore(runtime: KeyguardRuntime) {
         allowedCredentialIds: List<ByteArray>,
         userVerification: String?,
         userVerified: Boolean,
+        prfFirst: ByteArray?,
+        prfSecond: ByteArray?,
     ): PasskeyAssertionSnapshot? =
         passkeyController.assertPasskey(
             recordId = recordId,
@@ -491,11 +511,14 @@ class KeyguardCore(runtime: KeyguardRuntime) {
             allowedCredentialIds = allowedCredentialIds,
             userVerification = userVerification,
             userVerified = userVerified,
+            prfFirst = prfFirst,
+            prfSecond = prfSecond,
         )
 
     /**
      * Attaches a new passkey ("none" attestation) to the login [cipherRecordId] (`accountId|cipherId`). Null when
-     * the login is gone or read-only, or saving fails; crypto errors throw.
+     * the login is gone or read-only, or saving fails; crypto errors throw. [prfRequested] creates a passkey that
+     * supports the PRF, and [prfFirst] and [prfSecond] are the PRF inputs, if the request has any.
      */
     @Throws(Exception::class)
     suspend fun createPasskey(
@@ -507,6 +530,9 @@ class KeyguardCore(runtime: KeyguardRuntime) {
         userHandle: ByteArray,
         userVerification: String?,
         userVerified: Boolean,
+        prfRequested: Boolean,
+        prfFirst: ByteArray?,
+        prfSecond: ByteArray?,
     ): PasskeyRegistrationSnapshot? =
         passkeyController.createPasskey(
             cipherRecordId = cipherRecordId,
@@ -517,6 +543,9 @@ class KeyguardCore(runtime: KeyguardRuntime) {
             userHandle = userHandle,
             userVerification = userVerification,
             userVerified = userVerified,
+            prfRequested = prfRequested,
+            prfFirst = prfFirst,
+            prfSecond = prfSecond,
         )
 
     private val fido2PromptHost by lazy { com.artemchep.keyguard.apple.auth.Fido2PromptController(context) }
@@ -993,6 +1022,7 @@ class KeyguardCore(runtime: KeyguardRuntime) {
     private val foldersController by lazy { FoldersController(context) }
     private val equivalentDomainsController by lazy { EquivalentDomainsController(context) }
     private val exportController by lazy { ExportController(context) }
+    private val importController by lazy { ImportController(context) }
     private val cipherFiltersController by lazy { CipherFiltersController(context) }
     private val downloadsController by lazy { DownloadsController(context) }
     private val feedbackController by lazy { FeedbackController(context) }
@@ -1011,6 +1041,7 @@ class KeyguardCore(runtime: KeyguardRuntime) {
             foldersController,
             equivalentDomainsController,
             exportController,
+            importController,
             cipherFiltersController,
             downloadsController,
             feedbackController,
@@ -1096,6 +1127,33 @@ class KeyguardCore(runtime: KeyguardRuntime) {
     fun setExportPassword(instanceId: Long, text: String) =
         navigationStackController.setExportPassword(instanceId, text)
 
+    fun setExportConfirmationPassword(instanceId: Long, text: String) =
+        navigationStackController.setExportConfirmationPassword(instanceId, text)
+
+    fun setImportPassword(instanceId: Long, text: String) =
+        navigationStackController.setImportPassword(instanceId, text)
+
+    /** [index] is [com.artemchep.keyguard.apple.vault.ImportItemSnapshot.index]. */
+    fun setImportItemSelected(instanceId: Long, index: Int, selected: Boolean) =
+        navigationStackController.setImportItemSelected(instanceId, index, selected)
+
+    /** Answers the entry's pending [com.artemchep.keyguard.apple.vault.ImportSnapshot.filePickerRequest]. */
+    fun resolveImportFilePicker(
+        instanceId: Long,
+        requestId: String,
+        uri: String,
+        name: String?,
+        size: Long,
+        accessToken: String?,
+    ) = navigationStackController.resolveImportFilePicker(instanceId, requestId, uri, name, size, accessToken)
+
+    fun cancelImportFilePicker(instanceId: Long, requestId: String) =
+        navigationStackController.cancelImportFilePicker(instanceId, requestId)
+
+    /** The WebDAV and S3 settings sheets of a stack entry; see [ScreenEntrySnapshot.webDavSettings]. */
+    fun remoteSettingsSheets(instanceId: Long): RemoteSettingsSheets? =
+        navigationStackController.remoteSettingsSheets(instanceId)
+
     fun pushCollectionsList(accountId: String, organizationId: String?, title: String) =
         navigationStackController.pushCollectionsList(accountId, organizationId, title)
 
@@ -1125,6 +1183,12 @@ class KeyguardCore(runtime: KeyguardRuntime) {
         onChange: (SyncStatusSnapshot) -> Unit,
     ): KeyguardCancellable = accountsController.observeSyncStatus(onChange)
 
+    fun makeAccountClientCertificateSession(accountId: String): AccountClientCertificateSession =
+        AccountClientCertificateSession(
+            context, accountId,
+            com.artemchep.keyguard.apple.dialog.FormDialogsSession(newFormDialogController()),
+        )
+
     fun makeAccountDetailSession(accountId: String): AccountDetailSession =
         accountsController.makeDetailSession(accountId)
 
@@ -1141,6 +1205,16 @@ class KeyguardCore(runtime: KeyguardRuntime) {
     /** History of the cipher [cipherId], or of every cipher when `null`. */
     fun makeSshAgentHistorySession(cipherId: String?): SshAgentHistorySession =
         readOnlyListsController.makeSshAgentHistorySession(cipherId)
+
+    /**
+     * Request log of the CLI agent: the [client] (`CLI`, `MCP` or `ENV`) log, or
+     * the log of the environment [cipherId] across all clients.
+     */
+    fun makeCliAgentHistorySession(client: String?, cipherId: String?): CliAgentHistorySession =
+        readOnlyListsController.makeCliAgentHistorySession(client, cipherId)
+
+    /** Clears the [client] log without asking; confirm with the user first. */
+    fun clearCliAgentHistory(client: String) = readOnlyListsController.clearCliAgentHistory(client)
 
     fun makePasswordHistorySession(itemId: String): ListSession<PasswordHistorySnapshot> =
         readOnlyListsController.makePasswordHistorySession(itemId)
@@ -1327,6 +1401,10 @@ class KeyguardCore(runtime: KeyguardRuntime) {
 
     fun setSshAgentApprovalWindow(optionId: String) = sshAgentController.setSshAgentApprovalWindow(optionId)
 
+    fun setSshAgentApprovalTimeout(optionId: String) = sshAgentController.setSshAgentApprovalTimeout(optionId)
+
+    fun setAgentHistoryRetention(optionId: String) = sshAgentController.setAgentHistoryRetention(optionId)
+
     fun setSshAgentDisplayKeyNames(value: Boolean) = sshAgentController.setSshAgentDisplayKeyNames(value)
 
     fun makeSshAgentFiltersSession(): AgentFiltersSession =
@@ -1421,7 +1499,12 @@ class KeyguardCore(runtime: KeyguardRuntime) {
 
     // Automatic backups
 
-    private val backupsController by lazy { BackupsController(context) }
+    private val backupsController by lazy {
+        BackupsController(
+            ctx = context,
+            navigationInterceptor = navigationStackController::interceptor,
+        )
+    }
 
     fun observeBackupSettings(
         onChange: (BackupSettingsSnapshot) -> Unit,
@@ -1434,7 +1517,12 @@ class KeyguardCore(runtime: KeyguardRuntime) {
 
     fun triggerBackupNow() = backupsController.triggerBackupNow()
 
+    fun upgradeBackupEncryption() = backupsController.upgradeBackupEncryption()
+
     fun setBackupRetention(maxSnapshots: Int) = backupsController.setBackupRetention(maxSnapshots)
 
     fun disableBackup() = backupsController.disableBackup()
+
+    /** Imports a snapshot of the configured backup, asking for the account if there are several. */
+    fun importFromBackup() = backupsController.importFromBackup()
 }

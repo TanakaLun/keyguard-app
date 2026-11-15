@@ -71,6 +71,7 @@ import com.artemchep.keyguard.feature.confirmation.organization.OrganizationConf
 import com.artemchep.keyguard.feature.confirmation.organization.organizationConfirmationStateProducer
 import com.artemchep.keyguard.feature.emailleak.EmailLeakRoute
 import com.artemchep.keyguard.feature.emailleak.EmailLeakState
+import com.artemchep.keyguard.feature.favicon.toIconKey
 import com.artemchep.keyguard.feature.emailleak.emailLeakStateProducer
 import com.artemchep.keyguard.feature.filepicker.FilePickerIntent
 import com.artemchep.keyguard.feature.filepicker.FilePickerResult
@@ -114,6 +115,8 @@ import com.artemchep.keyguard.util.io.toNSData
 import com.artemchep.keyguard.apple.core.filePickerResultOf
 import com.artemchep.keyguard.apple.core.onFilePickerResult
 import com.artemchep.keyguard.apple.core.toFilePickerRequest
+import com.artemchep.keyguard.apple.model.buildVaultItemSnapshots
+import com.artemchep.keyguard.apple.model.toTagsSnapshot
 import com.artemchep.keyguard.platform.LeContext
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.res.elevatedaccess_biometric_auth_confirm_title
@@ -425,8 +428,10 @@ internal class DialogController(
                 true
             }
 
-            tagsConfirmation != null -> {
-                ctx.scope.launch { presentTagsConfirmation(tagsConfirmation.first.args, tagsConfirmation.second) }
+            tagsConfirmation != null && sessionKoin != null -> {
+                ctx.scope.launch {
+                    presentTagsConfirmation(tagsConfirmation.first.args, tagsConfirmation.second, sessionKoin)
+                }
                 true
             }
 
@@ -772,11 +777,14 @@ internal class DialogController(
                     getAttachmentPreview = sessionKoin.get(),
                     downloadManager = sessionKoin.get(),
                     temporaryDirProvider = sessionKoin.get(),
+                    gpgPublicKeyParser = sessionKoin.get(),
+                    dateFormatter = sessionKoin.get(),
                 )
                 .collect { loadable ->
                     val state = loadable.getOrNull() ?: return@collect
                     val content = cache?.takeIf { it.first === state.content }?.second
-                        ?: buildAttachmentPreviewSnapshot(state, leContext)
+                        ?: buildAttachmentPreviewSnapshot(state, leContext, cache?.second?.jsonTree)
+                            .withJsonDocumentIdentity(state.content, cache?.first, cache?.second)
                             .also { cache = state.content to it }
                     publish(
                         content.withAttachmentPreviewState(state),
@@ -787,7 +795,7 @@ internal class DialogController(
     }
 
     fun invokeAttachmentPreviewCopy() {
-        (attachmentPreviewDialog.handlers?.content as? AttachmentPreviewContent.TextLike)?.onCopy?.invoke()
+        attachmentPreviewDialog.handlers?.content?.onCopy?.invoke()
     }
 
     /** Cancels a running archive operation, otherwise goes up a folder. */
@@ -926,41 +934,38 @@ internal class DialogController(
     private fun presentTagsConfirmation(
         args: TagsConfirmationRoute.Args,
         transmitter: RouteResultTransmitter<TagsConfirmationResult>,
+        sessionKoin: Scope,
     ) {
         confirmationDialog.present { publish ->
             val interceptor = confirmationDialog.closeOnPop()
             val leContext = ctx.koin.get<LeContext>()
             ctx.koin.newHeadlessStateFlowScope("tags_confirmation", this, interceptor)
-                .tagsConfirmationStateProducer(args, transmitter)
+                .tagsConfirmationStateProducer(
+                    args = args,
+                    transmitter = transmitter,
+                    getCiphers = sessionKoin.get(),
+                )
                 .collect { state ->
+                    val stringHandlers = LinkedHashMap<String, (String) -> Unit>()
+                    val tags = state.tags.toTagsSnapshot("tags", stringHandlers)
                     publish(
                         ConfirmationSnapshot(
                             title = textResource(Res.string.ciphers_action_change_tags_title, leContext),
                             subtitle = null,
-                            message = if (state.items.isEmpty()) textResource(Res.string.tag_none, leContext) else null,
-                            items = state.items.map { item ->
+                            message = null,
+                            items = listOf(
                                 ConfirmationItemSnapshot(
-                                    key = item.key,
-                                    kind = ConfirmationItemKind.STRING,
-                                    enabled = item.field.onChange != null,
+                                    key = "tags",
+                                    kind = ConfirmationItemKind.TAGS,
+                                    enabled = state.tags.onCommit != null,
                                     title = "",
-                                    stringValue = item.field.text,
-                                    stringRevision = item.field.textRevision,
-                                    hint = item.field.hint,
-                                    removable = item.onRemove != null,
-                                )
-                            },
+                                    tags = tags,
+                                ),
+                            ),
                             confirmEnabled = state.onConfirm != null,
-                            canAddItem = state.onAdd != null,
                         ),
                         ConfirmationHandlers(
-                            stringOnChange = state.items.mapNotNull { item ->
-                                item.field.onChange?.let { item.key to it }
-                            }.toMap(),
-                            onRemove = state.items.mapNotNull { item ->
-                                item.onRemove?.let { item.key to it }
-                            }.toMap(),
-                            onAdd = state.onAdd,
+                            stringOnChange = stringHandlers,
                             onConfirm = state.onConfirm,
                         ),
                     )
@@ -1674,7 +1679,10 @@ internal class DialogController(
             kind = ConfirmationItemKind.STRING,
             enabled = enabled,
             title = title,
-            stringValue = state.text,
+            // Transient secrets stay in the native field buffer and the live producer.
+            // User edits preserve the revision, so omitting their echo does not reset the buffer.
+            stringValue = state.text.takeUnless { ephemeral }.orEmpty(),
+            ephemeral = ephemeral,
             stringRevision = state.textRevision,
             descriptionText = description,
             hint = state.hint,
@@ -1814,7 +1822,7 @@ internal class DialogController(
         title = title,
         domain = domain,
         descriptionText = description,
-        icon = icon,
+        iconKey = icon?.toIconKey(),
         count = count,
         countText = count?.let {
             textResource(
@@ -1911,7 +1919,7 @@ internal class DialogController(
         title = title,
         domain = domain,
         descriptionText = description,
-        icon = icon,
+        iconKey = icon?.toIconKey(),
         count = count,
         countText = count?.let {
             textResource(
@@ -1937,6 +1945,7 @@ internal class DialogController(
     private suspend fun buildAttachmentPreviewSnapshot(
         state: AttachmentPreviewState,
         leContext: LeContext,
+        previousJsonTree: AttachmentPreviewJsonTreeSnapshot?,
     ): AttachmentPreviewSnapshot = when (val content = state.content) {
         is AttachmentPreviewContent.Archive -> AttachmentPreviewSnapshot(
             fileName = state.fileName,
@@ -1961,20 +1970,39 @@ internal class DialogController(
             ),
         )
 
-        is AttachmentPreviewContent.Text -> AttachmentPreviewSnapshot(
+        is AttachmentPreviewContent.Text -> content.toAttachmentPreviewTextSnapshot(
             fileName = state.fileName,
             kind = AttachmentPreviewKindSnapshot.TEXT,
-            text = content.code.text,
-            spans = content.code.annotatedString.toAttachmentPreviewSpans(),
-            canCopy = true,
         )
 
-        is AttachmentPreviewContent.Markdown -> AttachmentPreviewSnapshot(
+        is AttachmentPreviewContent.Markdown -> content.toAttachmentPreviewTextSnapshot(
             fileName = state.fileName,
             kind = AttachmentPreviewKindSnapshot.MARKDOWN,
-            text = content.code.text,
-            spans = content.code.annotatedString.toAttachmentPreviewSpans(),
-            canCopy = true,
+        )
+
+        is AttachmentPreviewContent.Json -> content.toAttachmentPreviewJsonSnapshot(
+            fileName = state.fileName,
+            leContext = leContext,
+            previousJsonTree = previousJsonTree,
+        )
+
+        is AttachmentPreviewContent.Table -> content.toAttachmentPreviewTableSnapshot(
+            fileName = state.fileName,
+        )
+
+        is AttachmentPreviewContent.GpgKey -> AttachmentPreviewSnapshot(
+            fileName = state.fileName,
+            kind = AttachmentPreviewKindSnapshot.GPG_KEY,
+            text = content.source?.text,
+            spans = content.source?.annotatedString?.toAttachmentPreviewSpans().orEmpty(),
+            canCopy = content.onCopy != null,
+            items = buildVaultItemSnapshots(
+                items = content.items,
+                notesText = null,
+                leContext = leContext,
+                // The items have no actions.
+                actionHandlers = mutableMapOf(),
+            ),
         )
 
         is AttachmentPreviewContent.Error -> AttachmentPreviewSnapshot(

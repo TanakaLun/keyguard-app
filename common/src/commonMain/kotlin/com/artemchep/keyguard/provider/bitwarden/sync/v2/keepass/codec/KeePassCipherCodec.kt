@@ -2,17 +2,20 @@ package com.artemchep.keyguard.provider.bitwarden.sync.v2.keepass.codec
 
 import app.keemobile.kotpass.constants.BasicField
 import app.keemobile.kotpass.constants.PredefinedIcon
+import app.keemobile.kotpass.cryptography.EncryptedValue
 import app.keemobile.kotpass.database.BinaryIndex
 import app.keemobile.kotpass.database.BinaryIndexEntry
 import app.keemobile.kotpass.models.BinaryData
 import app.keemobile.kotpass.models.BinaryReference
 import app.keemobile.kotpass.models.Entry
 import app.keemobile.kotpass.models.EntryFields
+import app.keemobile.kotpass.models.EntryValue
 import app.keemobile.kotpass.models.TimeData
 import com.artemchep.keyguard.common.io.attempt
 import com.artemchep.keyguard.common.io.bind
 import com.artemchep.keyguard.common.io.runCatchingNonFatal
 import com.artemchep.keyguard.common.model.KEEPASS_FILE_UPLOAD_MAX_BYTES
+import com.artemchep.keyguard.common.model.KEEPASS_FILE_UPLOAD_TOO_LARGE_MESSAGE
 import com.artemchep.keyguard.common.service.crypto.CryptoGenerator
 import com.artemchep.keyguard.common.service.crypto.GpgKeyMetadataResolver
 import com.artemchep.keyguard.common.service.file.FileService
@@ -258,6 +261,10 @@ class KeePassCipherCodec(
                 }
             }
         }
+        // The bookmarks are the user's fields, so they come after the other ones.
+        local.sshKey?.bookmarks
+            ?.let(sshKeyCodec::encodeBookmarks)
+            ?.forEach { scope.setValue(it.key, it.value) }
 
         // Local entity ids are UUIDs. Reusing that id for a new KeePass entry
         // makes the write idempotent if the KDBX file is saved but the
@@ -454,6 +461,14 @@ class KeePassCipherCodec(
             if (enabled) {
                 BitwardenCipher.RepromptType.Password
             } else BitwardenCipher.RepromptType.None
+        }
+
+        // Last, so that a bookmark never takes a field that another part reads.
+        if (type == BitwardenCipher.Type.SshKey) {
+            val bookmarks = sshKeyCodec.decodeBookmarks(scope)
+            if (bookmarks.isNotEmpty()) {
+                sshKey = (sshKey ?: BitwardenCipher.SshKey()).copy(bookmarks = bookmarks)
+            }
         }
 
         val customFields = scope.getAvailableFields()
@@ -882,7 +897,7 @@ class KeePassCipherCodec(
         val pendingUpload = attachment.pendingUpload
             ?: return readAttachmentDataFromUri(attachment.url)
         require(pendingUpload.plainSize <= KEEPASS_FILE_UPLOAD_MAX_BYTES) {
-            "KeePass attachment file must be 500 MB or smaller."
+            KEEPASS_FILE_UPLOAD_TOO_LARGE_MESSAGE
         }
         val fileKey = requireNotNull(attachment.keyBase64) {
             "A staged KeePass attachment must have an encryption key."
@@ -909,7 +924,7 @@ class KeePassCipherCodec(
                 if (read == -1) break
                 total += read
                 require(total <= KEEPASS_FILE_UPLOAD_MAX_BYTES) {
-                    "KeePass attachment file must be 500 MB or smaller."
+                    KEEPASS_FILE_UPLOAD_TOO_LARGE_MESSAGE
                 }
                 output.write(buffer, 0, read)
             }
@@ -931,6 +946,45 @@ class KeePassCipherCodec(
     }
 
     // endregion
+}
+
+/**
+ * KeePass keeps the previous passwords as snapshots of the
+ * entry, oldest first; the reverse of decoding the password
+ * history. [KeePassCipherCodec.encode] does not write them,
+ * sync leaves the history of an entry as is.
+ */
+internal fun Entry.withPasswordHistory(
+    passwordHistory: List<BitwardenCipher.Login.PasswordHistory>,
+): Entry {
+    if (passwordHistory.isEmpty()) {
+        return this
+    }
+
+    // Only the passwords are known, so a snapshot keeps the
+    // basic fields and no attachments. KeePass counts the
+    // attachments of every snapshot toward the history size
+    // limit, and drops the history once it is over it.
+    val basicFields = fields.filterKeys { it in BasicField.keys }
+    val history = passwordHistory
+        .sortedBy { it.lastUsedDate }
+        .map { item ->
+            val password = EntryValue.Encrypted(
+                EncryptedValue.fromString(item.password),
+            )
+            val date = item.lastUsedDate
+                ?: times?.creationTime
+            copy(
+                fields = basicFields + (BasicField.Password() to password),
+                times = times?.copy(
+                    lastAccessTime = date,
+                    lastModificationTime = date,
+                ),
+                binaries = emptyList(),
+                history = emptyList(),
+            )
+        }
+    return copy(history = history)
 }
 
 private fun getPassword(entry: Entry): String? = entry.fields.password?.content

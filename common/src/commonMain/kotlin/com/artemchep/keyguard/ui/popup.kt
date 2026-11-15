@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -57,6 +58,7 @@ private const val OutTransitionDuration = 125
 fun DialogPopup(
     onDismissRequest: () -> Unit,
     expanded: Boolean = true,
+    maxWidth: Dp = 560.dp,
     content: @Composable () -> Unit,
 ) {
     // Popups on the desktop are by default embedded in the component in which
@@ -75,6 +77,7 @@ fun DialogPopup(
         density,
     )
     BasicPopup(
+        maxWidth = maxWidth,
         contentModifier = Modifier
             .padding(16.dp),
         graphicsModifier = { alpha, scale ->
@@ -146,6 +149,7 @@ private fun BasicPopup(
     expanded: Boolean,
     popupPositionProvider: PopupPositionProvider,
     shape: Shape = KgShapes.extraLarge,
+    maxWidth: Dp = 560.dp,
     content: @Composable () -> Unit,
 ) {
     val expandedStates = remember {
@@ -237,7 +241,6 @@ private fun BasicPopup(
                 0.9f
             }
         }
-        val maxWidth = 560.dp
         val verticalInsets = WindowInsets.leSystemBars
             .union(WindowInsets.leIme)
         Box(

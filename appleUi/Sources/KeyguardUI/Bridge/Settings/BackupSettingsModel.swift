@@ -42,8 +42,12 @@ final class BackupSettingsModel: SnapshotObserving {
     func isValidBackupWebDavURL(_ url: String) -> Bool { core.isValidBackupWebDavUrl(url: url) }
 
     func triggerBackupNow() { core.triggerBackupNow() }
+    func upgradeBackupEncryption() { core.upgradeBackupEncryption() }
 
     func setBackupRetention(_ maxSnapshots: Int32) { core.setBackupRetention(maxSnapshots: maxSnapshots) }
 
     func disableBackup() { core.disableBackup() }
+
+    /// Imports a snapshot of the configured backup, asking for the account if there are several.
+    func importFromBackup() { core.importFromBackup() }
 }

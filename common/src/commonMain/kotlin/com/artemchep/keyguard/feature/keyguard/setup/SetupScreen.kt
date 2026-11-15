@@ -46,7 +46,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.artemchep.keyguard.common.model.VaultState
 import com.artemchep.keyguard.common.model.fold
-import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 import com.artemchep.keyguard.feature.biometric.BiometricPromptEffect
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.artemchep.keyguard.feature.keyguard.unlock.unlockScreenTitlePadding
@@ -61,14 +60,15 @@ import com.artemchep.keyguard.ui.skeleton.SkeletonButton
 import com.artemchep.keyguard.ui.skeleton.SkeletonCheckbox
 import com.artemchep.keyguard.ui.skeleton.SkeletonText
 import com.artemchep.keyguard.ui.skeleton.SkeletonTextField
-import com.artemchep.keyguard.ui.theme.combineAlpha
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.state.ToggleableState
 import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.bodyMedium
+import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.theme.titleLarge
+import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 
 @Composable
 fun SetupScreen(
@@ -326,6 +326,7 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
             .padding(horizontal = 12.dp),
         text = stringResource(Res.string.setup_header_text),
         style = MiuixTheme.textStyles.bodyLarge,
+    )
     )
 
     val config = koinInject<FlavorConfig>()

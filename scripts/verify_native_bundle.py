@@ -18,12 +18,12 @@ if __package__:
     from . import check_bouncycastle_policy as dependencies
     from . import native_bundle_android as android
     from . import native_bundle_binary as binary
-    from .run_native_package_smoke import run_smoke
+    from .run_native_package_smoke import find_windows_launcher, run_smoke
 else:
     import check_bouncycastle_policy as dependencies
     import native_bundle_android as android
     import native_bundle_binary as binary
-    from run_native_package_smoke import run_smoke
+    from run_native_package_smoke import find_windows_launcher, run_smoke
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 InspectionError = binary.InspectionError
@@ -65,6 +65,9 @@ MODULES = {
         "txn_write", "txn_commit", "txn_abort", "scratch_open", "scratch_write", "scratch_seal",
         "scratch_length", "scratch_read_at", "scratch_close", "sweep_orphans",
     )),
+    "age": NativeModule("age", "com_artemchep_keyguard_util_age_NativeAgeJni",
+                        ("abiVersion", "create", "execute", "close"),
+                        ("abi_version", "create", "execute", "close")),
     "zxcvbn": NativeModule("zxcvbn", "com_artemchep_keyguard_util_zxcvbn_NativeZxcvbnJni",
                           ("abiVersion", "estimate"), ("abi_version", "estimate")),
     "instance": NativeModule("instance", "com_artemchep_keyguard_util_instance_NativeInstanceJni",
@@ -89,11 +92,11 @@ MODULES = {
         "peer_pid", "read", "write", "await_input", "close",
     )),
 }
-DESKTOP_MODULES = ("crypto", "io", "zxcvbn", "instance", "yubikey", "fido2", "agent_ipc")
+DESKTOP_MODULES = ("crypto", "io", "age", "zxcvbn", "instance", "yubikey", "fido2", "agent_ipc")
 # The passkey provider exists only on Windows; other desktop packages do not bundle it.
 WINDOWS_DESKTOP_MODULES = DESKTOP_MODULES + ("windows_passkeys",)
-ANDROID_MODULES = ("crypto", "io", "zxcvbn")
-APPLE_APP_MODULES = ("crypto", "io", "zxcvbn", "zip")
+ANDROID_MODULES = ("crypto", "io", "age", "zxcvbn")
+APPLE_APP_MODULES = ("crypto", "io", "age", "zxcvbn", "zip")
 BRIDGE_EXPORTS = frozenset((
     "autoTypeCaptureTarget", "autoTypePermission", "autoTypeLogin",
     "getSystemAccentColor", "biometricsIsSupported", "biometricsVerify",
@@ -196,10 +199,10 @@ def inspect_desktop(root: Path, target_platform: str, arch: str) -> None:
 
 
 def inspect_windows_runtime(root: Path, arch: str) -> None:
-    launchers = sorted(path for path in root.rglob("Keyguard.exe") if path.is_file())
-    if len(launchers) != 1:
-        raise InspectionError(f"{root}: expected one Windows launcher; found {len(launchers)}")
-    launcher = launchers[0]
+    try:
+        launcher = find_windows_launcher(root)
+    except RuntimeError as error:
+        raise InspectionError(str(error)) from error
     for path in (launcher, launcher.parent / "runtime/bin/server/jvm.dll"):
         if not path.is_file():
             raise InspectionError(f"{root}: missing bundled runtime binary {path}")

@@ -65,6 +65,7 @@ jobs:
           python3 -m unittest
           scripts/test_classify_native_changes.py
           scripts/test_prefetch_native.py
+          scripts/test_setup_protobuf.py
           scripts/test_verify_native_bundle.py
           scripts/test_check_bouncycastle_policy.py
           scripts/test_run_native_package_smoke.py
@@ -201,7 +202,7 @@ jobs:
           --locked
           --offline
       - name: "Cache pinned supply-chain tools"
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.cargo/native-ci-tools
           key: native-crypto-tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('rust-toolchain.toml', '.github/actions/setup_rust/action.yml') }}-${{ env.CARGO_ABOUT_VERSION }}-${{ env.CARGO_DENY_VERSION }}-${{ env.CARGO_SBOM_VERSION }}
@@ -270,7 +271,7 @@ jobs:
           rustup show active-toolchain
           rustup show active-toolchain | grep -q "^${RUSTUP_TOOLCHAIN}-"
       - name: "Cache pinned cargo-fuzz"
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.cargo/native-fuzz-tools
           key: native-fuzz-tools-${{ runner.os }}-${{ runner.arch }}-${{ env.RUSTUP_TOOLCHAIN }}-${{ env.CARGO_FUZZ_VERSION }}
@@ -355,11 +356,15 @@ jobs:
       - name: "Check native utility protocol drift"
         run: >-
           python3 scripts/native_protocol.py check windows-passkeys
+      - name: "Install shells for agent setup fixtures"
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fish zsh
       - name: "Format, lint and test native utility crates"
         shell: bash
+        env:
+          KEYGUARD_REQUIRED_SHELLS: bash,zsh,fish
         run: |
           # One module at a time, so features never unify across modules.
-          for module in ffi io instance zip zxcvbn yubikey fido2 windows-passkeys agent-ipc; do
+          for module in ffi io age instance zip zxcvbn yubikey fido2 windows-passkeys agent-ipc; do
             packages=()
             for crate in util/"$module"/rust/crates/*/; do
               packages+=(-p "$(basename "$crate")")
@@ -378,12 +383,12 @@ jobs:
               --target "$target" --lib --bins --locked --no-deps -- -D warnings
           done
           # One CLI crate at a time, so features never unify across them.
-          for package in keyguard-agent-ipc keyguard-cli-protocol keyguard-cli keyguard-cli-agent; do
+          for package in keyguard-agent-setup keyguard-agent-ipc keyguard-cli-protocol keyguard-cli keyguard-cli-agent; do
             cargo fmt -p "$package" -- --check
             cargo clippy -p "$package" --all-targets --locked -- -D warnings
           done
           # Together: the agent's tests run the keyguard binary of keyguard-cli.
-          cargo test -p keyguard-agent-ipc -p keyguard-cli-protocol -p keyguard-cli -p keyguard-cli-agent --locked
+          cargo test -p keyguard-agent-setup -p keyguard-agent-ipc -p keyguard-cli-protocol -p keyguard-cli -p keyguard-cli-agent --locked
           # zip consumes keyguard-ffi without its jni feature.
           cargo clippy -p keyguard-ffi --all-targets --locked --no-deps -- -D warnings
       - name: "Test reviewed authenticator fork"
@@ -413,9 +418,12 @@ jobs:
         with:
           cache-write-only: ${{ inputs.cache-write-only || false }}
       - uses: ./.github/actions/setup_python
-      - name: "Test Windows native process cleanup"
+      - name: "Test Windows package layout and process cleanup"
         if: runner.os == 'Windows'
-        run: python -m unittest scripts/test_run_native_package_smoke.py
+        run: >-
+          python -m unittest
+          scripts.test_verify_native_bundle.WindowsRuntimeTest
+          scripts.test_run_native_package_smoke
       - name: "Select latest stable Xcode"
         if: matrix.platform == 'macos' && matrix.arch == 'aarch64' && (needs.changes.outputs.apple == 'true' || needs.changes.outputs.apple_regressions == 'true')
         shell: bash
@@ -469,7 +477,9 @@ jobs:
         run: cargo test --manifest-path desktopLibNative/src/Cargo.toml --all-targets --locked --offline
       - name: "Run Windows CLI helper Rust tests"
         if: runner.os == 'Windows' && needs.changes.outputs.desktop_native == 'true'
-        run: cargo test -p keyguard-agent-ipc -p keyguard-cli-protocol -p keyguard-cli -p keyguard-cli-agent --all-targets --locked --offline
+        env:
+          KEYGUARD_REQUIRED_SHELLS: pwsh,powershell
+        run: cargo test -p keyguard-agent-setup -p keyguard-agent-ipc -p keyguard-cli-protocol -p keyguard-cli -p keyguard-cli-agent --all-targets --locked --offline
       - name: "Run environment FIFO regressions"
         if: runner.os != 'Windows' && needs.changes.outputs.desktop_native == 'true'
         run: |
@@ -480,7 +490,7 @@ jobs:
         shell: bash
         run: |
           # One helper at a time, so features never unify across helpers.
-          for package in keyguard-agent-ipc keyguard-ssh-agent keyguard-gpg-agent keyguard-cli-protocol keyguard-cli keyguard-cli-agent; do
+          for package in keyguard-agent-setup keyguard-agent-ipc keyguard-ssh-agent keyguard-gpg-agent keyguard-cli-protocol keyguard-cli keyguard-cli-agent; do
             cargo clippy -p "$package" --all-targets --locked --offline -- -D warnings
           done
       - name: "Test Linux kernel credential protection"
@@ -598,7 +608,7 @@ jobs:
       - name: "Run macOS native consumer regressions"
         if: matrix.platform == 'macos' && matrix.arch == 'aarch64' && (needs.changes.outputs.apple == 'true' || needs.changes.outputs.apple_regressions == 'true')
         run: >-
-          ./gradlew --continue --max-workers=1
+          python3 scripts/run_mtls_tests.py -- ./gradlew --continue --max-workers=1
           -Pkeyguard.nativeCargo.cargoOffline=true
           :util:agent-ipc:macosArm64Test
           :util:crypto:macosArm64Test
@@ -610,8 +620,10 @@ jobs:
           :util:webauthn:macosArm64Test
           :util:zip:macosArm64Test
           :util:zxcvbn:macosArm64Test
+          :util:age:macosArm64Test
           :common:macosArm64Test
           :appleApp:macosArm64Test
+          :common:desktopTest --tests 'com.artemchep.keyguard.provider.bitwarden.transport.MutualTlsNetworkTest'
       - name: "Link native consumers for device and simulator"
         if: matrix.platform == 'macos' && matrix.arch == 'aarch64' && needs.changes.outputs.apple == 'true'
         run: >-
@@ -620,7 +632,6 @@ jobs:
           :appleApp:linkDebugTestIosArm64
           :appleApp:linkDebugTestIosSimulatorArm64
           :appleApp:assembleKeyguardSharedDebugXCFramework
-          :common:generateAppleStrings
           :util:crypto:linkDebugTestMacosArm64
       - name: "Generate Xcode projects"
         if: matrix.platform == 'macos' && matrix.arch == 'aarch64' && needs.changes.outputs.apple == 'true'
@@ -730,8 +741,8 @@ jobs:
           archives=()
           while IFS= read -r -d '' archive; do
             archives+=("$archive")
-          done < <(find util/crypto/build util/io/build util/zip/build util/zxcvbn/build util/agent-ipc/build -type f -name 'libkeyguard_*.a' -print0)
-          test "${#archives[@]}" -ge 5
+          done < <(find util/crypto/build util/io/build util/age/build util/zip/build util/zxcvbn/build util/agent-ipc/build -type f -name 'libkeyguard_*.a' -print0)
+          test "${#archives[@]}" -ge 6
           python3 scripts/verify_native_bundle.py apple --arch aarch64 \
             appleApp/build/bin/iosArm64/debugTest/test.kexe \
             appleApp/build/bin/iosSimulatorArm64/debugTest/test.kexe \
@@ -754,7 +765,9 @@ jobs:
             util/zip/build/reports/tests/
             util/zip/build/test-results/
             util/zxcvbn/build/reports/tests/
+            util/age/build/reports/tests/
             util/zxcvbn/build/test-results/
+            util/age/build/test-results/
             util/io/build/reports/tests/
             util/io/build/test-results/
             util/instance/build/reports/tests/
@@ -812,10 +825,10 @@ jobs:
           disable-animations: true
           disk-size: 4G
           script: >-
-            ./gradlew --max-workers=1
+            python3 scripts/run_mtls_tests.py --android -- ./gradlew --max-workers=1
             -Pkeyguard.nativeCargo.cargoOffline=true
             :androidApp:connectedNoneDebugAndroidTest
-            -Pandroid.testInstrumentationRunnerArguments.class=com.artemchep.keyguard.test.nativebundle.NativeBundleSmokeTest,com.artemchep.keyguard.test.io.NativeIoAtomicDirectorySmokeTest
+            -Pandroid.testInstrumentationRunnerArguments.class=com.artemchep.keyguard.test.nativebundle.NativeBundleSmokeTest,com.artemchep.keyguard.test.io.NativeIoAtomicDirectorySmokeTest,com.artemchep.keyguard.test.transport.MutualTlsNetworkTest
       - name: "Build Wear package"
         if: matrix.api == 26 && needs.changes.outputs.android == 'true'
         run: >-

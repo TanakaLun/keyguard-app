@@ -72,6 +72,7 @@ import com.artemchep.keyguard.ui.buildContextItems
 import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.icons.iconSmall
+import com.artemchep.keyguard.ui.selection.removeMissingSelection
 import com.artemchep.keyguard.ui.selection.selectionHandle
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -88,7 +89,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import org.koin.compose.currentKoinScope
 
@@ -322,23 +322,10 @@ suspend fun RememberStateFlowScope.attachmentsScreenStateProducer(
         }
         .shareInScreenScope()
 
-    // Automatically de-select items
-    // that do not exist.
-    combine(
-        itemsRawFlow,
-        selectionHandle.idsFlow,
-    ) { attachments, selectedAttachmentIds ->
-        val newSelectedAttachmentIds = selectedAttachmentIds
-            .asSequence()
-            .filter { attachmentId ->
-                attachments.any { it.attachment.id == attachmentId }
-            }
-            .toSet()
-        newSelectedAttachmentIds.takeIf { it.size < selectedAttachmentIds.size }
-    }
-        .filterNotNull()
-        .onEach { ids -> selectionHandle.setSelection(ids) }
-        .launchIn(screenScope)
+    selectionHandle.removeMissingSelection(
+        scope = screenScope,
+        itemsFlow = itemsRawFlow,
+    ) { it.attachment.id }
 
     val itemsFilteredFlow = itemsRawFlow
         .map { attachments ->

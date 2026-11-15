@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.attachmentpreview
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
+import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.ui.Breadcrumb
 import dev.snipme.highlights.model.SyntaxLanguage
 
@@ -30,6 +31,10 @@ data class AttachmentPreviewCode(
 )
 
 sealed interface AttachmentPreviewContent {
+    /** Copies the whole file as text, or `null` if there is no text. */
+    val onCopy: (() -> Unit)?
+        get() = null
+
     data class Archive(
         internal val source: com.artemchep.keyguard.util.zip.ZipArchive,
         val path: String = "",
@@ -49,7 +54,7 @@ sealed interface AttachmentPreviewContent {
             get() = code.lineIndex
         val syntaxLanguage: SyntaxLanguage?
             get() = code.syntaxLanguage
-        val onCopy: () -> Unit
+        override val onCopy: () -> Unit
     }
 
     data class Text(
@@ -61,6 +66,28 @@ sealed interface AttachmentPreviewContent {
         override val code: AttachmentPreviewCode,
         override val onCopy: () -> Unit,
     ) : TextLike
+
+    data class Table(
+        override val code: AttachmentPreviewCode,
+        val table: AttachmentPreviewTable,
+        override val onCopy: () -> Unit,
+    ) : TextLike
+
+    data class Json(
+        override val code: AttachmentPreviewCode,
+        val preview: AttachmentPreviewJsonPreview,
+        override val onCopy: () -> Unit,
+    ) : TextLike
+
+    /**
+     * Parsed OpenPGP certificates. A binary key has
+     * no [source] to show or copy.
+     */
+    data class GpgKey(
+        val items: List<VaultViewItem>,
+        val source: AttachmentPreviewCode?,
+        override val onCopy: (() -> Unit)?,
+    ) : AttachmentPreviewContent
 
     data class Error(
         val type: AttachmentPreviewError,
@@ -74,6 +101,9 @@ enum class AttachmentPreviewError {
     Network,
     Decryption,
     TextDecode,
+    GpgKey,
+    GzipInvalid,
+    GzipTooLarge,
     ArchiveInvalid,
     ArchiveUnsupported,
     ArchivePassword,

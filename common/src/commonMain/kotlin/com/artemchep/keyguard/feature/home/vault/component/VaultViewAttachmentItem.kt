@@ -13,5 +13,6 @@ fun VaultViewAttachmentItem(
     ItemAttachment(
         modifier = modifier,
         item = item.item,
+        drag = item.drag,
     )
 }

@@ -34,14 +34,8 @@ import coil3.SingletonImageLoader
 import com.artemchep.keyguard.common.AppWorker
 import com.artemchep.keyguard.common.di.ImageLoadingModule
 import com.artemchep.keyguard.common.di.setFromKoin
-import com.artemchep.keyguard.common.io.attempt
-import com.artemchep.keyguard.common.io.bind
-import com.artemchep.keyguard.common.model.MasterSession
-import com.artemchep.keyguard.common.model.PersistedSession
 import com.artemchep.keyguard.common.model.ToastMessage
 import com.artemchep.keyguard.common.service.Files
-import com.artemchep.keyguard.common.service.app.AppIconFetcher
-import com.artemchep.keyguard.common.service.app.AppIconKeyer
 import com.artemchep.keyguard.common.service.clipboard.ClipboardEventBus
 import com.artemchep.keyguard.common.service.clipboard.ClipboardService
 import com.artemchep.keyguard.common.service.crypto.CryptoGenerator
@@ -58,30 +52,41 @@ import com.artemchep.keyguard.di.ApplicationCoroutineScope
 import kotlinx.coroutines.CoroutineScope
 import com.artemchep.keyguard.common.service.gpgagent.GpgAgentStatusService
 import com.artemchep.keyguard.common.service.keyboard.KeyboardShortcutsService
+import com.artemchep.keyguard.common.io.launchIn
+import com.artemchep.keyguard.common.model.GlobalShortcutAction
+import com.artemchep.keyguard.common.model.LockReason
+import com.artemchep.keyguard.common.model.UI_SCALE_MAX
+import com.artemchep.keyguard.common.model.UI_SCALE_MIN
+import com.artemchep.keyguard.common.service.settings.SettingsReadWriteRepository
+import com.artemchep.keyguard.common.service.shortcut.GlobalShortcutController
+import com.artemchep.keyguard.common.service.shortcut.DesktopGlobalShortcutController
+import com.artemchep.keyguard.common.usecase.GetGlobalShortcuts
+import com.artemchep.keyguard.common.usecase.PutGlobalShortcut
+import com.artemchep.keyguard.common.usecase.impl.PutGlobalShortcutImpl
+import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.common.service.keychain.KeychainRepository
 import com.artemchep.keyguard.common.service.keyvalue.KeyValueStoreFactory
 import com.artemchep.keyguard.common.service.logging.LogRepository
 import com.artemchep.keyguard.common.service.notification.NotificationRepository
 import com.artemchep.keyguard.common.service.passkey.WindowsPasskeyService
-import com.artemchep.keyguard.common.service.quicksearch.DesktopLibGlobalHotKeyRegistrar
-import com.artemchep.keyguard.common.service.quicksearch.QuickSearchHotkeyService
 import com.artemchep.keyguard.common.service.quicksearch.QuickSearchWindowManager
-import com.artemchep.keyguard.common.service.session.VaultLockHotkeyService
 import com.artemchep.keyguard.common.service.session.VaultPowerLockService
+import com.artemchep.keyguard.common.service.shortcut.DesktopLibGlobalHotKeyRegistrar
 import com.artemchep.keyguard.common.service.session.VaultSessionLocker
+import com.artemchep.keyguard.common.service.session.VaultSessionPersister
+import com.artemchep.keyguard.common.service.sshagent.DesktopSshAgentSocketPathProvider
 import com.artemchep.keyguard.common.service.sshagent.SshAgentManager
+import com.artemchep.keyguard.common.service.sshagent.SshAgentSocketPathProvider
 import com.artemchep.keyguard.common.service.sshagent.SshAgentStatusService
 import com.artemchep.keyguard.common.service.agent.superviseAgent
 import com.artemchep.keyguard.desktop.ui.showAgentFailure
-import com.artemchep.keyguard.common.service.vault.KeyReadWriteRepository
 import com.artemchep.keyguard.common.usecase.ClearVaultSession
-import com.artemchep.keyguard.common.usecase.GetAccounts
 import com.artemchep.keyguard.common.usecase.GetCloseToTray
 import com.artemchep.keyguard.common.usecase.GetGpgAgent
 import com.artemchep.keyguard.common.usecase.GetLocale
 import com.artemchep.keyguard.common.usecase.GetMinimizeOnCopy
 import com.artemchep.keyguard.common.usecase.GetSshAgent
-import com.artemchep.keyguard.common.usecase.GetVaultPersist
+import com.artemchep.keyguard.common.usecase.GetUiScale
 import com.artemchep.keyguard.common.usecase.GetVaultSession
 import com.artemchep.keyguard.common.usecase.PutVaultSession
 import com.artemchep.keyguard.common.usecase.ShowMessage
@@ -113,8 +118,6 @@ import com.artemchep.keyguard.desktop.util.requestAppForeground
 import com.artemchep.keyguard.desktop.util.requestFocusWithRetry
 import com.artemchep.keyguard.di.GlobalModuleCommon
 import com.artemchep.keyguard.di.VaultModuleCommon
-import com.artemchep.keyguard.di.resolve
-import com.artemchep.keyguard.feature.favicon.Favicon
 import com.artemchep.keyguard.feature.keyguard.AppRoute
 import com.artemchep.keyguard.feature.navigation.BackHandler
 import com.artemchep.keyguard.feature.navigation.LocalNavigationBackHandler
@@ -146,22 +149,17 @@ import com.artemchep.keyguard.util.windowspasskeys.WindowsPasskeys
 import dev.nucleusframework.composenativetray.tray.api.Tray
 import java.util.Locale
 import kotlin.system.exitProcess
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
@@ -171,6 +169,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinIsolatedContext
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.single
@@ -210,10 +209,7 @@ fun main(args: Array<String>) {
 }
 
 internal fun createDesktopKoinApplication(): org.koin.core.KoinApplication {
-    val images = ImageLoadingModule { scope ->
-        add(AppIconFetcher.Factory(scope.get(), scope.get()))
-        add(AppIconKeyer())
-    }
+    val images = ImageLoadingModule()
     return koinApplication {
         allowOverride(false)
         modules(
@@ -232,11 +228,21 @@ private class DesktopApplicationModule {
     val module = module {
         single { WindowStateManager(get<KeyValueStoreFactory>().get(Files.WINDOW_STATE), get()) }
         single { QuickSearchWindowManager() }
+        single {
+            val repository = get<SettingsReadWriteRepository>()
+            DesktopGlobalShortcutController(
+                configurations = get<GetGlobalShortcuts>()(),
+                persist = { action, config -> repository.setGlobalShortcut(action, config).invoke() },
+                registrar = DesktopLibGlobalHotKeyRegistrar(name = "Global shortcuts"),
+            )
+        } bind GlobalShortcutController::class
+        single<PutGlobalShortcutImpl>() bind PutGlobalShortcut::class
         single<KeychainRepository> { KeychainRepositoryNative() }
         single<AutotypeService> { AutotypeServiceNative(get()) }
         single<NotificationRepository> { NotificationRepositoryNative(get()) }
         // The agents and their approval prompts outlive any window.
         single<SshAgentManager>()
+        single<DesktopSshAgentSocketPathProvider>() bind SshAgentSocketPathProvider::class
         single<GpgAgentManager>()
         single { CliAgentManager(get(), get(), get<CliAgentHost>()) }
         single {
@@ -277,21 +283,6 @@ private fun runKeyguardApplication(desktopInstance: DesktopInstance, passkeyActi
     val cryptoGenerator by lazy { koin.get<CryptoGenerator>() }
     val getVaultSession by lazy { koin.get<GetVaultSession>() }
     val putVaultSession by lazy { koin.get<PutVaultSession>() }
-    val getVaultPersist by lazy { koin.get<GetVaultPersist>() }
-    val keyReadWriteRepository by lazy { koin.get<KeyReadWriteRepository>() }
-    getVaultSession()
-        .map { session ->
-            val key = session as? MasterSession.Key
-            key?.session?.resolve { get<GetAccounts>() }
-        }
-        .mapLatest { getAccounts ->
-            if (getAccounts != null) {
-                coroutineScope {
-                    Favicon.launch(this, getAccounts)
-                }
-            }
-        }
-        .launchIn(GlobalScope)
 
     // locale
     val systemLocale = Locale.getDefault()
@@ -318,32 +309,10 @@ private fun runKeyguardApplication(desktopInstance: DesktopInstance, passkeyActi
         .launchIn(GlobalScope)
 
     // persist
-    combine(
-        getVaultSession(),
-        getVaultPersist(),
-    ) { session, persist ->
-        val persistedMasterKey = if (persist && session is MasterSession.Key) {
-            session.masterKey
-        } else {
-            null
-        }
-        persistedMasterKey
+    val vaultSessionPersister by lazy { koin.get<VaultSessionPersister>() }
+    GlobalScope.launch {
+        vaultSessionPersister.run()
     }
-        .onEach { masterKey ->
-            val persistedSession = if (masterKey != null) {
-                PersistedSession(
-                    masterKey = masterKey,
-                    createdAt = Clock.System.now(),
-                    persistedAt = Clock.System.now(),
-                )
-            } else {
-                null
-            }
-            keyReadWriteRepository.put(persistedSession)
-                .attempt()
-                .bind()
-        }
-        .launchIn(GlobalScope)
 
     val appWorker by lazy { koin.get<AppWorker>(qualifier = named(AppWorker.Feature.SYNC)) }
     val processLifecycleFlow = MutableStateFlow(LeLifecycleState.RESUMED)
@@ -471,39 +440,34 @@ private fun runKeyguardApplication(desktopInstance: DesktopInstance, passkeyActi
                     )
                 } else null
             }
-            val quickSearchHotkeyRegistrar = remember {
-                DesktopLibGlobalHotKeyRegistrar(
-                    name = "Quick search",
-                )
-            }
-            val vaultLockHotkeyRegistrar = remember {
-                DesktopLibGlobalHotKeyRegistrar(
-                    name = "Vault lock",
-                )
-            }
-            DisposableEffect(
-                quickSearchWindowManager,
-                quickSearchHotkeyRegistrar,
-                autotypeController,
-            ) {
-                val stop = QuickSearchHotkeyService(
-                    windowManager = quickSearchWindowManager,
-                    globalHotKeyRegistrar = quickSearchHotkeyRegistrar,
-                    beforeOpen = { autotypeController?.captureTarget() },
-                ).start()
-                onDispose(stop)
-            }
             val clearVaultSession = koinInject<ClearVaultSession>()
-            DisposableEffect(
+            val globalShortcutController = koinInject<DesktopGlobalShortcutController>()
+            LaunchedEffect(globalShortcutController) {
+                globalShortcutController.run()
+            }
+            LaunchedEffect(
+                globalShortcutController,
+                quickSearchWindowManager,
+                autotypeController,
                 clearVaultSession,
-                vaultLockHotkeyRegistrar,
             ) {
-                val stop = VaultLockHotkeyService(
-                    clearVaultSession = clearVaultSession,
-                    globalHotKeyRegistrar = vaultLockHotkeyRegistrar,
-                    scope = GlobalScope,
-                ).start()
-                onDispose(stop)
+                // Handle presses off the UI thread, like the native callbacks did.
+                withContext(Dispatchers.IO) {
+                    globalShortcutController.presses.collect { action ->
+                        when (action) {
+                            GlobalShortcutAction.QuickSearch -> {
+                                autotypeController?.captureTarget()
+                                quickSearchWindowManager.requestOpen()
+                            }
+
+                            GlobalShortcutAction.LockVault -> {
+                                val reason = TextHolder.Res(Res.string.lock_reason_manually)
+                                clearVaultSession(LockReason.LOCK, reason)
+                                    .launchIn(GlobalScope)
+                            }
+                        }
+                    }
+                }
             }
 
             val showMessage = koinInject<ShowMessage>()
@@ -807,11 +771,29 @@ private fun KeyguardWindowEssentialsProvider(
             ?.toFloatOrNull()
             ?.let { Density(it) }
     }
+    // The user-selected interface scale multiplies the base density,
+    // so 1x always matches the system (or the JVM property override).
+    val getUiScale = koinInject<GetUiScale>()
+    val uiScale by remember(getUiScale) {
+        getUiScale()
+    }.collectAsState(1f)
+    val baseDensity = densityOverride ?: LocalDensity.current
+    val density = remember(baseDensity, uiScale) {
+        val scale = uiScale.coerceIn(UI_SCALE_MIN, UI_SCALE_MAX)
+        if (scale != 1f) {
+            Density(
+                density = baseDensity.density * scale,
+                fontScale = baseDensity.fontScale,
+            )
+        } else {
+            densityOverride
+        }
+    }
     val providers = buildList {
         add(LocalComposeWindow provides window)
         add(LocalWindowId provides windowId)
-        if (densityOverride != null) {
-            add(LocalDensity provides densityOverride)
+        if (density != null) {
+            add(LocalDensity provides density)
         }
     }.toTypedArray()
     CompositionLocalProvider(*providers) {

@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.sshagent.history
 
 import androidx.compose.runtime.Immutable
 import arrow.optics.optics
+import com.artemchep.keyguard.feature.agent.history.AgentHistoryDetails
 import com.artemchep.keyguard.common.model.SshUsageHistoryRequestType
 import com.artemchep.keyguard.common.model.SshUsageHistoryResponseType
 import kotlin.time.Instant
@@ -33,6 +34,8 @@ sealed interface SshAgentHistoryItem {
         val request: SshUsageHistoryRequestType,
         val response: SshUsageHistoryResponseType,
         val createdAt: Instant,
+        val details: AgentHistoryDetails,
+        val onClick: (() -> Unit)? = null,
     ) : SshAgentHistoryItem {
         companion object;
     }

@@ -45,7 +45,9 @@ import com.artemchep.keyguard.common.usecase.impl.WatchtowerInactiveTfa
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerIncomplete
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerPasswordPwned
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerPasswordStrength
+import com.artemchep.keyguard.common.usecase.impl.WatchtowerSshCertificateUnusable
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerSshKeyStrength
+import com.artemchep.keyguard.common.usecase.impl.WatchtowerTwoFaUnusable
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerUnsecureWebsite
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerWeakGpgKey
 import com.artemchep.keyguard.common.usecase.impl.WatchtowerWebsitePwned
@@ -96,6 +98,10 @@ internal class VaultWatchtowerModule {
             scoped<WatchtowerPasswordStrength>()
 
             scoped<WatchtowerSshKeyStrength>()
+
+            scoped<WatchtowerSshCertificateUnusable>()
+
+            scoped<WatchtowerTwoFaUnusable>()
 
             scoped<GpgWatchtowerPolicy>()
 

@@ -11,8 +11,8 @@ import com.artemchep.keyguard.feature.home.vault.component.formatCardNumber
 import com.artemchep.keyguard.feature.home.vault.component.obscureCardNumber
 import com.artemchep.keyguard.feature.home.vault.component.vaultItemReferenceLabel
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
-import com.artemchep.keyguard.feature.home.vault.model.VaultUriIcon
 import com.artemchep.keyguard.feature.localization.textResource
+import com.artemchep.keyguard.feature.tags.TagsFieldModel
 import com.artemchep.keyguard.platform.LeContext
 import com.artemchep.keyguard.res.*
 import com.artemchep.keyguard.ui.ContextItem
@@ -87,6 +87,63 @@ internal fun TextFieldModel.toFieldSnapshot(
 }
 
 /**
+ * A tags editor: chips plus the [draft] of the tag being typed. The commands take a string and go
+ * through the owning screen's `set…(id, text)`, like a text field does: [commitId] adds the tags from
+ * a text (a picked suggestion or the draft), [removeId] removes a tag, and [editId] moves a tag back
+ * into the draft. A null id means the command is not available.
+ */
+data class TagsFieldSnapshot(
+    val tags: List<String>,
+    val draft: TextFieldSnapshot,
+    val suggestions: List<TagSuggestionSnapshot>,
+    val commitId: String?,
+    val removeId: String?,
+    val editId: String?,
+)
+
+/**
+ * A tag that exists in the vault; [usage] is the number of items that have it. [matchStart] and
+ * [matchEnd] are the UTF-16 range of the [name] that matches the draft, -1 if there is none.
+ */
+data class TagSuggestionSnapshot(
+    val name: String,
+    val usage: Int,
+    val matchStart: Int,
+    val matchEnd: Int,
+)
+
+/** Also registers the draft and the commands into [handlers], prefixing their ids with [id]. */
+internal fun TagsFieldModel.toTagsSnapshot(
+    id: String,
+    handlers: MutableMap<String, (String) -> Unit>,
+): TagsFieldSnapshot {
+    fun command(
+        name: String,
+        block: ((String) -> Unit)?,
+    ): String? = block?.let {
+        val commandId = "$id:$name"
+        handlers[commandId] = it
+        commandId
+    }
+
+    return TagsFieldSnapshot(
+        tags = tags,
+        draft = draft.toFieldSnapshot(handlers, id = "$id:draft"),
+        suggestions = suggestions.map { suggestion ->
+            TagSuggestionSnapshot(
+                name = suggestion.name,
+                usage = suggestion.usage,
+                matchStart = suggestion.match?.first ?: -1,
+                matchEnd = suggestion.match?.let { it.last + 1 } ?: -1,
+            )
+        },
+        commitId = command("commit", onCommit),
+        removeId = command("remove", onRemove),
+        editId = command("edit", onEdit),
+    )
+}
+
+/**
  * Side effect: registers every item action closure into [actionHandlers] under an opaque id that SwiftUI
  * invokes back. [notesText] is the Markdown note body, which the `Note` item only carries as a rendering flag.
  */
@@ -112,7 +169,6 @@ internal suspend fun buildVaultItemSnapshots(
     // a concealed row's value is sent and SwiftUI masks it locally.
     revealedIds: Set<String>? = null,
     onRequestReveal: ((VaultViewItem) -> String?)? = null,
-    uriAppIcons: Map<VaultUriIcon.App, String?> = emptyMap(),
 ): List<VaultItemSnapshot> {
     val out = ArrayList<VaultItemSnapshot>()
 
@@ -233,7 +289,8 @@ internal suspend fun buildVaultItemSnapshots(
                 switchValue = false,
                 actions = item.dropdown.toActionSnapshots(item.id),
                 shapeState = 0,
-                uriIcon = item.iconSource.toUriIconSnapshot(uriAppIcons),
+                uriIcon = item.iconSource.toUriIconSnapshot(),
+                dragUrl = item.drag?.url,
             )
 
             is VaultViewItem.Note -> {
@@ -710,7 +767,7 @@ internal suspend fun buildVaultItemSnapshots(
                     actions = att.actionsState.value.toActionSnapshots(item.id),
                     shapeState = 0,
                     clickActionId = clickActionId,
-                    attachment = attachmentSnap,
+                    attachment = attachmentSnap.copy(drag = item.drag?.let(::AttachmentDragSnapshot)),
                 )
             }
 
@@ -882,6 +939,7 @@ data class AttachmentFieldSnapshot(
     val progress: Float,
     val downloadedText: String?,
     val autoResume: Boolean,
+    val drag: AttachmentDragSnapshot? = null,
 )
 
 /**
@@ -987,6 +1045,8 @@ data class VaultItemSnapshot(
     val clickActionId: String? = null,
     val badges: List<VaultBadgeSnapshot> = emptyList(),
     val attachment: AttachmentFieldSnapshot? = null,
+    /** URI only: the link the row offers by drag; null when it offers none. */
+    val dragUrl: String? = null,
     /** SPACER height in points. */
     val spacerHeight: Float = 0f,
     /**

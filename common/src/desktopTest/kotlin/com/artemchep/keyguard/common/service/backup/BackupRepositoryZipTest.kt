@@ -40,6 +40,27 @@ abstract class BackupRepositoryZipTestBase {
         zipService = createZipService(),
     )
 
+    /**
+     * The metadata the runner would pass to index calls: the repository's
+     * own, or a plain one for tests of the index layer alone.
+     */
+    protected suspend fun indexMetadata(
+        store: BackupObjectStore,
+        password: Password?,
+    ): BackupRepositoryMetadata = repository.readMetadata(store, password)
+        ?: BackupRepositoryMetadata(repoId = "index-test", createdAt = Instant.fromEpochMilliseconds(0L))
+
+    protected suspend fun BackupRepository.readIndexes(
+        store: BackupObjectStore,
+        password: Password?,
+    ): List<BackupIndex> = readIndexes(store, indexMetadata(store, password), password)
+
+    protected suspend fun BackupRepository.writeIndex(
+        store: BackupObjectStore,
+        password: Password?,
+        index: BackupIndex,
+    ) = writeIndex(store, indexMetadata(store, password), password, index)
+
     protected fun manifest(
         snapshotId: String,
         vaultSize: Long = 2L,
@@ -807,9 +828,11 @@ private class TransientReadBackupObjectStore(
     }
 }
 
-private class MidstreamTransientBackupObjectStore(
+internal class MidstreamTransientBackupObjectStore(
     private val delegate: BackupObjectStore,
     private val transientKey: BackupObjectKey,
+    /** How many bytes the first read of [transientKey] hands out before it fails. */
+    private val failAfterBytes: Long = 32L,
 ) : BackupObjectStore by delegate {
     var reads = 0
 
@@ -826,15 +849,16 @@ private class MidstreamTransientBackupObjectStore(
             return source
         }
         return object : RawSource {
-            private var emittedPrefix = false
+            private var emitted = 0L
 
             override fun readAtMostTo(
                 sink: Buffer,
                 byteCount: Long,
             ): Long {
-                if (!emittedPrefix) {
-                    emittedPrefix = true
-                    return source.readAtMostTo(sink, minOf(byteCount, 32L))
+                if (emitted < failAfterBytes) {
+                    val read = source.readAtMostTo(sink, minOf(byteCount, failAfterBytes - emitted))
+                    emitted += maxOf(read, 0L)
+                    return read
                 }
                 throw BackupObjectStoreException.Transient(
                     operation = BackupObjectStoreOperation.Read,

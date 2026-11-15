@@ -197,6 +197,13 @@ internal data class SshPublicKeyDecodeOperationProto(
 ) : NativeRequestOperationProto
 
 @Serializable
+@SerialName("ssh_certificate_describe")
+internal data class SshCertificateDescribeOperationProto(
+    @ProtoNumber(61)
+    val value: SshCertificateDescribeRequestProto,
+) : NativeRequestOperationProto
+
+@Serializable
 @SerialName("passkey_key_generate")
 internal data class PasskeyKeyGenerateOperationProto(
     @ProtoNumber(48)
@@ -830,6 +837,58 @@ internal data class SshPublicKeyDecodeResultProto(
     val type: SshKeyTypeProto,
     @ProtoNumber(2)
     val spkiDer: ByteArray,
+)
+
+@Serializable
+internal data class SshCertificateDescribeRequestProto(
+    @ProtoNumber(1)
+    val certificateOpenSsh: String,
+    @ProtoNumber(2)
+    val publicKeyOpenSsh: String? = null,
+)
+
+@Serializable
+internal enum class SshCertificateTypeProto {
+    @ProtoNumber(0)
+    UNSPECIFIED,
+
+    @ProtoNumber(1)
+    USER,
+
+    @ProtoNumber(2)
+    HOST,
+}
+
+@Serializable
+internal data class SshCertificateOptionProto(
+    @ProtoNumber(1)
+    val name: String = "",
+    @ProtoNumber(2)
+    val value: String = "",
+)
+
+@Serializable
+internal data class SshCertificateDescriptionProto(
+    @ProtoNumber(1)
+    val type: SshCertificateTypeProto = SshCertificateTypeProto.UNSPECIFIED,
+    @ProtoNumber(2)
+    val keyId: String = "",
+    @ProtoNumber(3)
+    val serial: Long = 0L,
+    @ProtoNumber(4)
+    val principals: List<String> = emptyList(),
+    @ProtoNumber(5)
+    val validAfter: Long = 0L,
+    @ProtoNumber(6)
+    val validBefore: Long = 0L,
+    @ProtoNumber(7)
+    val caFingerprint: String = "",
+    @ProtoNumber(8)
+    val criticalOptions: List<SshCertificateOptionProto> = emptyList(),
+    @ProtoNumber(9)
+    val extensions: List<SshCertificateOptionProto> = emptyList(),
+    @ProtoNumber(10)
+    val publicKeyMatches: Boolean = false,
 )
 
 @Serializable
@@ -2500,3 +2559,34 @@ internal data class OpenPgpUserIdUpdateSuccessOutcomeProto(
 internal data class OpenPgpUserIdUpdateErrorOutcomeProto(
     @ProtoNumber(2) val value: OpenPgpUserIdMutationErrorProto,
 ) : OpenPgpUserIdUpdateOutcomeProto
+
+@Serializable
+@SerialName("pkcs12")
+internal data class Pkcs12OperationProto(
+    @ProtoNumber(62) val value: Pkcs12RequestProto,
+) : NativeRequestOperationProto
+
+@Serializable
+internal data class Pkcs12RequestProto(
+    @ProtoNumber(1) val data: ByteArray,
+    @ProtoNumber(2) val passwordUtf8: ByteArray? = null,
+    @ProtoNumber(3) val normalize: Boolean = false,
+    @ProtoNumber(4) val outputPasswordUtf8: ByteArray? = null,
+    @ProtoNumber(5) val exportPrivateKey: Boolean = false,
+)
+
+@Serializable
+internal data class Pkcs12ResultProto(
+    @ProtoNumber(6) val privateKeyDer: ByteArray = byteArrayOf(),
+    @ProtoNumber(1) val status: Int = 0,
+    @ProtoNumber(2) val normalizedPkcs12: ByteArray = byteArrayOf(),
+    @ProtoNumber(3) val displayName: String = "",
+    @ProtoNumber(4) val issuer: String = "",
+    @ProtoNumber(5) val expiresAt: Long = 0L,
+    @ProtoNumber(7) val subject: String = "",
+    @ProtoNumber(8) val issuerCommonName: String = "",
+    @ProtoNumber(9) val notBefore: Long = 0L,
+    @ProtoNumber(10) val serialNumber: ByteArray = byteArrayOf(),
+    @ProtoNumber(11) val sha256Fingerprint: ByteArray = byteArrayOf(),
+    @ProtoNumber(12) val keyType: String = "",
+)

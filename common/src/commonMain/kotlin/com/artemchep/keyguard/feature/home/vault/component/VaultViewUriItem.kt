@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import arrow.core.Either
 import com.artemchep.keyguard.common.exception.HttpException
 import com.artemchep.keyguard.common.service.app.parser.AppStoreListingInfo
+import com.artemchep.keyguard.feature.dragout.compose.dragOutArea
+import com.artemchep.keyguard.feature.dragout.compose.dragOutHandle
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
 import com.artemchep.keyguard.res.Res
 import com.artemchep.keyguard.res.error_failed_unknown
@@ -105,134 +107,150 @@ fun VaultViewUriItem(
                     },
                 ),
             startAction = {
-                item.icon()
+                Box(
+                    modifier = Modifier
+                        .dragOutHandle(
+                            source = item.drag,
+                            // A tap on the icon still opens the row's actions.
+                            exclusiveTouch = false,
+                        ),
+                ) {
+                    item.icon()
+                }
             },
             content = {
                 CompositionLocalProvider(
                     LocalTextStyle provides MiuixTheme.textStyles.bodyLarge,
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
+                            .dragOutArea(
+                                source = item.drag,
+                            ),
                     ) {
-                        Text(
+                        Row(
                             modifier = Modifier
-                                .weight(1f),
-                            text = item.title,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 5,
-                        )
-                        ExpandedIfNotEmptyForRow(
-                            item.matchTypeTitle,
-                        ) { matchTypeTitle ->
-                            VaultViewOutlinedBadge(
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .weight(1f),
+                                text = item.title,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 5,
+                            )
+                            ExpandedIfNotEmptyForRow(
+                                item.matchTypeTitle,
+                            ) { matchTypeTitle ->
+                                VaultViewOutlinedBadge(
+                                    modifier = Modifier
+                                        .padding(
+                                            start = 8.dp,
+                                        ),
+                                    text = matchTypeTitle,
+                                )
+                            }
+                        }
+                        if (item.text != null) {
+                            Text(
+                                text = item.text,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 5,
+                                style = MiuixTheme.textStyles.bodyMedium,
+                                color = LocalContentColor.current
+                                    .combineAlpha(MediumEmphasisAlpha),
+                            )
+                        }
+                        ExpandedIfNotEmpty(
+                            item.warningTitle,
+                        ) { warningTitle ->
+                            val contentColor = MiuixTheme.colorScheme.warning
+                            val backgroundColor = MiuixTheme.colorScheme.warningContainer
+                                .combineAlpha(DisabledEmphasisAlpha)
+                            Row(
                                 modifier = Modifier
                                     .padding(
-                                        start = 8.dp,
+                                        top = 4.dp,
+                                    )
+                                    .background(
+                                        backgroundColor,
+                                        KgShapes.small,
+                                    )
+                                    .padding(
+                                        start = 4.dp,
+                                        top = 4.dp,
+                                        bottom = 4.dp,
+                                        end = 4.dp,
                                     ),
-                                text = matchTypeTitle,
-                            )
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(14.dp),
+                                    imageVector = Icons.Outlined.Warning,
+                                    contentDescription = null,
+                                    tint = contentColor,
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    modifier = Modifier,
+                                    text = warningTitle,
+                                    style = MiuixTheme.textStyles.labelMedium,
+                                )
+                            }
                         }
                     }
                 }
-                if (item.text != null) {
-                    Text(
-                        text = item.text,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 5,
-                        style = MiuixTheme.textStyles.bodyMedium,
-                        color = LocalContentColor.current
-                            .combineAlpha(MediumEmphasisAlpha),
-                    )
-                }
-                ExpandedIfNotEmpty(
-                    item.warningTitle,
-                ) { warningTitle ->
-                val contentColor = MiuixTheme.colorScheme.warning
-                val backgroundColor = MiuixTheme.colorScheme.warningContainer
-                    .combineAlpha(DisabledEmphasisAlpha)
-                Row(
-                    modifier = Modifier
-                        .padding(
-                            top = 4.dp,
-                        )
-                        .background(
-                            backgroundColor,
-                            KgShapes.small,
-                        )
-                        .padding(
-                            start = 4.dp,
-                            top = 4.dp,
-                            bottom = 4.dp,
-                            end = 4.dp,
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(14.dp),
-                        imageVector = Icons.Outlined.Warning,
-                        contentDescription = null,
-                        tint = contentColor,
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        modifier = Modifier,
-                        text = warningTitle,
-                        style = MiuixTheme.textStyles.labelMedium,
-                    )
-                }
-                }
             },
             bottomAction = {
-            var selectedDropdown by remember {
-                mutableStateOf<List<ContextItem>>(emptyList())
-            }
-            if (item.overrides.isNotEmpty()) FlowRow(
-                modifier = Modifier
-                    .padding(
-                        top = 8.dp,
-                        bottom = 8.dp,
-                        end = Dimens.contentPadding,
-                        start = Dimens.contentPadding + 16.dp + 24.dp,
-                    )
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item.overrides.forEach { override ->
-                    val updatedDropdownState = rememberUpdatedState(override.dropdown)
-                    VaultViewBadge(
-                        icon = Icons.Outlined.Terminal,
-                        title = override.title,
-                        text = override.text,
-                        textFontFamily = FontFamily.Monospace,
-                        error = override.error,
-                        onClick = {
-                            selectedDropdown = updatedDropdownState.value
-                        },
-                    )
+                var selectedDropdown by remember {
+                    mutableStateOf<List<ContextItem>>(emptyList())
                 }
-            }
+                if (item.overrides.isNotEmpty()) FlowRow(
+                    modifier = Modifier
+                        .padding(
+                            top = 8.dp,
+                            bottom = 8.dp,
+                            end = Dimens.contentPadding,
+                            start = Dimens.contentPadding + 16.dp + 24.dp,
+                        )
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    item.overrides.forEach { override ->
+                        val updatedDropdownState = rememberUpdatedState(override.dropdown)
+                        VaultViewBadge(
+                            icon = Icons.Outlined.Terminal,
+                            title = override.title,
+                            text = override.text,
+                            textFontFamily = FontFamily.Monospace,
+                            error = override.error,
+                            onClick = {
+                                selectedDropdown = updatedDropdownState.value
+                            },
+                        )
+                    }
+                }
 
-            // Inject the dropdown popup to the bottom of the
-            // content.
-            val onDismissRequest = {
-                selectedDropdown = emptyList()
-            }
-            KeyguardDropdownMenu(
-                expanded = selectedDropdown.isNotEmpty(),
-                onDismissRequest = onDismissRequest,
-            ) {
-                val scope = DropdownScopeImpl(this, onDismissRequest = onDismissRequest)
-                selectedDropdown.forEach { action ->
-                    scope.DropdownMenuItemFlat(
-                        action = action,
-                    )
+                // Inject the dropdown popup to the bottom of the
+                // content.
+                val onDismissRequest = {
+                    selectedDropdown = emptyList()
                 }
-            }
-        },
+                KeyguardDropdownMenu(
+                    expanded = selectedDropdown.isNotEmpty(),
+                    onDismissRequest = onDismissRequest,
+                ) {
+                    val scope = DropdownScopeImpl(this, onDismissRequest = onDismissRequest)
+                    selectedDropdown.forEach { action ->
+                        scope.DropdownMenuItemFlat(
+                            action = action,
+                        )
+                    }
+                }
+            },
         )
         KeyguardDropdownMenu(
             expanded = dropdownExpanded,

@@ -124,7 +124,6 @@ import com.artemchep.keyguard.ui.PasswordFlatTextField
 import com.artemchep.keyguard.ui.PasswordPwnedBadge
 import com.artemchep.keyguard.ui.rememberFieldBuffer
 import com.artemchep.keyguard.ui.PasswordStrengthBadge
-import com.artemchep.keyguard.ui.TagFlatTextField
 import com.artemchep.keyguard.ui.UrlFlatTextField
 import com.artemchep.keyguard.ui.buildContextItems
 import com.artemchep.keyguard.ui.focus.focusRequester2
@@ -141,6 +140,7 @@ import com.artemchep.keyguard.ui.markdown.MarkdownText
 import com.artemchep.keyguard.ui.shimmer.shimmer
 import com.artemchep.keyguard.ui.skeleton.SkeletonText
 import com.artemchep.keyguard.ui.skeleton.SkeletonTextField
+import com.artemchep.keyguard.ui.tags.TagsField
 import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.bodyLarge
@@ -332,8 +332,8 @@ fun AnyField(
         )
     }
 
-    is AddStateItem.Tag<*> -> {
-        FieldTag(
+    is AddStateItem.Tags<*> -> {
+        FieldTags(
             modifier = modifier,
             item = item,
         )
@@ -940,9 +940,10 @@ private fun UrlTextField(
     UrlFlatTextField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
-        label = stringResource(Res.string.uri),
+        label = state.label ?: stringResource(Res.string.uri),
+        placeholder = state.placeholder,
         value = field,
-        leading = {
+        leading = item.leading ?: {
             IconBox(
                 main = Icons.Outlined.KeyguardWebsite,
             )
@@ -1202,48 +1203,15 @@ private fun TextTextField(
 
 context(addScope: AddScreenScope)
 @Composable
-private fun FieldTag(
+private fun FieldTags(
     modifier: Modifier = Modifier,
-    item: AddStateItem.Tag<*>,
-) = Column(modifier = modifier) {
-    val state by item.state.flow.collectAsState()
-    val actions = remember(
-        state.options,
-        item.options,
-    ) {
-        buildContextItems(
-            state.options,
-            item.options,
-        ) {
-            // Do nothing.
-        }
-    }
-    when (val s = state) {
-        is AddStateItem.Tag.State.Text -> {
-            FieldTextTag(
-                state = s,
-                actions = actions,
-            )
-        }
-    }
-}
-
-context(addScope: AddScreenScope)
-@Composable
-private fun FieldTextTag(
-    modifier: Modifier = Modifier,
-    state: AddStateItem.Tag.State.Text,
-    actions: ImmutableList<ContextItem>,
+    item: AddStateItem.Tags<*>,
 ) {
-    TagFlatTextField(
+    val state by item.state.flow.collectAsState()
+    TagsField(
         modifier = modifier
             .padding(horizontal = Dimens.fieldHorizontalPadding),
-        value = state.text,
-        trailing = {
-            OptionsButton(
-                actions = actions,
-            )
-        },
+        value = state,
     )
 }
 

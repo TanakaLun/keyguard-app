@@ -18,9 +18,9 @@ import com.artemchep.keyguard.common.usecase.GetCiphers
 import com.artemchep.keyguard.common.usecase.GetFolders
 import com.artemchep.keyguard.common.usecase.GetProfiles
 import com.artemchep.keyguard.common.usecase.filterHiddenProfiles
-import com.artemchep.keyguard.feature.credentialexchange.CredentialExchangeItem
-import com.artemchep.keyguard.feature.credentialexchange.sortedCredentialExchangeItemsBy
-import com.artemchep.keyguard.feature.credentialexchange.toggleNote
+import com.artemchep.keyguard.feature.transfer.TransferItem
+import com.artemchep.keyguard.feature.transfer.sortedTransferItemsBy
+import com.artemchep.keyguard.feature.transfer.toggleNote
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
 import com.artemchep.keyguard.platform.recordException
@@ -367,12 +367,12 @@ private fun List<ProfileAccount>.toReviewStage(
         profileAccount.result.account
             ?.items
             .orEmpty()
-    }.sortedCredentialExchangeItemsBy { item ->
+    }.sortedTransferItemsBy { item ->
         item.title
     }
     return CredentialExchangeExportState.Stage.Review(
         items = items.map { item ->
-            CredentialExchangeItem(
+            TransferItem(
                 title = item.title,
                 credentials = item.credentials
                     .map { it.toUiKind() }
@@ -389,20 +389,20 @@ private fun List<ProfileAccount>.toReviewStage(
     )
 }
 
-private fun CxfCredential.toUiKind(): CredentialExchangeItem.Kind = when (this) {
-    is CxfCredential.Passkey -> CredentialExchangeItem.Kind.Passkey
-    is CxfCredential.BasicAuth -> CredentialExchangeItem.Kind.Password
-    is CxfCredential.Totp -> CredentialExchangeItem.Kind.Totp
-    is CxfCredential.CreditCard -> CredentialExchangeItem.Kind.Card
+private fun CxfCredential.toUiKind(): TransferItem.Kind = when (this) {
+    is CxfCredential.Passkey -> TransferItem.Kind.Passkey
+    is CxfCredential.BasicAuth -> TransferItem.Kind.Password
+    is CxfCredential.Totp -> TransferItem.Kind.Totp
+    is CxfCredential.CreditCard -> TransferItem.Kind.Card
     // A postal address, a person name and the identity documents are all facets
     // of an identity item. Only the import mapper builds the document
     // credentials, so those branches never fire on the export path.
-    is CxfCredential.Address -> CredentialExchangeItem.Kind.Identity
-    is CxfCredential.PersonName -> CredentialExchangeItem.Kind.Identity
-    is CxfCredential.Passport -> CredentialExchangeItem.Kind.Identity
-    is CxfCredential.DriversLicense -> CredentialExchangeItem.Kind.Identity
-    is CxfCredential.IdentityDocument -> CredentialExchangeItem.Kind.Identity
-    is CxfCredential.Note -> CredentialExchangeItem.Kind.Note
-    is CxfCredential.CustomFields -> CredentialExchangeItem.Kind.Fields
-    is CxfCredential.SshKey -> CredentialExchangeItem.Kind.SshKey
+    is CxfCredential.Address -> TransferItem.Kind.Identity
+    is CxfCredential.PersonName -> TransferItem.Kind.Identity
+    is CxfCredential.Passport -> TransferItem.Kind.Identity
+    is CxfCredential.DriversLicense -> TransferItem.Kind.Identity
+    is CxfCredential.IdentityDocument -> TransferItem.Kind.Identity
+    is CxfCredential.Note -> TransferItem.Kind.Note
+    is CxfCredential.CustomFields -> TransferItem.Kind.Fields
+    is CxfCredential.SshKey -> TransferItem.Kind.SshKey
 }

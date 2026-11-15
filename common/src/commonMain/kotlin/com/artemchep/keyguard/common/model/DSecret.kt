@@ -341,8 +341,21 @@ data class DSecret(
         val passwordRevisionDate: Instant? = null,
         val fido2Credentials: List<Fido2Credentials> = emptyList(),
         val totp: Totp? = null,
+        /**
+         * The stored one-time password value that Keyguard can not
+         * parse, `null` if there is none or it parses into [totp].
+         * Kept so that saving the item does not drop the value.
+         */
+        val totpUnsupported: String? = null,
     ) {
         companion object;
+
+        /**
+         * The stored one-time password value, whether Keyguard
+         * can generate codes from it or not.
+         */
+        val totpRaw: String?
+            get() = totp?.raw ?: totpUnsupported
 
         @optics
         data class PasswordHistory(
@@ -376,6 +389,13 @@ data class DSecret(
             val userDisplayName: String?,
             val discoverable: Boolean,
             val creationDate: Instant,
+            /** The base64url secret of the WebAuthn PRF extension. */
+            val prfSecret: String? = null,
+            /**
+             * The base64url `credWithoutUV` of an imported passkey, kept for Credential
+             * Exchange only: the WebAuthn PRF extension always uses [prfSecret].
+             */
+            val prfSecretWithoutUv: String? = null,
         )
     }
 
@@ -425,8 +445,19 @@ data class DSecret(
         val privateKey: String? = null,
         val publicKey: String? = null,
         val fingerprint: String? = null,
+        /** An OpenSSH certificate line that certifies the [publicKey]. */
+        val certificate: String? = null,
+        /** The hosts that the key is for, synced as `ssh://` text fields. */
+        val bookmarks: List<Bookmark> = emptyList(),
     ) {
-        companion object
+        companion object;
+
+        data class Bookmark(
+            /** The name of the field, kept so that other apps show it as before. */
+            val name: String?,
+            /** An `ssh://[user@]host[:port]` URL, as the user wrote it. */
+            val url: String,
+        )
     }
 
     @optics

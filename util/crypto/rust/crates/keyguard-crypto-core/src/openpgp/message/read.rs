@@ -1445,7 +1445,7 @@ impl ClearVerificationSession {
         while index < data.len() {
             if self.state == ClearVerifyState::SignatureArmor {
                 self.push_signature(&data[index..])?;
-                return Ok(output.to_vec());
+                return Ok(std::mem::take(&mut *output));
             }
             let byte = data[index];
             if self.previous_input_was_cr {
@@ -1471,7 +1471,7 @@ impl ClearVerificationSession {
                 }
             }
         }
-        Ok(output.to_vec())
+        Ok(std::mem::take(&mut *output))
     }
 
     /// Verifies the retained canonical text against the trailing signature
@@ -2466,7 +2466,13 @@ fn verify_prepared(
                 })
                 .collect::<Vec<_>>();
             let mut buffer = [0u8; VERIFY_BUFFER_BYTES];
-            let mut text_canonicalizer = StreamingTextCanonicalizer::default();
+            // Binary signatures hash the raw bytes. Normalize only when a
+            // usable hasher signs canonical text.
+            let mut text_canonicalizer = hashers
+                .iter()
+                .flatten()
+                .any(|hasher| hasher.text_mode)
+                .then(StreamingTextCanonicalizer::default);
             loop {
                 let count = input
                     .read(&mut buffer)
@@ -2475,16 +2481,21 @@ fn verify_prepared(
                     break;
                 }
                 let input = &buffer[..count];
-                let normalized_text = text_canonicalizer.update(input)?;
+                let normalized_text: &[u8] = match text_canonicalizer.as_mut() {
+                    Some(canonicalizer) => canonicalizer.update(input)?,
+                    None => &[],
+                };
                 for hasher in hashers.iter_mut().flatten() {
                     hasher.update(input, normalized_text);
                 }
             }
-            let normalized_text_tail = text_canonicalizer.finish();
-            if !normalized_text_tail.is_empty() {
-                for hasher in hashers.iter_mut().flatten() {
-                    if hasher.text_mode {
-                        hasher.hasher.update(normalized_text_tail);
+            if let Some(canonicalizer) = text_canonicalizer.as_mut() {
+                let normalized_text_tail = canonicalizer.finish();
+                if !normalized_text_tail.is_empty() {
+                    for hasher in hashers.iter_mut().flatten() {
+                        if hasher.text_mode {
+                            hasher.hasher.update(normalized_text_tail);
+                        }
                     }
                 }
             }

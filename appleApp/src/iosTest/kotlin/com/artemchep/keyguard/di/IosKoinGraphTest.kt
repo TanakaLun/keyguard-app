@@ -1,5 +1,6 @@
 package com.artemchep.keyguard.di
 
+import com.artemchep.keyguard.common.usecase.GetIconImage
 import com.artemchep.keyguard.common.service.crypto.GpgUserIdUpdateService
 import com.artemchep.keyguard.common.model.MasterKdfVersion
 import com.artemchep.keyguard.common.model.MasterKey
@@ -30,6 +31,11 @@ import com.artemchep.keyguard.feature.home.vault.VaultRouteFactory
 import com.artemchep.keyguard.feature.home.vault.VaultRouteFactoryDefault
 import com.artemchep.keyguard.platform.withTestAppleStorage
 import com.artemchep.keyguard.provider.bitwarden.usecase.DiscoverBitwardenServer
+import com.artemchep.keyguard.provider.bitwarden.ServerEnv
+import com.artemchep.keyguard.provider.bitwarden.transport.BitwardenHttpClientProvider
+import com.artemchep.keyguard.provider.bitwarden.usecase.PutAccountMutualTls
+import com.artemchep.keyguard.provider.bitwarden.transport.MutualTlsService
+import com.artemchep.keyguard.provider.bitwarden.usecase.internal.RequestEmailTfa
 import com.artemchep.keyguard.util.webauthn.WebAuthnAuthenticator
 import com.artemchep.keyguard.util.webauthn.crypto.NativePasskeyCrypto
 import com.artemchep.keyguard.util.webauthn.crypto.PasskeyCrypto
@@ -43,6 +49,8 @@ import kotlin.test.assertNotSame
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import com.artemchep.keyguard.common.usecase.PrepareAttachmentContent
+import com.artemchep.keyguard.common.service.dragout.PreparedContentStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.test.runTest
@@ -51,6 +59,24 @@ import org.koin.core.error.NoDefinitionFoundException
 import org.koin.core.qualifier.named
 
 class IosKoinGraphTest {
+    @Test
+    fun `attachment export resolves inside the native vault scope`() = runTest {
+        withTestAppleStorage { directories ->
+            directories.withKoin { koin ->
+                val key = MasterKey(MasterKdfVersion.LATEST, ByteArray(32))
+                koin.withVaultSession(key) { session ->
+                    assertNotNull(session.resolve { get<PrepareAttachmentContent>() })
+                    assertNotNull(session.resolve { get<RequestEmailTfa>() })
+                    assertNotNull(session.resolve { get<PutAccountMutualTls>() })
+                    assertSame(
+                        koin.get<PreparedContentStore>(),
+                        session.resolve { get<PreparedContentStore>() },
+                    )
+                }
+            }
+        }
+    }
+
     @Test
     fun `User ID management resolves the native mutation service`() {
         val application = createIosKoinApplication()
@@ -72,6 +98,10 @@ class IosKoinGraphTest {
             val rootWindow = application.koin.get<WindowCoroutineScope>()
             val firstWindow = assertNotNull(first.resolve { get<WindowCoroutineScope>() })
             val secondWindow = assertNotNull(second.resolve { get<WindowCoroutineScope>() })
+            val firstTransport = assertNotNull(first.resolve { get<BitwardenHttpClientProvider>() })
+            val secondTransport = assertNotNull(second.resolve { get<BitwardenHttpClientProvider>() })
+            assertNotSame(firstTransport, secondTransport)
+            assertNotNull(first.resolve { get<MutualTlsService>() })
 
             assertSame(key, first.resolve { get<MasterKey>() })
             assertSame(key, second.resolve { get<MasterKey>() })
@@ -84,6 +114,8 @@ class IosKoinGraphTest {
             assertNull(first.resolve { get<MasterKey>() })
             first.close()
             first.close()
+            assertFailsWith<IllegalStateException> { firstTransport.client(ServerEnv()) }
+            assertNotNull(secondTransport.client(ServerEnv()))
             assertFalse(firstWindow.coroutineContext[Job]!!.isActive)
             assertTrue(secondWindow.coroutineContext[Job]!!.isActive)
             assertTrue(rootWindow.coroutineContext[Job]!!.isActive)
@@ -131,6 +163,8 @@ class IosKoinGraphTest {
                 assertSame(koin.get<CliService>(), host.cli)
                 assertSame(koin.get<EnvironmentMounts>(), host.mounts)
                 assertSame(koin.get<EnvironmentMcp>(), host.mcp)
+                // The icon loader reads the icon settings from the store.
+                assertNotNull(koin.get<GetIconImage>())
             }
         }
     }

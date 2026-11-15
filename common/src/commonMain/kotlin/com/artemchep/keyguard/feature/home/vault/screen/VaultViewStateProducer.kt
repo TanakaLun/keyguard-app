@@ -36,6 +36,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -106,20 +109,20 @@ import com.artemchep.keyguard.feature.environments.mounts.titleH
 import com.artemchep.keyguard.feature.environments.EnvironmentValueSource
 import com.artemchep.keyguard.feature.environments.editableDefinition
 import com.artemchep.keyguard.common.service.crypto.CryptoGenerator
-import com.artemchep.keyguard.common.service.crypto.GpgPublicKeyInfo
 import com.artemchep.keyguard.common.service.crypto.GpgPublicKeyParser
 import com.artemchep.keyguard.common.service.crypto.GpgPublicKeyParserUnsupported
-import com.artemchep.keyguard.common.service.crypto.GpgPublicSubKeyInfo
 import com.artemchep.keyguard.common.service.crypto.KeyPairGenerator
-import com.artemchep.keyguard.common.service.crypto.hasAuthenticatedMetadata
+import com.artemchep.keyguard.common.service.crypto.SshCertificate
+import com.artemchep.keyguard.common.service.crypto.SshCertificateParser
 import com.artemchep.keyguard.common.service.crypto.parsePrimaryKeyInfo
+import com.artemchep.keyguard.common.service.crypto.problemAt
 import com.artemchep.keyguard.common.service.download.DownloadInfoEntity
 import com.artemchep.keyguard.common.service.download.DownloadManager
+import com.artemchep.keyguard.common.service.dragout.dragOutFileName
 import com.artemchep.keyguard.common.service.execute.ExecuteCommand
 import com.artemchep.keyguard.common.service.extract.LinkInfoExtractor
 import com.artemchep.keyguard.common.service.extract.LinkInfoExtractorRegistry
 import com.artemchep.keyguard.common.service.extract.LinkInfoRegistry
-import com.artemchep.keyguard.common.service.gpgagent.GpgRenewalAuthorization
 import com.artemchep.keyguard.common.service.gpgagent.chunkedGpgFingerprint
 import com.artemchep.keyguard.common.service.gpgagent.getGpgAgentFingerprint
 import com.artemchep.keyguard.common.service.gpgagent.getGpgAgentPrivateKeyArmored
@@ -134,6 +137,11 @@ import com.artemchep.keyguard.common.service.placeholder.PlaceholderFactoryRegis
 import com.artemchep.keyguard.common.service.placeholder.PlaceholderScope
 import com.artemchep.keyguard.common.service.placeholder.create
 import com.artemchep.keyguard.common.service.placeholder.placeholderFormat
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.SshBookmark
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.displayHostRange
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.parseSshBookmark
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.toDisplayString
+import com.artemchep.keyguard.common.service.sshagent.bookmarks.toSshCommand
 import com.artemchep.keyguard.common.service.tld.TldService
 import com.artemchep.keyguard.common.usecase.AddCipherOpenedHistory
 import com.artemchep.keyguard.common.usecase.ArchiveCipherById
@@ -151,6 +159,7 @@ import com.artemchep.keyguard.common.usecase.CopyCipherById
 import com.artemchep.keyguard.common.usecase.CopyText
 import com.artemchep.keyguard.common.usecase.DateFormatter
 import com.artemchep.keyguard.common.usecase.DownloadAttachment
+import com.artemchep.keyguard.common.usecase.PrepareAttachmentContent
 import com.artemchep.keyguard.common.usecase.FavouriteCipherById
 import com.artemchep.keyguard.common.usecase.GetAccounts
 import com.artemchep.keyguard.common.usecase.GetAppIcons
@@ -177,6 +186,7 @@ import com.artemchep.keyguard.common.usecase.GetWebsiteIcons
 import com.artemchep.keyguard.common.usecase.GpgKeyExport
 import com.artemchep.keyguard.common.usecase.GpgKeyPrivateExport
 import com.artemchep.keyguard.common.usecase.GpgKeyPublicExport
+import com.artemchep.keyguard.common.usecase.KeyCertificateExport
 import com.artemchep.keyguard.common.usecase.KeyPrivateExport
 import com.artemchep.keyguard.common.usecase.KeyPublicExport
 import com.artemchep.keyguard.common.usecase.MarkWatchtowerAlertAsRead
@@ -202,6 +212,10 @@ import com.artemchep.keyguard.core.store.bitwarden.canRetry
 import com.artemchep.keyguard.core.store.bitwarden.expired
 import com.artemchep.keyguard.core.store.bitwarden.message
 import com.artemchep.keyguard.feature.attachmentpreview.AttachmentPreviewRouteFactory
+import com.artemchep.keyguard.feature.attachments.model.AttachmentDragPreparer
+import com.artemchep.keyguard.feature.dragout.model.DragOutSource
+import com.artemchep.keyguard.feature.dragout.model.draggableUrl
+import com.artemchep.keyguard.feature.attachments.model.AttachmentItem
 import com.artemchep.keyguard.feature.attachments.util.createAttachmentItem
 import com.artemchep.keyguard.feature.attachments.util.createPendingAttachmentItem
 import com.artemchep.keyguard.feature.auth.common.util.REGEX_EMAIL
@@ -215,7 +229,14 @@ import com.artemchep.keyguard.feature.emailleak.EmailLeakRoute
 import com.artemchep.keyguard.feature.favicon.FaviconUrl
 import com.artemchep.keyguard.feature.generator.gpgkey.GpgKeyActions
 import com.artemchep.keyguard.feature.generator.sshkey.SshKeyActions
-import com.artemchep.keyguard.feature.gpgkey.translateGpgWeakSelfSignature
+import com.artemchep.keyguard.feature.gpgkey.createGpgKeyCapabilitiesRow
+import com.artemchep.keyguard.feature.gpgkey.createGpgKeyDateRows
+import com.artemchep.keyguard.feature.gpgkey.createGpgKeyStatusInfoItem
+import com.artemchep.keyguard.feature.gpgkey.createGpgSubKeyItems
+import com.artemchep.keyguard.feature.gpgkey.displayUserIds
+import com.artemchep.keyguard.feature.gpgkey.formatGpgAlgorithm
+import com.artemchep.keyguard.feature.gpgkey.primaryUserId
+import com.artemchep.keyguard.feature.home.settings.component.cliPlatformClasses
 import com.artemchep.keyguard.feature.home.vault.VaultRouteFactory
 import com.artemchep.keyguard.feature.home.vault.add.AddRoute
 import com.artemchep.keyguard.feature.home.vault.add.LeAddRoute
@@ -249,8 +270,11 @@ import com.artemchep.keyguard.feature.home.vault.util.cipherUploadGpgPublicKeyAc
 import com.artemchep.keyguard.feature.home.vault.util.cipherVerifyGpgPublicKeyAction
 import com.artemchep.keyguard.feature.home.vault.util.cipherViewPasswordHistoryAction
 import com.artemchep.keyguard.feature.home.vault.util.cipherCreateEnvironmentMountAction
+import com.artemchep.keyguard.feature.home.vault.util.cipherViewCliAgentHistoryAction
 import com.artemchep.keyguard.feature.home.vault.util.cipherViewSshAgentHistoryAction
 import com.artemchep.keyguard.feature.home.vault.util.cipherWatchtowerAlerts
+import com.artemchep.keyguard.feature.home.vault.util.formatSshCertificateProblem
+import com.artemchep.keyguard.feature.home.vault.util.formatSshCertificateTime
 import com.artemchep.keyguard.feature.home.vault.watchtower
 import com.artemchep.keyguard.feature.justdeleteme.directory.JustDeleteMeServiceViewDialogRoute
 import com.artemchep.keyguard.feature.justgetdata.directory.JustGetMyDataViewDialogRoute
@@ -262,6 +286,7 @@ import com.artemchep.keyguard.feature.navigation.NavigationIntent
 import com.artemchep.keyguard.feature.navigation.keyboard.KeyShortcut
 import com.artemchep.keyguard.feature.navigation.keyboard.interceptKeyEvents
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
+import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
 import com.artemchep.keyguard.feature.navigation.state.onClick
 import com.artemchep.keyguard.feature.navigation.state.produceScreenState
 import com.artemchep.keyguard.feature.passkeys.PasskeysCredentialViewRoute
@@ -293,6 +318,7 @@ import com.artemchep.keyguard.ui.icons.ChevronIcon
 import com.artemchep.keyguard.ui.icons.FaviconIcon
 import com.artemchep.keyguard.ui.icons.IconBox
 import com.artemchep.keyguard.ui.icons.IconBoxContainer
+import com.artemchep.keyguard.ui.icons.KeyguardTwoFa
 import com.artemchep.keyguard.ui.icons.icon
 import com.artemchep.keyguard.ui.icons.iconSmall
 import com.artemchep.keyguard.ui.markdown.MarkdownParser
@@ -328,6 +354,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.currentKoinScope
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -370,6 +398,8 @@ fun vaultViewScreenState(
             ?: GpgPublicKeyParserUnsupported,
         keyPrivateExport = get(),
         keyPublicExport = get(),
+        keyCertificateExport = get(),
+        sshCertificateParser = get(),
         gpgKeyExport = get(),
         gpgPublicKeyExport = get(),
         gpgPrivateKeyExport = get(),
@@ -401,6 +431,7 @@ fun vaultViewScreenState(
         favouriteCipherById = get(),
         downloadManager = get(),
         downloadAttachment = get(),
+        prepareAttachmentDrag = AttachmentDragPreparer(get()),
         removeAttachment = get(),
         canPreviewAttachment = get(),
         attachmentPreviewRouteFactory = get(),
@@ -452,6 +483,8 @@ private class Holder(
 private class CipherSauce(
     val cipher: DSecret,
     val cipherUrisIo: IO<List<Holder>>,
+    /** The SSH bookmarks that an app can open. */
+    val sshBookmarkConnectableUrlsIo: IO<Set<String>>,
     val canEdit: Boolean,
     val canDelete: Boolean,
 )
@@ -485,6 +518,8 @@ fun vaultViewScreenState(
     gpgPublicKeyParser: GpgPublicKeyParser,
     keyPrivateExport: KeyPrivateExport,
     keyPublicExport: KeyPublicExport,
+    keyCertificateExport: KeyCertificateExport,
+    sshCertificateParser: SshCertificateParser,
     gpgKeyExport: GpgKeyExport,
     gpgPublicKeyExport: GpgKeyPublicExport,
     gpgPrivateKeyExport: GpgKeyPrivateExport,
@@ -516,6 +551,7 @@ fun vaultViewScreenState(
     favouriteCipherById: FavouriteCipherById,
     downloadManager: DownloadManager,
     downloadAttachment: DownloadAttachment,
+    prepareAttachmentDrag: AttachmentDragPreparer,
     removeAttachment: RemoveAttachment,
     canPreviewAttachment: CanPreviewAttachment,
     attachmentPreviewRouteFactory: AttachmentPreviewRouteFactory,
@@ -594,6 +630,8 @@ fun vaultViewScreenState(
         gpgPublicKeyParser = gpgPublicKeyParser,
         keyPrivateExport = keyPrivateExport,
         keyPublicExport = keyPublicExport,
+        keyCertificateExport = keyCertificateExport,
+        sshCertificateParser = sshCertificateParser,
         gpgKeyExport = gpgKeyExport,
         gpgPublicKeyExport = gpgPublicKeyExport,
         gpgPrivateKeyExport = gpgPrivateKeyExport,
@@ -625,6 +663,7 @@ fun vaultViewScreenState(
         favouriteCipherById = favouriteCipherById,
         downloadManager = downloadManager,
         downloadAttachment = downloadAttachment,
+        prepareAttachmentDrag = prepareAttachmentDrag,
         removeAttachment = removeAttachment,
         canPreviewAttachment = canPreviewAttachment,
         attachmentPreviewRouteFactory = attachmentPreviewRouteFactory,
@@ -682,6 +721,8 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
     gpgPublicKeyParser: GpgPublicKeyParser,
     keyPrivateExport: KeyPrivateExport,
     keyPublicExport: KeyPublicExport,
+    keyCertificateExport: KeyCertificateExport,
+    sshCertificateParser: SshCertificateParser,
     gpgKeyExport: GpgKeyExport,
     gpgPublicKeyExport: GpgKeyPublicExport,
     gpgPrivateKeyExport: GpgKeyPrivateExport,
@@ -713,6 +754,7 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
     favouriteCipherById: FavouriteCipherById,
     downloadManager: DownloadManager,
     downloadAttachment: DownloadAttachment,
+    prepareAttachmentDrag: AttachmentDragPreparer,
     removeAttachment: RemoveAttachment,
     canPreviewAttachment: CanPreviewAttachment,
     attachmentPreviewRouteFactory: AttachmentPreviewRouteFactory,
@@ -917,6 +959,22 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
             }
     }
 
+    // Android tells if no app opens the URL; other
+    // platforms leave it to the system.
+    fun getSshBookmarkConnectableUrlsIo(
+        cipher: DSecret,
+    ) = ioEffect {
+        val extractors = LinkInfoRegistry(linkInfoExtractors)
+        cipher.sshKey?.bookmarks.orEmpty()
+            .map { it.url.trim() }
+            .filter { url ->
+                parseSshBookmark(url) != null && extractors
+                    .process(DSecret.Uri(uri = url))
+                    .none { it is LinkInfoLaunch.Deny }
+            }
+            .toSet()
+    }
+
     val cipherExtraFlow = combine(
         secretFlow,
         collectionsFlow,
@@ -945,10 +1003,14 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
             cipher = cipher,
             urlOverrides = urlOverrides,
         ).shared(tag = "Cipher URIs")
+        val sshBookmarkConnectableUrlsIo = getSshBookmarkConnectableUrlsIo(
+            cipher = cipher,
+        ).shared(tag = "Cipher SSH bookmarks")
 
         CipherSauce(
             cipher = cipher,
             cipherUrisIo = cipherUrisIo,
+            sshBookmarkConnectableUrlsIo = sshBookmarkConnectableUrlsIo,
             canEdit = canEdit,
             canDelete = canDelete,
         )
@@ -1512,6 +1574,14 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
                         )
                             .takeIf { secretOrNull.type == DSecret.Type.SshKey }
                             ?.verify(verify),
+                        cipherViewCliAgentHistoryAction(
+                            cipher = secretOrNull,
+                        )
+                            .takeIf {
+                                secretOrNull.type == DSecret.Type.Environment &&
+                                    cliPlatformClasses.any { it.isInstance(CurrentPlatform) }
+                            }
+                            ?.verify(verify),
                         cipherCreateEnvironmentMountAction(
                             cipher = secretOrNull,
                         )
@@ -1665,6 +1735,7 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
                         hasCanNotSeePassword = hasCanNotSeePassword,
                         downloadManager = downloadManager,
                         downloadAttachment = downloadAttachment,
+                        prepareAttachmentDrag = prepareAttachmentDrag,
                         removeAttachment = removeAttachment,
                         canPreviewAttachment = canPreviewAttachment,
                         attachmentPreviewRouteFactory = attachmentPreviewRouteFactory,
@@ -1679,6 +1750,8 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
                         gpgPublicKeyParser = gpgPublicKeyParser,
                         keyPrivateExport = keyPrivateExport,
                         keyPublicExport = keyPublicExport,
+                        keyCertificateExport = keyCertificateExport,
+                        sshCertificateParser = sshCertificateParser,
                         gpgPublicKeyExport = gpgPublicKeyExport,
                         gpgPrivateKeyExport = gpgPrivateKeyExport,
                         cipherUnsecureUrlCheck = cipherUnsecureUrlCheck,
@@ -1694,7 +1767,7 @@ suspend fun RememberStateFlowScope.vaultViewScreenStateProducer(
                         getGravatarUrl = getGravatarUrl,
                         copy = copy,
                         dateFormatter = dateFormatter,
-                        linkInfoExtractors = linkInfoExtractors,
+                        sshBookmarkConnectableUrlsIo = secretSauceOrNull.sshBookmarkConnectableUrlsIo,
                         visibilityGlobalConfig = visibilityGlobalConfig,
                         visibilityGlobalUserTransform = visibilityGlobalUserTransform,
                         account = accountOrNull,
@@ -1742,6 +1815,7 @@ private fun RememberStateFlowScope.oh(
     hasCanNotSeePassword: Boolean,
     downloadManager: DownloadManager,
     downloadAttachment: DownloadAttachment,
+    prepareAttachmentDrag: AttachmentDragPreparer,
     removeAttachment: RemoveAttachment,
     canPreviewAttachment: CanPreviewAttachment,
     attachmentPreviewRouteFactory: AttachmentPreviewRouteFactory,
@@ -1756,6 +1830,8 @@ private fun RememberStateFlowScope.oh(
     gpgPublicKeyParser: GpgPublicKeyParser,
     keyPrivateExport: KeyPrivateExport,
     keyPublicExport: KeyPublicExport,
+    keyCertificateExport: KeyCertificateExport,
+    sshCertificateParser: SshCertificateParser,
     gpgPublicKeyExport: GpgKeyPublicExport,
     gpgPrivateKeyExport: GpgKeyPrivateExport,
     cipherUnsecureUrlCheck: CipherUnsecureUrlCheck,
@@ -1771,7 +1847,7 @@ private fun RememberStateFlowScope.oh(
     getGravatarUrl: GetGravatarUrl,
     copy: CopyText,
     dateFormatter: DateFormatter,
-    linkInfoExtractors: List<LinkInfoExtractor<LinkInfo, LinkInfo>>,
+    sshBookmarkConnectableUrlsIo: IO<Set<String>>,
     visibilityGlobalConfig: Visibility.Global,
     visibilityGlobalUserTransform: (Boolean, (Boolean) -> Unit) -> Unit,
     account: DAccount,
@@ -2128,6 +2204,67 @@ private fun RememberStateFlowScope.oh(
             )
             emit(typeItem)
         }
+        val certificate = sshKey.certificate
+        if (certificate != null) {
+            val section = VaultViewItem.Section(
+                id = "sshKey.certificate.section",
+                text = translate(Res.string.ssh_certificate),
+            )
+            emit(section)
+
+            val description = withContext(Dispatchers.Default) {
+                sshCertificateParser.parse(
+                    certificate = certificate,
+                    publicKey = sshKey.publicKey,
+                )
+            }
+            val problem = description.problemAt(
+                epochSeconds = now.epochSeconds,
+                hasPublicKey = !sshKey.publicKey.isNullOrBlank(),
+            )
+            if (problem != null) {
+                val problemItem = VaultViewItem.Info(
+                    id = "sshKey.certificate.problem",
+                    name = translate(Res.string.ssh_certificate),
+                    message = formatSshCertificateProblem(
+                        problem = problem,
+                        dateFormatter = dateFormatter,
+                    ),
+                )
+                emit(problemItem)
+            }
+            val certificateItem = create(
+                copy = copy,
+                cryptoGenerator = cryptoGenerator,
+                cipherLocalId = cipher.id,
+                id = "sshKey.certificate",
+                accountId = account.id,
+                title = translate(Res.string.ssh_certificate),
+                value = certificate,
+                maxLines = 4, // a certificate is too long to always show
+                monospace = true,
+                colorize = true,
+                elevated = true,
+                onBuildActions = {
+                    this += SshKeyActions.saveCertificate(
+                        certificate = certificate,
+                        certificateExport = keyCertificateExport,
+                    )
+                },
+            )
+            emit(certificateItem)
+            if (description != null) {
+                val detailsItem = VaultViewItem.Table(
+                    id = "sshKey.certificate.details",
+                    elevation = 1.dp,
+                    rows = createSshCertificateRows(
+                        certificate = description,
+                        dateFormatter = dateFormatter,
+                    ),
+                )
+                emit(detailsItem)
+            }
+        }
     }
 
     val cipherCard = cipher.card
@@ -2426,6 +2563,43 @@ private fun RememberStateFlowScope.oh(
                 copy = copy,
                 totp = cipherLoginTotp.token,
                 localStateFlow = localStateFlow,
+            )
+            emit(model)
+        } else if (cipherLogin.totpUnsupported != null) {
+            // Show the value Keyguard can not generate codes
+            // from, so the user knows it is there.
+            if (!cipher.ignores(DWatchtowerAlertType.TWO_FA_UNUSABLE)) {
+                val info = VaultViewItem.Info(
+                    id = "info.totp.unsupported",
+                    name = translate(Res.string.item_totp_unsupported_title),
+                    message = translate(Res.string.item_totp_unsupported_text),
+                )
+                emit(info)
+            }
+            val model = create(
+                copy = copy,
+                cryptoGenerator = cryptoGenerator,
+                cipherLocalId = cipher.id,
+                id = "login.totp",
+                accountId = account.id,
+                title = translate(Res.string.one_time_password),
+                value = cipherLogin.totpUnsupported,
+                verify = verify.takeIf { concealFields },
+                visibility = Visibility(
+                    concealed = concealFields,
+                    hidden = hasCanNotSeePassword,
+                    transformUserEvent = visibilityGlobalUserTransform,
+                    globalConfig = visibilityGlobalConfig,
+                ),
+                monospace = true,
+                elevated = true,
+                badge = VaultViewItem.Value.Badge(
+                    text = translate(Res.string.item_totp_unsupported_badge),
+                    score = 0.5f,
+                ),
+                leading = {
+                    IconBox(main = Icons.Outlined.KeyguardTwoFa)
+                },
             )
             emit(model)
         } else {
@@ -2825,9 +2999,11 @@ private fun RememberStateFlowScope.oh(
             .mapIndexed { index, holder ->
                 val id = "link.app.$index"
                 val item = createUriItem(
+                    sharingScope = sharingScope,
                     canEdit = canEdit,
                     contentColor = contentColor,
                     disabledContentColor = disabledContentColor,
+                    appIcons = appIcons,
                     websiteIcons = websiteIcons,
                     cipherUnsecureUrlCheck = cipherUnsecureUrlCheck,
                     cipherUnsecureUrlAutoFix = cipherUnsecureUrlAutoFix,
@@ -2873,9 +3049,11 @@ private fun RememberStateFlowScope.oh(
             .mapIndexed { index, holder ->
                 val id = "link.website.$index"
                 val item = createUriItem(
+                    sharingScope = sharingScope,
                     canEdit = canEdit,
                     contentColor = contentColor,
                     disabledContentColor = disabledContentColor,
+                    appIcons = appIcons,
                     websiteIcons = websiteIcons,
                     cipherUnsecureUrlCheck = cipherUnsecureUrlCheck,
                     cipherUnsecureUrlAutoFix = cipherUnsecureUrlAutoFix,
@@ -2897,128 +3075,23 @@ private fun RememberStateFlowScope.oh(
                 emit(item)
             }
     }
-    if (cipher.fields.isNotEmpty()) {
-        val sectionText = if (cipher.fields.size > 1) {
-            translate(Res.string.custom_fields)
-        } else translate(Res.string.custom_field)
-        val section = VaultViewItem.Section(
-            id = "custom",
-            text = sectionText,
-        )
-        emit(section)
-        // items
-        cipher.fields.forEachIndexed { index, field ->
-            if (field.type == DSecret.Field.Type.Boolean) {
-                fun createAction(
-                    value: Boolean,
-                ) = FlatItemAction(
-                    id = "cipher.field.$index.toggleBoolean",
-                    title = TextHolder.Res(Res.string.custom_field_toggle_boolean_value),
-                    trailing = {
-                        SwitchExpressive(
-                            checked = !value,
-                            onCheckedChange = null,
-                            enabled = canEdit,
-                        )
-                    },
-                    onClick = if (canEdit) {
-                        // lambda
-                        {
-                            val request = mapOf(
-                                cipher.id to listOf(
-                                    CipherFieldSwitchToggleRequest(
-                                        fieldIndex = index,
-                                        fieldName = field.name,
-                                        value = value,
-                                    ),
-                                ),
-                            )
-                            cipherFieldSwitchToggle(request)
-                                .launchIn(appScope)
-                        }
-                    } else {
-                        null
-                    },
-                )
-
-                val value = field.value?.toBooleanStrictOrNull() ?: false
-                val actions = listOf(
-                    createAction(!value),
-                )
-                val m = VaultViewItem.Switch(
-                    id = "custom.$index",
-                    title = field.name.orEmpty(),
-                    value = value,
-                    dropdown = actions,
-                )
-                emit(m)
-                return@forEachIndexed
-            }
-            if (field.type == DSecret.Field.Type.Linked) {
-                val t = annotate(
-                    when (field.linkedId) {
-                        DSecret.Field.LinkedId.Login_Username -> Res.string.field_linked_to_username
-                        DSecret.Field.LinkedId.Login_Password -> Res.string.field_linked_to_password
-                        DSecret.Field.LinkedId.Card_CardholderName -> Res.string.field_linked_to_card_cardholdername
-                        DSecret.Field.LinkedId.Card_ExpMonth -> Res.string.field_linked_to_card_expmonth
-                        DSecret.Field.LinkedId.Card_ExpYear -> Res.string.field_linked_to_card_expyear
-                        DSecret.Field.LinkedId.Card_Code -> Res.string.field_linked_to_card_code
-                        DSecret.Field.LinkedId.Card_Brand -> Res.string.field_linked_to_card_brand
-                        DSecret.Field.LinkedId.Card_Number -> Res.string.field_linked_to_card_number
-                        DSecret.Field.LinkedId.Identity_Title -> Res.string.field_linked_to_identity_title
-                        DSecret.Field.LinkedId.Identity_MiddleName -> Res.string.field_linked_to_identity_middlename
-                        DSecret.Field.LinkedId.Identity_Address1 -> Res.string.field_linked_to_identity_address1
-                        DSecret.Field.LinkedId.Identity_Address2 -> Res.string.field_linked_to_identity_address2
-                        DSecret.Field.LinkedId.Identity_Address3 -> Res.string.field_linked_to_identity_address3
-                        DSecret.Field.LinkedId.Identity_City -> Res.string.field_linked_to_identity_city
-                        DSecret.Field.LinkedId.Identity_State -> Res.string.field_linked_to_identity_state
-                        DSecret.Field.LinkedId.Identity_PostalCode -> Res.string.field_linked_to_identity_postalcode
-                        DSecret.Field.LinkedId.Identity_Country -> Res.string.field_linked_to_identity_country
-                        DSecret.Field.LinkedId.Identity_Company -> Res.string.field_linked_to_identity_company
-                        DSecret.Field.LinkedId.Identity_Email -> Res.string.field_linked_to_identity_email
-                        DSecret.Field.LinkedId.Identity_Phone -> Res.string.field_linked_to_identity_phone
-                        DSecret.Field.LinkedId.Identity_Ssn -> Res.string.field_linked_to_identity_ssn
-                        DSecret.Field.LinkedId.Identity_Username -> Res.string.field_linked_to_identity_username
-                        DSecret.Field.LinkedId.Identity_PassportNumber -> Res.string.field_linked_to_identity_passportnumber
-                        DSecret.Field.LinkedId.Identity_LicenseNumber -> Res.string.field_linked_to_identity_licensenumber
-                        DSecret.Field.LinkedId.Identity_FirstName -> Res.string.field_linked_to_identity_firstname
-                        DSecret.Field.LinkedId.Identity_LastName -> Res.string.field_linked_to_identity_lastname
-                        DSecret.Field.LinkedId.Identity_FullName -> Res.string.field_linked_to_identity_fullname
-                        null -> Res.string.field_linked_to_unknown_field
-                    },
-                    field.name.orEmpty() to SpanStyle(
-                        fontFamily = FontFamily.Monospace,
-                        color = contentColor,
-                    ),
-                )
-                val m = VaultViewItem.Label(
-                    id = "custom.$index",
-                    text = t,
-                )
-                emit(m)
-                return@forEachIndexed
-            }
-
-            val hidden = field.type == DSecret.Field.Type.Hidden
-            val concealed = hidden && concealFields
-            val m = create(
-                copy = copy,
-                cryptoGenerator = cryptoGenerator,
-                cipherLocalId = cipher.id,
-                id = "custom.$index",
-                accountId = account.id,
-                title = field.name.orEmpty(),
-                value = field.value.orEmpty(),
-                verify = verify.takeIf { concealed },
-                visibility = Visibility(
-                    concealed = concealed,
-                    transformUserEvent = visibilityGlobalUserTransform,
-                    globalConfig = visibilityGlobalConfig,
-                ),
-            )
-            emit(m)
-        }
-    }
+    emitAll(
+        cipherFieldItems(
+            canEdit = canEdit,
+            contentColor = contentColor,
+            disabledContentColor = disabledContentColor,
+            cryptoGenerator = cryptoGenerator,
+            cipherFieldSwitchToggle = cipherFieldSwitchToggle,
+            concealFields = concealFields,
+            copy = copy,
+            sshBookmarkConnectableUrlsIo = sshBookmarkConnectableUrlsIo,
+            visibilityGlobalConfig = visibilityGlobalConfig,
+            visibilityGlobalUserTransform = visibilityGlobalUserTransform,
+            account = account,
+            cipher = cipher,
+            verify = verify,
+        ),
+    )
     emitAll(
         cipherRelationItems(
             cipherRelations = cipherRelations,
@@ -3092,9 +3165,45 @@ private fun RememberStateFlowScope.oh(
                         removeIo = removeIo,
                         verify = verify,
                     )
+                    val dragFileName = dragOutFileName(actualItem.name)
                     val wrapperItem = VaultViewItem.Attachment(
                         id = actualItem.key,
                         item = actualItem,
+                        drag = if (prepareAttachmentDrag.canPrepare(attachment.size)) DragOutSource(
+                            scope = sharingScope,
+                            label = dragFileName,
+                            // A re-prompt dialog cannot appear while a native drag is in flight.
+                            promisedFileName = dragFileName.takeIf { verify == null },
+                            errorTitle = TextHolder.Res(Res.string.attachment_drag_error),
+                            registerCancellation = { cancel ->
+                                interceptKeyEvent(flowOf { event ->
+                                    if (event.key == Key.Escape && event.type == KeyEventType.KeyDown) {
+                                        cancel()
+                                        true
+                                    } else false
+                                })
+                            },
+                            prepare = { onProgress ->
+                                // Native drags cannot wait through an authentication dialog.
+                                // Remember authorization, then let the user start a fresh gesture.
+                                var authorized = verify == null
+                                verify?.invoke { authorized = true }
+                                if (authorized) {
+                                    val status = actualItem.statusState.value
+                                    prepareAttachmentDrag(
+                                        PrepareAttachmentContent.Request(
+                                            attachment = DownloadAttachmentRequest.ByLocalCipherAttachment(
+                                                cipher, attachment,
+                                            ),
+                                            name = actualItem.name,
+                                            localUri = (status as? AttachmentItem.Status.Downloaded)?.localUrl,
+                                        ),
+                                        onProgress,
+                                    )
+                                } else null
+                            },
+                            onError = ::message,
+                        ) else null,
                     )
                     emit(wrapperItem)
                 }
@@ -3563,6 +3672,222 @@ private suspend fun RememberStateFlowScope.createEnvironmentReference(
     )
 }
 
+/** The SSH bookmarks of an SSH key, then the custom fields. */
+private fun RememberStateFlowScope.cipherFieldItems(
+    canEdit: Boolean,
+    contentColor: Color,
+    disabledContentColor: Color,
+    cryptoGenerator: CryptoGenerator,
+    cipherFieldSwitchToggle: CipherFieldSwitchToggle,
+    concealFields: Boolean,
+    copy: CopyText,
+    sshBookmarkConnectableUrlsIo: IO<Set<String>>,
+    visibilityGlobalConfig: Visibility.Global,
+    visibilityGlobalUserTransform: (Boolean, (Boolean) -> Unit) -> Unit,
+    account: DAccount,
+    cipher: DSecret,
+    verify: ((() -> Unit) -> Unit)?,
+) = flow<VaultViewItem> {
+    val bookmarks = cipher.sshKey?.bookmarks.orEmpty()
+    if (bookmarks.isNotEmpty()) {
+        val sectionText = if (bookmarks.size > 1) {
+            translate(Res.string.ssh_bookmarks)
+        } else translate(Res.string.ssh_bookmark)
+        val section = VaultViewItem.Section(
+            id = "ssh.bookmark",
+            text = sectionText,
+        )
+        emit(section)
+        // items
+        val connectableUrls = sshBookmarkConnectableUrlsIo
+            .attempt().bind().getOrNull().orEmpty()
+        bookmarks.forEachIndexed { index, bookmark ->
+            val item = createSshBookmarkItem(
+                id = "ssh.bookmark.$index",
+                value = bookmark.url,
+                disabledContentColor = disabledContentColor,
+                connectableUrls = connectableUrls,
+                copy = copy,
+            )
+            emit(item)
+        }
+    }
+    val customFields = cipher.fields
+    if (customFields.isNotEmpty()) {
+        val sectionText = if (customFields.size > 1) {
+            translate(Res.string.custom_fields)
+        } else translate(Res.string.custom_field)
+        val section = VaultViewItem.Section(
+            id = "custom",
+            text = sectionText,
+        )
+        emit(section)
+        // items
+        customFields.forEachIndexed { index, field ->
+            val item = createCustomFieldItem(
+                canEdit = canEdit,
+                contentColor = contentColor,
+                cryptoGenerator = cryptoGenerator,
+                cipherFieldSwitchToggle = cipherFieldSwitchToggle,
+                concealFields = concealFields,
+                copy = copy,
+                visibilityGlobalConfig = visibilityGlobalConfig,
+                visibilityGlobalUserTransform = visibilityGlobalUserTransform,
+                account = account,
+                cipher = cipher,
+                verify = verify,
+                index = index,
+                field = field,
+            )
+            emit(item)
+        }
+    }
+}
+
+private suspend fun RememberStateFlowScope.createCustomFieldItem(
+    canEdit: Boolean,
+    contentColor: Color,
+    cryptoGenerator: CryptoGenerator,
+    cipherFieldSwitchToggle: CipherFieldSwitchToggle,
+    concealFields: Boolean,
+    copy: CopyText,
+    visibilityGlobalConfig: Visibility.Global,
+    visibilityGlobalUserTransform: (Boolean, (Boolean) -> Unit) -> Unit,
+    account: DAccount,
+    cipher: DSecret,
+    verify: ((() -> Unit) -> Unit)?,
+    index: Int,
+    field: DSecret.Field,
+): VaultViewItem {
+    val id = "custom.$index"
+    return when (field.type) {
+        DSecret.Field.Type.Boolean -> createBooleanFieldItem(
+            canEdit = canEdit,
+            cipherFieldSwitchToggle = cipherFieldSwitchToggle,
+            cipher = cipher,
+            id = id,
+            index = index,
+            field = field,
+        )
+
+        DSecret.Field.Type.Linked -> VaultViewItem.Label(
+            id = id,
+            text = annotate(
+                field.linkedId.linkedFieldTitle(),
+                field.name.orEmpty() to SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    color = contentColor,
+                ),
+            ),
+        )
+
+        DSecret.Field.Type.Text,
+        DSecret.Field.Type.Hidden,
+        -> {
+            val concealed = field.type == DSecret.Field.Type.Hidden && concealFields
+            create(
+                copy = copy,
+                cryptoGenerator = cryptoGenerator,
+                cipherLocalId = cipher.id,
+                id = id,
+                accountId = account.id,
+                title = field.name.orEmpty(),
+                value = field.value.orEmpty(),
+                verify = verify.takeIf { concealed },
+                visibility = Visibility(
+                    concealed = concealed,
+                    transformUserEvent = visibilityGlobalUserTransform,
+                    globalConfig = visibilityGlobalConfig,
+                ),
+            )
+        }
+    }
+}
+
+private fun RememberStateFlowScope.createBooleanFieldItem(
+    canEdit: Boolean,
+    cipherFieldSwitchToggle: CipherFieldSwitchToggle,
+    cipher: DSecret,
+    id: String,
+    index: Int,
+    field: DSecret.Field,
+): VaultViewItem.Switch {
+    fun createAction(
+        value: Boolean,
+    ) = FlatItemAction(
+        id = "cipher.field.$index.toggleBoolean",
+        title = TextHolder.Res(Res.string.custom_field_toggle_boolean_value),
+        trailing = {
+            SwitchExpressive(
+                checked = !value,
+                onCheckedChange = null,
+                enabled = canEdit,
+            )
+        },
+        onClick = if (canEdit) {
+            // lambda
+            {
+                val request = mapOf(
+                    cipher.id to listOf(
+                        CipherFieldSwitchToggleRequest(
+                            fieldIndex = index,
+                            fieldName = field.name,
+                            value = value,
+                        ),
+                    ),
+                )
+                cipherFieldSwitchToggle(request)
+                    .launchIn(appScope)
+            }
+        } else {
+            null
+        },
+    )
+
+    val value = field.value?.toBooleanStrictOrNull() ?: false
+    val actions = listOf(
+        createAction(!value),
+    )
+    return VaultViewItem.Switch(
+        id = id,
+        title = field.name.orEmpty(),
+        value = value,
+        dropdown = actions,
+    )
+}
+
+@Suppress("CyclomaticComplexMethod") // One branch per linked field.
+private fun DSecret.Field.LinkedId?.linkedFieldTitle(): StringResource = when (this) {
+    DSecret.Field.LinkedId.Login_Username -> Res.string.field_linked_to_username
+    DSecret.Field.LinkedId.Login_Password -> Res.string.field_linked_to_password
+    DSecret.Field.LinkedId.Card_CardholderName -> Res.string.field_linked_to_card_cardholdername
+    DSecret.Field.LinkedId.Card_ExpMonth -> Res.string.field_linked_to_card_expmonth
+    DSecret.Field.LinkedId.Card_ExpYear -> Res.string.field_linked_to_card_expyear
+    DSecret.Field.LinkedId.Card_Code -> Res.string.field_linked_to_card_code
+    DSecret.Field.LinkedId.Card_Brand -> Res.string.field_linked_to_card_brand
+    DSecret.Field.LinkedId.Card_Number -> Res.string.field_linked_to_card_number
+    DSecret.Field.LinkedId.Identity_Title -> Res.string.field_linked_to_identity_title
+    DSecret.Field.LinkedId.Identity_MiddleName -> Res.string.field_linked_to_identity_middlename
+    DSecret.Field.LinkedId.Identity_Address1 -> Res.string.field_linked_to_identity_address1
+    DSecret.Field.LinkedId.Identity_Address2 -> Res.string.field_linked_to_identity_address2
+    DSecret.Field.LinkedId.Identity_Address3 -> Res.string.field_linked_to_identity_address3
+    DSecret.Field.LinkedId.Identity_City -> Res.string.field_linked_to_identity_city
+    DSecret.Field.LinkedId.Identity_State -> Res.string.field_linked_to_identity_state
+    DSecret.Field.LinkedId.Identity_PostalCode -> Res.string.field_linked_to_identity_postalcode
+    DSecret.Field.LinkedId.Identity_Country -> Res.string.field_linked_to_identity_country
+    DSecret.Field.LinkedId.Identity_Company -> Res.string.field_linked_to_identity_company
+    DSecret.Field.LinkedId.Identity_Email -> Res.string.field_linked_to_identity_email
+    DSecret.Field.LinkedId.Identity_Phone -> Res.string.field_linked_to_identity_phone
+    DSecret.Field.LinkedId.Identity_Ssn -> Res.string.field_linked_to_identity_ssn
+    DSecret.Field.LinkedId.Identity_Username -> Res.string.field_linked_to_identity_username
+    DSecret.Field.LinkedId.Identity_PassportNumber -> Res.string.field_linked_to_identity_passportnumber
+    DSecret.Field.LinkedId.Identity_LicenseNumber -> Res.string.field_linked_to_identity_licensenumber
+    DSecret.Field.LinkedId.Identity_FirstName -> Res.string.field_linked_to_identity_firstname
+    DSecret.Field.LinkedId.Identity_LastName -> Res.string.field_linked_to_identity_lastname
+    DSecret.Field.LinkedId.Identity_FullName -> Res.string.field_linked_to_identity_fullname
+    null -> Res.string.field_linked_to_unknown_field
+}
+
 private fun RememberStateFlowScope.cipherRelationItems(
     cipherRelations: CipherRelations,
     vaultViewRouteFactory: VaultViewRouteFactory,
@@ -3628,9 +3953,11 @@ private fun RememberStateFlowScope.cipherRelationItems(
 }
 
 private suspend fun RememberStateFlowScope.createUriItem(
+    sharingScope: CoroutineScope,
     canEdit: Boolean,
     contentColor: Color,
     disabledContentColor: Color,
+    appIcons: Boolean,
     websiteIcons: Boolean,
     cipherUnsecureUrlCheck: CipherUnsecureUrlCheck,
     cipherUnsecureUrlAutoFix: CipherUnsecureUrlAutoFix,
@@ -3746,6 +4073,8 @@ private suspend fun RememberStateFlowScope.createUriItem(
         copy = copy,
     )
 
+    // A store icon is both an app icon and a download from a website.
+    val storeIcons = appIcons && websiteIcons
     val platformMarker = holder.info
         .firstOrNull { it is LinkInfoPlatform } as LinkInfoPlatform?
     when (platformMarker) {
@@ -3766,7 +4095,7 @@ private suspend fun RememberStateFlowScope.createUriItem(
                             )
                         },
                         title = AnnotatedString(androidMarker.label),
-                        iconSource = VaultUriIcon.AndroidApp(platformMarker.packageName, websiteIcons),
+                        iconSource = VaultUriIcon.AndroidApp(platformMarker.packageName, storeIcons),
                         matchTypeTitle = matchTypeTitle,
                         dropdown = dropdown,
                         overrides = overrides,
@@ -3783,7 +4112,7 @@ private suspend fun RememberStateFlowScope.createUriItem(
                             )
                         },
                         title = AnnotatedString(platformMarker.packageName),
-                        iconSource = VaultUriIcon.AndroidApp(platformMarker.packageName, websiteIcons),
+                        iconSource = VaultUriIcon.AndroidApp(platformMarker.packageName, storeIcons),
                         matchTypeTitle = matchTypeTitle,
                         dropdown = dropdown,
                         overrides = overrides,
@@ -3802,7 +4131,7 @@ private suspend fun RememberStateFlowScope.createUriItem(
                     )
                 },
                 title = AnnotatedString(platformMarker.bundleId),
-                iconSource = VaultUriIcon.IosApp(platformMarker.bundleId, websiteIcons),
+                iconSource = VaultUriIcon.IosApp(platformMarker.bundleId, storeIcons),
                 matchTypeTitle = matchTypeTitle,
                 dropdown = dropdown,
                 overrides = overrides,
@@ -3857,6 +4186,8 @@ private suspend fun RememberStateFlowScope.createUriItem(
                 matchTypeTitle = matchTypeTitle,
                 dropdown = dropdown,
                 overrides = overrides,
+                drag = draggableUrl(platformMarker.url, holder.uri.match)
+                    ?.let { DragOutSource.url(sharingScope, it, onError = ::message) },
             )
         }
 
@@ -4268,34 +4599,133 @@ private suspend fun RememberStateFlowScope.createUriItemContextItems(
                     }
                 }
                 section {
-                    this += LargeTypeRoute.showInLargeTypeActionOrNull(
-                        translator = this@createUriItemContextItems,
-                        text = uri,
-                        colorize = true,
-                        navigate = ::navigate,
-                    )
-                    this += LargeTypeRoute.showInLargeTypeActionAndLockOrNull(
-                        translator = this@createUriItemContextItems,
-                        text = uri,
-                        colorize = true,
-                        navigate = ::navigate,
-                    )
-                    this += BarcodeTypeRoute.showInBarcodeTypeActionOrNull(
-                        translator = this@createUriItemContextItems,
-                        data = uri,
-                        disallowFormatSelection = true,
-                        navigate = ::navigate,
-                    )
-                    this += createShareAction(
-                        translator = this@createUriItemContextItems,
-                        text = uri,
-                        navigate = ::navigate,
-                    )
+                    this += createTextShareActions(uri)
                 }
             }
             return dropdown
         }
     }
+}
+
+/**
+ * An `ssh://` field of an SSH key. It looks like a link, but is
+ * not a website: no favicon, browser or breach check.
+ */
+private suspend fun RememberStateFlowScope.createSshBookmarkItem(
+    id: String,
+    value: String,
+    disabledContentColor: Color,
+    /** The bookmarks that an app can open. */
+    connectableUrls: Set<String>,
+    copy: CopyText,
+): VaultViewItem.Uri {
+    val url = value.trim()
+    val bookmark = parseSshBookmark(url)
+    val title = if (bookmark != null) {
+        val dimmed = SpanStyle(
+            color = disabledContentColor,
+        )
+        val text = bookmark.toDisplayString()
+        val host = bookmark.displayHostRange()
+        buildAnnotatedString {
+            append(text)
+            addStyle(dimmed, 0, host.first)
+            addStyle(dimmed, host.last + 1, text.length)
+        }
+    } else {
+        AnnotatedString(url)
+    }
+    val canConnect = url in connectableUrls
+    return VaultViewItem.Uri(
+        id = id,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Terminal,
+                contentDescription = null,
+            )
+        },
+        title = title,
+        warningTitle = translate(Res.string.ssh_bookmark_invalid)
+            .takeIf { bookmark == null },
+        dropdown = createSshBookmarkActions(
+            id = id,
+            url = url,
+            bookmark = bookmark,
+            canConnect = canConnect,
+            copy = copy,
+        ),
+    )
+}
+
+private suspend fun RememberStateFlowScope.createSshBookmarkActions(
+    id: String,
+    url: String,
+    bookmark: SshBookmark?,
+    canConnect: Boolean,
+    copy: CopyText,
+): List<ContextItem> = buildContextItems {
+    section {
+        this += copy.FlatItemAction(
+            id = "$id.copy",
+            title = Res.string.copy.wrap(),
+            value = url,
+        )
+        if (bookmark != null) {
+            this += copy.FlatItemAction(
+                id = "$id.copy.command",
+                title = Res.string.ssh_bookmark_copy_command.wrap(),
+                value = bookmark.toSshCommand(),
+            )
+        }
+    }
+    section {
+        if (canConnect) {
+            this += FlatItemAction(
+                id = "$id.connect",
+                icon = Icons.Outlined.Terminal,
+                title = Res.string.ssh_bookmark_connect.wrap(),
+                trailing = {
+                    ChevronIcon()
+                },
+                onClick = {
+                    val intent = NavigationIntent.NavigateToBrowser(url)
+                    navigate(intent)
+                },
+            )
+        }
+    }
+    section {
+        this += createTextShareActions(url)
+    }
+}
+
+/** Shows the [text] in large type or as a QR code, or shares it. */
+private suspend fun RememberStateFlowScope.createTextShareActions(
+    text: String,
+): List<ContextItem> = buildContextItems {
+    this += LargeTypeRoute.showInLargeTypeActionOrNull(
+        translator = this@createTextShareActions,
+        text = text,
+        colorize = true,
+        navigate = ::navigate,
+    )
+    this += LargeTypeRoute.showInLargeTypeActionAndLockOrNull(
+        translator = this@createTextShareActions,
+        text = text,
+        colorize = true,
+        navigate = ::navigate,
+    )
+    this += BarcodeTypeRoute.showInBarcodeTypeActionOrNull(
+        translator = this@createTextShareActions,
+        data = text,
+        disallowFormatSelection = true,
+        navigate = ::navigate,
+    )
+    this += createShareAction(
+        translator = this@createTextShareActions,
+        text = text,
+        navigate = ::navigate,
+    )
 }
 
 private fun RememberStateFlowScope.createUriContextAppStoreListingAndroid(
@@ -4688,64 +5118,21 @@ private suspend fun RememberStateFlowScope.createGpgKeyItems(
 
     val items = mutableListOf<VaultViewItem>()
 
-    val gpgRevoked = parsedGpgKey?.revoked == true
-    val gpgExpired = parsedGpgKey?.expiresAt?.let { it <= now } == true
-    // The vault view has no live policy evaluation, so both self-signature
-    // states are read off the parse result. `authenticated == false` alone does
-    // not say which one it is: a weak-hash key that a renewal repairs and a key
-    // whose self-signature is missing, invalid or policy-rejected are both
-    // unauthenticated. The renewal tier is what separates them, so the
-    // remediation advice matches.
-    val gpgWeakSelfSignature =
-        parsedGpgKey?.renewal == GpgRenewalAuthorization.TEMPLATE_ONLY
-    val gpgUnauthenticatedSelfSignature = parsedGpgKey != null &&
-            !parsedGpgKey.hasAuthenticatedMetadata
-    when {
-        gpgRevoked -> {
-            items += VaultViewItem.Info(
-                id = "info.gpg.revoked",
-                name = translate(Res.string.revoked),
-                message = translate(Res.string.gpg_key_status_revoked_text),
+    parsedGpgKey
+        ?.let { key ->
+            createGpgKeyStatusInfoItem(
+                key = key,
+                now = now,
+                idPrefix = "info.gpg",
             )
         }
-
-        gpgExpired -> {
-            items += VaultViewItem.Info(
-                id = "info.gpg.expired",
-                name = translate(Res.string.expired),
-                message = translate(Res.string.gpg_key_status_expired_text),
-            )
-        }
-
-        gpgWeakSelfSignature -> {
-            items += VaultViewItem.Info(
-                id = "info.gpg.weakSelfSignature",
-                name = translate(Res.string.gpg_key_status_weak_self_signature_title),
-                message = translateGpgWeakSelfSignature(parsedGpgKey?.weakSelfSignatureAlgorithms.orEmpty()),
-            )
-        }
-
-        gpgUnauthenticatedSelfSignature -> {
-            items += VaultViewItem.Info(
-                id = "info.gpg.unauthenticatedSelfSignature",
-                name = translate(Res.string.gpg_key_status_unauthenticated_self_signature_title),
-                message = translate(Res.string.gpg_key_status_unauthenticated_self_signature_text),
-            )
-        }
-    }
+        ?.let { items += it }
 
     val gpgUserIds = parsedGpgKey
-        ?.userIds
+        ?.displayUserIds()
         .orEmpty()
-        .ifEmpty { parsedGpgKey?.emails.orEmpty() }
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-        .distinct()
     val gpgPrimaryUserId = parsedGpgKey
-        ?.userIdDetails
-        ?.firstOrNull { it.primary }
-        ?.userId
-        ?.trim()
+        ?.primaryUserId()
 
     val effectiveGpgFingerprint = gpgFingerprint
         ?: parsedGpgKey
@@ -4884,18 +5271,6 @@ private suspend fun RememberStateFlowScope.createGpgKeyItems(
         )
     }
 
-    val signCapability = translate(Res.string.gpg_keys_capability_sign)
-    val encryptDecryptCapability = translate(Res.string.gpg_key_capability_encrypt_decrypt)
-    // Persisted agent operations describe algorithm support, not present
-    // policy authorization, so only the parser's verdict counts here.
-    val gpgCapabilities = buildList {
-        if (parsedGpgKey?.canSign == true) {
-            this += signCapability
-        }
-        if (parsedGpgKey?.canEncrypt == true) {
-            this += encryptDecryptCapability
-        }
-    }
     val gpgAlgorithms = buildList {
         parsedGpgKey
             ?.formatGpgAlgorithm()
@@ -4913,33 +5288,18 @@ private suspend fun RememberStateFlowScope.createGpgKeyItems(
             value = gpgAlgorithms.joinToString(separator = "\n"),
         )
     }
-    parsedGpgKey?.createdAt?.let { createdAt ->
-        gpgDetailRows += VaultViewItem.Table.Row(
-            title = translate(Res.string.created),
-            value = dateFormatter.formatDate(createdAt),
-        )
-    }
     if (parsedGpgKey != null) {
-        val expiresAt = parsedGpgKey.expiresAt
-        gpgDetailRows += VaultViewItem.Table.Row(
-            title = translate(Res.string.expires),
-            value = expiresAt
-                ?.let(dateFormatter::formatDate)
-                ?: translate(
-                    if (parsedGpgKey.hasAuthenticatedMetadata) {
-                        Res.string.gpg_key_does_not_expire
-                    } else {
-                        Res.string.gpg_key_expiry_unknown
-                    },
-                ),
+        gpgDetailRows += createGpgKeyDateRows(
+            key = parsedGpgKey,
+            dateFormatter = dateFormatter,
         )
     }
-    if (gpgCapabilities.isNotEmpty()) {
-        gpgDetailRows += VaultViewItem.Table.Row(
-            title = translate(Res.string.capabilities),
-            value = gpgCapabilities.joinToString(),
-        )
-    }
+    // Persisted agent operations describe algorithm support, not present
+    // policy authorization, so only the parser's verdict counts here.
+    createGpgKeyCapabilitiesRow(
+        canSign = parsedGpgKey?.canSign == true,
+        canEncrypt = parsedGpgKey?.canEncrypt == true,
+    )?.let { gpgDetailRows += it }
     val gpgKeyMaterialText = when {
         gpgPrivateKeyArmored != null && gpgPublicKeyArmored != null -> "sec/pub"
         gpgPrivateKeyArmored != null -> "sec"
@@ -4960,98 +5320,14 @@ private suspend fun RememberStateFlowScope.createGpgKeyItems(
         )
     }
 
-    val gpgSubKeyItems = parsedGpgKey
-        ?.subKeys
-        .orEmpty()
-        .mapIndexedNotNull { index, subKey ->
-            val subKeyCapabilities = buildList {
-                if (subKey.canSign) {
-                    this += signCapability
-                }
-                if (subKey.canEncrypt) {
-                    this += encryptDecryptCapability
-                }
-            }.distinct()
-            val subKeyFingerprint = subKey.fingerprint
-                .normalizeGpgFingerprint()
-                .takeIf { it.isNotEmpty() }
-            val subKeyKeyId = subKey.keyId
-                .normalizeGpgFingerprint()
-                .takeIf { it.isNotEmpty() }
-            val rows = mutableListOf<VaultViewItem.Table.Row>()
-            if (subKeyFingerprint != null) {
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.fingerprint),
-                    value = subKeyFingerprint.chunkedGpgFingerprint(),
-                )
-            }
-            if (subKeyKeyId != null && subKeyKeyId != subKeyFingerprint) {
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.key_id),
-                    value = subKeyKeyId.chunkedGpgFingerprint(),
-                )
-            }
-            subKey.keygrip
-                ?.normalizeGpgKeygrip()
-                ?.takeIf { it.isNotEmpty() }
-                ?.let { keygrip ->
-                    rows += VaultViewItem.Table.Row(
-                        title = translate(Res.string.keygrip),
-                        value = keygrip,
-                    )
-                }
-            subKey.formatGpgAlgorithm()?.let { algorithm ->
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.algorithm),
-                    value = algorithm,
-                )
-            }
-            subKey.createdAt?.let { createdAt ->
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.created),
-                    value = dateFormatter.formatDate(createdAt),
-                )
-            }
-            subKey.expiresAt?.let { expiresAt ->
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.expires),
-                    value = dateFormatter.formatDate(expiresAt),
-                )
-            }
-            if (subKeyCapabilities.isNotEmpty()) {
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.capabilities),
-                    value = subKeyCapabilities.joinToString(),
-                )
-            }
-            val subKeyStatus = when {
-                subKey.revoked -> Res.string.revoked
-                subKey.expiresAt?.let { it <= now } == true -> Res.string.expired
-                else -> null
-            }
-            if (subKeyStatus != null) {
-                rows += VaultViewItem.Table.Row(
-                    title = translate(Res.string.gpg_key_status),
-                    value = translate(subKeyStatus),
-                )
-            }
-            if (rows.isEmpty()) {
-                return@mapIndexedNotNull null
-            }
-            VaultViewItem.Table(
-                id = "gpg.subKey.$index",
-                elevation = 1.dp,
-                title = translate(Res.string.gpg_key_subkey_n, index + 1),
-                rows = rows,
-            )
-        }
-    if (gpgSubKeyItems.isNotEmpty()) {
-        items += VaultViewItem.Section(
-            id = "gpg.subKeys.section",
-            text = translate(Res.string.subkeys),
-        )
-        items += gpgSubKeyItems
-    }
+    items += createGpgSubKeyItems(
+        subKeys = parsedGpgKey
+            ?.subKeys
+            .orEmpty(),
+        now = now,
+        dateFormatter = dateFormatter,
+        idPrefix = "gpg",
+    )
 
     if (gpgUserIds.isNotEmpty()) {
         items += VaultViewItem.Section(
@@ -5157,26 +5433,6 @@ private suspend fun RememberStateFlowScope.createGpgKeyItems(
     return items
 }
 
-private fun GpgPublicKeyInfo.formatGpgAlgorithm(): String? {
-    val values = listOfNotNull(
-        algorithm.takeIf { it.isNotBlank() },
-        bitStrength?.let { "$it-bit" },
-    )
-    return values
-        .joinToString(separator = " ")
-        .takeIf { it.isNotBlank() }
-}
-
-private fun GpgPublicSubKeyInfo.formatGpgAlgorithm(): String? {
-    val values = listOfNotNull(
-        algorithm.takeIf { it.isNotBlank() },
-        bitStrength?.let { "$it-bit" },
-    )
-    return values
-        .joinToString(separator = " ")
-        .takeIf { it.isNotBlank() }
-}
-
 internal data class VaultViewPrimaryCopy(
     val value: String,
     val type: CopyText.Type,
@@ -5228,6 +5484,63 @@ fun List<ContextItem>.verify(
             is FlatItemAction -> it.verify(verify)
         }
     }
+
+private suspend fun TranslatorScope.createSshCertificateRows(
+    certificate: SshCertificate,
+    dateFormatter: DateFormatter,
+): List<VaultViewItem.Table.Row> = buildList {
+    if (certificate.principals.isNotEmpty()) {
+        this += VaultViewItem.Table.Row(
+            title = translate(Res.string.ssh_certificate_principals),
+            value = certificate.principals.joinToString(separator = "\n"),
+        )
+    }
+    // A certificate without a start is valid from the Unix epoch.
+    if (certificate.validAfter > 0L) {
+        this += VaultViewItem.Table.Row(
+            title = translate(Res.string.valid_from),
+            value = formatSshCertificateTime(certificate.validAfter, dateFormatter),
+        )
+    }
+    this += VaultViewItem.Table.Row(
+        title = translate(Res.string.expires),
+        value = if (certificate.validBefore == Long.MAX_VALUE) {
+            translate(Res.string.expiration_date_never)
+        } else {
+            formatSshCertificateTime(certificate.validBefore, dateFormatter)
+        },
+    )
+    if (certificate.keyId.isNotEmpty()) {
+        this += VaultViewItem.Table.Row(
+            title = translate(Res.string.key_id),
+            value = certificate.keyId,
+        )
+    }
+    this += VaultViewItem.Table.Row(
+        title = translate(Res.string.ssh_certificate_serial),
+        value = certificate.serial.toString(),
+    )
+    this += VaultViewItem.Table.Row(
+        title = translate(Res.string.ssh_certificate_authority),
+        value = certificate.caFingerprint,
+    )
+    if (certificate.criticalOptions.isNotEmpty()) {
+        this += VaultViewItem.Table.Row(
+            title = translate(Res.string.ssh_certificate_critical_options),
+            value = certificate.criticalOptions.joinToString(separator = "\n") { it.format() },
+        )
+    }
+    if (certificate.extensions.isNotEmpty()) {
+        this += VaultViewItem.Table.Row(
+            title = translate(Res.string.ssh_certificate_extensions),
+            value = certificate.extensions.joinToString(separator = "\n") { it.format() },
+        )
+    }
+}
+
+// Formatted as `ssh-keygen -L` prints them.
+private fun SshCertificate.Option.format() =
+    if (value.isEmpty()) name else "$name $value"
 
 fun List<FlatItemAction>.verify(
     verify: ((() -> Unit) -> Unit)? = null,

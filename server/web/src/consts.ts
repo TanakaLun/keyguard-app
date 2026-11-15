@@ -11,6 +11,7 @@ export const SITE = {
 
 export const NAV = [
   { label: 'Features', href: '/features/' },
+  { label: 'Purchase', href: '/purchase/' },
   { label: 'Docs', href: '/docs/' },
 ];
 
@@ -153,8 +154,7 @@ export const PLATFORMS: DownloadPlatform[] = [
     options: [
       {
         name: 'Flathub',
-        description:
-          'Sandboxed. No [FIDO2 Web Authentication](/docs/bitwarden/two-factor-login/#limitations) for two-factor login.',
+        description: 'Sandboxed.',
         href: 'https://flathub.org/apps/com.artemchep.keyguard',
       },
       {

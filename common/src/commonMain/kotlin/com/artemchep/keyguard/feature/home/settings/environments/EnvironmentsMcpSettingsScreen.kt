@@ -30,12 +30,19 @@ fun rememberSettingsEnvironmentsMcpItems(
                 list = persistentListOf(
                     SettingPaneItem.Item(Setting.ENVIRONMENTS_MCP),
                     SettingPaneItem.Item(Setting.ENVIRONMENTS_MCP_APPROVAL_WINDOW),
+                    SettingPaneItem.Item(Setting.ENVIRONMENTS_MCP_APPROVAL_TIMEOUT),
                 ),
             ),
             SettingPaneItem.Group(
                 key = "environments_mcp.setup",
                 list = persistentListOf(
                     SettingPaneItem.Item(Setting.ENVIRONMENTS_MCP_SETUP),
+                ),
+            ),
+            SettingPaneItem.Group(
+                key = "environments_mcp.history",
+                list = persistentListOf(
+                    SettingPaneItem.Item(Setting.ENVIRONMENTS_MCP_HISTORY),
                 ),
             ),
         )

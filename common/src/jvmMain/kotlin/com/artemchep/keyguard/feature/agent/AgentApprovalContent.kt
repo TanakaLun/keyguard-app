@@ -44,7 +44,7 @@ import com.artemchep.keyguard.ui.focus.FocusRequester2
 import com.artemchep.keyguard.ui.focus.focusRequester2
 import com.artemchep.keyguard.ui.icons.DropdownIcon
 import com.artemchep.keyguard.ui.icons.icon
-import com.artemchep.keyguard.ui.rememberCountdownSeconds
+import com.artemchep.keyguard.ui.rememberCountdownText
 import com.artemchep.keyguard.ui.text.annotatedResource
 import com.artemchep.keyguard.ui.theme.bodyLarge
 import com.artemchep.keyguard.ui.theme.combineAlpha
@@ -220,7 +220,7 @@ fun AgentApprovalButtons(
                 maxLines = 1,
             )
 
-            val countdown = rememberCountdownSeconds(expiresAt)
+            val countdown = rememberCountdownText(expiresAt)
             if (countdown != null) {
                 Spacer(
                     modifier = Modifier

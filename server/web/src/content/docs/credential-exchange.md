@@ -24,7 +24,8 @@ in both directions, over the transfer that Android provides.
 
 1. On the screen of the account the items go to, select
    **Import from another app**.
-2. Select **Start import**. Android shows the apps that can share credentials.
+2. Under **Another app on this device**, select **Credential Exchange**.
+   Android shows the apps that can share credentials.
 3. Select the app to import from, and approve the transfer in that app.
 4. Back in Keyguard, review the items. All items are selected; clear the ones
    you don't want.
@@ -75,6 +76,7 @@ The review screen counts what Keyguard skips.
 | --- | --- |
 | Attachments | Both directions |
 | [GPG keys](/docs/gpg-keys/) | Export |
+| Certificates of SSH keys. The key transfers without it. | Export |
 | Archived items and items in the trash | Export |
 | Password history | Export. Only the current password transfers. |
 | Environments with item references | Export |
@@ -96,6 +98,8 @@ A passkey is skipped when:
   zero. See [How Keyguard handles passkeys](/docs/passkeys/#how-keyguard-handles-passkeys).
 - Its credential ID, private key or relying party ID is missing or can't be
   decoded.
+- Its PRF secret is larger than 64 KiB or can't be decoded. This applies in
+  both directions.
 
 ### SSH keys
 

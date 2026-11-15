@@ -78,9 +78,22 @@ struct BitwardenLoginView: View {
             .padding(40)
             .frame(maxWidth: .infinity)
         }
+        #if os(iOS)
+        .sheet(
+            item: Binding(get: { loginModel.filePicker.pendingFilePicker }, set: { _ in }),
+            onDismiss: { loginModel.filePicker.pickerDismissed() }
+        ) { request in
+            DocumentOpenPicker(request: request) { result in
+                loginModel.filePicker.resolve(result: result, requestID: request.id)
+            }
+            .ignoresSafeArea()
+            .interactiveDismissDisabled()
+        }
+        #endif
         .navigationTitle(L10n.addaccountMethodHeaderTitle)
         .navigationDestination(isPresented: $loginModel.ssoActive) {
             BitwardenSsoView()
+                .environment(loginModel)
         }
         // The SSO step keeps running under its 2FA screen, so it
         // stops only once its own screen is popped.
@@ -89,6 +102,7 @@ struct BitwardenLoginView: View {
         }
         .navigationDestination(isPresented: loginTwofaActive) {
             BitwardenTwofaView()
+                .environment(loginModel)
         }
         .onChange(of: loginModel.loginDidSucceed) { _, succeeded in
             if succeeded { dismiss() }
@@ -214,6 +228,18 @@ struct BitwardenLoginView: View {
                 Text(text)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+        } else if item.kind == LoginItemKind.mutualTls {
+            VStack(alignment: .leading, spacing: 8) {
+                if let label = item.label { Label(label, systemImage: "lock.shield") }
+                if let text = item.text {
+                    Text(text).font(.footnote).foregroundStyle(.secondary)
+                }
+                HStack {
+                    ForEach(item.actions, id: \.id) { action in
+                        Button(action.title) { loginModel.invokeLoginAction(id: action.id) }
+                    }
+                }
             }
         } else if item.kind == LoginItemKind.add {
             addButton(item)

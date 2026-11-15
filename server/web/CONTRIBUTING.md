@@ -10,7 +10,12 @@ pnpm lint:docs    # page structure and Markdown
 pnpm lint:prose   # Vale, needs the vale binary
 pnpm build        # site and search index
 pnpm check:links  # URLs the app and README link to, after build
+pnpm check:agents # Markdown exports, generated content and discovery, after build
 ```
+
+The build exports each rendered doc to `/docs/<id>/index.md` and lists the exports in `/llms.txt`.
+The exports include availability metadata and generated tables. Markdown links and copy controls appear only in
+the built site. After deployment, `pnpm check:agents:live https://keyguard.dev` checks responses and content types.
 
 ## Sections
 
@@ -157,7 +162,7 @@ Each fact lives on one page. Other pages link to it and never restate it. (revie
 - H2 and H3 only, in sentence case. No numbers, no links, no `&`. (lint)
 - Never two headings without text between them, and never a heading that repeats the page title. (review)
 - A heading the app links to is frozen: renaming it breaks the anchor. Today that's
-  `credential-exchange#importing-from-another-app` and `generator#custom-wordlists`. (lint: `check:links`)
+  `generator#custom-wordlists`. (lint: `check:links`)
 
 ### Callouts
 

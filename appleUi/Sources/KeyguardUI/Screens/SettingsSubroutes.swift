@@ -415,17 +415,23 @@ struct DeveloperSettingsView: View {
 
     private var searchReady: Bool {
         #if os(macOS)
-        s.loaded && gpgAgentModel.gpgAgentSettings.loaded
+        s.loaded && gpgAgentModel.gpgAgentSettings.loaded && cli.model?.snapshot != nil
         #else
         s.loaded
         #endif
     }
 
+    private var searchAliases: [SettingsSearchTarget: SettingsSearchTarget] {
+        // The MCP page opens from the Environments page.
+        var aliases: [SettingsSearchTarget: SettingsSearchTarget] = [.mcpHistory: .envHistory]
+        if !(status.running && status.sshAuthSock != nil) {
+            aliases[.sshSocket] = .sshEnable
+        }
+        return aliases
+    }
+
     var body: some View {
-        SettingsForm(
-            ready: searchReady,
-            aliases: status.running && status.sshAuthSock != nil ? [:] : [.sshSocket: .sshEnable]
-        ) {
+        SettingsForm(ready: searchReady, aliases: searchAliases) {
             #if os(macOS)
             sshAgentSection
             approvalsSection
@@ -434,13 +440,29 @@ struct DeveloperSettingsView: View {
             // Builds that serve no command of the CLI have no CLI path.
             if cli.model?.snapshot?.path != nil {
                 Section(L10n.cliTitle) {
+                    // Search reveals the row that opens the page with the request log.
                     NavigationLink(L10n.cliTitle) { CliScreen() }
+                        .settingsSearchTarget(.cliHistory)
                     Text(L10n.cliNote).foregroundStyle(.secondary)
                 }
             }
             Section(L10n.environmentsTitle) {
                 NavigationLink(L10n.environmentsTitle) { EnvironmentsScreen() }
+                    .settingsSearchTarget(.envHistory)
                 Text(L10n.environmentsDescription).foregroundStyle(.secondary)
+            }
+            Section {
+                durationPicker(
+                    L10n.prefItemAgentHistoryRetentionTitle,
+                    options: s.historyRetentionOptions,
+                    currentTitle: s.historyRetentionTitle,
+                    set: { sshAgentModel.setAgentHistoryRetention(optionId: $0) }
+                )
+                .settingsSearchTarget(.agentHistoryRetention)
+            } header: {
+                Text(L10n.prefItemAgentHistoryTitle)
+            } footer: {
+                Text(L10n.prefItemAgentHistoryRetentionNote)
             }
             #else
             Section(L10n.agentTitle(L10n.protocolSsh)) {
@@ -555,6 +577,13 @@ struct DeveloperSettingsView: View {
                 set: { sshAgentModel.setSshAgentApprovalWindow(optionId: $0) }
             )
             .settingsSearchTarget(.sshApproval)
+            durationPicker(
+                L10n.prefItemAgentApprovalTimeoutTitle,
+                options: s.approvalTimeoutOptions,
+                currentTitle: s.approvalTimeoutTitle,
+                set: { sshAgentModel.setSshAgentApprovalTimeout(optionId: $0) }
+            )
+            .settingsSearchTarget(.sshApprovalTimeout)
         } header: {
             Text(L10n.agentApprovalsHeaderTitle)
         } footer: {

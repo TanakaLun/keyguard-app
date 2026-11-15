@@ -9,6 +9,18 @@ from scripts.classify_native_changes import FLAGS, changed_paths, classify
 
 
 class NativeChangeClassificationTest(unittest.TestCase):
+    def test_mtls_changes_run_real_network_checks_on_all_engines(self):
+        for path in (
+            "scripts/run_mtls_tests.py",
+            "common/src/mtlsTest/kotlin/com/artemchep/keyguard/provider/bitwarden/transport/MutualTlsNetworkChecks.kt",
+            "common/src/appleMain/kotlin/com/artemchep/keyguard/provider/bitwarden/transport/BitwardenHttpClientFactoryApple.kt",
+            "androidApp/src/mtlsTest/kotlin/com/artemchep/keyguard/test/transport/MutualTlsNetworkTest.kt",
+        ):
+            with self.subTest(path=path):
+                result = classify([path])
+                for flag in ("desktop_run", "apple_regressions", "android_run"):
+                    self.assertTrue(result[flag], flag)
+
     def test_docs_translations_and_ui_do_not_build_native_packages(self):
         result = classify([
             "docs/architecture/native-crypto.md",
@@ -192,6 +204,7 @@ class NativeChangeClassificationTest(unittest.TestCase):
 
     def test_native_dependencies_are_not_silently_omitted(self):
         cases = {
+            "util/age/rust/crates/keyguard-age-core/Cargo.toml": (True, True, True),
             "util/zxcvbn/rust/crates/keyguard-zxcvbn-core/Cargo.toml": (True, True, True),
             "util/zip/rust/crates/keyguard-zip-core/Cargo.toml": (False, False, True),
             "util/instance/rust/crates/keyguard-instance-core/Cargo.toml": (True, False, False),
@@ -502,13 +515,6 @@ class NativeChangeClassificationTest(unittest.TestCase):
                 self.assertFalse(result["desktop"])
                 self.assertFalse(result["android_run"])
 
-    def test_apple_string_catalogs_do_not_build_native_apple_consumers(self):
-        result = classify([
-            "appleUi/Sources/KeyguardUI/Resources/Localizable.xcstrings",
-            "iosApp/Resources/InfoPlist.xcstrings",
-        ])
-        self.assertFalse(any(result[flag] for flag in FLAGS))
-
     def test_apple_bridge_tests_select_macos_regressions(self):
         result = classify(["appleApp/src/appleTest/kotlin/NativeBundleSmokeTest.kt"])
         self.assertTrue(result["apple_regressions"])
@@ -584,7 +590,7 @@ class NativeChangeClassificationTest(unittest.TestCase):
         self.assertEqual([(row["platform"], row["arch"]) for row in result["desktop_matrix"]["include"]], [("macos", "aarch64")])
 
     def test_shared_toolchain_and_build_plugins_request_all_semantic_checks(self):
-        for path in ("rust-toolchain.toml", "buildPlugins/src/main/kotlin/Cargo.kt", ".github/actions/prefetch_native/prefetch.sh", "gradle/libs.versions.toml"):
+        for path in ("rust-toolchain.toml", ".cargo/config.toml", "buildPlugins/src/main/kotlin/Cargo.kt", ".github/actions/prefetch_native/prefetch.sh", "gradle/libs.versions.toml"):
             with self.subTest(path=path):
                 result = classify([path])
                 self.assertTrue(all(result[flag] for flag in FLAGS if flag != "wear"))

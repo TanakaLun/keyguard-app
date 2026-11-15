@@ -132,7 +132,7 @@ async fn exited_macos_peer_is_rejected_before_key_provider_on_repeated_requests(
         let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
         assert!(agent
             .sign(SignRequest {
-                pubkey: pubkey.key_data().clone(),
+                credential: PublicCredential::Key(pubkey.key_data().clone()),
                 data: vec![1, 2, 3],
                 flags: 0,
             })
@@ -165,6 +165,17 @@ fn session_bind_extension_signed_for(
         is_forwarding,
     })
     .expect("test session-bind message should encode")
+}
+
+fn with_forwarding_flag(extension: Extension, flag: u8) -> Extension {
+    let mut details = extension.details.into_bytes();
+    *details
+        .last_mut()
+        .expect("encoded session-bind includes a forwarding flag") = flag;
+    Extension {
+        name: extension.name,
+        details: details.into(),
+    }
 }
 
 fn session_bind_host_key_blob(seed_byte: u8) -> Vec<u8> {
@@ -421,8 +432,8 @@ async fn sign_no_matching_key_returns_failure() {
 
     // Build a SignRequest with a pubkey that doesn't match any key.
     let request = SignRequest {
-        pubkey: ssh_key::public::KeyData::Ed25519(ssh_key::public::Ed25519PublicKey(
-            Default::default(),
+        credential: PublicCredential::Key(ssh_key::public::KeyData::Ed25519(
+            ssh_key::public::Ed25519PublicKey(Default::default()),
         )),
         data: vec![1, 2, 3],
         flags: 0,
@@ -451,7 +462,7 @@ async fn sign_ipc_error_returns_failure() {
     // Parse the real pubkey to get the matching KeyData.
     let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
     let request = SignRequest {
-        pubkey: pubkey.key_data().clone(),
+        credential: PublicCredential::Key(pubkey.key_data().clone()),
         data: vec![1, 2, 3],
         flags: 0,
     };
@@ -484,7 +495,7 @@ async fn sign_preserves_legacy_and_sha2_rsa_wire_signatures() {
         });
         let signature = KeyguardAgent::new(provider)
             .sign(SignRequest {
-                pubkey: pubkey.key_data().clone(),
+                credential: PublicCredential::Key(pubkey.key_data().clone()),
                 data: vec![1, 2, 3],
                 flags,
             })
@@ -516,7 +527,7 @@ async fn sign_returns_valid_signature() {
 
     let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
     let request = SignRequest {
-        pubkey: pubkey.key_data().clone(),
+        credential: PublicCredential::Key(pubkey.key_data().clone()),
         data: vec![1, 2, 3],
         flags: 0,
     };
@@ -567,7 +578,7 @@ async fn caller_identity_is_forwarded_to_provider() {
     // Sign should forward identity.
     let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
     let request = SignRequest {
-        pubkey: pubkey.key_data().clone(),
+        credential: PublicCredential::Key(pubkey.key_data().clone()),
         data: vec![1, 2, 3],
         flags: 0,
     };
@@ -616,7 +627,7 @@ async fn verified_session_binding_partitions_sign_authorization_only() {
 
     agent
         .sign(SignRequest {
-            pubkey: pubkey.key_data().clone(),
+            credential: PublicCredential::Key(pubkey.key_data().clone()),
             data: bound_userauth_data(b"bound-sign-session", pubkey.key_data(), None),
             flags: 0,
         })
@@ -688,7 +699,7 @@ async fn session_binding_preserves_subject_and_sets_separate_cache_context() {
 
     agent
         .sign(SignRequest {
-            pubkey: pubkey.key_data().clone(),
+            credential: PublicCredential::Key(pubkey.key_data().clone()),
             data: bound_userauth_data(b"v2-bound-session", pubkey.key_data(), None),
             flags: 0,
         })
@@ -779,7 +790,7 @@ async fn sign_list_keys_failure_during_sign_returns_error() {
 
     let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
     let request = SignRequest {
-        pubkey: pubkey.key_data().clone(),
+        credential: PublicCredential::Key(pubkey.key_data().clone()),
         data: vec![1, 2, 3],
         flags: 0,
     };
@@ -808,8 +819,8 @@ async fn sign_with_only_invalid_keys_returns_failure() {
     let mut agent = KeyguardAgent::new(provider);
 
     let request = SignRequest {
-        pubkey: ssh_key::public::KeyData::Ed25519(ssh_key::public::Ed25519PublicKey(
-            Default::default(),
+        credential: PublicCredential::Key(ssh_key::public::KeyData::Ed25519(
+            ssh_key::public::Ed25519PublicKey(Default::default()),
         )),
         data: vec![1, 2, 3],
         flags: 0,
@@ -851,7 +862,7 @@ async fn extension_query_returns_supported_extensions() {
 }
 
 #[tokio::test]
-async fn extension_unknown_name_returns_extension_failure() {
+async fn extension_unknown_name_returns_generic_failure() {
     let provider = FakeKeyProvider::new(vec![]);
     let mut agent = KeyguardAgent::new(provider);
 
@@ -862,8 +873,8 @@ async fn extension_unknown_name_returns_extension_failure() {
 
     let result = agent.extension(request).await;
     assert!(
-        matches!(result, Err(AgentError::ExtensionFailure)),
-        "Unknown extension should return extension failure"
+        matches!(result, Err(AgentError::Failure)),
+        "Unknown extension should return generic failure"
     );
 }
 
@@ -959,7 +970,7 @@ async fn session_bind_invalid_signature_poisoned_connection_cannot_sign() {
     let pubkey = ssh_key::PublicKey::from_openssh(TEST_ED25519_PUBKEY).unwrap();
     let sign_result = agent
         .sign(SignRequest {
-            pubkey: pubkey.key_data().clone(),
+            credential: PublicCredential::Key(pubkey.key_data().clone()),
             data: vec![1, 2, 3],
             flags: 0,
         })
@@ -1070,7 +1081,7 @@ async fn session_bind_forwarding_hop_cannot_sign() {
 
     let result = agent
         .sign(SignRequest {
-            pubkey: public_key.key_data().clone(),
+            credential: PublicCredential::Key(public_key.key_data().clone()),
             data: bound_userauth_data(b"forwarding-hop", public_key.key_data(), None),
             flags: 0,
         })
@@ -1098,7 +1109,7 @@ async fn session_bind_wrong_session_sign_request_is_rejected_before_ipc() {
 
     let result = agent
         .sign(SignRequest {
-            pubkey: public_key.key_data().clone(),
+            credential: PublicCredential::Key(public_key.key_data().clone()),
             data: bound_userauth_data(b"wrong-session", public_key.key_data(), None),
             flags: 0,
         })
@@ -1134,14 +1145,14 @@ async fn forwarded_path_requires_the_final_hostbound_key() {
 
     let plain_result = agent
         .sign(SignRequest {
-            pubkey: public_key.key_data().clone(),
+            credential: PublicCredential::Key(public_key.key_data().clone()),
             data: bound_userauth_data(b"final-session", public_key.key_data(), None),
             flags: 0,
         })
         .await;
     let wrong_host_result = agent
         .sign(SignRequest {
-            pubkey: public_key.key_data().clone(),
+            credential: PublicCredential::Key(public_key.key_data().clone()),
             data: bound_userauth_data(
                 b"final-session",
                 public_key.key_data(),
@@ -1152,7 +1163,7 @@ async fn forwarded_path_requires_the_final_hostbound_key() {
         .await;
     let correct_host_result = agent
         .sign(SignRequest {
-            pubkey: public_key.key_data().clone(),
+            credential: PublicCredential::Key(public_key.key_data().clone()),
             data: bound_userauth_data(
                 b"final-session",
                 public_key.key_data(),
@@ -1187,23 +1198,64 @@ async fn session_bind_trailing_bytes_are_rejected() {
 }
 
 #[tokio::test]
-async fn session_bind_noncanonical_boolean_is_rejected() {
+async fn session_bind_nonzero_forwarding_flag_is_true() {
     let provider = FakeKeyProvider::new(vec![]);
-    let mut agent = KeyguardAgent::new(provider);
-    let request = session_bind_extension(19, b"session-id", false);
-    let mut details = request.details.into_bytes();
-    *details
-        .last_mut()
-        .expect("encoded session-bind includes a forwarding flag") = 2;
+    let mut canonical_agent = KeyguardAgent::new(provider.clone());
+    canonical_agent
+        .extension(session_bind_extension(19, b"session-id", true))
+        .await
+        .unwrap();
+    let canonical = canonical_agent.verified_session_binding_context().unwrap();
 
-    let result = agent
-        .extension(Extension {
-            name: SESSION_BIND_EXTENSION.to_string(),
-            details: details.into(),
-        })
+    for flag in [2, 0xff] {
+        let mut agent = KeyguardAgent::new(provider.clone());
+        let request = with_forwarding_flag(session_bind_extension(19, b"session-id", false), flag);
+
+        let result = agent.extension(request).await;
+
+        assert!(matches!(result, Ok(None)), "flag {flag}: {result:?}");
+        let context = agent.verified_session_binding_context().unwrap();
+        assert!(context.final_is_forwarding());
+        assert_eq!(context, canonical);
+    }
+}
+
+#[tokio::test]
+async fn extension_response_frames_distinguish_unsupported_from_failed() {
+    let unknown = Extension {
+        name: "unknown@example.com".to_string(),
+        details: Vec::new().into(),
+    };
+    // Response types: SSH_AGENT_SUCCESS (6), SSH_AGENT_FAILURE (5), and
+    // SSH_AGENT_EXTENSION_FAILURE (28).
+    let cases = [
+        (
+            "canonical forwarding flag",
+            session_bind_extension(22, b"session-id", true),
+            6,
+        ),
+        (
+            "nonzero forwarding flag",
+            with_forwarding_flag(session_bind_extension(22, b"session-id", false), 2),
+            6,
+        ),
+        ("unsupported extension", unknown, 5),
+        (
+            "failed session binding",
+            session_bind_extension_signed_for(22, b"session-id", b"other-session", false),
+            28,
+        ),
+    ];
+
+    for (case, extension, response_type) in cases {
+        let mut agent = KeyguardAgent::new(FakeKeyProvider::new(vec![]));
+        let frame = crate::socket::response_frame(
+            &mut agent,
+            ssh_agent_lib::proto::Request::Extension(extension),
+        )
         .await;
-
-    assert!(matches!(result, Err(AgentError::ExtensionFailure)));
+        assert_eq!(frame, [0, 0, 0, 1, response_type], "{case}");
+    }
 }
 
 #[tokio::test]

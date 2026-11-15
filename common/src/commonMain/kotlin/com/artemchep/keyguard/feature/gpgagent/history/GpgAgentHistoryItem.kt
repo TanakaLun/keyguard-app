@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import arrow.optics.optics
 import com.artemchep.keyguard.common.model.GpgUsageHistoryRequestType
 import com.artemchep.keyguard.common.model.GpgUsageHistoryResponseType
+import com.artemchep.keyguard.feature.agent.history.AgentHistoryDetails
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
@@ -33,6 +34,8 @@ sealed interface GpgAgentHistoryItem {
         val request: GpgUsageHistoryRequestType,
         val response: GpgUsageHistoryResponseType,
         val createdAt: Instant,
+        val details: AgentHistoryDetails,
+        val onClick: (() -> Unit)? = null,
     ) : GpgAgentHistoryItem {
         companion object;
     }

@@ -3,6 +3,7 @@
 use crate::ipc::{IpcClient, IpcError};
 use anyhow::Result;
 use common_gpg_agent_rust::messages::{CallerIdentity, ErrorCode, GpgKey};
+use std::sync::Arc;
 use tokio::io::{AsyncBufRead, AsyncWriteExt};
 use tracing::warn;
 
@@ -34,6 +35,12 @@ const ERR_NO_AUTH: u32 = 314;
 /// lines during PKDECRYPT, matching gpg-agent's MAXLEN_CIPHERTEXT.
 pub(super) const MAX_CIPHERTEXT_LEN: usize = 4096;
 
+/// Iteration count reported by `GETINFO s2k_count` for gpg's symmetric S2K.
+/// gpg-agent calibrates it to ~100 ms of hashing; this agent hashes no
+/// passphrases, so it reports the largest count OpenPGP can encode (coded
+/// 0xFF), which gpg clamps calibrated counts to on current hardware anyway.
+const S2K_COUNT: u32 = 65_011_712;
+
 // Keeping the protocol state, guarded caller, bounded reader, and writer as
 // explicit borrows makes the security boundaries visible at this dispatcher.
 #[allow(clippy::too_many_arguments)]
@@ -41,7 +48,7 @@ pub(super) async fn handle_command<R: AsyncBufRead + Unpin, W: AsyncWriteExt + U
     command: ParsedCommand<'_>,
     state: &mut SessionState,
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
     info: &AgentInfo,
     reader: &mut DeadlineReader<R>,
@@ -62,6 +69,12 @@ pub(super) async fn handle_command<R: AsyncBufRead + Unpin, W: AsyncWriteExt + U
             Ok(false)
         }
         "OPTION" => {
+            write_ok(write, "").await?;
+            Ok(false)
+        }
+        "UPDATESTARTUPTTY" => {
+            // Shell profiles send this to point gpg-agent's pinentry at the
+            // current terminal. We have no pinentry, so there is nothing to update.
             write_ok(write, "").await?;
             Ok(false)
         }
@@ -109,6 +122,13 @@ pub(super) async fn handle_command<R: AsyncBufRead + Unpin, W: AsyncWriteExt + U
             .await?;
             Ok(should_close)
         }
+        "SCD" => {
+            // Smartcards are unsupported. Reply like gpg-agent with
+            // disable-scdaemon, so gpg reports a missing card instead of an
+            // unknown command.
+            write_error(write, ERR_NOT_SUPPORTED, "not supported").await?;
+            Ok(false)
+        }
         _ => {
             write_error(write, ERR_ASS_UNKNOWN_CMD, "unsupported command").await?;
             Ok(false)
@@ -134,6 +154,10 @@ async fn handle_getinfo<W: AsyncWriteExt + Unpin>(
             write_data(write, std::process::id().to_string().as_bytes()).await?;
             write_ok(write, "").await
         }
+        "s2k_count" => {
+            write_data(write, S2K_COUNT.to_string().as_bytes()).await?;
+            write_ok(write, "").await
+        }
         "socket_name" => {
             write_data(write, info.socket_name.as_bytes()).await?;
             write_ok(write, "").await
@@ -146,7 +170,7 @@ async fn handle_getinfo<W: AsyncWriteExt + Unpin>(
 async fn handle_havekey<W: AsyncWriteExt + Unpin>(
     args: &str,
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
     write: &mut W,
 ) -> Result<()> {
@@ -201,7 +225,7 @@ async fn handle_havekey<W: AsyncWriteExt + Unpin>(
 async fn handle_keyinfo<W: AsyncWriteExt + Unpin>(
     args: &str,
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
     write: &mut W,
 ) -> Result<()> {
@@ -290,7 +314,7 @@ async fn handle_sethash<W: AsyncWriteExt + Unpin>(
 async fn handle_pksign<W: AsyncWriteExt + Unpin>(
     state: &mut SessionState,
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
     write: &mut W,
 ) -> Result<()> {
@@ -328,7 +352,7 @@ async fn handle_pksign<W: AsyncWriteExt + Unpin>(
         return Ok(());
     }
 
-    if let Err(error) = caller_guard.revalidate() {
+    if let Err(error) = caller_guard.revalidate_async().await {
         warn!(%error, "Refusing PKSIGN after caller identity changed");
         write_error(write, ERR_GENERAL, "caller identity changed").await?;
         return Ok(());
@@ -355,7 +379,7 @@ async fn handle_pkdecrypt<R: AsyncBufRead + Unpin, W: AsyncWriteExt + Unpin>(
     args: &str,
     state: &SessionState,
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
     reader: &mut DeadlineReader<R>,
     write: &mut W,
@@ -427,7 +451,7 @@ async fn handle_pkdecrypt<R: AsyncBufRead + Unpin, W: AsyncWriteExt + Unpin>(
         return Ok(false);
     }
 
-    if let Err(error) = caller_guard.revalidate() {
+    if let Err(error) = caller_guard.revalidate_async().await {
         warn!(%error, "Refusing PKDECRYPT after caller identity changed");
         write_error(write, ERR_GENERAL, "caller identity changed").await?;
         return Ok(false);
@@ -540,10 +564,10 @@ async fn inquire_ciphertext<R: AsyncBufRead + Unpin, W: AsyncWriteExt + Unpin>(
 
 async fn list_keys(
     ipc_client: &IpcClient,
-    caller_guard: &CallerGuard,
+    caller_guard: &Arc<CallerGuard>,
     caller: Option<CallerIdentity>,
 ) -> Result<Vec<GpgKey>> {
-    caller_guard.revalidate()?;
+    caller_guard.revalidate_async().await?;
     ipc_client
         .list_keys(caller)
         .await

@@ -10,6 +10,7 @@ use ssh_agent_lib::agent::Session;
 use ssh_agent_lib::error::AgentError;
 use ssh_agent_lib::proto::Extension;
 use ssh_agent_lib::proto::Identity;
+use ssh_agent_lib::proto::PublicCredential;
 use ssh_agent_lib::proto::SignRequest;
 use ssh_encoding::Encode;
 use ssh_key::{Algorithm, Signature};
@@ -98,8 +99,8 @@ impl<K: KeyProvider> KeyguardAgent<K> {
 
     /// Refuses the operation when the accepted caller changed. On Windows,
     /// also refreshes the best-effort pipe-opener evidence.
-    fn ensure_caller_valid(&mut self) -> Result<(), AgentError> {
-        if let Err(error) = self.caller_guard.revalidate() {
+    async fn ensure_caller_valid(&mut self) -> Result<(), AgentError> {
+        if let Err(error) = self.caller_guard.revalidate_async().await {
             warn!(%error, "Caller identity changed; refusing agent operation");
             return Err(AgentError::Failure);
         }
@@ -180,7 +181,7 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
     async fn request_identities(&mut self) -> Result<Vec<Identity>, AgentError> {
         debug!("Handling RequestIdentities");
 
-        self.ensure_caller_valid()?;
+        self.ensure_caller_valid().await?;
 
         let keys_response = self
             .key_provider
@@ -194,10 +195,10 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
 
         let mut identities = Vec::new();
         for key in &keys_response.keys {
-            match parse_openssh_pubkey(&key.public_key) {
-                Ok(pubkey) => {
+            match parse_openssh_credential(&key.public_key) {
+                Ok(credential) => {
                     identities.push(Identity {
-                        pubkey: pubkey.key_data().clone(),
+                        credential,
                         comment: key.name.clone(),
                     });
                 }
@@ -220,7 +221,7 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
             return Err(AgentError::Failure);
         }
 
-        self.ensure_caller_valid()?;
+        self.ensure_caller_valid().await?;
 
         // Find the matching key by comparing the public key data.
         let keys_response = self
@@ -232,14 +233,12 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
                 AgentError::Failure
             })?;
 
-        let matching_key =
-            keys_response
-                .keys
-                .iter()
-                .find(|key| match parse_openssh_pubkey(&key.public_key) {
-                    Ok(pubkey) => *pubkey.key_data() == request.pubkey,
-                    Err(_) => false,
-                });
+        // A certificate matches only itself; Keyguard signs with the key it
+        // certifies. OpenSSH 10.3+ sends the certificate, older clients the key.
+        let matching_key = keys_response.keys.iter().find(|key| {
+            parse_openssh_credential(&key.public_key)
+                .is_ok_and(|credential| credentials_match(&credential, &request.credential))
+        });
 
         let Some(key) = matching_key else {
             warn!("No matching key found for sign request");
@@ -249,7 +248,7 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
         debug!("Requesting signature from Keyguard");
 
         // Request signing from Keyguard (may prompt user for approval).
-        self.ensure_caller_valid()?;
+        self.ensure_caller_valid().await?;
         let sign_caller = self.caller_for_sign();
         let sign_response = self
             .key_provider
@@ -293,7 +292,9 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
                     Err(AgentError::ExtensionFailure)
                 }
             },
-            _ => Err(AgentError::ExtensionFailure),
+            // RFC 9987 section 5.8 reserves extension failure for supported
+            // extensions; an unsupported name receives generic failure.
+            _ => Err(AgentError::Failure),
         }
     }
 }
@@ -301,6 +302,34 @@ impl<K: KeyProvider> Session for KeyguardAgent<K> {
 /// Parses an OpenSSH public key string (authorized_keys format).
 pub(crate) fn parse_openssh_pubkey(pubkey_str: &str) -> Result<ssh_key::PublicKey, ssh_key::Error> {
     ssh_key::PublicKey::from_openssh(pubkey_str)
+}
+
+/// Parses an OpenSSH public key or certificate line into an agent identity.
+pub(crate) fn parse_openssh_credential(value: &str) -> Result<PublicCredential, ssh_key::Error> {
+    let algorithm = value.split_whitespace().next().unwrap_or_default();
+    // Told apart as ssh-agent-lib tells apart the credential of a sign request.
+    if Algorithm::new_certificate(algorithm).is_ok() {
+        let certificate = ssh_key::Certificate::from_openssh(value)?;
+        Ok(PublicCredential::Cert(Box::new(certificate)))
+    } else {
+        let public_key = parse_openssh_pubkey(value)?;
+        Ok(PublicCredential::Key(public_key.key_data().clone()))
+    }
+}
+
+/// Compares the wire encodings: a listed certificate keeps the comment of its
+/// OpenSSH line, which a sign request never carries.
+fn credentials_match(listed: &PublicCredential, requested: &PublicCredential) -> bool {
+    match (listed, requested) {
+        (PublicCredential::Key(listed), PublicCredential::Key(requested)) => listed == requested,
+        (PublicCredential::Cert(listed), PublicCredential::Cert(requested)) => {
+            matches!(
+                (listed.to_bytes(), requested.to_bytes()),
+                (Ok(listed), Ok(requested)) if listed == requested
+            )
+        }
+        _ => false,
+    }
 }
 
 /// SSH agent session factory that captures per-connection socket metadata.

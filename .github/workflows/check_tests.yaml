@@ -148,6 +148,8 @@ jobs:
               :common:checkBouncyCastleProductionDependencies
               :common:checkSshjDependencies
               :common:desktopTest
+              :feature:agent-setup:checkComposeFree
+              :feature:agent-setup:desktopTest
               :feature:android-ipc-presentation:checkComposeFree
               :feature:android-ipc-presentation:desktopTest
               :feature:cli:checkComposeFree
@@ -174,6 +176,8 @@ jobs:
               :util:agent-ipc:checkComposeFree
               :util:agent-ipc:desktopTest
               :util:crypto:desktopTest
+              :util:csv:checkComposeFree
+              :util:csv:desktopTest
               :util:dns:checkComposeFree
               :util:dns:desktopTest
               :util:ffi:checkComposeFree
@@ -188,6 +192,8 @@ jobs:
               :util:yubikey:desktopTest
               :util:foundation:desktopTest
               :util:foundation:checkBouncyCastleProductionDependencies
+              :util:gzip:checkComposeFree
+              :util:gzip:desktopTest
               :util:kdbx:desktopTest
               :util:kdbx:checkBouncyCastleProductionDependencies
               :util:messagepack:desktopTest
@@ -201,17 +207,20 @@ jobs:
               :util:xml:desktopTest
               :util:zip:desktopTest
               :util:zxcvbn:desktopTest
+              :util:age:desktopTest
           - id: util-android-host
             name: Util Android Host
             max_workers: 2
             tasks: >-
               :util:crypto:testAndroidHostTest
+              :util:csv:testAndroidHostTest
               :util:dns:testAndroidHostTest
               :util:ffi:testAndroidHostTest
               :util:io:testAndroidHostTest
               :util:yubikey:testAndroidHostTest
               :util:fido2:testAndroidHostTest
               :util:foundation:testAndroidHostTest
+              :util:gzip:testAndroidHostTest
               :util:kdbx:testAndroidHostTest
               :util:messagepack:testAndroidHostTest
               :util:planeta:testAndroidHostTest
@@ -222,6 +231,7 @@ jobs:
               :util:xml:testAndroidHostTest
               :util:zip:testAndroidHostTest
               :util:zxcvbn:testAndroidHostTest
+              :util:age:testAndroidHostTest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:

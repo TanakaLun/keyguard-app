@@ -7,7 +7,7 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use daemon::{run_blocking, Config};
 use keyguard_android_agent_bridge::bridge::{BridgeConfig, DEFAULT_CONNECT_TIMEOUT_MS};
-use keyguard_android_agent_bridge::broadcast::{BridgeContract, LegacyAcknowledgement};
+use keyguard_android_agent_bridge::broadcast::BridgeContract;
 use keyguard_android_agent_bridge::process::{exit_with, fork_daemon, prefers_csh};
 use keyguard_android_agent_bridge::socket_guard::{EnsureSocket, SocketGuard};
 use process::{kill_existing_agent, print_auth_socket_export, print_env_exports};
@@ -26,13 +26,18 @@ pub(crate) const SSH_AGENT_CONTRACT: BridgeContract = BridgeContract {
     extra_session_id: "com.artemchep.keyguard.extra.SSH_AGENT_SESSION_ID",
     extra_session_secret: "com.artemchep.keyguard.extra.SSH_AGENT_SESSION_SECRET",
     result_prefix: "keyguard.ssh-agent.broadcast.v1:",
-    // Older Keyguard releases handled the SSH broadcast without acknowledging it.
-    legacy_acknowledgement: LegacyAcknowledgement::Tolerate,
 };
 
 #[derive(Parser, Debug)]
 #[command(name = "keyguard-android-ssh-agent", version, about)]
 struct Args {
+    /// Review and configure startup for these Termux shells: bash,zsh,fish.
+    #[arg(long, value_delimiter = ',', conflicts_with_all = ["undo_setup", "kill", "cmd", "addr", "ensure", "foreground", "debug"])]
+    setup_shells: Vec<keyguard_agent_setup::Shell>,
+
+    /// Review removal of configuration created by --setup-shells.
+    #[arg(long, conflicts_with_all = ["kill", "cmd", "addr", "ensure", "foreground", "debug"])]
+    undo_setup: bool,
     #[arg(short = 'a', value_name = "bind_address")]
     addr: Option<PathBuf>,
 
@@ -72,8 +77,28 @@ fn main() {
     exit_with(try_main())
 }
 
+/// The socket that Termux shells configured by `--setup-shells` start the agent on.
+fn termux_setup_agent() -> Result<keyguard_agent_setup::Agent> {
+    Ok(keyguard_agent_setup::Agent::Ssh {
+        socket: keyguard_agent_setup::termux::prefix()?
+            .join("tmp/keyguard-ssh-agent.sock")
+            .to_string_lossy()
+            .into_owned(),
+        host: None,
+        include: None,
+    })
+}
+
 fn try_main() -> Result<i32> {
     let args = Args::parse();
+    if args.undo_setup {
+        keyguard_agent_setup::termux::undo(keyguard_agent_setup::AgentKind::Ssh)?;
+        return Ok(0);
+    }
+    if !args.setup_shells.is_empty() {
+        keyguard_agent_setup::termux::setup(termux_setup_agent()?, args.setup_shells)?;
+        return Ok(0);
+    }
     let is_csh = prefers_csh(args.csh, args.bash);
     let mut pid = std::process::id() as i32;
 

@@ -1050,6 +1050,92 @@ suspend fun RememberStateFlowScope.watchtowerStateProducer(
         },
     )
 
+    suspend fun onClickUnusableTfa(
+        filter: DFilter,
+    ) {
+        val intent = NavigationIntent.NavigateToRoute(
+            vaultRouteFactory.watchtower(
+                title = translate(Res.string.watchtower_item_unusable_2fa_title),
+                subtitle = translate(Res.string.watchtower_header_title),
+                filter = DFilter.And(
+                    filters = listOfNotNull(
+                        DFilter.ByUnusableTfa,
+                        filter,
+                        args.filter,
+                    ),
+                ),
+            ),
+        )
+        navigate(intent)
+    }
+
+    val unusableTwoFactorAuthFlow = createCipherAlertStateFlow(
+        key = DFilter.ByUnusableTfa.key,
+        type = DWatchtowerAlertType.TWO_FA_UNUSABLE,
+        onCreate = { holder, count, new ->
+            val onClick = if (count > 0) {
+                val filter = holder?.filterConfig?.filter
+                    ?: DFilter.All
+                onClick {
+                    onClickUnusableTfa(
+                        filter = filter,
+                    )
+                }
+            } else {
+                null
+            }
+            WatchtowerState.Content.UnusableTwoFactorAuth(
+                revision = holder?.filterConfig?.id ?: 0,
+                count = count,
+                new = new,
+                onClick = onClick,
+            )
+        },
+    )
+
+    suspend fun onClickUnusableSshCertificates(
+        filter: DFilter,
+    ) {
+        val intent = NavigationIntent.NavigateToRoute(
+            vaultRouteFactory.watchtower(
+                title = translate(Res.string.watchtower_item_unusable_ssh_certificates_title),
+                subtitle = translate(Res.string.watchtower_header_title),
+                filter = DFilter.And(
+                    filters = listOfNotNull(
+                        DFilter.ByUnusableSshCertificates,
+                        filter,
+                        args.filter,
+                    ),
+                ),
+            ),
+        )
+        navigate(intent)
+    }
+
+    val unusableSshCertificatesFlow = createCipherAlertStateFlow(
+        key = DFilter.ByUnusableSshCertificates.key,
+        type = DWatchtowerAlertType.SSH_CERTIFICATE_UNUSABLE,
+        onCreate = { holder, count, new ->
+            val onClick = if (count > 0) {
+                val filter = holder?.filterConfig?.filter
+                    ?: DFilter.All
+                onClick {
+                    onClickUnusableSshCertificates(
+                        filter = filter,
+                    )
+                }
+            } else {
+                null
+            }
+            WatchtowerState.Content.UnusableSshCertificates(
+                revision = holder?.filterConfig?.id ?: 0,
+                count = count,
+                new = new,
+                onClick = onClick,
+            )
+        },
+    )
+
     suspend fun onClickUnusableGpgKeys(
         filter: DFilter,
     ) {
@@ -1495,12 +1581,14 @@ suspend fun RememberStateFlowScope.watchtowerStateProducer(
         duplicateWebsites = duplicateWebsitesFlow,
         broadWebsites = broadWebsitesFlow,
         inactiveTwoFactorAuth = inactiveTwoFactorAuthFlow,
+        unusableTwoFactorAuth = unusableTwoFactorAuthFlow,
         inactivePasskey = inactivePasskeyFlow,
         accountCompromised = accountCompromisedFlow,
         pwned = passwordPwnedFlow,
         pwnedWebsites = websitePwnedFlow,
         reused = passwordReusedFlow,
         weakSshKeys = weakSshKeysFlow,
+        unusableSshCertificates = unusableSshCertificatesFlow,
         unusableGpgKeys = unusableGpgKeysFlow,
         weakGpgKeys = weakGpgKeysFlow,
         gpgKeyPublishing = gpgKeyPublishingFlow,

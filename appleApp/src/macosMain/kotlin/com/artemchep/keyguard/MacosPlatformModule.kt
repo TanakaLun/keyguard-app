@@ -5,9 +5,9 @@ import com.artemchep.keyguard.util.fido2.NativeFido2Client
 import com.artemchep.keyguard.common.usecase.Fido2UnlockAvailability
 
 import androidx.compose.ui.graphics.ImageBitmap
-import com.artemchep.keyguard.apple.billing.GetPurchasedApple
 import com.artemchep.keyguard.apple.billing.SubscriptionServiceApple
 import com.artemchep.keyguard.apple.billing.appleIsFreeDistribution
+import com.artemchep.keyguard.apple.billing.appleStorePurchased
 import com.artemchep.keyguard.common.io.io
 import com.artemchep.keyguard.common.io.ioEffect
 import com.artemchep.keyguard.common.io.ioUnit
@@ -46,6 +46,7 @@ import com.artemchep.keyguard.common.service.flavor.FlavorConfig
 import com.artemchep.keyguard.common.service.gpgagent.GpgAgentCrypto
 import com.artemchep.keyguard.common.service.gpgagent.GpgAgentStatusService
 import com.artemchep.keyguard.common.service.gpgagent.impl.GpgAgentStatusServiceImpl
+import com.artemchep.keyguard.common.service.http.KeyguardHttpUserAgent
 import com.artemchep.keyguard.common.service.keychain.KeychainRepository
 import com.artemchep.keyguard.common.service.keyvalue.KeyValueStoreFactory
 import com.artemchep.keyguard.common.service.licensekey.EcdsaP256LicenseSignatureVerifier
@@ -78,12 +79,14 @@ import com.artemchep.keyguard.common.usecase.GetPurchased
 import com.artemchep.keyguard.common.usecase.NumberFormatter
 import com.artemchep.keyguard.common.usecase.PutLaunchAtLogin
 import com.artemchep.keyguard.common.usecase.PutLocale
+import com.artemchep.keyguard.common.usecase.UpgradeBackupEncryption
 import com.artemchep.keyguard.common.usecase.RunBackupNow
 import com.artemchep.keyguard.common.usecase.TestBackupLocation
 import com.artemchep.keyguard.common.usecase.YubiKeyUnlockAvailability
 import com.artemchep.keyguard.common.usecase.impl.CheckWebDavConnectionImpl
 import com.artemchep.keyguard.common.usecase.impl.GetLocaleImpl
 import com.artemchep.keyguard.common.usecase.impl.PutLocaleImpl
+import com.artemchep.keyguard.common.usecase.impl.UpgradeBackupEncryptionImpl
 import com.artemchep.keyguard.common.usecase.impl.RunBackupNowImpl
 import com.artemchep.keyguard.common.usecase.impl.TestBackupLocationImpl
 import com.artemchep.keyguard.common.worker.WorkerRegistry
@@ -95,6 +98,7 @@ import com.artemchep.keyguard.copy.DirsServiceMacos
 import com.artemchep.keyguard.copy.FileServiceApple
 import com.artemchep.keyguard.common.usecase.impl.GetAppBuildDateImpl
 import com.artemchep.keyguard.common.usecase.impl.GetAppBuildRefImpl
+import com.artemchep.keyguard.common.usecase.impl.GetPurchasedImpl
 import com.artemchep.keyguard.copy.NumberFormatterApple
 import com.artemchep.keyguard.core.session.usecase.BiometricKeyRepositoryApple
 import com.artemchep.keyguard.core.session.usecase.BiometricStatusUseCaseApple
@@ -108,28 +112,18 @@ import com.artemchep.keyguard.dataexposed.DatabaseExposed
 import com.artemchep.keyguard.di.ApplePlatformServicesModule
 import com.artemchep.keyguard.di.NativeCryptoServicesModule
 import com.artemchep.keyguard.platform.AppleBiometricKeychain
-import com.artemchep.keyguard.platform.CurrentPlatform
 import com.artemchep.keyguard.platform.LeContext
 import com.artemchep.keyguard.platform.AppleStorageDirectories
-import com.artemchep.keyguard.provider.bitwarden.api.BitwardenPersona
-import com.artemchep.keyguard.provider.bitwarden.api.builder.configureBitwardenHttpRetry
 import com.artemchep.keyguard.util.io.resolve
+import com.artemchep.keyguard.provider.bitwarden.transport.BitwardenHttpClientFactory
+import com.artemchep.keyguard.provider.bitwarden.transport.BitwardenHttpClientFactoryApple
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.darwin.Darwin
-import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.UserAgent
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.websocket.WebSockets
-import io.ktor.http.ContentType
-import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -181,14 +175,17 @@ internal class MacosPlatformModule {
                 getStore = get<AppleKeyValueStoreFactory>()::getJson,
             )
         }
+        single<BitwardenHttpClientFactory> { BitwardenHttpClientFactoryApple(get()) }
         single<HttpClient> {
-            macosHttpClient(
+            appleHttpClient(
                 json = get(),
+                userAgent = KeyguardHttpUserAgent.Bitwarden,
             )
         }
         single<HttpClient>(qualifier = named("curl")) {
-            macosHttpClient(
+            appleHttpClient(
                 json = get(),
+                userAgent = KeyguardHttpUserAgent.Curl,
             )
         }
         single {
@@ -296,13 +293,13 @@ internal class MacosPlatformModule {
             ExecuteCommandImpl()
         }
         single<GetPurchased> {
-            GetPurchasedApple(
+            GetPurchasedImpl(
                 config = get(),
-                subscriptionService = get(),
+                storePurchased = get<SubscriptionService>().appleStorePurchased(),
+                getLicensePremium = get(),
                 getDebugPremium = get(),
                 getCachePremium = get(),
                 putCachePremium = get(),
-                getLicensePremium = get(),
                 windowCoroutineScope = get(),
             )
         }
@@ -349,6 +346,12 @@ internal class MacosPlatformModule {
 
         single<RunBackupNow> {
             RunBackupNowImpl(
+                backupRunService = get(),
+            )
+        }
+
+        single<UpgradeBackupEncryption> {
+            UpgradeBackupEncryptionImpl(
                 backupRunService = get(),
             )
         }
@@ -403,29 +406,6 @@ internal class MacosPlatformModule {
         }
     }
 }
-
-private fun macosHttpClient(
-    json: Json,
-) = HttpClient(Darwin) {
-    install(UserAgent) {
-        agent = BitwardenPersona.of(CurrentPlatform)
-            .userAgent
-    }
-    install(ContentNegotiation) {
-        register(ContentType.Application.Json, KotlinxSerializationConverter(json))
-    }
-    install(WebSockets) {
-        pingIntervalMillis = HTTP_PING_INTERVAL_MS
-    }
-    install(HttpCache) {
-        // In memory.
-    }
-    install(HttpRequestRetry) {
-        configureBitwardenHttpRetry()
-    }
-}
-
-private const val HTTP_PING_INTERVAL_MS = 20_000L
 
 private object MacosNoOpAutofillService : AutofillService {
     override fun status(): Flow<AutofillServiceStatus> =

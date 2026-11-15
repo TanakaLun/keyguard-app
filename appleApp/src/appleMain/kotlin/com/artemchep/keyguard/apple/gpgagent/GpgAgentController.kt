@@ -5,6 +5,7 @@ import com.artemchep.keyguard.apple.core.AgentFiltersSession
 import com.artemchep.keyguard.apple.core.AgentFiltersSnapshot
 import com.artemchep.keyguard.apple.core.agentFiltersFrame
 import com.artemchep.keyguard.apple.core.CoreContext
+import com.artemchep.keyguard.apple.lists.toSnapshot
 import com.artemchep.keyguard.apple.core.KeyguardCancellable
 import com.artemchep.keyguard.apple.core.collectOnMain
 import com.artemchep.keyguard.apple.core.completeOnPop
@@ -17,29 +18,35 @@ import com.artemchep.keyguard.common.model.AgentStatus
 import com.artemchep.keyguard.common.model.VaultState
 import com.artemchep.keyguard.common.model.getOrNull
 import com.artemchep.keyguard.common.service.agent.AgentApprovalCachePolicy
+import com.artemchep.keyguard.common.service.agent.AgentIpcAuthenticator
 import com.artemchep.keyguard.common.service.crypto.CryptoGenerator
 import com.artemchep.keyguard.common.service.crypto.seedHex
 import com.artemchep.keyguard.common.service.gpgagent.GpgAgentStatusService
 import com.artemchep.keyguard.common.service.gpgagent.impl.GpgAgentRequestProcessorImpl
 import com.artemchep.keyguard.common.service.logging.LogLevel
 import com.artemchep.keyguard.common.service.logging.LogRepository
+import com.artemchep.keyguard.common.usecase.GetAgentApprovalTimeoutVariants
 import com.artemchep.keyguard.common.usecase.GetGpgAgent
 import com.artemchep.keyguard.common.usecase.GetGpgAgentApprovalCachePolicy
+import com.artemchep.keyguard.common.usecase.GetGpgAgentApprovalTimeout
 import com.artemchep.keyguard.common.usecase.GetGpgAgentApprovalWindow
 import com.artemchep.keyguard.common.usecase.GetGpgAgentApprovalWindowVariants
 import com.artemchep.keyguard.common.usecase.GetGpgAgentDisplayKeyNames
 import com.artemchep.keyguard.common.usecase.GetGpgAgentFilter
 import com.artemchep.keyguard.common.usecase.PutGpgAgent
 import com.artemchep.keyguard.common.usecase.PutGpgAgentApprovalCachePolicy
+import com.artemchep.keyguard.common.usecase.PutGpgAgentApprovalTimeout
 import com.artemchep.keyguard.common.usecase.PutGpgAgentApprovalWindow
 import com.artemchep.keyguard.common.usecase.PutGpgAgentDisplayKeyNames
 import com.artemchep.keyguard.common.usecase.RemoveGpgUsageHistory
+import com.artemchep.keyguard.common.util.useAndClear
 import com.artemchep.keyguard.feature.gpgagent.filter.gpgAgentFiltersStateProducer
 import com.artemchep.keyguard.feature.gpgagent.help.macosSandboxGpgAgentSetupCommand
 import com.artemchep.keyguard.feature.gpgagent.history.GpgAgentHistoryItem
 import com.artemchep.keyguard.feature.gpgagent.history.GpgAgentHistoryState
 import com.artemchep.keyguard.feature.gpgagent.history.gpgAgentHistoryStateProducer
 import com.artemchep.keyguard.feature.localization.textResource
+import com.artemchep.keyguard.feature.home.settings.component.agentApprovalTimeoutTitle
 import com.artemchep.keyguard.feature.home.settings.component.agentApprovalWindowTitle
 import com.artemchep.keyguard.platform.LeContext
 import com.artemchep.keyguard.res.*
@@ -55,6 +62,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -72,8 +80,10 @@ internal class GpgAgentController(
     private val getApprovalWindow: GetGpgAgentApprovalWindow by lazy { ctx.koin.get() }
     private val getApprovalWindowVariants: GetGpgAgentApprovalWindowVariants by lazy { ctx.koin.get() }
     private val getApprovalCachePolicy: GetGpgAgentApprovalCachePolicy by lazy { ctx.koin.get() }
+    private val getApprovalTimeout: GetGpgAgentApprovalTimeout by lazy { ctx.koin.get() }
+    private val getApprovalTimeoutVariants: GetAgentApprovalTimeoutVariants by lazy { ctx.koin.get() }
     private val getFilter: GetGpgAgentFilter by lazy { ctx.koin.get() }
-    private val requests = gpgAgentApprovalQueue()
+    private val requests = gpgAgentApprovalQueue(timeout = ::approvalTimeout)
     private val status = MutableStateFlow(GpgAgentStatusSnapshot.empty)
     private val retry = MutableStateFlow(0L)
     private val lifecycleMutex = Mutex()
@@ -82,6 +92,9 @@ internal class GpgAgentController(
     private var runScope: CoroutineScope? = null
     private var generation = 0L
     private var latestApprovalWindowVariants: List<Duration> = emptyList()
+    private var latestApprovalTimeoutVariants: List<Duration> = emptyList()
+
+    private suspend fun approvalTimeout() = getApprovalTimeout().first()
 
     fun startGpgAgentApplier() {
         if (applier != null) return
@@ -141,12 +154,13 @@ internal class GpgAgentController(
                 onApprovalRequest = { prompt ->
                     requests.await(prompt, deadline = prompt.expiresAt)
                 },
+                approvalTimeout = ::approvalTimeout,
             )
             scope.launch(Dispatchers.Main) {
                 requests.denyWhenSessionEnds(di.get())
             }
-            val authToken = cryptoGenerator.seed(32)
-            handle = try {
+            // The runtime owns a separate copy for its serving lifetime.
+            handle = cryptoGenerator.seed(AgentIpcAuthenticator.TOKEN_SIZE).useAndClear { authToken ->
                 runtime.start(
                     scope,
                     GpgAgentRuntimeConfig(
@@ -165,9 +179,6 @@ internal class GpgAgentController(
                         log = { logger.post("GpgAgent", it, LogLevel.INFO) },
                     ),
                 )
-            } finally {
-                // The runtime owns a separate copy for its serving lifetime.
-                authToken.fill(0)
             }
             if (handle?.isRunning == true) {
                 setStatus(GpgAgentRunState.READY)
@@ -250,13 +261,18 @@ internal class GpgAgentController(
             val approvals = combine(getApprovalWindow(), getApprovalWindowVariants(), getApprovalCachePolicy()) {
                     window, variants, policy -> Triple(window, variants, policy)
             }
+            val timeouts = combine(getApprovalTimeout(), getApprovalTimeoutVariants()) {
+                    timeout, variants -> timeout to variants
+            }
             combine(
                 getEnabled(),
                 approvals,
+                timeouts,
                 ctx.koin.get<GetGpgAgentDisplayKeyNames>()(),
                 getFilter(),
-            ) { enabled, approval, displayNames, filter ->
+            ) { enabled, approval, approvalTimeout, displayNames, filter ->
                 val (window, variants, policy) = approval
+                val (timeout, timeoutVariants) = approvalTimeout
                 val snapshot = GpgAgentSettingsSnapshot(
                     loaded = true,
                     enabled = enabled,
@@ -266,6 +282,14 @@ internal class GpgAgentController(
                             id = duration.inWholeMilliseconds.toString(),
                             title = agentApprovalWindowTitle(duration, context),
                             selected = duration == window,
+                        )
+                    },
+                    approvalTimeoutTitle = agentApprovalTimeoutTitle(timeout, context),
+                    approvalTimeoutOptions = timeoutVariants.map { duration ->
+                        SettingOptionSnapshot(
+                            id = duration.inWholeMilliseconds.toString(),
+                            title = agentApprovalTimeoutTitle(duration, context),
+                            selected = duration == timeout,
                         )
                     },
                     approvalCachePolicyTitle = approvalCachePolicyTitle(policy, context),
@@ -279,9 +303,10 @@ internal class GpgAgentController(
                     displayKeyNames = displayNames,
                     filterActive = filter.normalize().isActive,
                 )
-                variants to snapshot
-            }.collectOnMain { (variants, snapshot) ->
+                Triple(variants, timeoutVariants, snapshot)
+            }.collectOnMain { (variants, timeoutVariants, snapshot) ->
                 latestApprovalWindowVariants = variants
+                latestApprovalTimeoutVariants = timeoutVariants
                 onChange(snapshot)
             }
         }
@@ -292,6 +317,13 @@ internal class GpgAgentController(
             ?: return
         requests.denyAll()
         ctx.koin.get<PutGpgAgentApprovalWindow>()(duration).launchIn(ctx.scope)
+    }
+
+    fun setGpgAgentApprovalTimeout(optionId: String) {
+        val duration = latestApprovalTimeoutVariants
+            .firstOrNull { it.inWholeMilliseconds.toString() == optionId }
+            ?: return
+        ctx.koin.get<PutGpgAgentApprovalTimeout>()(duration).launchIn(ctx.scope)
     }
 
     fun setGpgAgentApprovalCachePolicy(optionId: String) {
@@ -403,6 +435,7 @@ internal fun GpgAgentHistoryState?.toHistorySnapshot(): GpgAgentHistorySnapshot 
                 responseText = item.responseText,
                 request = item.request.name,
                 response = item.response.name,
+                details = item.details.toSnapshot(),
             )
         }
     }

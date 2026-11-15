@@ -56,11 +56,16 @@ def classify(paths, *, full=False, all_checks=False):
             continue
         if path.endswith((".md", ".txt")) and not path.startswith(".github/native-crypto-"):
             continue
-        # String catalogs hold only text; Check Apple Tests compiles them.
-        if path.endswith(".xcstrings"):
+        if (
+            path == "scripts/run_mtls_tests.py"
+            or re.match(r"common/src/mtls[^/]*/", path)
+            or path.startswith("androidApp/src/mtlsTest/")
+            or re.match(r"common/src/[^/]+/kotlin/.+/provider/bitwarden/transport/", path)
+        ):
+            enable("desktop_regressions", "apple_regressions", "android_runtime")
             continue
         if (
-            path in {"build.gradle.kts", "settings.gradle", "settings.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat", "rust-toolchain.toml"}
+            path in {"build.gradle.kts", "settings.gradle", "settings.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat", "rust-toolchain.toml", ".cargo/config.toml"}
             or path.startswith(("gradle/", "buildPlugins/"))
             or path.startswith((".github/actions/setup_rust/", ".github/actions/setup_gradle/", ".github/actions/prefetch_native/", ".github/actions/setup_protobuf/"))
             or path in {".github/workflows/check_native.yml", ".github/workflows/check_native_crypto.yml", ".github/workflows/check_native_io.yml"}
@@ -93,7 +98,7 @@ def classify(paths, *, full=False, all_checks=False):
                     continue
             enable("io", "instance", "agent_ipc", "desktop", "desktop_regressions", "android", "apple", "apple_regressions")
             continue
-        module = re.match(r"util/(crypto|dns|io|zxcvbn|zip|instance|webauthn|yubikey|fido2|windows-passkeys|agent-ipc)/(.+)", path)
+        module = re.match(r"util/(age|crypto|dns|io|zxcvbn|zip|instance|webauthn|yubikey|fido2|windows-passkeys|agent-ipc)/(.+)", path)
         if module:
             name, relative = module.groups()
             if name in {"yubikey", "fido2"}:

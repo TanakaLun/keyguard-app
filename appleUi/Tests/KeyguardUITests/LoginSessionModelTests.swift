@@ -53,6 +53,8 @@ final class LoginSessionModelTests: XCTestCase {
         old.publish(login("old@example.test"))
         old.requireTwofa()
         old.complete()
+        old.publishFile?(
+            AddFilePickerRequest(requestId: "late", kind: .openDocument, mimeTypes: [], suggestedName: nil))
         presentation.close()
         let fresh = BitwardenSourceProbe()
         let next = fresh.makeModel()
@@ -66,6 +68,7 @@ final class LoginSessionModelTests: XCTestCase {
         XCTAssertEqual(first.login.email.text, "")
         XCTAssertFalse(first.twofaActive)
         XCTAssertFalse(first.loginDidSucceed)
+        XCTAssertNil(first.filePicker.pendingFilePicker)
         XCTAssertEqual(next.login.email.text, "new@example.test")
         XCTAssertFalse(next.twofaActive)
         XCTAssertFalse(next.loginDidSucceed)
@@ -107,30 +110,30 @@ final class LoginSessionModelTests: XCTestCase {
         b.publishWebDav(webdav("second"))
         try await settle()
         XCTAssertEqual(a.starts, 1)
-        XCTAssertEqual(first.keepassWebDav?.id, "first")
-        XCTAssertEqual(second.keepassWebDav?.id, "second")
-        first.dismissWebDavSettings()
+        XCTAssertEqual(first.remoteSettings.webDav?.id, "first")
+        XCTAssertEqual(second.remoteSettings.webDav?.id, "second")
+        first.remoteSettings.dismissWebDav()
         a.publishWebDav(webdav("first"))
         try await settle()
-        XCTAssertNil(first.keepassWebDav)
+        XCTAssertNil(first.remoteSettings.webDav)
         a.publishWebDav(webdav("new"))
         try await settle()
-        XCTAssertEqual(first.keepassWebDav?.id, "new")
+        XCTAssertEqual(first.remoteSettings.webDav?.id, "new")
         a.publishFile?(
             KeePassFilePickerRequest(requestId: "late", kind: .openDocument, mimeTypes: [], suggestedName: nil))
         first.stopKeePassLoginObservation()
         a.complete()
         try await settle()
         XCTAssertNil(first.filePicker.pendingFilePicker)
-        XCTAssertNil(first.keepassWebDav)
+        XCTAssertNil(first.remoteSettings.webDav)
         XCTAssertFalse(first.keepassDidSucceed)
         XCTAssertEqual(a.closes, 1)
         XCTAssertEqual(b.closes, 0)
-        XCTAssertEqual(second.keepassWebDav?.id, "second")
+        XCTAssertEqual(second.remoteSettings.webDav?.id, "second")
         b.complete()
         try await settle()
         XCTAssertTrue(second.keepassDidSucceed)
-        XCTAssertNil(second.keepassWebDav)
+        XCTAssertNil(second.remoteSettings.webDav)
         second.stopKeePassLoginObservation()
     }
 
@@ -141,18 +144,18 @@ final class LoginSessionModelTests: XCTestCase {
         model.startKeePassLoginObservation()
         source.publishS3(s3("first"))
         try await settle()
-        XCTAssertEqual(model.keepassS3?.id, "first")
-        model.dismissS3Settings()
+        XCTAssertEqual(model.remoteSettings.s3?.id, "first")
+        model.remoteSettings.dismissS3()
         XCTAssertEqual(source.cancelledS3, 1)
         source.publishS3(s3("first"))
         try await settle()
-        XCTAssertNil(model.keepassS3)
+        XCTAssertNil(model.remoteSettings.s3)
         source.publishS3(s3("new"))
         try await settle()
-        XCTAssertEqual(model.keepassS3?.id, "new")
+        XCTAssertEqual(model.remoteSettings.s3?.id, "new")
         source.complete()
         try await settle()
-        XCTAssertNil(model.keepassS3)
+        XCTAssertNil(model.remoteSettings.s3)
         XCTAssertTrue(model.keepassDidSucceed)
         model.stopKeePassLoginObservation()
     }
@@ -165,6 +168,8 @@ final class LoginSessionModelTests: XCTestCase {
         bitwarden.complete()
         try await settle()
         bitwarden.requireTwofa()
+        bitwarden.publishFile?(
+            AddFilePickerRequest(requestId: "late", kind: .openDocument, mimeTypes: [], suggestedName: nil))
         let keepass = KeePassSourceProbe()
         let database = KeePassLoginModel(source: keepass)
         database.startKeePassLoginObservation()
@@ -176,7 +181,8 @@ final class LoginSessionModelTests: XCTestCase {
         try await settle()
         XCTAssertFalse(login.twofaActive)
         XCTAssertTrue(login.loginDidSucceed)
-        XCTAssertNil(database.keepassWebDav)
+        XCTAssertNil(login.filePicker.pendingFilePicker)
+        XCTAssertNil(database.remoteSettings.webDav)
         XCTAssertNil(database.filePicker.pendingFilePicker)
         XCTAssertTrue(database.keepassDidSucceed)
         XCTAssertEqual(bitwarden.closes, 1)
@@ -292,13 +298,15 @@ final class LoginSessionModelTests: XCTestCase {
 
     private func webdav(_ id: String) -> WebDavSettingsSnapshot {
         WebDavSettingsSnapshot(
-            id: id, url: "https://example.test/\(id).kdbx", username: id, password: "draft", errorKind: nil,
+            id: id, purpose: "KeePassDatabase", url: "https://example.test/\(id).kdbx", username: id, password: "draft",
+            errorKind: nil,
             isTestingConnection: false)
     }
 
     private func s3(_ id: String) -> S3SettingsSnapshot {
         S3SettingsSnapshot(
-            id: id, endpoint: "", region: "", bucket: "vaults", key: "\(id).kdbx", accessKeyId: "AKID",
+            id: id, purpose: "KeePassDatabase", endpoint: "", region: "", bucket: "vaults", key: "\(id).kdbx",
+            accessKeyId: "AKID",
             secretAccessKey: "draft", pathStyle: true, errorKind: nil, isTestingConnection: false,
             fieldErrors: [], validationRequest: 0, validationField: nil)
     }
@@ -309,6 +317,11 @@ final class LoginSessionModelTests: XCTestCase {
 
 @MainActor
 private final class BitwardenSourceProbe: BitwardenLoginSource {
+    var publishFile: ((AddFilePickerRequest) -> Void)?
+    func setLoginFilePickerRequestHandler(handler: ((AddFilePickerRequest) -> Void)?) { publishFile = handler }
+    func resolveLoginFilePicker(requestId: String, uri: String, name: String?, size: Int64, accessToken: String?) {}
+    func cancelLoginFilePicker(requestId: String) {}
+
     var publish: (LoginSnapshot) -> Void = { _ in }
     var publishTwofa: (TwofaSnapshot) -> Void = { _ in }
     var publishSso: (SsoLoginSnapshot) -> Void = { _ in }
@@ -374,7 +387,7 @@ private final class BitwardenSourceProbe: BitwardenLoginSource {
 }
 
 @MainActor
-final class KeePassSourceProbe: KeePassLoginSource {
+final class KeePassSourceProbe: KeePassLoginSource, RemoteSettingsSource {
     var publishWebDav: (WebDavSettingsSnapshot?) -> Void = { _ in }
     var publishS3: (S3SettingsSnapshot?) -> Void = { _ in }
     var cancelledS3 = 0
@@ -402,6 +415,7 @@ final class KeePassSourceProbe: KeePassLoginSource {
     func clearKeePassKeyFile() {}
     func setKeePassPassword(text: String) {}
     func submitKeePassLogin() {}
+    var remoteSettings: any RemoteSettingsSource { self }
     func setWebDavField(sessionId: String, id: String, text: String) {}
     func submitWebDavSettings(sessionId: String) {}
     func testWebDavConnection(sessionId: String) {}

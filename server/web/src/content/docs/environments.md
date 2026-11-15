@@ -162,6 +162,7 @@ keyguard run --environment <ENVIRONMENT_ID> -- powershell -c '$env:<NAME>'
   starts. A read while the vault is locked waits until you unlock and approve.
 - A denied or failed read gets an empty file. Keyguard never writes an error
   into it.
+- Each read appears in the [request log](/docs/cli/#request-log).
 
 ## .env syntax
 
@@ -217,6 +218,6 @@ referenced item exists, is out of the trash, and still has the field.
 
 ### A tool reads an empty .env file
 
-Keyguard refused the read: you denied it, the prompt expired after 60 seconds,
-or a variable can't be resolved. Read the file again and approve the request.
+Keyguard refused the read: you denied it, the prompt timed out, or a variable
+can't be resolved. Read the file again and approve the request.
 If it stays empty, check the variables as in the previous entry.

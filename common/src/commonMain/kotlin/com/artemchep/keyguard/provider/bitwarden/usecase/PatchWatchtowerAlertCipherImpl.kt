@@ -46,6 +46,7 @@ class PatchWatchtowerAlertCipherImpl(
                     DWatchtowerAlertType.PWNED_WEBSITE -> BitwardenCipher.IgnoreAlertType.PWNED_WEBSITE
                     DWatchtowerAlertType.UNSECURE_WEBSITE -> BitwardenCipher.IgnoreAlertType.UNSECURE_WEBSITE
                     DWatchtowerAlertType.TWO_FA_WEBSITE -> BitwardenCipher.IgnoreAlertType.TWO_FA_WEBSITE
+                    DWatchtowerAlertType.TWO_FA_UNUSABLE -> BitwardenCipher.IgnoreAlertType.TWO_FA_UNUSABLE
                     DWatchtowerAlertType.PASSKEY_WEBSITE -> BitwardenCipher.IgnoreAlertType.PASSKEY_WEBSITE
                     DWatchtowerAlertType.DUPLICATE -> BitwardenCipher.IgnoreAlertType.DUPLICATE
                     DWatchtowerAlertType.DUPLICATE_URIS -> BitwardenCipher.IgnoreAlertType.DUPLICATE_URIS
@@ -53,6 +54,8 @@ class PatchWatchtowerAlertCipherImpl(
                     DWatchtowerAlertType.INCOMPLETE -> BitwardenCipher.IgnoreAlertType.INCOMPLETE
                     DWatchtowerAlertType.EXPIRING -> BitwardenCipher.IgnoreAlertType.EXPIRING
                     DWatchtowerAlertType.WEAK_SSH_KEY -> BitwardenCipher.IgnoreAlertType.WEAK_SSH_KEY
+                    DWatchtowerAlertType.SSH_CERTIFICATE_UNUSABLE ->
+                        BitwardenCipher.IgnoreAlertType.SSH_CERTIFICATE_UNUSABLE
                     DWatchtowerAlertType.GPG_KEY_UNUSABLE -> BitwardenCipher.IgnoreAlertType.GPG_KEY_UNUSABLE
                     DWatchtowerAlertType.WEAK_GPG_KEY -> BitwardenCipher.IgnoreAlertType.WEAK_GPG_KEY
                     DWatchtowerAlertType.GPG_KEY_PUBLISHING -> BitwardenCipher.IgnoreAlertType.GPG_KEY_PUBLISHING

@@ -3,6 +3,7 @@ package com.artemchep.keyguard.common.service.cli
 import com.artemchep.keyguard.common.io.bind
 import com.artemchep.keyguard.common.model.MasterSession
 import com.artemchep.keyguard.common.service.Files
+import com.artemchep.keyguard.common.service.agent.AGENT_APPROVAL_PROMPT_TIMEOUT
 import com.artemchep.keyguard.common.service.agent.AgentApprovalBroker
 import com.artemchep.keyguard.common.service.agent.AgentApprovalCacheConfigProvider
 import com.artemchep.keyguard.common.service.agent.AgentApprovalCacheIdentity
@@ -36,12 +37,17 @@ class CliServiceImpl(
     /** How long a terminal tab keeps an approval. */
     approvalCacheConfig: AgentApprovalCacheConfigProvider<AgentApprovalCachePolicy> =
         fixedAgentApprovalCacheConfig(Duration.INFINITE, AgentApprovalCachePolicy.Default),
+    /** How long a prompt waits for the user. */
+    approvalTimeout: suspend () -> Duration = { AGENT_APPROVAL_PROMPT_TIMEOUT },
 ) : CliRuntimeHost {
     private val store = storeFactory.get(Files.SETTINGS)
     private val enabledPreference = store.getBoolean("cli.enabled", false)
     private val mutableState = MutableStateFlow(CliServiceState())
     override val state = mutableState.asStateFlow()
-    private val approvalBroker = AgentApprovalBroker<CliApprovalRequest>(idOf = { it.id })
+    private val approvalBroker = AgentApprovalBroker<CliApprovalRequest>(
+        idOf = { it.id },
+        promptTimeout = approvalTimeout,
+    )
     override val approvals = approvalBroker.pending
 
     /**
@@ -119,10 +125,11 @@ class CliServiceImpl(
     /**
      * Confirms an operation of the CLI, prompting the user unless the
      * terminal tab of the [context] has a remembered approval of an equal
-     * [grant]. With a verified terminal session, approving also covers
-     * later equal grants of that tab, until the approval is unused for
-     * [GRANT_IDLE], [GRANT_LIMIT] passes, or the grants are revoked. Marks
-     * the [context] as [approved][CliCallContext.approved] once it returns.
+     * [grant], or the approval window is "Never ask". With a verified
+     * terminal session, approving also covers later equal grants of that
+     * tab, until the approval is unused for [GRANT_IDLE], [GRANT_LIMIT]
+     * passes, or the grants are revoked. Marks the [context] as
+     * [approved][CliCallContext.approved] once it returns.
      *
      * @param grant What the approval allows; a command includes everything
      *   whose change must revoke it.
@@ -146,10 +153,10 @@ class CliServiceImpl(
         val key = currentKey()
         val identity = key.session.id
         val epoch = generation.value
-        val access = context.terminalSession?.let { terminal ->
-            grants.getOrGenerateSession(key).access { CliGrant(grant, terminal) }
+        val access = grants.getOrGenerateSession(key).access {
+            context.terminalSession?.let { terminal -> CliGrant(grant, terminal) }
         }
-        if (access?.isRemembered == true && !elevationPending) {
+        if (access.isRemembered && !elevationPending) {
             context.approved = true
             return
         }
@@ -183,7 +190,7 @@ class CliServiceImpl(
             throw CliServiceException("approval_revoked")
         }
         check()
-        access?.remember()
+        access.remember()
         context.approved = true
     }
 }

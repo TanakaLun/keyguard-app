@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.artemchep.keyguard.common.service.backup.BackupRetention
 import com.artemchep.keyguard.common.service.backup.BackupStep
 import com.artemchep.keyguard.common.service.backup.BackupStoreConfig
+import com.artemchep.keyguard.common.service.backup.BackupStoreKind
 import com.artemchep.keyguard.feature.s3.locationUriOrNull
 import com.artemchep.keyguard.feature.s3.s3EndpointHostOrNull
 import com.artemchep.keyguard.res.Res
@@ -31,6 +32,7 @@ internal fun retentionText(
 internal fun BackupStep.titleRes(): StringResource = when (this) {
     BackupStep.Preparing -> Res.string.backup_step_preparing
     BackupStep.OpeningRepository -> Res.string.backup_step_opening_repository
+    BackupStep.UpgradingEncryption -> Res.string.backup_step_upgrading_encryption
     BackupStep.ExportingVault -> Res.string.backup_step_exporting_vault
     BackupStep.ScanningAttachments -> Res.string.backup_step_scanning_attachments
     BackupStep.BackingUpAttachments -> Res.string.backup_step_backing_up_attachments
@@ -58,8 +60,18 @@ internal fun backupLocationText(
 }
 
 internal val BackupStoreConfig.icon: ImageVector
+    get() = kind.icon
+
+internal val BackupStoreKind.icon: ImageVector
     get() = when (this) {
-        is BackupStoreConfig.Local -> Icons.Outlined.Folder
-        is BackupStoreConfig.WebDav -> Icons.Outlined.Cloud
-        is BackupStoreConfig.S3 -> Icons.Outlined.Inventory2
+        BackupStoreKind.Local -> Icons.Outlined.Folder
+        BackupStoreKind.WebDav -> Icons.Outlined.Cloud
+        BackupStoreKind.S3 -> Icons.Outlined.Inventory2
+    }
+
+internal val BackupStoreKind.titleRes: StringResource
+    get() = when (this) {
+        BackupStoreKind.Local -> Res.string.pref_item_automatic_backups_local_folder_title
+        BackupStoreKind.WebDav -> Res.string.pref_item_automatic_backups_webdav_server_title
+        BackupStoreKind.S3 -> Res.string.pref_item_automatic_backups_s3_title
     }

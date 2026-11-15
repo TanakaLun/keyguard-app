@@ -65,6 +65,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -85,6 +87,7 @@ import com.artemchep.keyguard.feature.attachmentpreview.minimap.AttachmentPrevie
 import com.artemchep.keyguard.feature.attachmentpreview.minimap.attachmentPreviewMinimapPanelHeightPx
 import com.artemchep.keyguard.feature.localization.TextHolder
 import com.artemchep.keyguard.feature.filepicker.humanReadableByteCountBin
+import com.artemchep.keyguard.feature.home.vault.component.VaultViewItem
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.NavigationIcon
 import com.artemchep.keyguard.feature.navigation.state.TranslatorScope
@@ -102,6 +105,7 @@ import com.artemchep.keyguard.ui.tabs.TabItem
 import com.artemchep.keyguard.ui.theme.Dimens
 import com.artemchep.keyguard.ui.theme.combineAlpha
 import com.artemchep.keyguard.ui.toolbar.LargeToolbar
+import com.artemchep.keyguard.ui.util.HorizontalDivider
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.HazeBlurStyle
 import dev.chrisbanes.haze.blur.hazeBlur
@@ -134,18 +138,20 @@ private fun AttachmentPreviewScaffold(
     var wrapLines by rememberSaveable(fileName) {
         mutableStateOf(false)
     }
-    var markdownModeKey by rememberSaveable(fileName) {
+    var textModeKey by rememberSaveable(fileName) {
         mutableStateOf(AttachmentPreviewTextMode.Rendered.key)
     }
-    val markdownMode = remember(markdownModeKey) {
+    val textMode = remember(textModeKey) {
         AttachmentPreviewTextMode.entries
-            .firstOrNull { it.key == markdownModeKey }
+            .firstOrNull { it.key == textModeKey }
             ?: AttachmentPreviewTextMode.Source
     }
 
     // Archive paths and navigation state belong only to this in-memory preview.
     val archiveScroll = remember { mutableMapOf<String, LazyListState>() }
     val ready = (loadableState as? Loadable.Ok)?.value
+    val jsonPreview = (ready?.content as? AttachmentPreviewContent.Json)?.preview
+    val jsonState = rememberAttachmentPreviewJsonViewState(jsonPreview)
     if (ready != null) AttachmentArchiveEffects(ready)
     Scaffold(
         topBar = {
@@ -170,57 +176,14 @@ private fun AttachmentPreviewScaffold(
                     }
                 },
                 actions = {
-                    loadableState.fold(
-                        ifLoading = {
-                        },
-                        ifOk = { state ->
-                            state.onSave?.let { onSave ->
-                                IconButton(
-                                    onClick = onSave,
-                                    enabled = !state.busy,
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.SaveAlt,
-                                        contentDescription = stringResource(Res.string.attachment_archive_save),
-                                    )
-                                }
-                            }
-                            val content = state.content as? AttachmentPreviewContent.TextLike
-                            if (content != null) {
-                                val copyAllText = stringResource(
-                                    Res.string.attachment_preview_action_copy_all,
-                                )
-                                IconButton(
-                                    onClick = content.onCopy,
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.ContentCopy,
-                                        contentDescription = copyAllText,
-                                    )
-                                }
-
-                                val wrapLinesText = stringResource(
-                                    Res.string.attachment_preview_action_wrap_lines,
-                                )
-                                IconToggleButton(
-                                    checked = wrapLines,
-                                    onCheckedChange = {
-                                        wrapLines = it
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Outlined.WrapText,
-                                        contentDescription = wrapLinesText,
-                                        tint = if (wrapLines) {
-                                            MiuixTheme.colorScheme.primary
-                                        } else {
-                                            LocalContentColor.current
-                                        },
-                                    )
-                                }
-                            }
-                        },
-                    )
+                    if (ready != null) {
+                        AttachmentPreviewToolbarActions(
+                            state = ready,
+                            jsonState = jsonState,
+                            wrapLines = wrapLines,
+                            onWrapLinesChange = { wrapLines = it },
+                        )
+                    }
                 },
             )
         },
@@ -254,11 +217,38 @@ private fun AttachmentPreviewScaffold(
                             contentPadding = contentPadding,
                         )
 
+                        is AttachmentPreviewContent.Json -> AttachmentPreviewJsonContent(
+                            content = content,
+                            state = requireNotNull(jsonState),
+                            wrapLines = wrapLines,
+                            contentPadding = contentPadding,
+                        )
+
                         is AttachmentPreviewContent.Markdown -> AttachmentPreviewMarkdown(
                             content = content,
-                            markdownMode = markdownMode,
-                            onMarkdownModeChange = {
-                                markdownModeKey = it.key
+                            textMode = textMode,
+                            onTextModeChange = {
+                                textModeKey = it.key
+                            },
+                            wrapLines = wrapLines,
+                            contentPadding = contentPadding,
+                        )
+
+                        is AttachmentPreviewContent.Table -> AttachmentPreviewTableContent(
+                            content = content,
+                            textMode = textMode,
+                            onTextModeChange = {
+                                textModeKey = it.key
+                            },
+                            wrapLines = wrapLines,
+                            contentPadding = contentPadding,
+                        )
+
+                        is AttachmentPreviewContent.GpgKey -> AttachmentPreviewGpgKeyContent(
+                            content = content,
+                            textMode = textMode,
+                            onTextModeChange = {
+                                textModeKey = it.key
                             },
                             wrapLines = wrapLines,
                             contentPadding = contentPadding,
@@ -283,6 +273,58 @@ private fun AttachmentPreviewScaffold(
             )
         }
     }
+}
+
+@Composable
+private fun AttachmentPreviewToolbarActions(
+    state: AttachmentPreviewState,
+    jsonState: AttachmentPreviewJsonViewState?,
+    wrapLines: Boolean,
+    onWrapLinesChange: (Boolean) -> Unit,
+) {
+    state.onSave?.let { onSave ->
+        IconButton(onClick = onSave, enabled = !state.busy) {
+            Icon(
+                imageVector = Icons.Outlined.SaveAlt,
+                contentDescription = stringResource(Res.string.attachment_archive_save),
+            )
+        }
+    }
+    state.content.onCopy?.let { onCopy ->
+        IconButton(onClick = onCopy) {
+            Icon(
+                imageVector = Icons.Outlined.ContentCopy,
+                contentDescription = stringResource(Res.string.attachment_preview_action_copy_all),
+            )
+        }
+        val showWrapLines = state.content !is AttachmentPreviewContent.Json ||
+            jsonState?.mode == AttachmentPreviewJsonMode.Source
+        if (showWrapLines) {
+            IconToggleButton(checked = wrapLines, onCheckedChange = onWrapLinesChange) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.WrapText,
+                    contentDescription = stringResource(Res.string.attachment_preview_action_wrap_lines),
+                    tint = if (wrapLines) MiuixTheme.colorScheme.primary else LocalContentColor.current,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+internal fun AttachmentPreviewJsonSource(
+    code: AttachmentPreviewCode,
+    state: AttachmentPreviewJsonViewState,
+    wrapLines: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    AttachmentPreviewCodeViewer(
+        modifier = modifier,
+        code = code,
+        wrapLines = wrapLines,
+        verticalScrollState = state.sourceScrollState,
+        horizontalScrollState = state.sourceHorizontalScrollState,
+    )
 }
 
 @Composable
@@ -490,10 +532,30 @@ private fun AttachmentPreviewText(
 }
 
 @Composable
+private fun AttachmentPreviewTextModeTabs(
+    textMode: AttachmentPreviewTextMode,
+    onTextModeChange: (AttachmentPreviewTextMode) -> Unit,
+) {
+    val textModeState = rememberUpdatedState(textMode)
+    SegmentedButtonGroup(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = Dimens.contentPadding,
+                vertical = 8.dp,
+            ),
+        tabState = textModeState,
+        tabs = AttachmentPreviewTextMode.entriesList,
+        onClick = onTextModeChange,
+        weight = 1f,
+    )
+}
+
+@Composable
 private fun AttachmentPreviewMarkdown(
     content: AttachmentPreviewContent.Markdown,
-    markdownMode: AttachmentPreviewTextMode,
-    onMarkdownModeChange: (AttachmentPreviewTextMode) -> Unit,
+    textMode: AttachmentPreviewTextMode,
+    onTextModeChange: (AttachmentPreviewTextMode) -> Unit,
     wrapLines: Boolean,
     contentPadding: PaddingValues,
 ) {
@@ -502,21 +564,12 @@ private fun AttachmentPreviewMarkdown(
             .fillMaxSize()
             .padding(contentPadding),
     ) {
-        val markdownModeState = rememberUpdatedState(markdownMode)
-        SegmentedButtonGroup(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = Dimens.contentPadding,
-                    vertical = 8.dp,
-                ),
-            tabState = markdownModeState,
-            tabs = AttachmentPreviewTextMode.entriesList,
-            onClick = onMarkdownModeChange,
-            weight = 1f,
+        AttachmentPreviewTextModeTabs(
+            textMode = textMode,
+            onTextModeChange = onTextModeChange,
         )
 
-        when (markdownMode) {
+        when (textMode) {
             AttachmentPreviewTextMode.Source -> AttachmentPreviewCodeViewer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -557,17 +610,276 @@ private fun AttachmentPreviewMarkdownText(
 }
 
 @Composable
-private fun AttachmentPreviewCodeViewer(
-    code: AttachmentPreviewCode,
+private fun AttachmentPreviewTableContent(
+    content: AttachmentPreviewContent.Table,
+    textMode: AttachmentPreviewTextMode,
+    onTextModeChange: (AttachmentPreviewTextMode) -> Unit,
+    wrapLines: Boolean,
+    contentPadding: PaddingValues,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+    ) {
+        AttachmentPreviewTextModeTabs(
+            textMode = textMode,
+            onTextModeChange = onTextModeChange,
+        )
+
+        when (textMode) {
+            AttachmentPreviewTextMode.Source -> AttachmentPreviewCodeViewer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                code = content.code,
+                wrapLines = wrapLines,
+            )
+
+            AttachmentPreviewTextMode.Rendered -> AttachmentPreviewTableViewer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                table = content.table,
+                wrapLines = wrapLines,
+            )
+        }
+    }
+}
+
+@Composable
+private fun AttachmentPreviewGpgKeyContent(
+    content: AttachmentPreviewContent.GpgKey,
+    textMode: AttachmentPreviewTextMode,
+    onTextModeChange: (AttachmentPreviewTextMode) -> Unit,
+    wrapLines: Boolean,
+    contentPadding: PaddingValues,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+    ) {
+        val source = content.source
+        if (source != null) {
+            AttachmentPreviewTextModeTabs(
+                textMode = textMode,
+                onTextModeChange = onTextModeChange,
+            )
+        }
+
+        if (source != null && textMode == AttachmentPreviewTextMode.Source) {
+            AttachmentPreviewCodeViewer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                code = source,
+                wrapLines = wrapLines,
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentPadding = PaddingValues(vertical = 8.dp),
+            ) {
+                items(
+                    items = content.items,
+                    key = { item -> item.id },
+                ) { item ->
+                    VaultViewItem(
+                        item = item,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AttachmentPreviewTableViewer(
+    table: AttachmentPreviewTable,
     wrapLines: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val horizontalScrollState = rememberScrollState()
-    val verticalScrollState = rememberLazyListState()
+    val rowCount = table.rows.size - 1
+    val gutterWidth = remember(rowCount) {
+        attachmentPreviewGutterWidth(rowCount)
+    }
+    val cellStyle = MiuixTheme.textStyles.bodyMedium.copy(
+        fontFamily = FontFamily.Monospace,
+    )
+    val headerStyle = cellStyle.copy(
+        fontWeight = FontWeight.Bold,
+    )
+    val columnWidths = rememberAttachmentPreviewTableColumnWidths(
+        columnLengths = table.columnLengths,
+        style = headerStyle,
+    )
+
+    SelectionContainer {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 16.dp),
+        ) {
+            stickyHeader(
+                key = "header",
+            ) {
+                AttachmentPreviewTableHeader {
+                    AttachmentPreviewTableRow(
+                        rowNumber = null,
+                        cells = table.rows.first(),
+                        columnWidths = columnWidths,
+                        gutterWidth = gutterWidth,
+                        horizontalScrollState = horizontalScrollState,
+                        wrapLines = wrapLines,
+                        style = headerStyle,
+                    )
+                }
+            }
+            items(
+                count = rowCount,
+                key = { it },
+            ) { index ->
+                if (index > 0) {
+                    HorizontalDivider()
+                }
+                AttachmentPreviewTableRow(
+                    rowNumber = index + 1,
+                    cells = table.rows[index + 1],
+                    columnWidths = columnWidths,
+                    gutterWidth = gutterWidth,
+                    horizontalScrollState = horizontalScrollState,
+                    wrapLines = wrapLines,
+                    style = cellStyle,
+                )
+            }
+        }
+    }
+}
+
+/** The sticky header is opaque, so rows scroll under it. */
+@Composable
+private fun AttachmentPreviewTableHeader(
+    content: @Composable () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .background(LocalSurfaceColor.current),
+    ) {
+        content()
+        HorizontalDivider()
+    }
+}
+
+/**
+ * Sizes each column to its longest cell, within the min and max widths. Pass
+ * the bold header style: it has the widest glyphs.
+ */
+@Composable
+private fun rememberAttachmentPreviewTableColumnWidths(
+    columnLengths: List<Int>,
+    style: TextStyle,
+): List<Dp> {
+    val textMeasurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    return remember(columnLengths, style, textMeasurer, density) {
+        // Monospace glyphs share one width, so one measurement sizes every column.
+        val sample = "0".repeat(TABLE_COLUMN_MAX_CHARS)
+        val charWidthPx = textMeasurer.measure(sample, style).size.width.toFloat() / sample.length
+        columnLengths.map { length ->
+            val chars = length.coerceIn(TABLE_COLUMN_MIN_CHARS, TABLE_COLUMN_MAX_CHARS)
+            with(density) { (charWidthPx * chars).toDp() } + AttachmentPreviewTableCellPadding * 2
+        }
+    }
+}
+
+@Composable
+private fun AttachmentPreviewTableRow(
+    rowNumber: Int?,
+    cells: List<String>,
+    columnWidths: List<Dp>,
+    gutterWidth: Dp,
+    horizontalScrollState: ScrollState,
+    wrapLines: Boolean,
+    style: TextStyle,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        DisableSelection {
+            Text(
+                modifier = Modifier
+                    .width(gutterWidth)
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = AttachmentPreviewTableCellVerticalPadding,
+                    ),
+                text = rowNumber?.toString().orEmpty(),
+                textAlign = TextAlign.End,
+                color = LocalContentColor.current
+                    .combineAlpha(MediumEmphasisAlpha),
+                style = style,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(horizontalScrollState)
+                .padding(end = 16.dp),
+        ) {
+            columnWidths.forEachIndexed { index, width ->
+                Text(
+                    modifier = Modifier
+                        .width(width)
+                        .padding(
+                            horizontal = AttachmentPreviewTableCellPadding,
+                            vertical = AttachmentPreviewTableCellVerticalPadding,
+                        ),
+                    text = cells.getOrElse(index) { "" },
+                    softWrap = wrapLines,
+                    maxLines = if (wrapLines) Int.MAX_VALUE else 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = style,
+                )
+            }
+        }
+    }
+}
+
+private val AttachmentPreviewTableCellPadding = 8.dp
+
+private val AttachmentPreviewTableCellVerticalPadding = 6.dp
+
+private const val TABLE_COLUMN_MIN_CHARS = 3
+
+private const val TABLE_COLUMN_MAX_CHARS = 40
+
+private val AttachmentPreviewGutterDigitWidth = 10.dp
+
+private val AttachmentPreviewGutterPadding = 24.dp
+
+private fun attachmentPreviewGutterWidth(
+    count: Int,
+): Dp {
+    val digits = count.toString().length
+    return AttachmentPreviewGutterDigitWidth * digits + AttachmentPreviewGutterPadding
+}
+
+@Composable
+private fun AttachmentPreviewCodeViewer(
+    code: AttachmentPreviewCode,
+    wrapLines: Boolean,
+    modifier: Modifier = Modifier,
+    horizontalScrollState: ScrollState = rememberScrollState(),
+    verticalScrollState: LazyListState = rememberLazyListState(),
+) {
     val lineIndex = code.lineIndex
     val gutterWidth = remember(lineIndex.size) {
-        val digits = lineIndex.size.toString().length
-        (digits * 10 + 24).dp
+        attachmentPreviewGutterWidth(lineIndex.size)
     }
     val codeStyle = MiuixTheme.textStyles.bodyMedium.copy(
         fontFamily = FontFamily.Monospace,
@@ -757,6 +1069,7 @@ private class AttachmentPreviewErrorText(
     vararg val args: Any,
 )
 
+@Suppress("CyclomaticComplexMethod") // One branch per error.
 private fun AttachmentPreviewError.text(): AttachmentPreviewErrorText = when (this) {
     AttachmentPreviewError.UnsupportedFileType ->
         AttachmentPreviewErrorText(Res.string.attachment_preview_error_unsupported_file)
@@ -778,6 +1091,18 @@ private fun AttachmentPreviewError.text(): AttachmentPreviewErrorText = when (th
 
     AttachmentPreviewError.TextDecode ->
         AttachmentPreviewErrorText(Res.string.attachment_preview_error_text_decode)
+
+    AttachmentPreviewError.GpgKey ->
+        AttachmentPreviewErrorText(Res.string.attachment_preview_error_gpg_key)
+
+    AttachmentPreviewError.GzipInvalid ->
+        AttachmentPreviewErrorText(Res.string.attachment_preview_error_gzip_invalid)
+
+    AttachmentPreviewError.GzipTooLarge ->
+        AttachmentPreviewErrorText(
+            Res.string.attachment_preview_error_gzip_size_limit,
+            humanReadableByteCountBin(AttachmentPreviewLimits.MAX_ENTRY_PREVIEW_BYTES),
+        )
 
     AttachmentPreviewError.ArchiveInvalid ->
         AttachmentPreviewErrorText(Res.string.attachment_archive_error_invalid)

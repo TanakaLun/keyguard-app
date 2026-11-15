@@ -1,6 +1,6 @@
 //! `keyguard mcp`: the official MCP SDK transport with a closed,
 //! management-only tool surface.
-use crate::{Connection, errors};
+use crate::{Connection, client, errors};
 use anyhow::{Result, ensure};
 use keyguard_cli_protocol::{
     errors::{UNSUPPORTED_COMMAND, error_code},
@@ -11,7 +11,7 @@ use keyguard_cli_protocol::{
     },
     public::PublicFrameRef,
     socket::client_socket,
-    transport::{self, BoxStream},
+    transport::BoxStream,
 };
 use rmcp::{
     ErrorData, RoleServer, ServerHandler, ServiceExt,
@@ -23,9 +23,28 @@ use rmcp::{
     service::RequestContext,
 };
 use serde_json::{Value, json};
-use std::{path::PathBuf, sync::Arc, time::Duration};
+use std::{path::PathBuf, sync::Arc};
 use tokio::sync::Mutex;
 use zeroize::Zeroizing;
+
+const INSTRUCTIONS: &str = "Manage Keyguard environments without receiving stored secret values.\n\n\
+Call authenticate first. Tell the user they may need to unlock Keyguard and approve access in the \
+Keyguard app. Other tools may require additional approvals.\n\n\
+Tool calls wait for the user's decision. Approval prompts expire after the timeout set in \
+Keyguard. While a call is pending, wait for its result; do not cancel it or issue duplicate \
+requests. A pending call does not indicate whether the vault is locked or an approval is \
+waiting.\n\n\
+Handle errors as follows:\n\
+- vault_locked: ask the user to unlock Keyguard before retrying.\n\
+- user_denied: stop; retry only if the user explicitly requests it.\n\
+- approval_timeout or request_timeout: explain that the request timed out and confirm the user is \
+ready before retrying.\n\
+- reauthentication_required: ask the user to confirm their identity in Keyguard.\n\
+- authorization_expired: call authenticate again.\n\n\
+Never ask the user to provide their master password or other unlock credentials in chat.\n\n\
+To use stored values, run a local command through keyguard run on Windows, Linux, or macOS, or \
+create a user-approved local .env file on Linux or macOS. MCP provides no shell execution, secret \
+exports, resources, or deletion tools.";
 
 #[derive(clap::Args)]
 pub(crate) struct Args {
@@ -60,7 +79,7 @@ impl Bridge {
         // leaving a half-read frame for the next request. The app revokes its grant.
         let mut stream = match slot.take() {
             Some(stream) => stream,
-            None => transport::connect(&self.socket, None).await?,
+            None => client::connect(&self.socket).await?,
         };
         let bytes = Zeroizing::new(serde_json::to_vec(&PublicFrameRef::Manage(request))?);
         write_frame(&mut *stream, &bytes).await?;
@@ -94,8 +113,11 @@ fn tool(spec: &ToolSpec) -> Tool {
 impl ServerHandler for Bridge {
     fn get_info(&self) -> ServerConfig {
         ServerConfig::new(ServerCapabilities::builder().enable_tools().build())
-            .with_server_info(Implementation::new("keyguard-environments", env!("CARGO_PKG_VERSION")))
-            .with_instructions("Manage Keyguard environments. Call authenticate first and approve access in Keyguard. Secret values are never returned. To use existing values, run a local command with keyguard run on Windows, Linux, or macOS, or create a user-approved local .env file on Linux and macOS. No shell execution, exports, resources, or deletion tools are provided.")
+            .with_server_info(Implementation::new(
+                "keyguard-environments",
+                env!("CARGO_PKG_VERSION"),
+            ))
+            .with_instructions(INSTRUCTIONS)
     }
 
     async fn list_tools(
@@ -137,24 +159,24 @@ impl ServerHandler for Bridge {
             }
             Err(error) => return Ok(tool_error(&error.to_string(), error.message())),
         }
+        // Keyguard bounds the wait for an approval, and the client may cancel it.
         let response = tokio::select! {
             _ = context.ct.cancelled() => return Ok(CallToolResult::error(vec![ContentBlock::text("Request cancelled.")]).into()),
-            response = tokio::time::timeout(Duration::from_secs(75), self.request(&request)) => response,
+            response = self.request(&request) => response,
         };
         match response {
-            Ok(Ok(mut response)) if response.get("ok") == Some(&Value::Bool(true)) => {
+            Ok(mut response) if response.get("ok") == Some(&Value::Bool(true)) => {
                 let result = response
                     .get_mut("result")
                     .map(Value::take)
                     .unwrap_or_else(|| json!({}));
                 Ok(CallToolResult::structured(result).into())
             }
-            Ok(Ok(response)) => {
+            Ok(response) => {
                 let code = error_code(&response);
                 Ok(tool_error(code, message(code)))
             }
-            Ok(Err(_)) => Ok(tool_error("unavailable", message("unavailable"))),
-            Err(_) => Ok(tool_error("request_timeout", message("request_timeout"))),
+            Err(_) => Ok(tool_error("unavailable", message("unavailable"))),
         }
     }
 }
@@ -214,7 +236,7 @@ async fn run(socket: PathBuf) -> Result<()> {
         socket,
         stream: Arc::new(Mutex::new(None)),
     };
-    let service = bridge.serve(rmcp::transport::stdio()).await?;
+    let service = bridge.serve(rmcp::transport::stdio_pipes()).await?;
     service.waiting().await?;
     Ok(())
 }
@@ -231,9 +253,9 @@ mod tests {
         };
         let instructions = bridge.get_info().instructions.unwrap();
         assert!(instructions.contains("keyguard run"));
-        assert!(instructions.contains("Linux and macOS"));
-        assert!(instructions.contains("Secret values are never returned"));
-        assert!(instructions.contains("No shell execution"));
+        assert!(instructions.contains("Linux or macOS"));
+        assert!(instructions.contains("without receiving stored secret values"));
+        assert!(instructions.contains("MCP provides no shell execution"));
     }
 
     #[test]
