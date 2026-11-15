@@ -42,21 +42,19 @@ fun TagsConfirmationScreen(
             val updatedOnDeny = rememberUpdatedState(state.onDeny)
             val updatedOnConfirm = rememberUpdatedState(state.onConfirm)
             TextButton(
+                text = stringResource(Res.string.close),
                 enabled = state.onDeny != null,
                 onClick = {
                     updatedOnDeny.value?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.close))
-            }
+            )
             TextButton(
+                text = stringResource(Res.string.ok),
                 enabled = state.onConfirm != null,
                 onClick = {
                     updatedOnConfirm.value?.invoke()
                 },
-            ) {
-                Text(stringResource(Res.string.ok))
-            }
+            )
         },
     )
 }
