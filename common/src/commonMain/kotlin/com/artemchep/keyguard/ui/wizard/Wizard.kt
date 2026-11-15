@@ -257,7 +257,7 @@ fun WizardHeader(
             Text(
                 text = detail,
                 style = MiuixTheme.textStyles.bodyLarge,
-                color = MiuixTheme.colorScheme.onSurfaceVariant,
+                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
             )
         }
     }

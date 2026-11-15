@@ -310,7 +310,7 @@ private fun ExportNote(
             .padding(horizontal = Dimens.textHorizontalPadding),
         text = text,
         style = MiuixTheme.textStyles.bodyMedium,
-        color = MiuixTheme.colorScheme.onSurfaceVariant,
+        color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
     )
 }
 

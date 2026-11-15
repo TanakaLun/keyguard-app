@@ -10,11 +10,10 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SystemUpdateAlt
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
+import top.yukonga.miuix.kmp.basic.BadgedBox
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -66,15 +65,13 @@ fun ImportScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImportScreenSkeleton(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     ScaffoldColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             ImportToolbar(
@@ -88,17 +85,12 @@ private fun ImportScreenSkeleton(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImportToolbar(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
 ) {
     LargeToolbar(
-        title = {
-            Text(
-                text = stringResource(Res.string.import_header_title),
-            )
-        },
+        title = stringResource(Res.string.import_header_title),
         navigationIcon = {
             NavigationIcon()
         },
@@ -106,10 +98,9 @@ private fun ImportToolbar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImportScreenContent(
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ScrollBehavior,
     state: ImportState,
 ) {
     val context by rememberUpdatedState(LocalLeContext)
@@ -118,7 +109,6 @@ private fun ImportScreenContent(
     ScaffoldLazyColumn(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             ImportToolbar(

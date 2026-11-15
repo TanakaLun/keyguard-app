@@ -53,6 +53,7 @@ import com.artemchep.keyguard.ui.theme.horizontalPaddingFourth
 import com.artemchep.keyguard.ui.theme.horizontalPaddingHalf
 import com.artemchep.keyguard.ui.theme.okContainer
 import com.artemchep.keyguard.ui.theme.onOkContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
@@ -163,7 +164,7 @@ private fun TextDiffLine(
     numberWidth: Dp,
     hunk: DiffHunk,
 ) {
-    val colors = MaterialTheme.colorScheme
+    val colors = MiuixTheme.colorScheme
     val background = when (line.kind) {
         DiffLineKind.ADDED -> colors.okContainer
         DiffLineKind.REMOVED -> colors.errorContainer

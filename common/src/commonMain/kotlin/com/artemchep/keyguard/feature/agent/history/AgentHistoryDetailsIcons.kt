@@ -12,9 +12,8 @@ import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.runtime.Composableimport androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.artemchep.keyguard.ui.icons.KeyguardDecrypt
 import com.artemchep.keyguard.ui.icons.KeyguardFileSign
@@ -25,9 +24,9 @@ import com.artemchep.keyguard.ui.theme.ok
 /** The color of the response text in a request log row. */
 @Composable
 internal fun AgentHistoryOutcome.contentColor(): Color = when (this) {
-    AgentHistoryOutcome.SUCCESS -> MaterialTheme.colorScheme.ok
-    AgentHistoryOutcome.FAILURE -> MaterialTheme.colorScheme.error
-    AgentHistoryOutcome.NEUTRAL -> MaterialTheme.colorScheme.onSurface
+    AgentHistoryOutcome.SUCCESS -> MiuixTheme.colorScheme.ok
+    AgentHistoryOutcome.FAILURE -> MiuixTheme.colorScheme.error
+    AgentHistoryOutcome.NEUTRAL -> MiuixTheme.colorScheme.onSurface
 }
 
 // A flat mapping of every icon, not branching logic.

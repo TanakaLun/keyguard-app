@@ -59,6 +59,7 @@ import com.artemchep.keyguard.ui.theme.onOkContainer
 import com.artemchep.keyguard.ui.theme.onWarningContainer
 import com.artemchep.keyguard.ui.theme.warning
 import com.artemchep.keyguard.ui.theme.warningContainer
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import org.jetbrains.compose.resources.stringResource
 
 private val ClientCertificateIconSize = 56.dp
@@ -376,16 +377,16 @@ private fun clientCertificateAppearance(
 ): ClientCertificateAppearance = when (status) {
     ClientCertificateStatus.VALID -> ClientCertificateAppearance(
         icon = Icons.Outlined.GppGood,
-        accent = MaterialTheme.colorScheme.ok,
-        container = MaterialTheme.colorScheme.okContainer,
-        onContainer = MaterialTheme.colorScheme.onOkContainer,
+        accent = MiuixTheme.colorScheme.ok,
+        container = MiuixTheme.colorScheme.okContainer,
+        onContainer = MiuixTheme.colorScheme.onOkContainer,
     )
 
     ClientCertificateStatus.EXPIRING_SOON -> ClientCertificateAppearance(
         icon = Icons.Outlined.GppMaybe,
-        accent = MaterialTheme.colorScheme.warning,
-        container = MaterialTheme.colorScheme.warningContainer,
-        onContainer = MaterialTheme.colorScheme.onWarningContainer,
+        accent = MiuixTheme.colorScheme.warning,
+        container = MiuixTheme.colorScheme.warningContainer,
+        onContainer = MiuixTheme.colorScheme.onWarningContainer,
     )
 
     ClientCertificateStatus.EXPIRED,

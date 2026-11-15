@@ -506,7 +506,7 @@ suspend fun RememberStateFlowScope.accountStateProducer(
         countersFlow.prepare(),
         certificateFlow,
     ) { meta, account, profile, counters, certificate ->
-        val items = buildItemsFlow(
+        buildItemsFlow(
             accountId = accountId,
             certificate = certificate,
             scope = this,

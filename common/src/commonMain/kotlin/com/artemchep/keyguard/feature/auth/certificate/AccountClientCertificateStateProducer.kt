@@ -18,7 +18,6 @@ import com.artemchep.keyguard.feature.confirmation.ConfirmationRouteFactory
 import com.artemchep.keyguard.feature.filepicker.FilePickerIntent
 import com.artemchep.keyguard.feature.filepicker.FilePickerResult
 import com.artemchep.keyguard.feature.home.vault.model.VaultViewItem
-import com.artemchep.keyguard.feature.home.vault.model.transformShapes
 import com.artemchep.keyguard.feature.largetype.LargeTypeRoute
 import com.artemchep.keyguard.feature.localization.wrap
 import com.artemchep.keyguard.feature.navigation.state.RememberStateFlowScope
@@ -286,7 +285,7 @@ private suspend fun RememberStateFlowScope.certificateDetails(
             monospace = true,
         ),
         row("key_type", Res.string.key_type, metadata.keyType),
-    ).transformShapes()
+    )
 }
 
 private const val COLON_HEX_GROUP_BYTES = 4

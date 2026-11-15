@@ -327,21 +327,6 @@ fun ColumnScope.SetupScreenCreateVaultTitle() {
         text = stringResource(Res.string.setup_header_text),
         style = MiuixTheme.textStyles.bodyLarge,
     )
-    )
-
-    val config = koinInject<FlavorConfig>()
-    if (config.isFreeAsBeer) {
-        Spacer(Modifier.height(8.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            text = stringResource(Res.string.setup_free_text),
-            style = MiuixTheme.textStyles.bodyMedium,
-            color = LocalContentColor.current
-                .combineAlpha(DisabledEmphasisAlpha),
-        )
-    }
 }
 
 fun keyguardSpan() =

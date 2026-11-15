@@ -79,11 +79,10 @@ fun AccountClientCertificateContent(state: AccountClientCertificateState?) {
     val scrollBehavior = ToolbarBehavior.behavior()
     ScaffoldLazyColumn(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        expressive = true,
         topAppBarScrollBehavior = scrollBehavior,
         topBar = {
             LargeToolbar(
-                title = { Text(stringResource(Res.string.client_certificate)) },
+                title = stringResource(Res.string.client_certificate),
                 navigationIcon = { NavigationIcon() },
                 scrollBehavior = scrollBehavior,
             )

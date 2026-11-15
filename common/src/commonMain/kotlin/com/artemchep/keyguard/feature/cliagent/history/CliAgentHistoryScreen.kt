@@ -2,6 +2,7 @@ package com.artemchep.keyguard.feature.cliagent.history
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -144,7 +145,7 @@ private fun CliAgentHistoryItem(
             text = item.text,
         )
     } else {
-        Column(modifier = modifier)
+        Spacer(modifier = modifier)
     }
 
     is CliAgentHistoryItem.Value -> CliAgentHistoryValueItem(

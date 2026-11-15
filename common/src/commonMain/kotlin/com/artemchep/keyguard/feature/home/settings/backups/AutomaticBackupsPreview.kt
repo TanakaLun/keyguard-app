@@ -35,6 +35,7 @@ import kotlin.time.Instant
 @Composable
 internal fun AutomaticBackupsPreview(
     dark: Boolean = false,
+    content: @Composable () -> Unit,
 ) {
     val scheme = if (dark) plainDarkColorScheme() else plainLightColorScheme()
     MaterialExpressiveTheme(colorScheme = scheme) {

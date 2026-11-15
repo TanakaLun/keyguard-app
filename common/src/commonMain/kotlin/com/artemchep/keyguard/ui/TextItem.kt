@@ -193,7 +193,6 @@ fun UrlFlatTextField(
 }
 
 @Composable
-@Composable
 fun EmailFlatTextField(
     modifier: Modifier = Modifier,
     fieldModifier: Modifier = Modifier,

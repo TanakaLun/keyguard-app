@@ -93,7 +93,7 @@ internal fun AttachmentPreviewJsonContent(
     state: AttachmentPreviewJsonViewState,
     wrapLines: Boolean,
     contentPadding: PaddingValues,
-) = ProvideScaffoldLocalValues(expressive = true) {
+) = ProvideScaffoldLocalValues {
     Column(
         modifier = Modifier
             .fillMaxSize()
